@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <div class="col-lg-12 col-sm-12 header-title">
+        <div style="float:left">
+            <h3>Lista wpisów słownika: [{{ dict.description }}]</h3>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-sm-12">
+        <hr style="margin-top:10px">
+    </div>
+
+    <div>
+        <table id="entry_list" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th class="sort sort-unsorted">Etykieta</th>
+                <th class="sort sort-unsorted">Wartość</th>
+                <th class="sort sort-unsorted" style="width:30px;">Aktywny</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for entry in entries %}
+                <tr data-id-entry="{{ entry.id }}">
+                    <td class="entry-label">{{ entry.label }}</td>
+                    <td class="entry-value">{{ entry.value }}</td>
+                    {% if entry.active %}
+                        <td class="text-center"><a class="yes-no-bookmark active"><i class="fa fa-check"></i></a></td>
+                    {% else %}
+                        <td class="text-center"><a class="yes-no-bookmark active"><i class="fa fa-times"></i></a></td>
+                    {% endif %}
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+
+{% block site_script %}
+
+{% endblock %}

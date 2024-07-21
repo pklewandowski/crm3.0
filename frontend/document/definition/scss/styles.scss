@@ -1,0 +1,272 @@
+@import '../../document-attribute/scss/document-attribute.scss';
+@import '../../../_core/scss/controls';
+
+.document-model-component {
+  width: 100%;
+  border: 1px solid #c9c9c9;
+}
+
+#labelItemContainer li {
+  position: relative;
+}
+
+#labelItemContainer li.section-label-active:hover > .item-btn-container {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility, opacity .6s;
+}
+
+#labelItemContainer .item-btn-container {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.item-btn-container-hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.item-btn-container {
+  position: absolute;
+  display: inline-block;
+  top: -12px;
+  left: -12px;
+  width: calc(100% + 24px);
+  z-index: 4;
+  transition: visibility 0.4s, opacity 0.4s;
+}
+
+
+#labelItemContainer .item-btn-container:hover {
+  visibility: visible;
+}
+
+.item-btn {
+  opacity: .6;
+  transition: opacity .4s;
+}
+
+.item-btn:hover {
+  opacity: 1;
+  transition: opacity .4s;
+}
+
+.handle {
+  float: left;
+
+}
+
+.remove {
+  margin-left: 2px;
+  float: right;
+}
+
+.edit {
+  margin-left: 2px;
+  float: right;
+}
+
+.item-btn-container i {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  text-align: center;
+  padding-top: 5px;
+  border: 2px solid;
+  color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, .7);
+  cursor: pointer;
+}
+
+.handle-icon, .item-btn-container .handle-icon {
+  background: rgba(50, 50, 50, 0.8);
+  border-radius: 5px;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  padding: 3px;
+  color: #d3d3d3;
+
+}
+
+.item-btn-container i.remove-icon {
+  background: rgba(234, 60, 57, 0.9);
+}
+
+.item-btn-container i.edit-icon {
+  background: rgba(30, 135, 39, 0.91);
+}
+
+.sortable-label-swap, .sortable-label-swap input, .sortable-label-swap select, .sortable-label-swap textarea {
+  background-color: #5e9ae9 !important;
+}
+
+
+.subsection-container {
+  background-color: #efefef;
+  margin: 0;
+  padding: 15px;
+  border: 2px dashed #8c8c8c;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+[data-theme="dark"] {
+  .subsection-container {
+    background-color: #000c1a;
+  }
+}
+
+.column-container {
+  background-color: #f7f7f7;
+  border: 1px solid #afafaf;
+  border-radius: 5px;
+  min-height: 120px;
+  padding-right: 15px !important;
+  padding-top: 15px;
+  margin-bottom: 15px;
+  //cursor: move;
+  //cursor: -webkit-grabbing;
+  position: relative;
+  border-style: dashed;
+}
+
+
+//.subsection-container:hover {
+//  border: 1px solid #333;
+//}
+//
+//.column-container:hover{
+//  border: 1px dashed #333;
+//}
+
+.col-lg-3 .column-container {
+  width: calc(25% - 5px)
+}
+
+.column-container label, .subsection-container label {
+  //top: 7px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.tab-pane {
+  height: unset !important;
+}
+
+.heading-title {
+  border: 1px dashed;
+  background-color: #fdfdfd;
+}
+
+.document-definition-menu-container {
+  height: 35px;
+  background-color: #dcdcdc;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+#labelItemContainer {
+  padding: 10px !important;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  border: 1px solid #afafaf;
+}
+
+#labelItemContainer li.section-label-active {
+  box-shadow: none !important;
+}
+
+
+//todo: TEMP!!!!!!!
+#addFieldBtn {
+  padding: 10px;
+  background-color: #999;
+  margin: 5px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.heading-title {
+  padding: 3px 0 0 0;
+  min-height: 20px;
+}
+
+.heading-title-text {
+  width: 100%;
+  min-height: 20px;
+  cursor: text;
+}
+
+.handle-column {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.handle-column i {
+  position: relative;
+  top: -5px;
+}
+
+.column-container:focus > .handle-column {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .4s;
+}
+
+.column-container:focus {
+  //background-color: #cddce6;
+  //border-width: 2px;
+  border-color: #85b6e1;
+  background-color: #f3f8fd;
+}
+
+.column-container hr {
+  height: 3px;
+  border: 1px solid;
+  background-color: #e7e7e7;
+  border-radius: 3px;
+}
+
+.sortable-element {
+  position: relative;
+}
+
+//todo: move it to toolbarUtils css file
+.toolbar-handle-btn {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: #363636bf;
+  top: -15px;
+  left: -10px;
+  z-index: 5;
+  border: 2px solid white;
+  border-radius: 5px;
+  visibility: hidden;
+  font-size: 16px;
+  color: white;
+  //opacity: 0;
+}
+
+#sectionContentContainer input:hover ~ div.handle-field {
+  visibility: visible;
+  opacity: 1;
+}
+
+.section-container {
+  margin: 0;
+}
+
+input:focus + label + .toolbar-handle-btn,
+input:focus + label + span + .toolbar-handle-btn,
+select:focus + label + .toolbar-handle-btn,
+select:focus + span + label + .toolbar-handle-btn,
+textarea:focus + label + .toolbar-handle-btn,
+hr:focus + .toolbar-handle-btn {
+  visibility: visible;
+}

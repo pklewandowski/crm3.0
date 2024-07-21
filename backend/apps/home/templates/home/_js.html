@@ -1,0 +1,11 @@
+{% load static %}
+<script>
+    _g.home = {
+        urls: {
+            currentContactsUrl: '{% url 'home.widget.current_contacts' %}',
+            incomingEventsUrl: '{% url 'home.widget.incoming_events' %}',
+            closeEventUrl: '{% url 'schedule.api.status' %}'
+        }
+    }
+</script>
+<script type="text/javascript" src="{% static 'dist/home/home-bundle.js' %}"></script>

@@ -1,0 +1,8 @@
+{% load static %}
+<script type="text/javascript" src="{% static 'dist/documentDefinition/documentDefinition-bundle.js' %}"></script>
+<script>
+    _g['document'] = {
+        type: {{ type.pk }},
+        mode: 'DEFINITION'
+    }
+</script>

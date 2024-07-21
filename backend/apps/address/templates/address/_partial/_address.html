@@ -1,0 +1,36 @@
+{% load i18n %}
+
+{#<div class="col-lg-3 col-sm-3">#}
+{#    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.street_prefix %}#}
+{#</div>#}
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.street %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-sm-4">
+        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.street_no %}
+    </div>
+    <div class="col-lg-4 col-sm-4">
+        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.apartment_no %}
+    </div>
+    <div class="col-lg-4 col-sm-4">
+        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.post_code %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-sm-8">
+        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.city %}
+    </div>
+{#    <div class="col-lg-4 col-sm-4">#}
+{#        {% include 'py3ws/forms/fields/p3form_field.html' with field=province %}#}
+{#    </div>#}
+    <div class="col-lg-4 col-sm-4">
+        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.country %}
+    </div>
+</div>
+
+

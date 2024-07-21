@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <h3> Test kontrolki copy-paste_image</h3>
+    <canvas tabindex="-1" style="border:1px solid grey;" id="my_canvas" width="300" height="300"></canvas>
+    <canvas tabindex="-1" style="border:1px solid grey;" id="my_canvas1" width="300" height="300"></canvas>
+    <button id="upload_btn">Zapisz</button>
+    <form method="post">
+    {% csrf_token %}
+        {{ form }}
+    </form>
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'common/js/graphUtils.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+
+        $(document).ready(function () {
+
+            var CLIPBOARD = new CLIPBOARD_CLASS("my_canvas", true);
+
+            $("#upload_btn").click(function () {
+                var canvas = document.getElementById("my_canvas");
+                {#                if (!$(canvas).is("canvas")) {#}
+                {#                    return;#}
+                {#                }#}
+                var image_data = canvas.toDataURL('image/jpeg');
+
+                $('#id_image_data').val(image_data);
+                $('form').submit();
+            });
+
+        });
+
+
+    </script>
+{% endblock %}

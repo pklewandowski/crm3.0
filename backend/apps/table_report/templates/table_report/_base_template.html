@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        .query-builder-container {
+            position: absolute;
+            display: inline-block;
+            top: 0;
+            right: 0;
+            width: 100%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.51);
+            visibility: hidden;
+            z-index: 1;
+        }
+
+        .query-builder-container label {
+            position: unset;
+        }
+
+        .query-builder {
+            display: inline-block;
+        }
+    </style>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ title }}</div>
+                <div class="panel-body table-report-container" style="position: relative; overflow: auto;height: calc(100vh - 210px);padding-top: 0">
+                    <table class="table">
+                        <thead>
+                        {% block table_report_head %}{% endblock %}
+                        </thead>
+                        <tbody>
+                        {% block table_report_body %}{% endblock %}
+                        </tbody>
+                    </table>
+                    <div class="query-builder-container">
+                        <div class="query-builder"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if is_paginated %}
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-lg-12 text-center">
+                {% include  "_partial/simple_paginator.html" with page_obj=page_obj %}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block form_icon %}fa fa-document{% endblock %}
+{% block form_title %} {{ title }}{% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <a href="{% url "table_report.list" %}" class="btn btn-default btn-sm"><i class="fas fa-arrow-left"></i></a>
+    <a href="#" class="btn btn-primary btn-sm show-query-builder"><i class="fas fa-filter"></i></a>
+    <a href="#" class="btn btn-success btn-sm export-to-csv-btn"><i class="fas fa-file-excel"></i></a>
+{% endblock %}
+
+{% block site_css %}
+    <link type="text/css" rel="stylesheet" href="{% static 'resource/jquery-ui/themes/base/jquery-ui.min.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'resource/structured-filter/structured-filter.css' %}">
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'resource/structured-filter/structured-filter.min.js' %}"></script>
+
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            function toggleQueryBuilder(container) {
+                if (container.style.visibility === 'visible') {
+                    container.style.visibility = 'hidden';
+                } else {
+                    container.style.visibility = 'visible';
+                }
+            }
+
+            let qb = document.querySelector('.query-builder');
+            $(qb).structFilter(
+                {
+                    dateFormat: 'yy-mm-dd',
+                    submitButton: true,
+                    fields: [
+                        {id: "code", type: "text", label: "Nr zgłoszenia"},
+                        {
+                            id: "request_type",
+                            type: "list",
+                            label: "Typ zgłoszenia",
+                            list: [
+                                {id: "PRJ", label: "projekt"},
+                                {id: "INC", label: "incydent"},
+                                {id: "SCH", label: "harmonogram"},
+                                {id: "INT", label: "testy wew."},
+                            ]
+                        },
+                        {id: "creation_date", type: "date", label: "Data utworzenia"},
+                        {id: "created_by", type: "boolean", label: "Utworzył"},
+                    ]
+                }
+            );
+
+            $(qb).on('submit.search', () => {
+                console.log($(qb).structFilter('val'));
+            });
+
+            let showQbBtn = document.querySelector('.show-query-builder');
+            if (showQbBtn) {
+                showQbBtn.addEventListener('click', () => {
+                    toggleQueryBuilder(document.querySelector('.query-builder-container'));
+                });
+            }
+        });
+
+    </script>
+{% endblock %}

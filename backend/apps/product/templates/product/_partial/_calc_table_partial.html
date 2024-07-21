@@ -1,0 +1,87 @@
+<div class="row calc-tab-navigator">
+
+    {#                        <div style="float: right;" class="col-lg-12">#}
+    {#                            <div style="float: left;">#}
+    {#                                <button class="btn btn-default" type="button"><i class="fa fa-fast-backward"></i></button>#}
+    {#                                <button class="btn btn-default" type="button"><i class="fas fa-step-backward"></i></button>#}
+    {#                                <span class="calc-tab-navigator-month">2020-02</span>#}
+    {#                                <button class="btn btn-default" type="button"><i class="fas fa-step-forward"></i></button>#}
+    {#                                <button class="btn btn-default" type="button"><i class="fa fa-fast-forward"></i></button>#}
+    {#                            </div>#}
+    {#                            <div style="float: left;">#}
+    {#                                <button class="btn btn-default" type="button"><i class="fa fa-fast-backward"></i></button>#}
+    {#                                <span class="calc-tab-navigator-payment">2020-02-17 1200,00</span>#}
+    {#                                <button class="btn btn-default" type="button"><i class="fa fa-fast-forward"></i></button>#}
+    {#                            </div>#}
+    {#                        </div>#}
+
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12" style="overflow-x:auto">
+
+        <div class="panel panel-default">
+
+            <div class="panel-body">
+                <div style="height: 100%; overflow: auto;">
+
+                    <table id="calc_table" class="table table-hover table-condensed" style="width:1700px; table-layout: fixed">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Kapitał niewymagalny</th>
+                                <th>Kapitał wymagalny (harmonogram)</th>
+                                <th>Kapitał wymagalny - stan na dzień</th>
+                                <th class="cash-flow-interest">Odsetki maksymalne</th>
+                                <th class="cash-flow-interest">Odsetki max. naliczone (suma)</th>
+                                <th class="cash-flow-interest">Odsetki max. za dzień</th>
+                                <th class="cash-flow-interest">Odsetki max. %</th>
+                                <th class="cash-flow-cost">Koszt w dniu</th>
+                                <th class="cash-flow-cost">Koszty całkowite - stan na dzień</th>
+                                <th class="cash-flow-cost">Koszty całkowite - suma</th>
+                                {#                                <th>Prowizja całkowita - stan na dzień</th>#}
+                                {#                                <th>Prowizja całkowita - suma</th>#}
+                                <th class="cash-flow-instalment">Wpłaty - suma</th>
+                                <th class="cash-flow-instalment">Wpłata - całość</th>
+                                <th class="cash-flow-instalment">Wpłata - kapitał wymagalny</th>
+                                <th class="cash-flow-instalment">Wpłata - kapitał niewymagalny</th>
+                                <th class="cash-flow-instalment">Wpłata - odsetki</th>
+                                <th class="cash-flow-instalment">Wpłata - koszty</th>
+                                <th class="cash-flow-instalment">Wpłaty - nadpłata, stan na dzień</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in calculation_list %}
+                                <tr {% if c.capital_required_from_schedule > 0 %} style="background-color:#f8e0b0" {% endif %}>
+                                    <td style="text-align: center;border-left: 1px solid #cbcbcb;{% comment %}background-color: #d7f1d3;{% endcomment %}">{{ c.calc_date|date:"Y-m-d" }}</td>
+                                    <td style="border-left: 1px solid #cbcbcb;">{{ c.capital_not_required|float_or_dash }}</td>
+                                    <td>{{ c.capital_required_from_schedule|float_or_dash }}</td>
+                                    <td>{{ c.capital_required|float_or_dash }}</td>
+
+                                    <td class="cash-flow-interest" style="border-left: 1px solid #cbcbcb;">{{ c.interest_required|float_or_dash }}</td>
+                                    <td class="cash-flow-interest">{{ c.interest_total|float_or_dash }}</td>
+                                    <td class="cash-flow-interest">{{ c.interest_required_daily|float_or_dash }}</td>
+                                    <td class="cash-flow-interest">{{ c.interest_rate|float_or_dash }}%</td>
+                                    <td class="cash-flow-cost" style="border-left: 1px solid #cbcbcb;">{{ c.cost_occurrence|float_or_dash }}</td>
+                                    <td class="cash-flow-cost">{{ c.cost|float_or_dash }}</td>
+                                    <td class="cash-flow-cost">{{ c.cost_total|float_or_dash }}</td>
+                                    {#                                    <td style="border-left: 1px solid #cbcbcb;">{{ c.commission|float_or_dash }}</td>#}
+                                    {#                                    <td>{{ c.commission_total|float_or_dash }}</td>#}
+                                    <td class="cash-flow-instalment" style="border-left: 1px solid #cbcbcb;">{{ c.instalment_total|float_or_dash }}</td>
+                                    <td class="cash-flow-instalment" style="border-left: 1px solid #cbcbcb;">{{ c.instalment|float_or_dash }}</td>
+                                    <td class="cash-flow-instalment">{{ c.instalment_capital_required|float_or_dash }}</td>
+                                    <td class="cash-flow-instalment">{{ c.instalment_capital_not_required|float_or_dash }}</td>
+                                    <td class="cash-flow-instalment">{{ c.instalment_interest|float_or_dash }}</td>
+                                    <td class="cash-flow-instalment" style="border-right: 1px solid #cbcbcb;">{{ c.instalment_cost|float_or_dash }}</td>
+                                    <td class="cash-flow-instalment" style="border-right: 1px solid #cbcbcb;">{{ c.instalment_overpaid|float_or_dash }}</td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

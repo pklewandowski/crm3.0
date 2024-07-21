@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+{% load humanize %}
+{% load client_tags %}
+{% load l10n %}
+
+{% block site_js %}
+{% endblock %}
+
+{% block form_icon %}fa fa-users{% endblock %}
+{% block form_title %}Lista {% if type == 'CLIENT' %}klientów
+{% elif type == 'EMPLOYEE' %}pracowników
+{% elif type == 'BROKER' %}pośredników
+{% elif type == 'ADVISER' %}doradców
+{% elif type == 'LAWOFFICE' %}kancelarii
+{% endif %}
+    {% if form.errors %} - <span class="error-header-info">wystąpiły błędy!</span>{% endif %}
+{% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <a href="{% url 'user.add' type %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></a>
+    {% if type == 'CLIENT' or type == 'BROKER' %}
+        <a href="#" id="csvUploadMenuBtn" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Importuj z pliku"><i class="fas fa-file-import"></i></a>
+        <a href="#" id="csvTemplateBtn" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Pobierz szablon pliku importu"><i class="fas fa-file-excel"></i></a>
+    {% endif %}
+{% endblock %}
+
+
+
+{% block content %}
+    <script>
+        _g['user'] = {
+            urls: {
+                getAdviserForSelect2: '{% url 'adviser.get_list_for_select2' %}',
+                deleteUser: '{% url 'user.delete' %}',
+                getBrokersForAdviserUrl: '{% url 'broker.get_brokers_for_adviser' %}'
+            }
+        };
+    </script>
+
+    {% include 'py3ws/lists/_partial/_list_filter.html' with filter_form=filter_form %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {#            <div class="row">#}
+                    {#                <div class="col-lg-12">#}
+                    <div style="height: calc(100vh - 220px);  overflow: auto">
+                        <table id="user_list" class="table table-hover table-condensed">
+                            <thead>
+                            <tr>
+                                <th style="width:50px;">&nbsp;</th>
+                                <th data-name="user__first_name"
+                                    class="sort sort-{% if sort_field == 'user__first_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">
+                                    Imię
+                                </th>
+                                <th data-name="user__last_name"
+                                    class="sort sort-{% if sort_field == 'user__last_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">
+                                    Nazwisko
+                                </th>
+                                <th data-name="user__company_name"
+                                    class="sort sort-{% if sort_field == 'user__company_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">
+                                    Firma
+                                </th>
+                                <th data-name="user__phone_one"
+                                    class="sort sort-{% if sort_field == 'user__phone_one' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">
+                                    Telefon
+                                </th>
+                                <th data-name="user__email" class="sort sort-{% if sort_field == 'user__email' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">
+                                    E-mail
+                                </th>
+                                <th data-name="user__date_joined"
+                                    class="sort sort-{% if sort_field == 'user__date_joined' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">
+                                    Data
+                                    utworzenia
+                                </th>
+                                {% if type == 'CLIENT' %}
+                                    <th data-name="client__company"
+                                        class="sort sort-{% if sort_field == 'client__company' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Spółka
+                                    </th>
+                                    <th data-name="source"
+                                        class="sort sort-{% if sort_field == 'source' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Źródło
+                                    </th>
+                                    {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='status' label='Status' %}
+
+                                    <th data-name="adviser__user__last_name"
+                                        class="sort sort-{% if sort_field == 'adviser__user__last_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Doradca
+                                    </th>
+                                    <th data-name="broker__user__last_name"
+                                        class="sort sort-{% if sort_field == 'broker__user__last_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Pośrednik
+                                    </th>
+                                    <th data-name="product_count"
+                                        class="sort sort-{% if sort_field == 'product_count' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">
+                                        Liczba
+                                        produktów
+                                    </th>
+                                    <th>Ostatni produkt</th>
+                                    <th>Ostatnia kwota</th>
+                                    {#                {% elif type == 'ADVISER' %}#}
+                                    {#                    <th>Oddział</th>#}
+                                {% elif type == 'BROKER' %}
+                                    <th data-name="adviser__user__last_name"
+                                        class="sort sort-{% if sort_field == 'adviser__user__last_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Doradca
+                                    </th>
+                                    <th>Wartość umów: aktualna umowa | wszyskie</th>
+                                {% endif %}
+
+                                <th>Akcje</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in page %}
+                                <tr data-id="{{ row.user.pk|unlocalize }}"
+                                        {% if row.product_in_vindication %} class="client-list-vindication-row">
+                                        {% elif row.product_in_execution %} class="client-list-execution-row"
+                                        {% endif %}>
+                                <td>
+                                    <div style="position: relative">
+                                        <div class="avatar-pool">
+                                            <a href="{% url 'user.edit' row.user.pk type %}" style="text-decoration: none">
+                                                {% if row.user.avatar_base64 %}
+                                                    <div class="avatar-image">
+                                                        <img src="data: data:image/png;base64, {{ row.user.avatar_base64 }}"/>
+                                                    </div>
+                                                {% elif row.user.avatar_filename %}
+                                                    <div class="avatar-image">
+                                                        <img src="{{ MEDIA_URL }}avatar/{{ row.user.avatar_filename }}"/>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="avatar-noimage">
+                                                        <div class="name-letter">
+                                                            {% if row.user.last_name %}{{ row.user.last_name.0|upper }}{% else %}{{ row.user.company_name.0|upper }}{% endif %}</div>
+                                                    </div>
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        {% if row.user.avatar_filename %}
+                                            <div class="avatar-image-magnifier">
+                                                <img src="{{ MEDIA_URL }}avatar/{{ row.user.avatar_filename }}">
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.first_name|default_if_none:'' }}</a></td>
+                                <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.last_name|default_if_none:'' }}</a></td>
+                                <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.company_name|default_if_none:'' }}</a></td>
+                                <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.phone_one|default_if_none:'' }}</a></td>
+                                <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.email|default_if_none:'' }}</a></td>
+                                <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.date_joined|date:'Y-m-d' }}</a></td>
+                                {% if type == 'CLIENT' %}
+                                    <td>{{ row.company.name|default_if_none:'' }}</td>
+                                    <td><a href="{% url 'user.edit' row.pk 'CLIENT' %}">{{ row.get_source_label|default_if_none:'' }}</a></td>
+                                    <td><a href="{% url 'user.edit' row.pk 'CLIENT' %}">{{ row.get_status_label|default_if_none:'' }}</a></td>
+                                    {% if row.adviser %}
+                                        <td>
+                                            <a href="{% url 'user.edit' row.adviser.pk 'ADVISER' %}">{{ row.adviser.user.first_name|default_if_none:'' }} {{ row.adviser.user.last_name|default_if_none:'' }}</a>
+                                        </td>
+                                    {% else %}
+                                        <td>&nbsp;</td>
+                                    {% endif %}
+
+                                    {% if row.broker %}
+                                        <td>
+                                            <a href="{% url 'user.edit' row.broker.pk 'BROKER' %}">{{ row.broker.user.first_name|default_if_none:'' }} {{ row.broker.user.last_name|default_if_none:'' }}</a>
+                                        </td>
+                                    {% else %}
+                                        <td>&nbsp;</td>
+                                    {% endif %}
+
+                                    <td class="text-center">
+                                        {% if row.product_count %}
+                                            {% if row.product_count > 1 %}
+                                                <div class="dropdown">
+                                                    <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown" id="product_dropdown_btn" aria-haspopup="true"
+                                                       aria-expanded="false"> {{ row.product_count }}</a>
+                                                    <ul class="dropdown-menu" aria-labelledby="product_dropdown_btn">
+                                                        {% for p in row.product_set.all %}
+                                                            <li><a href={% url 'product.edit' p.pk %}>{{ p.agreement_no }}</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            {% elif row.product_count == 1 %}
+                                                <a href={% url 'product.edit' row.product_set.all.0.pk %}>{{ row.product_count|default_if_none:0 }}</a>
+                                            {% endif %}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+
+
+                                        {% if row.product_set.count %}
+                                            {% for pr in row.product_set.all %}
+                                                {% if pr.creation_date == row.prod_max_creation_date %}
+                                                    <td><a href="{% url 'product.edit' pr.pk %}">{{ pr.agreement_no }}</a></td>
+                                                    <td class="currency-cell number-value-cell"><a href="{% url 'product.edit' pr.pk %}">{{ pr.value }}</a></td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <td></td>
+                                            <td></td>
+                                        {% endif %}
+
+                                {% elif type == 'BROKER' %}
+                                    {% if row.adviser %}
+                                        <td><a href="{% url 'user.edit' row.adviser.pk 'ADVISER' %}">{{ row.adviser.user.first_name }} {{ row.adviser.user.last_name }}</a></td>
+                                    {% else %}
+                                        <td>&nbsp;</td>
+                                    {% endif %}
+                                    <td class="number-value-cell"><strong>{{ row.total_value_no_annex|default_if_none:'-' }}</strong> | {{ row.total_value|default_if_none:'-' }}</td>
+                                {% endif %}
+
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        {% if type == 'EMPLOYEE' %}
+                                            <a data-id="{{ row.pk }}" href="{% url 'user.edit' row.pk 'EMPLOYEE' %}"
+                                               class="btn btn-default btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        {% endif %}
+
+                                        {% if type == 'CLIENT' %}
+                                            <div class="btn-group" role="group">
+                                                <a href="#" class="dropdown-toggle btn btn-default btn-sm" type="button"
+                                                   data-toggle="dropdown" id="product_list_dropdown_btn" aria-haspopup="true"
+                                                   aria-expanded="false"><i class="fa fa-plus"></i></a>
+                                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="product_list_dropdown_btn">
+                                                    {% for doc in document_types %}
+                                                        <li><a href={% url 'document.add' doc.pk row.user.pk %}>{{ doc.name }}</a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if type == 'ADVISER' %}
+                                            <a data-id="{{ row.pk }}" href="#"
+                                               class="btn btn-danger btn-sm user-delete-btn">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        {% endif %}
+
+                                    </div>
+                                </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'py3ws/lists/_partial/_pagination_current_form.html' %}
+    {% include 'user/_modal/_choose_adviser_modal.html' %}
+    {% include 'user/_modal/_csv_upload_modal.html' %}
+
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'user/css/user-list.css' %}" rel="stylesheet" type="text/css">
+    {% if type == 'CLIENT' %}
+        <link href="{% static 'dist/userClient/userClient-bundle.css' %}" rel="stylesheet" type="text/css">
+    {% elif type == 'BROKER' %}
+        <link href="{% static 'dist/userBroker/userBroker-bundle.css' %}" rel="stylesheet" type="text/css">
+    {% endif %}
+    <style>
+        a, a:hover {
+            color: unset;
+        }
+
+        td {
+            vertical-align: middle !important;
+        {#border-right: 1px dashed #eee;#}
+        }
+
+        td.currency-cell {
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        th:first-child {
+            border-top: none !important;
+        }
+
+        th {
+        {#            text-align: center;#}
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block site_inline_js %}
+    <script type="module" src="{% static 'user/js/user-list.js' %}"></script>
+    {% if type == 'CLIENT' %}
+        <script type="text/javascript" src="{% static 'dist/userClient/userClient-bundle.js' %}"></script>
+    {% elif type == 'BROKER' %}
+        <script type="text/javascript" src="{% static 'dist/userBroker/userBroker-bundle.js' %}"></script>
+    {% endif %}
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+
+        let user_anonimize_url = '{% url 'user.anonimize' %}';
+
+        function anonimize(id) {
+            $.ajax({
+                url: user_anonimize_url,
+                method: 'post',
+                data: {id: id}
+            }).done(function (res) {
+                alert(res.last_name_encoded);
+
+            }).fail(function (res) {
+                swal('Błąd!', res.errmsg, 'warning');
+            })
+        }
+
+
+        $(document).ready(function () {
+
+            $(document).on('click', '.anonimize', function () {
+                anonimize($(this).data('id'));
+            });
+        });
+
+    </script>
+
+
+{% endblock %}

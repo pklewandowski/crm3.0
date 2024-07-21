@@ -1,0 +1,14 @@
+@import '../../../../scss/globals';
+
+.hierarchical-checkbox-tree-container {
+  width: 100%;
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid $fieldBorderColor;
+  border-radius: $fieldBorderRadius;
+  padding: 10px 5px;
+}
+
+.hierarchical-checkbox-tree-container .jstree-themeicon-custom {
+  font-size: 15px;
+}

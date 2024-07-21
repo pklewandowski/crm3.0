@@ -1,0 +1,30 @@
+{% load l10n %}
+<tr data-id="{{ i.pk }}" data-removable="true"
+    {%if i.DELETE.value == True %} style="display: none" {% endif %}>
+    <td>
+{#        {% if index == 0 %}#}
+{#            <span class="no-input-value">{{ i.start_date.value|unlocalize }} {{ i.start_date.as_hidden }}</span>#}
+{#        {% else %}#}
+            {% include "py3ws/forms/fields/p3form_field.html" with field=i.start_date nolabel=True %}
+{#        {% endif %}#}
+    </td>
+    <td class="decimal-field">{% include "py3ws/forms/fields/p3form_field.html" with field=i.statutory_rate nolabel=True %}</td>
+    <td class="decimal-field">{% include "py3ws/forms/fields/p3form_field.html" with field=i.delay_rate nolabel=True %}</td>
+    <td class="decimal-field">{% include "py3ws/forms/fields/p3form_field.html" with field=i.delay_max_rate nolabel=True %}</td>
+    <td>{% include "py3ws/forms/fields/p3form_field.html" with field=i.type nolabel=True %}</td>
+
+    {% if index != 0 %}
+        <td>
+            <div class="delete-indicator">
+            <a href="#" class="btn btn-danger delete">
+                <i class="far fa-trash-alt"></i>
+            </a>
+            {{ i.DELETE.as_hidden }}
+        </div>
+        </td>
+    {% else %}
+        <td></td>
+    {% endif %}
+    {{ i.product.as_hidden|unlocalize }}
+    {{ i.id|unlocalize }}
+</tr>

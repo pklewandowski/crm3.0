@@ -1,0 +1,104 @@
+
+.document-process_flow-container {
+    overflow: auto;
+    height: calc(100vh - 260px);
+    height: -moz-calc(100vh - 260px);
+    height: -webkit-calc(100vh - 260px);
+}
+
+.document-process_flow-table {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.document-process_flow-table th, .document-process_flow-table td {
+    font-size: 11px;
+    font-weight: unset;
+    min-width: 120px;
+    height: 40px;
+    background-color: #e6ecf5;
+    border: 1px solid #fff;
+    text-align: center;
+    word-break: break-word;
+    padding: 5px;
+}
+
+.document-process_flow-table th {
+    font-size: 12px;
+}
+
+.document-process_flow-table th {
+    height: 30px;
+    background-color: #eee;
+}
+
+.document-process_flow-table td.document-process_flow-status_name {
+    background-color: #eee;
+    font-weight: 700;
+    font-size: 12px;
+    color: #676767;
+}
+
+.document-process_flow-table td.document-process_flow-alternate {
+    background-color: #ffa2a2;
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.document-process_flow-status div {
+    border-radius: 5px;
+    background-color: #fcefbf;
+    /* -webkit-box-shadow: inset hoff voff blur color; */
+    /* -moz-box-shadow: inset hoff voff blur color; */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, .3);
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    font-size: 11px;
+    color: #555;
+}
+
+.document-process_flow-status div.document-process_flow-status_alternate {
+    background-color: #ff7979;
+    color: white;
+}
+
+.document-process_flow-status-name-div {
+    font-size: 10px;
+}
+
+.document-process_flow-status-date-div {
+    font-size: 10px;
+}
+
+.document-process_flow-username-div {
+    font-weight:700;
+}
+
+#availableStatuses {
+    list-style: none;
+    padding: 0;
+}
+#availableStatuses li {
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+}
+
+#availableStatuses li:hover {
+    background-color: #eee;
+}
+
+.available-statuses-dropdown {
+    padding: 8px;
+}
+
+.document-status-alternate{
+    color: #d72727;
+}
+
+.available-statuses-list-arrow {
+    margin-right: 5px;
+}

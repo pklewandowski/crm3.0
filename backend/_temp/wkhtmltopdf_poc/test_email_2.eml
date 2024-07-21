@@ -1,0 +1,946 @@
+Delivered-To: pklewandowski@gmail.com
+Received: by 2002:a05:6a10:21:0:0:0:0 with SMTP id 1csp4248750pxo;
+        Tue, 19 Apr 2022 23:23:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzcGMtyuJcnwnxXgQOzuBVAuYkqdqann2KDlPSeKbYLiR3ktmQFxL+Exeuv2vTMYygjZTDC
+X-Received: by 2002:aa7:d904:0:b0:41d:728c:6cf1 with SMTP id a4-20020aa7d904000000b0041d728c6cf1mr21008731edr.366.1650435803061;
+        Tue, 19 Apr 2022 23:23:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1650435803; cv=none;
+        d=google.com; s=arc-20160816;
+        b=H0ItakeHo376OHdVw5gGfW5HDp49QR0y45LmFsbpkZWHuUQzD3uWWN9ZP7IjUDnD8e
+         jEznPCifpuISYKiugFfhVogNUQlUdXklTidR8BFF8H7NBnErC0IMpSsPyc9OJoixh4UW
+         5r6JgguxCOiGqh2VdzUOpiIsGoNrt2HuqnbQzseMhYpc+zb+GL5804lVOCXTO7TbN+QW
+         YuK7YkcRUOlQVuTiUfMJ76i3zbU6TyhOHfUWoyH6fWN3zinJVFDGzMTIKFbjRP1pgPaw
+         jY71QBSCckkxvhLhPRWjRfwl/uazZYsAmX88ZmqEOQuQpYbxTOqa9HhLlC24hS4hv+jl
+         Pf2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-unsubscribe:mime-version:subject:message-id:to:reply-to:from
+         :date:dkim-signature:dkim-signature;
+        bh=MhAY/Gy5BOKbJAe1rXU9+B5EQUAxqiDxPrm7OZlDSYE=;
+        b=ooKe76f9TuockCJ88gffw5ENdJdz5O2/8HHsxjRPR0yNbfiQkqWFpFT0/MjlvRYkow
+         eLWbWUn3FXnCR01uX6FOflYZhNNu1EhMtzxp3GUVHT0Ksa+fu1Ae5FhRDJa5LumynICQ
+         VUhS2hMaGtxl1U9H7VcmHaCYpZ31JfDKARnWs2oRV91SIYZVcELSyDZeEYG8GbQcR6r1
+         f9cWtlwdIzoPCrE2c0NbR2x7twzPBS0AYJNxQHd9FDaswZLQR99CXCNZpLPJamzK9z64
+         Bly1Oxq1fnKg2UQd3JFzkGgz87hg0ezLJNSCnszGjomzUGhnfWZUrXMGKjP1MC60as4P
+         dwGg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@event.st.com header.s=m1 header.b=R2ojBDCO;
+       dkim=pass header.i=@mktdns.com header.s=m1 header.b=EokX9LCd;
+       spf=pass (google.com: domain of 856-pvp-715.0.15308.0.0.11043.9.30591609-3@envelope.st.com designates 130.248.172.22 as permitted sender) smtp.mailfrom=856-PVP-715.0.15308.0.0.11043.9.30591609-3@envelope.st.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=st.com
+Return-Path: <856-PVP-715.0.15308.0.0.11043.9.30591609-3@envelope.st.com>
+Received: from envelope.st.com (envelope.st.com. [130.248.172.22])
+        by mx.google.com with ESMTPS id rk20-20020a170907215400b006e7edaad9ebsi1068710ejb.686.2022.04.19.23.23.22
+        for <pklewandowski@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Apr 2022 23:23:23 -0700 (PDT)
+Received-SPF: pass (google.com: domain of 856-pvp-715.0.15308.0.0.11043.9.30591609-3@envelope.st.com designates 130.248.172.22 as permitted sender) client-ip=130.248.172.22;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@event.st.com header.s=m1 header.b=R2ojBDCO;
+       dkim=pass header.i=@mktdns.com header.s=m1 header.b=EokX9LCd;
+       spf=pass (google.com: domain of 856-pvp-715.0.15308.0.0.11043.9.30591609-3@envelope.st.com designates 130.248.172.22 as permitted sender) smtp.mailfrom=856-PVP-715.0.15308.0.0.11043.9.30591609-3@envelope.st.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=st.com
+X-MSFBL: gkdjW4nKkd584KxBOhlGSH+6XTksEZmdjOtOuf7pZQs=|eyJyIjoicGtsZXdhbmR
+	vd3NraUBnbWFpbC5jb20iLCJnIjoiYmctbmxkMWQtMTIiLCJ1IjoiODU2LVBWUC0
+	3MTU6MDo5NDEwOjI3MjczOjczMDg1OjExMDQzOjk6MTUzMDg6MzA1OTE2MDktMyI
+	sImIiOiJkdnAtMTMwLTI0OC0xNzItMjIifQ==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1650434742;
+	s=m1; d=event.st.com; i=@event.st.com;
+	h=Content-Type:MIME-Version:Subject:To:From:Date;
+	bh=MhAY/Gy5BOKbJAe1rXU9+B5EQUAxqiDxPrm7OZlDSYE=;
+	b=R2ojBDCOcI2kVzlfjUXt9mNHm2GvNbCL8M0uPO8GOHyrm6rniaiMXqtD9uK8Fil+
+	vW7FAo8ngh0yhy4pByGAY2OmyqN8gIZhACfESVq5qZCkJGGVnVhHHzyAMarZ1stVd1s
+	RiZL6aw12qVhuih0njH3+eStcbM+Tv2si8OW/WYE=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1650434742;
+	s=m1; d=mktdns.com; i=@mktdns.com;
+	h=Content-Type:MIME-Version:Subject:To:From:Date;
+	bh=MhAY/Gy5BOKbJAe1rXU9+B5EQUAxqiDxPrm7OZlDSYE=;
+	b=EokX9LCdqXY2EkZzGvOhhnmgXVo1g1E/2ojRzKEPe0oxRqi+iSJyhPhIPLZ2zdKL
+	P7Lm6LX8+meMOvNZH99xnjJjziAJytKdgRlZDUrutQGM2AvUvuCZ4CTD9+SLzYC//0+
+	FgJDDZ/ltXDzRN6+iTt5XSoBODymrU6/WURf7x2s=
+Date: Wed, 20 Apr 2022 01:05:42 -0500 (CDT)
+From: STMicroelectronics <st@event.st.com>
+Reply-To: marketing.automation@st.com
+To: pklewandowski@gmail.com
+Message-ID: <329786714.1531337.1650434742895@nld1mktmail-batch1e.marketo.org>
+Subject: [Webinar] Turnkey solution to control gesture recognition with the
+ fastest, multizone and miniature ToF sensor
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_1531335_258757575.1650434742895"
+X-Binding: bg-nld1d-12
+List-Unsubscribe: <mailto:KRHDE5LXJV5FMU3TLJXV6TKONZKUI5DLKNTHANSFJRFW4WRZJBTGYTCGNFKHGZDUNFPVSPI=.15308.11043.9@unsub-nld1.mktomail.com>
+X-PVIQ: mkto-856PVP715-000001-000000-015308
+X-MarketoID: 856-PVP-715:0:9410:27273:73085:11043:9:15308:30591609-3
+X-Mailfrom: 856-PVP-715.0.15308.0.0.11043.9.30591609-3@envelope.st.com
+X-MktArchive: false
+X-MSYS-API: {"options":{"open_tracking":false,"click_tracking":false}}
+X-MktMailDKIM: true
+
+------=_Part_1531335_258757575.1650434742895
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+View in browser <[[https://content.st.com/index.php/email/emailWebview?mkt_=
+tok=3DODU2LVBWUC03MTUAAAGD5IxKaHvmpzB6vPFynftQ5512N6GStafcadogyhRXSetyewzk3=
+Md8diFYb_Vg4Ij8X0ZzBVqKi6K6VntNb6Twp-OA5PGT2yy2kR6kjDK00Qx3&md_id=3D11043]]=
+>
+Webinar
+Discover the new Gesture Recognition feature for VL53L5CX Time-of-Flight se=
+nsor opening new interaction possibilities
+<div style=3D"text-align: left;"><span style=3D"color: #ffffff;"><span styl=
+e=3D"font-size: 20px; color: #ffd200;">Tuesday, April 26<sup>th</sup> 2022<=
+/span></span></div>
+=E2=96=BA 03:00 pm CEST | EMEA session
+=E2=96=BA 02:00 pm EDT | AME session
+Hi Piotr
+
+Join our 1-hour webinar to discover ST's new turnkey Gesture Recognition so=
+lution for Time-of-Flight (ToF) sensors that opens new possibilities for en=
+hanced user interactions. This brand-new package dramatically reduces desig=
+n times thanks to its intuitive GUI and ready-to-use example code. Customed=
+-made for the multi-zone VL53L5CX sensor, it enables hand tracking, swipe, =
+tap, push/pull and many more.
+UPCOMING EVENTS & TECHNICAL SEMINARS
+
+Learn new skills and discover the latest technologies through our events, o=
+nline courses and seminars as well as many other resources
+<https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaPlw-8jgDeBG5VBfFV6YVKhDJf2t9OrK=
+ikBiH5dpduq4YZ0MP-SnYByqcQ-Rx-w4wtk=3D>=C2=A0=C2=A0=C2=A0  <https://go.st.c=
+om/ODU2LVBWUC03MTUAAAGD5IxKZ9bZdBSZf4Qoypudx022uaehab5yVo_-vGvfvh8_jH8ya-Iz=
+t6fx6JhSGJUrXzC0V1o=3D>=C2=A0=C2=A0=C2=A0  <https://go.st.com/ODU2LVBWUC03M=
+TUAAAGD5IxKaODOq0BC-4TVJqGdlYFdsZLE0PNcAYuFd4UXqsGmjeXjIKnIQ5XBTcXxfTbjQ1NB=
+_KE=3D>=C2=A0=C2=A0=C2=A0  <https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaIc88=
+qdWmjGhxnjlwRUDSzRYX-__Xoso8RoUn8524SIMb3-WeGjBhhX1stylKKZXHq8=3D>=C2=A0=C2=
+=A0=C2=A0  <https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKZ6Y9_qaAAb9yDMHXKp2y-=
+F99z-Z-M3p_YWlrr9DPBI-DynneU5sHeU-_gnQWry8RvY0=3D>
+If you are no longer interested in receiving this type of information, you =
+can unsubscribe  <https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaM25p90hbLXpIM8=
+PHmFaEOo8MRGHzYOXdwBbPn9Ef6jxI0aDSvTSFotiRED8_75HMqQ=3D> or manage your pre=
+ferences in our subscription center <https://go.st.com/ODU2LVBWUC03MTUAAAGD=
+5IxKZ0X7KTBU8O4l_LUKwlVK1iasSYbRT4CRKFPwrRABrUl-wGmjKK0PXPkFTpX_PcCHR3Y=3D>=
+.
+=C2=A92022 STMicroelectronics Int N.V - All rights reserved | Terms of Use =
+<https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKZ4ilsZ4PfZznrcXGGWlAiX87Lwa1H32V=
+CaddMBKForVYpliXyB_RQnRPgxO5wijFfqU=3D> | Privacy Policy <https://go.st.com=
+/ODU2LVBWUC03MTUAAAGD5IxKZ_PRVEYSHFuUbzEgMMTWoeqTclUfJQbVLnUjRubvwpCcthc_li=
+e91akiKYUK4WhYDqc=3D> | Contacts <https://go.st.com/ODU2LVBWUC03MTUAAAGD5Ix=
+KaONWjh9hgR_SiTBvRHB69c8pYUR0H1gVUGXID2IS-ciTIAQ4eZ6UyEuqty3EHQbFWhY=3D>
+
+This email was sent to pklewandowski@gmail.com. If you no longer wish to re=
+ceive these emails you may unsubscribe here: https://content.st.com/Unsubsc=
+ribePage.html?mkt_unsubscribe=3D1&mkt_tok=3DODU2LVBWUC03MTUAAAGD5IxKaHvmpzB=
+6vPFynftQ5512N6GStafcadogyhRXSetyewzk3Md8diFYb_Vg4Ij8X0ZzBVqKi6K6VntNb6Twp-=
+OA5PGT2yy2kR6kjDK00Qx3.
+
+------=_Part_1531335_258757575.1650434742895
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www=
+.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=3D"https://www.w3.org/1999/xhtml" xmlns:v=3D"urn:schemas-micros=
+oft-com:vml" xmlns:o=3D"urn:schemas-microsoft-com:office:office">
+<head>
+<style type=3D"text/css">
+        .ii a[href]{
+        text-decoration: none !important;
+        }
+        a[href]{
+        text-decoration: none !important; =20
+        }
+        a{
+        text-decoration: none !important;
+        }
+    </style> =20
+<!--[if gte mso 9]>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:AllowPNG/>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+                http
+            </o:OfficeDocumentSettings>
+        </xml>
+        <![endif]-->=20
+<!--[if mso]>
+        <style type=3D'text/css'>
+            .primary-font {
+            font-family: Arial, sans-serif !important;mso-line-height-rule:=
+exactly !important;
+            }
+        </style>
+        <![endif]-->=20
+<meta https-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF-8" /=
+>=20
+<meta name=3D"viewport" content=3D"width=3Ddevice-width" />=20
+<title>
+        </title>=20
+<!--body background color--> =20
+<!--body background color ends here-->=20
+<!--bgclors-->     =20
+<!--bgcolors ends here-->=20
+<!--top/bottom spacing-->                =20
+<!--text colors-->            =20
+<!--cta variables-->                        =20
+<style type=3D"text/css">
+            #outlook a {padding:0; }
+            .ReadMsgBody {width: 100%; }
+            .ExternalClass {width: 100%; }
+            .ExternalClass * {line-height:100%; }
+            body {margin: 0; padding:0; }
+            table, td {border-collapse:collapse; mso-table-lspace: 0pt; mso=
+-table-rspace: 0pt;}
+            img {border: 0; height: auto; line-height: 100%; outline: none;=
+ text-decoration: none; -ms-interpolation-mode: bicubic;}
+            p {display: block; margin: 13px 0;}
+            h3 {margin-top:0; padding-top:0;}
+            a {text-decoration:none;}
+        </style>=20
+<style type=3D"text/css">
+            @media only screen and (max-width:480px) {
+            @-ms-viewport { width:320px; }
+            @viewport { width:320px; }
+            }
+        </style>=20
+<style type=3D"text/css">
+            @media only screen and (max-width:480px) {
+            .bann{ height: auto !important; }
+            .cent{ width:100% !important; max-width:100% !important; height=
+:auto !important}
+            }
+        </style>=20
+<style type=3D"text/css">
+            @media only screen and (max-width:480px) {
+            .ios{ width:100% !important; }
+            }
+        </style>=20
+<style type=3D"text/css">
+            @media (max-width:640px)
+            {
+            .inner_table{width:90% !important;margin:0 auto !important;}
+            .main{width:100% !important;min-width:100% !important;}
+            .res{width:100% !important;display:block !important;}
+            .block1{display:block !important;margin:0 auto !important;}
+            .block2{display:block !important;margin:0 auto !important;text-=
+align:center;}
+            .block3{display:block !important;margin:0 auto !important;text-=
+align:center;}
+            .full-width1{width:100% !important;height:auto !important;}
+            }
+        </style>=20
+<style type=3D"text/css">
+            @media only screen and (min-width:480px) {
+            .mj-column-per-10, * [aria-labelledby=3D"mj-column-per-10"] { w=
+idth:10%!important; }
+            .mj-column-per-20, * [aria-labelledby=3D"mj-column-per-20"] { w=
+idth:20%!important; }
+            .mj-column-per-30, * [aria-labelledby=3D"mj-column-per-30"] { w=
+idth:30%!important; }
+            .mj-column-per-40, * [aria-labelledby=3D"mj-column-per-40"] { w=
+idth:40%!important; }
+            .mj-column-per-50, * [aria-labelledby=3D"mj-column-per-50"] { w=
+idth:50%!important; }
+            .mj-column-per-60, * [aria-labelledby=3D"mj-column-per-60"] { w=
+idth:60%!important; }
+            .mj-column-per-70, * [aria-labelledby=3D"mj-column-per-70"] { w=
+idth:70%!important; }
+            .mj-column-per-80, * [aria-labelledby=3D"mj-column-per-80"] { w=
+idth:80%!important; }
+            .mj-column-per-90, * [aria-labelledby=3D"mj-column-per-90"] { w=
+idth:90%!important; }
+            .mj-column-per-100, * [aria-labelledby=3D"mj-column-per-100"] {=
+ width:100%!important; }
+            .mj-column-per-25, * [aria-labelledby=3D"mj-column-per-25"] { w=
+idth:25%!important; }
+            .mj-column-per-75, * [aria-labelledby=3D"mj-column-per-75"] { w=
+idth:75%!important; }
+            .mj-column-per-33, * [aria-labelledby=3D"mj-column-per-33"] { w=
+idth:33%!important; }
+            .mj-column-per-66, * [aria-labelledby=3D"mj-column-per-66"] { w=
+idth:66%!important; }
+            }
+        </style>=20
+<style type=3D"text/css">
+            @media (max-width:640px)
+            {
+            .dir-none{
+            direction: none !important;
+            }
+            .center{text-align:center !important;}
+            .inner_table{width:90% !important;margin:0 auto;}
+            .padTop{padding-top:40px !important;}
+            .iphoneHeight{height:30px !important;}
+            .marginAuto{float:none !important;margin:0 auto !important;}
+            .full-width1 img{width:100% !important;height:auto !important;}
+            .iphoneHeight{height:25px !important;}
+            .floatnone{float:none!important}
+            .nopadd{padding:0 !important;}
+            .fontSize11{font-size:11px !important;line-height:15px !importa=
+nt;}
+            .logoImage img{width:120px !important;height:auto !important;}
+            .hidden {display: none!important;}
+            }
+        </style>=20
+<style type=3D"text/css">
+            @media only screen and (min-device-width: 768px) and (max-devic=
+e-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
+            .ios{ width:180px !important; }
+            .ipaddmi{ width:270px !important; }
+            .ipadtiers{ width:80px !important; float:left; display:block;}
+            .ipaddetiers{ width:390px !important; float:right; display:bloc=
+k;}
+            .bannerlarge{height: 269px !important; width: 269px !important;=
+}
+            .ios.largest{width:100% !important;}
+            }
+        </style>=20
+<style type=3D"text/css">
+            .gs li{
+            display: inline-block;
+            vertical-align: middle!important;
+            }
+            span > a[href] {
+            color: #ff7900;
+            }
+        </style>=20
+</head>=20
+<body style=3D"margin-bottom: 0; -webkit-text-size-adjust: 100%; padding-bo=
+ttom: 0;  margin-top: 0; margin-right: 0; -ms-text-size-adjust: 100%; margi=
+n-left: 0; padding-top: 0; padding-right: 0; padding-left: 0; width: 100%;"=
+><style type=3D"text/css">div#emailPreHeader{ display: none !important; }</=
+style><div id=3D"emailPreHeader" style=3D"mso-hide:all; visibility:hidden; =
+opacity:0; color:transparent; mso-line-height-rule:exactly; line-height:0; =
+font-size:0px; overflow:hidden; border-width:0; display:none !important;">W=
+ebinar invitation</div>=20
+<!-- Outer table START -->=20
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" styl=
+e=3D"-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-=
+lspace: 0pt; mso-table-rspace: 0pt;  border-spacing: 0; border-collapse: co=
+llapse;margin:0 auto;">=20
+<tbody>
+<tr>=20
+<td style=3D"background-color:#EDEEF0;" bgcolor=3D"#EDEEF0">=20
+<table class=3D"mktoContainer main" id=3D"UniqueContainer" align=3D"center"=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"border:0 !import=
+ant; padding:0 !important; margin:0 auto; border-collapse:collapse !importa=
+nt; width:600px;" width=3D"600">
+<tr class=3D"mktoModule" id=3D"MOD-STD-PSTFTR37541ca2-31b2-421f-9e8e-68894e=
+25ad68" style=3D"padding:0 !important; margin:0 !important;">=20
+<td bgcolor=3D"#edeef0" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#edeef0;">=20
+<table cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%; font-size:0=
+; background:#edeef0;" align=3D"center">=20
+<tbody>=20
+<tr>=20
+<td style=3D"font-size:10px; line-height:10px" height=3D"10">&nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td style=3D"text-align:center; vertical-align:top; font-size:0;">=20
+<!--[if mso]>
+                                                <table border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0">
+                                                    <tr>
+                                                        <td style=3D"width:=
+600px;">
+                                                            <![endif]-->=20
+<div style=3D"vertical-align:top; display:inline-block; font-size:10px; tex=
+t-align:left; width:100%;" class=3D"mj-column-per-100" aria-labelledby=3D"m=
+j-column-per-100">=20
+<table width=3D"550" class=3D"inner_table" border=3D"0" align=3D"center" ce=
+llpadding=3D"0" cellspacing=3D"0" style=3D"width:550px;margin:0 auto;">=20
+<tbody>=20
+<tr>=20
+<td valign=3D"top" style=3D"vertical-align:top;" align=3D"center">=20
+<div class=3D"mktoSnippet" id=3D"top-opt-out-snippet37541ca2-31b2-421f-9e8e=
+-68894e25ad68"></div> </td>=20
+</tr>=20
+<tr>=20
+<td height=3D"15" style=3D"line-height:1px;font-size:1px;">&nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td valign=3D"top" style=3D"vertical-align:top;" align=3D"center">=20
+<div class=3D"mktoSnippet" id=3D"top-opt-out-snippet137541ca2-31b2-421f-9e8=
+e-68894e25ad68">
+ <p style=3D"line-height: 180%; text-align: right;"><span color=3D"#a3a2a7"=
+ style=3D"color: #a3a2a7;"><span style=3D"font-size: 12px;"><span style=3D"=
+font-family: arial, helvetica, sans-serif;"><a href=3D"https://content.st.c=
+om/index.php/email/emailWebview?mkt_tok=3DODU2LVBWUC03MTUAAAGD5IxKaHvmpzB6v=
+PFynftQ5512N6GStafcadogyhRXSetyewzk3Md8diFYb_Vg4Ij8X0ZzBVqKi6K6VntNb6Twp-OA=
+5PGT2yy2kR6kjDK00Qx3&md_id=3D11043" target=3D"_blank" id=3D"" style=3D"colo=
+r: #3cb4e6; text-decoration: none;">View in browser</a></span><br /></span>=
+</span></p>=20
+</div> </td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+</div>=20
+<!--[if mso]>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <![endif]--> </td>=20
+</tr>=20
+<tr>=20
+<td style=3D"font-size:5px; line-height:5px" height=3D"5">&nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-ONE-LOGO" style=3D"padding:0 !important;=
+ margin:0 !important;">=20
+<td bgcolor=3D"#ffffff" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#ffffff;">=20
+<table width=3D"550" class=3D"inner_table" border=3D"0" align=3D"center" ce=
+llpadding=3D"0" cellspacing=3D"0" style=3D"width:550px;margin:0 auto;">=20
+<tbody>=20
+<tr>=20
+<td style=3D"font-size:1px; line-height:1px" height=3D"20">&nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td class=3D"logoImage" style=3D"text-align:center; vertical-align:top;">=
+=20
+<div class=3D"mktoImg" id=3D"logo-image" mktolockimgsize=3D"true">=20
+<a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKZ9u12IQ0vYUkaVFaogQqJ8JbHYACiLfU=
+kZvd0hHgh0k9pedAzAFEVGwW_l8yPwLAFEc=3D" target=3D"_blank"
+> <img alt=3D"STMicroelectronics" src=3D"https://content.st.com/rs/856-PVP-=
+715/images/STMicro logo.png" border=3D"0" width=3D"110" style=3D"" /></a>=
+=20
+</div> </td>=20
+</tr>=20
+<tr>=20
+<td style=3D"font-size:1px; line-height:1px" height=3D"20">&nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-1CO-TXTfab56755-80b8-4ad2-89b0-e3e129f96=
+89e33173f17-15ed-44ca-b311-19beccf7df1e75e53541-c49e-45fb-90a3-1cea41011194=
+" style=3D"padding:0 !important; margin:0 !important;">=20
+<td bgcolor=3D"#FFD200" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#FFD200;">=20
+<table class=3D"inner_table" width=3D"550" align=3D"center" cellpadding=3D"=
+0" cellspacing=3D"0" style=3D"width:550px; margin:0 auto;">=20
+<tbody>=20
+<tr height=3D"7" style=3D"height:7px;">=20
+<td style=3D"height:7px; font-size:7px; line-height:7px" height=3D"7">&nbsp=
+;</td>=20
+</tr>=20
+<tr>=20
+<td class=3D"primary-font" valign=3D"top" style=3D"text-align:left;font-fam=
+ily:arial,sans-serif,helvetica,sans-serif; font-size:14px; line-height:21px=
+; font-weight:normal;color:#03234b;">=20
+<div class=3D"primary-font mktoText" id=3D"MOD-1CO-108a36f62ce-5133-4a98-98=
+72-578e95e21812fab56755-80b8-4ad2-89b0-e3e129f9689e33173f17-15ed-44ca-b311-=
+19beccf7df1e75e53541-c49e-45fb-90a3-1cea41011194">=20
+<div style=3D"text-align: center;">=20
+<span style=3D"color: #03234b; font-size: 18px;"><strong>Webinar</strong></=
+span>=20
+</div>=20
+</div> </td>=20
+</tr>=20
+<tr height=3D"7" style=3D"height:7px;">=20
+<td style=3D"height:7px; font-size:7px; line-height:7px" height=3D"7">&nbsp=
+;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-BNR-IMG" style=3D"padding:0 !important; =
+margin:0 !important;">=20
+<td style=3D"padding:0 !important; margin:0 !important;">=20
+<div style=3D"margin:0 auto; padding:0; max-width:600px; background-color:#=
+ffffff">=20
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%=
+; font-size:0; background-color:#ffffff" align=3D"center">=20
+<tbody>=20
+<tr>=20
+<td style=3D"text-align:center; vertical-align:top; font-size:0;">=20
+<!--[if mso]>
+                                                    <table border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"0">
+                                                        <tr>
+                                                            <td style=3D"wi=
+dth:600px;">
+                                                                <![endif]--=
+>=20
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"border-col=
+lapse:collapse; border-spacing:0;" align=3D"center">=20
+<tbody>=20
+<tr>=20
+<td>=20
+<div class=3D"mktoImg" id=3D"MOD-BNR-22240e01692-332c-4a8e-b704-2b36fddcece=
+d" mktolockimgsize=3D"true" mktolockimgstyle=3D"true">=20
+<a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaJrN_JrLsMONk9qqFIZ4tJ0EwXpkS10A=
+OPfT-2Oi5ZH6dngOHhmzEhDYZVlpmBPmVvQ=3D" target=3D"_blank"
+><img src=3D"https://content.st.com/rs/856-PVP-715/images/ev-MLT-gesture-re=
+cognition-feature.png" width=3D"600" alt=3D"gesture-recognition-feature-for=
+-vl53l5cx-time-of-flight-sensor" class=3D"full-width1" style=3D"border:none=
+; display:block; outline:none; text-decoration:none;height:auto;" /></a>=20
+</div> </td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+<!--[if mso]>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <![endif]--> </td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+</div> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-1CO-TITLE" style=3D"padding:0 !important=
+; margin:0 !important;">=20
+<td bgcolor=3D"#03234b" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#03234b;">=20
+<table class=3D"inner_table" width=3D"550" align=3D"center" cellpadding=3D"=
+0" cellspacing=3D"0" style=3D"width:550px; margin:0 auto;">=20
+<tbody>=20
+<tr>=20
+<td style=3D"font-size:0px; line-height:0px" height=3D"0">&nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td class=3D"primary-font" valign=3D"top" style=3D"text-align:left;font-fam=
+ily:arial,sans-serif,helvetica,sans-serif; font-size:14px; line-height:28px=
+; color:#ffffff;font-weight:bold;text-transform:none;">=20
+<div class=3D"primary-font mktoText" id=3D"simpletxt">=20
+<p style=3D"text-align: left;"><span style=3D"color: #ffffff; font-size: 22=
+px;">Discover the new Gesture Recognition feature for VL53L5CX Time-of-Flig=
+ht sensor opening new interaction possibilities</span></p>=20
+<div style=3D"text-align: left;">=20
+<span style=3D"color: #ffffff;"><span style=3D"font-size: 20px; color: #ffd=
+200;"><div style=3D"text-align: left;"><span style=3D"color: #ffffff;"><spa=
+n style=3D"font-size: 20px; color: #ffd200;">Tuesday, April 26<sup>th</sup>=
+ 2022</span></span></div></span></span>=20
+</div>=20
+<div style=3D"text-align: left;">=20
+<span style=3D"color: #ffffff;"><span style=3D"font-size: 18px; color: #ffd=
+200;"><span style=3D"color: #ffffff; font-size: 16px;">=E2=96=BA 03:00 pm C=
+EST | EMEA session<br /><span style=3D"color: #ffffff; font-family: arial, =
+sans-serif, helvetica, sans-serif; font-size: 16px; font-style: normal; fon=
+t-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; =
+letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; tex=
+t-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webk=
+it-text-stroke-width: 0px; background-color: #03234b; text-decoration-thick=
+ness: initial; text-decoration-style: initial; text-decoration-color: initi=
+al; display: inline !important; float: none;">=E2=96=BA 02:00 pm EDT | AME =
+sessio</span>n</span></span></span>=20
+</div>=20
+</div> </td>=20
+</tr>=20
+<tr>=20
+<td style=3D"font-size:10px; line-height:10px" height=3D"10">&nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-STD-BLANKSEPa74110d3-1cd7-403d-bd32-945a=
+3565dc92" style=3D"padding:0 !important; margin:0 !important;">=20
+<td bgcolor=3D"#edeef0" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#edeef0;">=20
+<table cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%; font-size:0=
+; background:#edeef0;" align=3D"center">=20
+<tbody>=20
+<tr>=20
+<td style=3D"height:20px; font-size:20px; line-height:20px" height=3D"20">&=
+nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-1CO-TXTe172b72d-df97-4c67-844e-34d570132=
+984" style=3D"padding:0 !important; margin:0 !important;">=20
+<td bgcolor=3D"#ffffff" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#ffffff;">=20
+<table class=3D"inner_table" width=3D"550" align=3D"center" cellpadding=3D"=
+0" cellspacing=3D"0" style=3D"width:550px; margin:0 auto;">=20
+<tbody>=20
+<tr height=3D"10" style=3D"height:10px;">=20
+<td style=3D"height:10px; font-size:10px; line-height:10px" height=3D"10">&=
+nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td class=3D"primary-font" valign=3D"top" style=3D"text-align:left;font-fam=
+ily:arial,sans-serif,helvetica,sans-serif; font-size:14px; line-height:21px=
+; font-weight:normal;color:#03234b;">=20
+<div class=3D"primary-font mktoText" id=3D"MOD-1CO-108a36f62ce-5133-4a98-98=
+72-578e95e21812e172b72d-df97-4c67-844e-34d570132984">=20
+<p><span style=3D"font-size: 14px;"><strong> Hi Piotr</strong></span></p>=
+=20
+<p><span style=3D"font-size: 13px;"><span style=3D"color: #03234b; font-fam=
+ily: arial, sans-serif, helvetica, sans-serif; font-size: 13px; font-style:=
+ normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-=
+spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-trans=
+form: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text=
+-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: i=
+nitial; text-decoration-style: initial; text-decoration-color: initial; flo=
+at: none; display: inline !important;">Join our 1-hour webinar to discover =
+ST's new turnkey Gesture Recognition solution for Time-of-Flight (ToF) sens=
+ors that opens new possibilities for enhanced user interactions. This brand=
+-new package dramatically reduces design times thanks to its intuitive GUI =
+and ready-to-use example code. Customed-made for the multi-zone VL53L5CX se=
+nsor, it enables hand tracking, swipe, tap, push/pull and many more.</span>=
+</span></p>=20
+</div> </td>=20
+</tr>=20
+<tr height=3D"5" style=3D"height:5px;">=20
+<td style=3D"height:5px; font-size:5px; line-height:5px" height=3D"5">&nbsp=
+;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-1CO-CTAc23da26a-1d48-4d74-9766-ca4f9c6b4=
+240" style=3D"padding:0 !important; margin:0 !important;">=20
+<td bgcolor=3D"#ffffff" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#ffffff;">=20
+<table class=3D"inner_table" width=3D"550" align=3D"center" cellpadding=3D"=
+0" cellspacing=3D"0" style=3D"width:550px; margin:0 auto;background-color:#=
+ffffff;">=20
+<tbody>=20
+<tr height=3D"5" style=3D"height:5px;">=20
+<td style=3D"height:5px; font-size:5px; line-height:5px" height=3D"5">&nbsp=
+;</td>=20
+</tr>=20
+<tr>=20
+<td class=3D"block center" valign=3D"top" style=3D"">=20
+<div class=3D"mktoText" id=3D"left-cta31c23da26a-1d48-4d74-9766-ca4f9c6b424=
+0">=20
+<table style=3D"margin:0 auto;" class=3D"center" align=3D"center" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0">=20
+<tbody>=20
+<tr>=20
+<td class=3D"primary-font" style=3D"background-color:#03234B; font-family:a=
+rial,sans-serif,helvetica,sans-serif; font-size:14px; line-height:16px; mso=
+-line-height-rule: exactly;text-align: center; vertical-align: top; color:#=
+ffffff;font-weight: bold;padding:9px 15px;border:2px solid #03234B;text-tra=
+nsform:none;" valign=3D"top"> <a style=3D"text-decoration: none;color: #fff=
+fff;outline: none;" href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaJrN_JrLsMONk9qqFIZ4tJ0EwXpkS10A=
+OPfT-2Oi5ZH6dngOHhmzEhDYZVlpmBPmVvQ=3D"
+>Register now</a> </td>=20
+</tr>=20
+<tr>=20
+<td style=3D"font-size: 1px;line-height: 1px;" height=3D"2">&nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+</div> </td>=20
+</tr>=20
+<tr height=3D"20" style=3D"height:20px;">=20
+<td style=3D"height:20px; font-size:20px; line-height:20px" height=3D"20">&=
+nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-STD-BLANKSEPa74110d3-1cd7-403d-bd32-945a=
+3565dc92676f9d6f-c515-4ce5-86b2-b9b186d021f4fbbb5616-e4d3-4d0d-8fa3-67c41a0=
+8d765" style=3D"padding:0 !important; margin:0 !important;">=20
+<td bgcolor=3D"#edeef0" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#edeef0;">=20
+<table cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%; font-size:0=
+; background:#edeef0;" align=3D"center">=20
+<tbody>=20
+<tr>=20
+<td style=3D"height:20px; font-size:20px; line-height:20px" height=3D"20">&=
+nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-STD-LINESEP7d1059da-5aa8-4bc5-ab3f-9129f=
+89feab7d5844409-ca5c-4ce4-8bfc-8679f2fd244a" style=3D"padding:0 !important;=
+ margin:0 !important;">=20
+<td style=3D"padding:0 !important; margin:0 !important;">=20
+<table cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%;" align=3D"c=
+enter">=20
+<tbody>=20
+<tr>=20
+<td style=3D"text-align:center; vertical-align:top;">=20
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%">=20
+<tbody>=20
+<tr>=20
+<td height=3D"4" style=3D"background-color:#ffd200;font-size:4px;line-heigh=
+t:4px;">&nbsp; </td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-1CO-TXT296c3a96-1d4e-40e5-9652-125a25b29=
+8db" style=3D"padding:0 !important; margin:0 !important;">=20
+<td bgcolor=3D"#03234b" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#03234b;">=20
+<table class=3D"inner_table" width=3D"550" align=3D"center" cellpadding=3D"=
+0" cellspacing=3D"0" style=3D"width:550px; margin:0 auto;">=20
+<tbody>=20
+<tr height=3D"10" style=3D"height:10px;">=20
+<td style=3D"height:10px; font-size:10px; line-height:10px" height=3D"10">&=
+nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td class=3D"primary-font" valign=3D"top" style=3D"text-align:left;font-fam=
+ily:arial,sans-serif,helvetica,sans-serif; font-size:14px; line-height:21px=
+; font-weight:normal;color:#03234b;">=20
+<div class=3D"primary-font mktoText" id=3D"MOD-1CO-108a36f62ce-5133-4a98-98=
+72-578e95e21812296c3a96-1d4e-40e5-9652-125a25b298db">=20
+<p style=3D"line-height: 180%; text-align: center;"><span style=3D"color: #=
+ffffff; font-size: 14px;"><span style=3D"font-size: 18px;"><strong>UPCOMING=
+ <span style=3D"color: #ffffff;">EVENTS</span> &amp; TECHNICAL SEMINARS<br =
+/></strong></span><br />Learn new skills and discover the latest technologi=
+es through our events, online courses and seminars as well as many other re=
+sources</span></p>=20
+</div> </td>=20
+</tr>=20
+<tr height=3D"0" style=3D"height:0px;">=20
+<td style=3D"height:0px; font-size:0px; line-height:0px" height=3D"0">&nbsp=
+;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-1CO-CTA" style=3D"padding:0 !important; =
+margin:0 !important;">=20
+<td bgcolor=3D"#03234B" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#03234B;">=20
+<table class=3D"inner_table" width=3D"550" align=3D"center" cellpadding=3D"=
+0" cellspacing=3D"0" style=3D"width:550px; margin:0 auto;background-color:#=
+03234B;">=20
+<tbody>=20
+<tr height=3D"10" style=3D"height:10px;">=20
+<td style=3D"height:10px; font-size:10px; line-height:10px" height=3D"10">&=
+nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td class=3D"block center" valign=3D"top" style=3D"">=20
+<div class=3D"mktoText" id=3D"left-cta31">=20
+<table style=3D"margin:0 auto;" class=3D"center" align=3D"center" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0">=20
+<tbody>=20
+<tr>=20
+<td class=3D"primary-font" style=3D"background-color:#ffffff; font-family:a=
+rial,sans-serif,helvetica,sans-serif; font-size:14px; line-height:16px; mso=
+-line-height-rule: exactly;text-align: center; vertical-align: top; color:#=
+03234B;font-weight: bold;padding:9px 15px;border:2px solid #ffffff;text-tra=
+nsform:none;" valign=3D"top"> <a style=3D"text-decoration: none;color: #032=
+34B;outline: none;" href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaAxFkfReLGYYr42KGFe7xo9fS33v5P-a=
+v9JgElmTd4c6QVApyQ93mMuFolbs5SEcy5o=3D"
+>Find one near you!</a> </td>=20
+</tr>=20
+<tr>=20
+<td style=3D"font-size: 1px;line-height: 1px;" height=3D"2">&nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+</div> </td>=20
+</tr>=20
+<tr height=3D"20" style=3D"height:20px;">=20
+<td style=3D"height:20px; font-size:20px; line-height:20px" height=3D"20">&=
+nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-STD-LINESEP7d1059da-5aa8-4bc5-ab3f-9129f=
+89feab7" style=3D"padding:0 !important; margin:0 !important;">=20
+<td style=3D"padding:0 !important; margin:0 !important;">=20
+<table cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%;" align=3D"c=
+enter">=20
+<tbody>=20
+<tr>=20
+<td style=3D"text-align:center; vertical-align:top;">=20
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%">=20
+<tbody>=20
+<tr>=20
+<td height=3D"4" style=3D"background-color:#ffd200;font-size:4px;line-heigh=
+t:4px;">&nbsp; </td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-FTR-SOCIAL" style=3D"padding:0 !importan=
+t; margin:0 !important;">=20
+<td bgcolor=3D"#ffffff" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#ffffff;">=20
+<table cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%; font-size:0=
+; background-color:#ffffff;" align=3D"center">=20
+<tbody>=20
+<tr>=20
+<td style=3D"font-size:20px; line-height:20px" height=3D"20">&nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td style=3D"text-align:center; vertical-align:middle !important; font-size=
+:0; padding:0;">=20
+<!--[if mso]>
+                                                <table border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0">
+                                                    <tr>
+                                                        <td style=3D"width:=
+600px;">
+                                                            <![endif]-->=20
+<div style=3D"vertical-align:middle !important; display:inline-block; font-=
+size:13px; text-align:center; width:100%;" class=3D"mj-column-per-100" aria=
+-labelledby=3D"mj-column-per-100">=20
+<table width=3D"550" class=3D"inner_table" border=3D"0" align=3D"center" ce=
+llpadding=3D"0" cellspacing=3D"0" style=3D"width:550px;margin:0 auto;">=20
+<tbody>=20
+<tr>=20
+<td style=3D"text-align:center;vertical-align:top;">=20
+<div class=3D"mktoText" id=3D"social-icons">=20
+<div>=20
+<a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaPlw-8jgDeBG5VBfFV6YVKhDJf2t9OrK=
+ikBiH5dpduq4YZ0MP-SnYByqcQ-Rx-w4wtk=3D" style=3D"text-decoration: none; out=
+line: none;"
+><img src=3D"https://content.st.com/rs/856-PVP-715/images/Twitter.png" alt=
+=3D"" width=3D"32" /></a>&nbsp;&nbsp;&nbsp;=20
+<a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKZ9bZdBSZf4Qoypudx022uaehab5yVo_-=
+vGvfvh8_jH8ya-Izt6fx6JhSGJUrXzC0V1o=3D" style=3D"text-decoration: none; out=
+line: none;"
+><img src=3D"https://content.st.com/rs/856-PVP-715/images/Facebook.png" alt=
+=3D"" width=3D"32" /></a>&nbsp;&nbsp;&nbsp;=20
+<a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaODOq0BC-4TVJqGdlYFdsZLE0PNcAYuF=
+d4UXqsGmjeXjIKnIQ5XBTcXxfTbjQ1NB_KE=3D" style=3D"text-decoration: none; out=
+line: none;"
+><img src=3D"https://content.st.com/rs/856-PVP-715/images/LinkedIn.png" alt=
+=3D"LinkedIn" width=3D"32" /></a>&nbsp;&nbsp;&nbsp;=20
+<a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaIc88qdWmjGhxnjlwRUDSzRYX-__Xoso=
+8RoUn8524SIMb3-WeGjBhhX1stylKKZXHq8=3D" style=3D"text-decoration: none; out=
+line: none;"
+><img src=3D"https://content.st.com/rs/856-PVP-715/images/Instagram.png" al=
+t=3D"Instagram" width=3D"32" /></a>&nbsp;&nbsp;&nbsp;=20
+<a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKZ6Y9_qaAAb9yDMHXKp2y-F99z-Z-M3p_=
+YWlrr9DPBI-DynneU5sHeU-_gnQWry8RvY0=3D" style=3D"text-decoration: none; out=
+line: none;"
+><img src=3D"https://content.st.com/rs/856-PVP-715/images/Youtube.png" alt=
+=3D"YouTube" width=3D"32" /></a>=20
+</div>=20
+</div> </td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+</div>=20
+<!--[if mso]>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <![endif]--> </td>=20
+</tr>=20
+<tr>=20
+<td style=3D"font-size:20px; line-height:20px" height=3D"20">&nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr class=3D"mktoModule" id=3D"MOD-STD-PSTFTR" style=3D"padding:0 !importan=
+t; margin:0 !important;">=20
+<td bgcolor=3D"#edeef0" style=3D"padding:0 !important; margin:0 !important;=
+background-color:#edeef0;">=20
+<table cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%; font-size:0=
+; background:#edeef0;" align=3D"center">=20
+<tbody>=20
+<tr>=20
+<td style=3D"font-size:10px; line-height:10px" height=3D"10">&nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td style=3D"text-align:center; vertical-align:top; font-size:0;">=20
+<!--[if mso]>
+                                                <table border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0">
+                                                    <tr>
+                                                        <td style=3D"width:=
+600px;">
+                                                            <![endif]-->=20
+<div style=3D"vertical-align:top; display:inline-block; font-size:10px; tex=
+t-align:left; width:100%;" class=3D"mj-column-per-100" aria-labelledby=3D"m=
+j-column-per-100">=20
+<table width=3D"550" class=3D"inner_table" border=3D"0" align=3D"center" ce=
+llpadding=3D"0" cellspacing=3D"0" style=3D"width:550px;margin:0 auto;">=20
+<tbody>=20
+<tr>=20
+<td valign=3D"top" style=3D"vertical-align:top;" align=3D"center">=20
+<div class=3D"mktoSnippet" id=3D"top-opt-out-snippet">
+ <p style=3D"line-height: 180%; text-align: left;"><span color=3D"#a3a2a7" =
+style=3D"color: #a3a2a7; font-family: arial, helvetica, sans-serif;"><span =
+style=3D"font-size: 12px;">If you are no longer interested in receiving thi=
+s type of information, you can <a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaM25p90hbLXpIM8PHmFaEOo8MRGHzYOX=
+dwBbPn9Ef6jxI0aDSvTSFotiRED8_75HMqQ=3D" target=3D"_blank" style=3D"color: #=
+3cb4e6; text-decoration: none;"
+>unsubscribe </a> or manage your preferences in our <a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKZ0X7KTBU8O4l_LUKwlVK1iasSYbRT4CR=
+KFPwrRABrUl-wGmjKK0PXPkFTpX_PcCHR3Y=3D" target=3D"_blank" id=3D"" style=3D"=
+color: #3cb4e6; text-decoration: none;"
+>subscription center</a>.</span></span></p>=20
+</div> </td>=20
+</tr>=20
+<tr>=20
+<td height=3D"15" style=3D"line-height:1px;font-size:1px;">&nbsp;</td>=20
+</tr>=20
+<tr>=20
+<td valign=3D"top" style=3D"vertical-align:top;" align=3D"center">=20
+<div class=3D"mktoSnippet" id=3D"top-opt-out-snippet1">
+ <p style=3D"text-align: left;"><span color=3D"#a3a2a7" style=3D"color: #a3=
+a2a7; font-family: arial, helvetica, sans-serif;"><span style=3D"font-size:=
+ 12px;">&copy;2022 STMicroelectronics Int N.V - All rights reserved | <a hr=
+ef=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKZ4ilsZ4PfZznrcXGGWlAiX87Lwa1H32V=
+CaddMBKForVYpliXyB_RQnRPgxO5wijFfqU=3D" target=3D"_blank" id=3D"" style=3D"=
+color: #3cb4e6; text-decoration: none;"
+>Terms of Use</a> | <a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKZ_PRVEYSHFuUbzEgMMTWoeqTclUfJQbV=
+LnUjRubvwpCcthc_lie91akiKYUK4WhYDqc=3D" target=3D"_blank" id=3D"" style=3D"=
+color: #3cb4e6; text-decoration: none;"
+>Privacy Policy</a> | <a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKaONWjh9hgR_SiTBvRHB69c8pYUR0H1gV=
+UGXID2IS-ciTIAQ4eZ6UyEuqty3EHQbFWhY=3D" target=3D"_blank" id=3D"" style=3D"=
+color: #3cb4e6; text-decoration: none;"
+>Contacts</a></span></span></p>=20
+</div> </td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+</div>=20
+<!--[if mso]>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <![endif]--> </td>=20
+</tr>=20
+<tr>=20
+<td style=3D"font-size:10px; line-height:10px" height=3D"10">&nbsp;</td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+</table> </td>=20
+</tr>=20
+</tbody>
+</table>=20
+<!--Outer table ends here--> =20
+<a href=3D
+"https://go.st.com/ODU2LVBWUC03MTUAAAGD5IxKZ86oAoJleffWwLLBvc4KNcoP6_DFWnTW=
+eigB7cue_qZyW4nZvK3GcifWym8rkKaPcXQ=3D"
+></a>
+<img src=3D"https://go.st.com/trk?t=3D1&mid=3DODU2LVBWUC03MTU6MDo5NDEwOjI3M=
+jczOjczMDg1OjExMDQzOjk6MTUzMDg6MzA1OTE2MDktMzpwa2xld2FuZG93c2tpQGdtYWlsLmNv=
+bQ%3D%3D" width=3D"1" height=3D"1" style=3D"display:none !important;" alt=
+=3D"" />
+
+<!--This is a comment -->
+</body>
+</html>
+------=_Part_1531335_258757575.1650434742895--

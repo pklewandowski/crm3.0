@@ -1,0 +1,15 @@
+.lov-value {
+    text-transform: uppercase;
+}
+
+#attribute_lov_table td {
+    vertical-align: top;
+}
+
+.section-content {
+    display: none;
+}
+
+.attribute-table {
+    width: 100%;
+}

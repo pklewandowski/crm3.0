@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fa fa-envelope{% endblock %}
+{% block form_title %}Kolejka wiadomości
+    {% if form.errors %} - <span class="error-header-info">wystąpiły błędy!</span>{% endif %}
+{% endblock %}
+{% block form_subtitle %}Lista wiadomości wysłanych i oczekujących na wysyłkę{% endblock %}
+
+{% block content %}
+    {% include 'py3ws/lists/_partial/_list_filter.html' with filter_form=filter_form %}
+    <table id="queue_list" class="table table-hover table-condensed">
+        <thead>
+        <tr>
+            <th data-name="creation_date" class="sort sort-{% if sort_field == 'creation_date' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Data utworzenia</th>
+            <th data-name="subject" class="sort sort-{% if sort_field == 'subject' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Temat</th>
+            <th data-name="recipients" class="sort sort-{% if sort_field == 'recipients' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Odbiorcy</th>
+            <th data-name="is_sent" class="sort sort-{% if sort_field == 'is_sent' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Wysłana</th>
+            <th style="width:110px;">Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for row in page %}
+            <tr data-id="{{ row.pk }}">
+                <td>{{ row.creation_date }}</td>
+                <td>{{ row.subject }}</td>
+                <td>{{ row.recipients }}</td>
+                <td>{{ row.is_sent }}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="#"
+                           class="btn btn-default btn-sm message-preview">
+                            <i class="far fa-search"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <hr>
+
+    {% include 'py3ws/lists/_partial/_pagination_current_form.html' %}
+    {% include 'message/_modal/_message_preview_modal.html' %}
+{% endblock %}
+
+{% block site_css %}
+    <style>
+    #message_preview_container {
+        text-align: left;
+        max-height:500px;
+        overflow: auto;
+    }
+    </style>
+
+{% endblock %}
+
+{% block site_any_script %}
+
+    <script>
+        $(document).ready(function () {
+            $('.message-preview').click(function () {
+
+                let id = $(this).closest('tr').data('id')
+                $.ajax({
+                    method: 'post',
+                    url: '{% url 'message.queue_preview' %}',
+                    data: {id: id}
+                }).done(function(res) {
+                    console.log(res.data)
+                    $('#message_preview_container').html(res.data)
+                    $('#message_preview_modal').modal()
+                }).fail(function(res){
+                    swal('Błąd', res.errmsg, 'error')
+                })
+            })
+
+        })
+    </script>
+
+{% endblock %}

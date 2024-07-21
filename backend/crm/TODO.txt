@@ -1,0 +1,22 @@
+KALENDARZ:
+1. Wprowadzić funckjonalność określania kluczowych osób spotkania, bez których spotkanie nie może się odbyć.
+2. Zarządzanie harmonogramam na dwóch płaszczyznach:
+    a. użytkownika - właściciela spotkania
+    b. roli zarządzającej całym kalendarzem - harmonogramem globalnie
+
+HR:
+1. Wprowadzanie skanu/OCR/[PDF/DOC]/RĘCZNIE/ Umowy o dzieło
+2. PYTANIE: Co, kiedy osoba zarudniona na różne typy umów w różnych firmach (np. Ja, umowa o pracę i umowa o dzieło).
+   CRM jest na daną firmę, więc czy możliwe jest zatrudnienie na podstawie kilku różnych typów umów w jednej firmie?
+
+BATCH:
+1. Przeliczenia roczne
+    1. URLOP/PRZERWA W ŚWIADCZENIU PRACY
+        1. Reset dni urlopu
+        2. Obliczenie liczby dni zaległego urlopu z poprzedniego roku
+-------------------------------------------------------------------------
+
+- Skróty klawiaturowe
+
+- Atrybuty dokumentu
+  - Listy LOV - statycznie lub podanie urla- źródła danych

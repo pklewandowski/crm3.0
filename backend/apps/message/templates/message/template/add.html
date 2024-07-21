@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}far fa-envelope{% endblock %}
+{% block form_title %}Nowy szablon wiadomości{% endblock %}
+{% block form_subtitle %}Tworzenie nowego szablonu{% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit" type="submit"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    {{ form.errors }}
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        {% include "message/template/_partial/_form_elements.html" %}
+    </form>
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'resource/ckeditor4.9.2/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/ckeditor4.9.2/lang/pl.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        $(document).ready(function () {
+            CKEDITOR.replace('ck_editor_text');
+
+            $('.include_component').click(function () {
+                CKEDITOR.instances['ck_editor_text'].insertText("$INC__" + $(this).data('code') + "__INC$");
+            });
+
+            $('.include_parameter, .common_parameter').click(function () {
+                CKEDITOR.instances['ck_editor_text'].insertText("$P__" + $(this).data('code') + "__P$");
+            });
+
+            $('#test_message_btn').click(function () {
+
+                let body = CKEDITOR.instances['ck_editor_text'].getData();
+                $.ajax({
+                    method: 'post',
+                    url: '{% url 'message.test_message' %}',
+                    data: {body: body}
+                }).done(function (res) {
+                    swal('Wiadomość wysłana!', '', 'info')
+                }).fail(function (res) {
+                    swal('Błąd', res.errmsg, 'error')
+                })
+            })
+        });
+
+
+    </script>
+{% endblock %}

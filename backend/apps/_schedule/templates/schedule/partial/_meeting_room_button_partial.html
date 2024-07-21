@@ -1,0 +1,9 @@
+<label class="btn btn-default meeting-room-btn">
+    <i class="fa fa-home"></i>
+    <div class="meeting-room-select-button-color" style="background-color: {{ i.color }}"></div>
+    <div class="scroll-box">
+        <div class="scroll-text" style="font-size:10px;">{{ name }}</div>
+    </div>
+    <input data-name="{{ name }}" type="radio" style="display:none"
+           name="{{ form.prefix }}-meeting_room" autocomplete="off" value="{{ i.pk }}"/>
+</label>

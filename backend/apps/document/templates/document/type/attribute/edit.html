@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fas fa-user-edit{% endblock %}
+{% block form_title %}Atrybut typu dokumentu {% if type == 'CLIENT' %}klienta{% elif type == 'EMPLOYEE' %}pracownika{% elif type == 'BROKER' %}pośrednika{% elif type == 'ADVISER' %}doradcy{% endif %}
+    {% if form.errors %} - <span class="error-header-info">wystąpiły błędy!</span>
+    {% endif %} {% endblock %}
+{% block form_subtitle %}Edycja atrybutu dla typu dokumentu: {{ form.instance.document_type.name }} | Sekcja: {{ form.instance.section.name }}{% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit-form" type="button"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    {% if form %}
+
+        {% if form.errors %}
+            <div class="col-lg-12">
+                <div style="height:120px; overflow:auto; width:100%; background-color: #eee; border-radius:5px; margin:20px; padding:10px; border:1px solid #ddd">
+                    <h3>błędy danych</h3>
+                    {{ form.errors }}
+                </div>
+            </div>
+        {% endif %}
+
+        <form method="post" id="user-form">
+            {% csrf_token %}
+            {{ lov_formset.management_form }}
+            {% include 'document/type/attribute/_partial/_form_elements.html' with form=form %}
+        </form>
+    {% endif %}
+
+    {% include 'document/type/attribute/template/lov_formset_form_template.html' %}
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'document/type/attribute/css/document-type-attribute.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'document/type/attribute/js/document-type-attribute.js' %}"></script>
+{% endblock %}

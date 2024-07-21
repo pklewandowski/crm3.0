@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fa fa-file{% endblock %}
+{% block form_title %}Edycja faktury{% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit" type="submit"><i class="fa fa-user pad-r"></i>Zapisz</button>
+{% endblock %}
+
+{% block content %}
+    {{ form.errors }}
+    <form method="post">
+        {% csrf_token %}
+        {{ invoice_item_formset.management_form }}
+        {{ invoice_extra_item_formset.management_form }}
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#document-tab">Dane</a></li>
+            <li><a data-toggle="tab" href="#attachment-tab">Załączniki</a></li>
+        </ul>
+
+        <div class="tab-content pad-t">
+
+            <div id="document-tab" class="tab-pane fade in active">
+
+                <div class="col-lg-3">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {% include 'document/_partial/_document_scan.html' with scan=document.scan_set.all %}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-9">
+                    {% include 'invoice/_partial/_form_elements.html' with mode=mode %}
+                </div>
+            </div>
+
+            <div id="attachment-tab" class="tab-pane fade in">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Załączniki</div>
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        {% include 'document/_partial/_document_prtscn.html' with prtscn=document.attachment_set.all %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% include 'document/_modal/_add_scan_modal.html' %}
+    {% include 'document/_modal/_paste_screen_modal.html' %}
+    {% include 'document/_modal/_image_preview_modal.html' %}
+    {% include 'document/_template/_scan_upload_template.html' %}
+    {% include 'invoice/_template/_formset/_invoice_item_row_template.html' %}
+    {% include 'invoice/_template/_formset/_invoice_extra_item_row_template.html' %}
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'document/css/document.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'common/js/graphUtils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/dropzone/dropzone.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/js/documentAttm.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/type/js/document_type_process_flow.js' %}"></script>
+    <script type="text/javascript" src="{% static 'invoice/js/invoice.js' %}"></script>
+{% endblock %}
+
+{% block site_js %}
+    <script>
+        var invoiceId = {% if form.instance.pk %}{{form.instance.pk}}{% else %}null{% endif %};
+        var documentType = {{ document_form.instance.type.pk }};
+        var documentStatus = '{{document_form.instance.status }}';
+
+        var upload_attachment_url = '{% url 'document.temp_scan_upload' %}';
+        var upload_printscreen_url = '{% url 'document.upload_printscreen_image' %}';
+    </script>
+{% endblock %}

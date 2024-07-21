@@ -1,0 +1,52 @@
+<div class="col-sm-{{ c.sm_width }}">
+    <div style="position:absolute; right:10px; width:15px; height:15px; border: 1px solid #ddd;
+        -webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;">
+        <i class="fa fa-plus"></i>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body section-id" data-section-id="{{ section.pk }}">
+            <div class="attributes-list-table" data-column_id="{{ c.pk }}">
+
+                <table class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Nazwa</th>
+                        <th>Typ danych</th>
+                        {#                        <th style="width:50px;">Wym.</th>#}
+                        <th style="width:80px;">Akcje</th>
+                    </tr>
+                    </thead>
+                    <tbody class="sortable-attributes sortable-items attributes">
+
+                    {% for a in c.attribute_set.all|dictsort:"sq" %}
+                        <tr data-id="{{ a.pk }}">
+                            <td><i class="fa fa-arrows-alt-v sortable-handle" aria-hidden="true"></i></td>
+                            <td>{{ a.name }}</td>
+                            <td>{{ a.attribute.name }}</td>
+
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'document.type.attribute.edit' a.pk %}"
+                                       class="btn btn-default btn-sm edit">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-danger btn-sm delete-attribute">
+                                        <i class="fa fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                                <input type="hidden" name="attribute_id" value="{{ a.pk }}"/>
+                                <input type="hidden" name="attribute_section_id" class="attribute-section-id" value="{{ a.section.pk }}"/>
+                                <input type="hidden" name="attribute_section_column_id" class="attribute-section-column-id" value="{{ a.section_column.pk }}"/>
+                                <input type="hidden" name="attribute_sq" class="sq-input" value="{{ a.sq }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

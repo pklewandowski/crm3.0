@@ -1,0 +1,188 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-16 13:20+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#: .\user_func\employee\forms.py:17
+msgid "employee.form.label.hire_date"
+msgstr "Data zatrudnienia"
+
+#: .\user_func\employee\forms.py:18
+msgid "employee.form.label.completion_date"
+msgstr "Data zakończenia stosunku pracy"
+
+#: .\user_func\employee\forms.py:19
+msgid "employee.form.label.init_holiday_days"
+msgstr "Inicjalna liczba dni urlopu"
+
+#: .\user_func\employee\forms.py:20
+msgid "employee.form.label.curr_holiday_days"
+msgstr "Bieżąca liczba dni urlopu"
+
+#: .\user_func\employee\forms.py:21
+msgid "employee.form.label.prev_year_holiday_days"
+msgstr "Zaległa liczba dni urlopu"
+
+#: .\user_func\employee\forms.py:22
+msgid "employee.form.label.curr_salary"
+msgstr "Bieżąca kwota wynagrodzenia"
+
+#: .\user_func\employee\forms.py:34
+msgid "employee_contract_type.form.label.code"
+msgstr "Sygnatura"
+
+#: .\user_func\employee\forms.py:35
+msgid "employee_contract_type.form.label.name"
+msgstr "Nazwa"
+
+#: .\user_func\employee\forms.py:36
+msgid "employee_contract_type.form.label.part_time"
+msgstr "Obowiązuje wymiar godzinowy (np. pół etatu)"
+
+#: .\user_func\employee\forms.py:37
+msgid "employee_contract_type.form.label.description"
+msgstr "Opis"
+
+#: .\user_func\employee\forms.py:50
+msgid "employee_contract.form.label.type"
+msgstr "Typ umowy"
+
+#: .\user_func\employee\forms.py:51
+msgid "employee_contract.form.label.code"
+msgstr "Kod"
+
+#: .\user_func\employee\forms.py:52
+msgid "employee_contract.form.label.salary"
+msgstr "Kwota wynagrodzenia"
+
+#: .\user_func\employee\forms.py:53
+msgid "employee_contract.form.label.sign_date"
+msgstr "Data podpisania"
+
+#: .\user_func\employee\forms.py:54
+msgid "employee_contract.form.label.start_date"
+msgstr "Data rozpoczęcia"
+
+#: .\user_func\employee\forms.py:55
+msgid "employee_contract.form.label.end_date"
+msgstr "Data zakończenia"
+
+#: .\user_func\employee\forms.py:56
+msgid "employee_contract.form.label.part_time"
+msgstr "Wymiar etatu (wartość od 0 do 1)"
+
+#: .\user_func\employee\forms.py:57
+msgid "employee_contract.form.label.contract_subject"
+msgstr "Opis przedmiotu"
+
+#: .\user_func\employee\forms.py:58
+msgid "employee_contract.form.label.description"
+msgstr "Opis"
+
+#: .\user_func\employee\models.py:53
+#, fuzzy
+#| msgid "employee.form.label.hire_date"
+msgid "employee.hire_date"
+msgstr "Data zatrudnienia"
+
+#: .\user_func\employee\models.py:54
+#, fuzzy
+#| msgid "employee.form.label.completion_date"
+msgid "employee.completion_date"
+msgstr "Data zakończenia stosunku pracy"
+
+#: .\user_func\employee\models.py:55
+#, fuzzy
+#| msgid "employee.form.label.init_holiday_days"
+msgid "employee.init_holiday_days"
+msgstr "Inicjalna liczba dni urlopu"
+
+#: .\user_func\employee\models.py:56
+#, fuzzy
+#| msgid "employee.form.label.curr_holiday_days"
+msgid "employee.curr_holiday_days"
+msgstr "Bieżąca liczba dni urlopu"
+
+#: .\user_func\employee\models.py:57
+#, fuzzy
+#| msgid "employee.form.label.prev_year_holiday_days"
+msgid "employee.prev_year_holiday_days"
+msgstr "Zaległa liczba dni urlopu"
+
+#: .\user_func\employee\models.py:58
+#, fuzzy
+#| msgid "employee.form.label.curr_salary"
+msgid "employee.curr_salary"
+msgstr "Bieżąca kwota wynagrodzenia"
+
+#: .\user_func\employee\templates\employee\contract\add.html:7
+msgid "employee_contract.form.title"
+msgstr "Dodawanie/Edycja umowy"
+
+#: .\user_func\employee\templates\employee\contract\add.html:16
+msgid "employee_contract.panel.label.contract_data"
+msgstr "Dane umowy"
+
+#: .\user_func\employee\templates\employee\contract\list.html:16
+msgid "employee_contract.label.type"
+msgstr "Typ umowy"
+
+#: .\user_func\employee\templates\employee\contract\list.html:17
+msgid "employee_contract.label.code"
+msgstr "Sygnatura"
+
+#: .\user_func\employee\templates\employee\contract\list.html:18
+msgid "employee_contract.label.salary"
+msgstr "Wynagrodzenie"
+
+#: .\user_func\employee\templates\employee\contract\list.html:19
+msgid "employee_contract.label.sign_date"
+msgstr "Data podpisania"
+
+#: .\user_func\employee\templates\employee\contract\list.html:20
+msgid "employee_contract.label.start_date"
+msgstr "Data rozpoczęcia"
+
+#: .\user_func\employee\templates\employee\contract\list.html:21
+msgid "employee_contract.label.end_date"
+msgstr "Data zakończenia"
+
+#: .\user_func\employee\templates\employee\contract\list.html:22
+msgid "employee_contract.label.part_time"
+msgstr "Wymiar etatu"
+
+#: .\user_func\employee\templates\employee\contract_type\add.html:7
+msgid "employee_contract_type.form.title"
+msgstr "Dodawanie/Edycja typu umowy"
+
+#: .\user_func\employee\templates\employee\contract_type\add.html:16
+msgid "employee_contract_type.panel.label.contract_type_data"
+msgstr "Dane typu umowy"
+
+#: .\user_func\employee\templates\employee\contract_type\list.html:12
+msgid "employee_contract_type.add_contract_type"
+msgstr "Dodaj nowy typ umowy"
+
+#: .\user_func\employee\templates\employee\contract_type\list.html:22
+msgid "employee_contract_type.label.code"
+msgstr "Kod"
+
+#: .\user_func\employee\templates\employee\contract_type\list.html:23
+msgid "employee_contract_type.label.name"
+msgstr "Nazwa"

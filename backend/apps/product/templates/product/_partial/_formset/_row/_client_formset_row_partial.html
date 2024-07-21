@@ -1,0 +1,26 @@
+{#{% load my_template_tags %}#}
+<tr data-id="{{ i.instance.client.pk }}" data-removable="true">
+    <td>{{ i.instance.client.user.first_name }} {{ i.instance.client.user.last_name }}</td>
+    <td>{{ i.instance.client.user.email }}</td>
+    <td>{{ i.instance.client.user.personal_id }}</td>
+    <td>{{ i.instance.client.user.nip }}</td>
+    <td>{% include "py3ws/forms/fields/p3form_field.html" with field=i.function label=false nolabel=True %}</td>
+    {#    {% if index != 0 %}#}
+    <td>
+        <div class="btn-group">
+            {% if i.id.value %}
+                {{ i.DELETE }}
+            {% else %}
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+            {% endif %}
+        </div>
+    </td>
+    {#    {% else %}#}
+    {#        <td></td>#}
+    {#    {% endif %}#}
+    {{ i.product.as_hidden }}
+    {{ i.client.as_hidden }}
+    {{ i.id }}
+</tr>

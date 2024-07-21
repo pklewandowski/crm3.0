@@ -1,0 +1,90 @@
+$eventLocationHeight: 330px;
+.select2-container--open {
+  z-index: 9999999
+}
+
+.swal2-popup {
+  z-index: 2000;
+}
+
+.calendar-event-form-modal {
+  z-index: 1060;
+}
+
+.pac-container {
+  z-index: 1061 !important;
+}
+
+.schedule-form-participants {
+  min-height: 220px;
+  padding-top: 10px;
+}
+
+.schedule-form-location {
+  min-height: 350px;
+  padding-top: 10px;
+  overflow: hidden;
+
+}
+
+.schedule-form-participants ul {
+  padding: 0 10px;
+  list-style: none;
+}
+
+.schedule-form-participants ul li {
+  border-bottom: 1px solid #dddddd;
+  cursor: pointer;
+}
+
+.schedule-form-participants ul li:hover {
+  //background-color: #f6f6f6;
+  color: #0a6aa1;
+  transition: background-color, color .8s;
+}
+
+.schedule-form-participants ul li:hover .event-participant-delete-btn {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .8s;
+}
+
+.schedule-form-participants-item {
+  position: relative;
+  //border: 1px solid #cdcdcd;
+  //border-radius: 10px;
+  padding: 3px;
+  //background-color: #ededed;
+  margin-bottom: 3px;
+}
+
+.schedule-form-participants-item .toolbar-btn {
+  right: 10px;
+  top: 2px;
+}
+
+.eventDescription {
+  height: 88px !important;
+}
+
+.eventLocationMap {
+  height: $eventLocationHeight;
+}
+
+.eventLocationAddress {
+  padding: 10px 0 0 10px;
+}
+
+.eventParticipantListContainer {
+  margin-top: 10px;
+  overflow: auto;
+  max-height: 150px;
+}
+
+.event-participant-delete-btn {
+  visibility: hidden;
+  opacity: 0;
+  right: 0;
+  top: 0;
+}
+

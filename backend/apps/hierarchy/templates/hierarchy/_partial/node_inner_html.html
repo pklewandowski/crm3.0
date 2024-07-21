@@ -1,0 +1,23 @@
+<div data-id="{{ node.id }}" class="node-inner-content node-descendant">
+    {% if node.type != 'CMP' %}
+        <div class="node-draggable" draggable="true"><i class="fas fa-arrows-alt"></i></div>
+    {% endif %}
+    <div class="node-dropable"><i class="fas fa-shopping-basket"></i></div>
+
+    <p style="margin-bottom:0" class="node-name">{{ node.name }}</p>
+    <p style="font-size:11px">&nbsp;{{ node.description }}</p>
+    <div class="hierarchy-action-buttons">
+        <div style="float: left">
+            {% if node.type == 'CMP' or node.type == 'HDQ' or node.type == 'DEP' %}
+                <a data-id="{{ node.id }}" class="add-hierarchy"><i class="fa fa-plus"></i></a>
+            {% endif %}
+
+            <a data-id="{{ node.id }}" data-type="{{ node.type }}" data-parent="{{ node.parent.id }}" data-name="{{ node.name }}"
+               data-groups="{% for i in node.hierarchy_groups.all %}{{ i.pk }},{% endfor %}"
+               data-description="{{ node.description }}" class="edit-hierarchy"><i class="fas fa-pencil-alt"></i></a>
+
+            <a data-id="{{ node.id }}" class="user-list "><i class="fa fa-user" aria-hidden="true"></i></a>
+            <a data-id="{{ node.id }}" class="delete-hierarchy"><i class="fa fa-times"></i></a>
+        </div>
+    </div>
+</div>

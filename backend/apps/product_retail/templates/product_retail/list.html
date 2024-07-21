@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block form_icon %}fa fa-users{% endblock %}
+{% block form_title %} Lista produktów detalicznych
+    {% if form.errors %} - <span class="error-header-info">wystąpiły błędy!</span>{% endif %}
+{% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <a href="{% url 'product_retail.add' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></a>
+{% endblock %}
+
+{% block content %}
+
+    {% include 'py3ws/lists/_partial/_list_filter.html' with filter_form=filter_form %}
+
+    <div class="row">
+        <div class="col-lg-3">
+            {% include 'product_retail/partial/_product_category_partial.html' %}
+        </div>
+        <div class="col-lg-9">
+            <div id="productList">
+                <table id="user_list" class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th data-name="name" class="sort sort-{% if sort_field == 'name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Nazwa</th>
+                        <th data-name="category__name" class="sort sort-{% if sort_field == 'category__name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">
+                            Kategoria
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% include 'py3ws/lists/_partial/_pagination_current_form.html' %}
+
+    {% include 'product_retail/template/product_list_row_template.html' %}
+    {% include 'product_retail/globals.js.html' %}
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'resource/jstree/css/themes/default/style.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'resource/jstree/js/jstree.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'product_retail/js/product-retail.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        $(document).ready(function () {
+            let productRetail = new ProductRetail(
+                {
+                    productListRowTemplate: $('#product_list_row_template'),
+                    urls: {
+                        productsForCategoryUrl: '{% url 'product_retail.get_products_for_category' %}',
+                        productCategoryTreeUrl: '{% url 'product_retail.get_category_tree' %}',
+                        addCategoryUrl: '{% url 'product_retail.category.add' %}',
+                        deleteCategoryUrl: '{% url 'product_retail.category.delete' %}'
+                    }
+                });
+            productRetail.getCategoryTree();
+
+        });
+    </script>
+{% endblock %}

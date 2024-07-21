@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load mathfilters %}
+{% load humanize %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Faktury: {{ product_type.name }} {% endblock %}
+{% block form_subtitle %}Lista faktur{% endblock %}
+{% block form_title_right %}
+   <a href="{% url 'document.add' document_type.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></a>
+{% endblock %}
+
+{% block content %}
+
+    <div class="">
+        <table id="invoice_list" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Numer</th>
+                <th>Wartość pozycji</th>
+                <th>Wartość dodatkowych pozycji</th>
+                <th>Wartość faktury</th>
+                <th>Sprzedawca</th>
+                <th>Nabywca</th>
+                <th>Departament</th>
+                <th>Status</th>
+                <th style="width:60px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for invoice in invoices %}
+                <tr>
+                    <td>{{ invoice.number }}</td>
+                    <td>{{ invoice.total|default_if_none:0|floatformat:2 }}</td>
+                    <td>{{ invoice.total_extra|floatformat:2 }}</td>
+                    <td>{{ invoice.total|default_if_none:0 | addition:invoice.total_extra|default_if_none:0|floatformat:2 }}</td>
+                    <td>{{ invoice.issuer }}</td>
+                    <td>{{ invoice.recipient }}</td>
+                    <td>{{ invoice.document.hierarchy.name }}</td>
+                    <td>{{ invoice.document.status }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'invoice.edit' invoice.pk %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+.current-contacts-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.current-contacts-date-diff {
+    font-weight: 700;
+}
+
+.current-contacts-green-dot {
+    background-color: #56b24a;
+}
+
+.current-contacts-yellow-dot {
+    background-color: #ffd144;
+}
+
+.current-contacts-red-dot {
+    background-color: #dd6161;
+}
+
+.current-contacts-exclamation-dot {
+    background-color: #dd6161;
+}
+
+.current-contacts-exclamation-dot:after {
+    content: "!";
+    left: 14px;
+    top: -5px;
+    position: relative;
+    font-size: 35px;
+    font-weight: 700;
+    color: white;
+}
+
+.current-contacts-products {
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.current-contacts-tag {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background-color: #d7d7d7;
+    font-weight: 700;
+    margin: 3px;
+    white-space: nowrap;
+    float: left;
+}

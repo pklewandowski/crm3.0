@@ -1,0 +1,24 @@
+<form method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dane grupy</div>
+                <div class="panel-body">
+                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.name %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Lista statusów</div>
+                <div class="panel-body">
+                    <div style="max-height: 500px; overflow: auto;">
+                        <span class="checkbox-horizontal small-list">
+                            {{ form.adviser_list }}
+                        </span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

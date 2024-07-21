@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+{% block content %}
+<div class="col-xs-12">
+
+    <div class="col-lg-12 col-sm-12 header-title">
+        <div style="float:left">
+            <h3>Typy wydarzeń</h3>
+            <h4>Tworzenie i edycja typów wydarzeń kalendarza</h4>
+
+        </div>
+        <div style="float:right; margin:0 auto">
+
+            <button class="btn btn-success pull-right pad-t btn-submit" type="submit"><i class="fa fa-calendar pad-r"></i>Zapisz</button>
+        </div>
+    </div>
+    <div class="col-lg-12 col-sm-12">
+        <hr style="margin:0">
+    </div>
+
+    <div class="col-lg-6 col-sm-6 pad-t">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dane typu harmonogramu</div>
+            <div class="panel-body">
+
+                {{form}}
+
+                <!--<div class="form-group">-->
+                    <!--&lt;!&ndash;{{form.label_suffix}}&ndash;&gt;-->
+                    <!--{{form.name.label_tag}}-->
+                    <!--{{form.name}}-->
+                    <!--{{form.name.errors}}-->
+                <!--</div>-->
+
+                <!--<div class="form-group">-->
+                    <!--&lt;!&ndash;{{form.label_suffix}}&ndash;&gt;-->
+                    <!--{{form.work_break.label_tag}}-->
+                    <!--{{form.work_break}}-->
+                    <!--{{form.work_break.errors}}-->
+                <!--</div>-->
+                <!---->
+                <!--<div class="form-group">-->
+                    <!--&lt;!&ndash;{{form.label_suffix}}&ndash;&gt;-->
+                    <!--{{form.work_break.label_tag}}-->
+                    <!--{{form.work_break}}-->
+                    <!--{{form.work_break.errors}}-->
+                <!--</div>-->
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block site_script %}
+
+$(".btn-submit").click(function(){
+$("form#schedule-type-form").submit();
+});
+{% endblock %}

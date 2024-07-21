@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block form_icon %}fas fa-cogs{% endblock %}
+{% block form_title %}Atrybuty dokumentu {% endblock %}
+{% block form_subtitle %}Zarządzanie atrybutami dla dokumentu typu: {{ document_type.name }}{% endblock %}
+{% block form_title_right %}
+    <a href="{% url 'document.type.section.add' document_type.pk %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+    <button class="btn btn-success btn-submit" type="submit"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        <table class="attribute-table">
+            <tbody class="sortable-attributes sortable-sections sections">
+            {% for i in attr %}
+                <tr data-section-id="{{ i.section.pk }}" class="section-id">
+                    <td>
+                        {% include 'document/type/attribute/_partial/_section_panel.html' with i=i.section %}
+                        {% include 'document/type/attribute/_partial/_section_content.html' with i=i.section %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'document/type/css/document_type.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'document/type/attribute/css/document-type-attribute.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'document/type/js/document_type_attributes.js' %}"></script>
+{% endblock %}
+
+{% block site_script %}
+    {% include "document/type/_partial/_site_script._js" %}
+{% endblock %}

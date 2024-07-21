@@ -1,0 +1,36 @@
+{% extends 'table_report/_base_template.html' %}
+
+{% block table_report_head %}
+    <tr>
+        <th>Klient</th>
+        <th class="text-center">Nr wniosku</th>
+        <th class="text-right" style="width: 10%">Wartość</th>
+        <th class="text-right" style="width: 10%">Saldo</th>
+        <th class="text-center">Data rozpoczęcia</th>
+        <th class="text-center">Data kolejnej raty</th>
+        <th class="text-center">Liczba dni do kolejnej raty</th>
+        <th class="text-center">Data raty końcowej</th>
+        <th class="text-center">Liczba wpłat</th>
+        <th class="text-right" style="width: 10%">Suma wpłat</th>
+        <th class="text-center">Liczba dni do końca umowy</th>
+    </tr>
+{% endblock %}
+
+{% block table_report_body %}
+    {% for item in object_list %}
+        <tr>
+            <td>{{ item.client.user }}</td>
+            <td class="text-center"><a href="{% url 'product.edit' item.pk %}">{{ item.document.code }}</a></td>
+            <td class="text-right p-2">{{ item.value }}</td>
+            <td class="text-right">{{ item.balance|default_if_none:'-' }}</td>
+            <td class="text-center">{{ item.start_date|date:'Y-m-d'|default_if_none:'-' }}</td>
+            <td class="text-center">{{ item.next_instalment_date|date:'Y-m-d'|default_if_none:'-' }}</td>
+            <td class="text-center">{{ item.days_to_next_instalment|default_if_none:'-' }}</td>
+            <td class="text-center">{{ item.agreement_end_date|date:'Y-m-d'|default_if_none:'-' }}</td>
+            <td class="text-center table-report-cell-btn instalment-count-btn">{{ item.total_instalment_count|default_if_none:'-' }}</td>
+            <td class="text-right">{{ item.total_instalment_paid|default_if_none:'-' }}</td>
+            <td class="text-center {% if item.days_to_last_instalment < 0 %} table-report-days-to-last-instalment-negative
+                    {% else %} table-report-days-to-last-instalment-negative {% endif %}"><span>{{ item.days_to_last_instalment }}</span></td>
+        </tr>
+    {% endfor %}
+{% endblock %}

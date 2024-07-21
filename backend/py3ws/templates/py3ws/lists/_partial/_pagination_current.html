@@ -1,0 +1,25 @@
+<div class="row">
+        <div class="col-xs-12 text-center">
+
+            <div class="pagination">
+            <span class="step-links">
+        {% if page.has_previous %}
+            <a class="btn btn-default btn-sm page-nav" href="?page=1"><i class="fa fa-step-backward"></i></a>
+            <a class="btn btn-default btn-sm page-nav" href="?page={{ page.previous_page_number }}"><i class="fa fa-fast-backward"></i></a>
+        {% endif %}
+                {% for _ in ''|center:page.paginator.num_pages %}
+                    {% if forloop.counter == page.number %}
+                        <div class="btn btn-primary btn-sm">{{ forloop.counter }}</div>
+                    {% else %}
+                        <a class="btn btn-default btn-sm page-nav" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page.has_next %}
+                    <a class="btn btn-default btn-sm page-nav" href="?page={{ page.next_page_number }}"><i class="fa fa-step-forward"></i></a>
+                    <a class="btn btn-default btn-sm page-nav" href="?page={{ page.paginator.num_pages }}"><i class="fa fa-fast-forward"></i></a>
+                {% endif %}
+    </span>
+            </div>
+        </div>
+    </div>

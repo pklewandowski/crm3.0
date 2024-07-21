@@ -1,0 +1,42 @@
+#documentScanContainer {
+    width: 100%;
+    position: relative;
+    height: calc(100vh - 420px);
+    overflow: auto;
+    text-align: center;
+
+}
+
+#documentScanThumbnailContainer {
+    display: inline-block;
+    height: 150px;
+    width: 100%;
+    border-top: 1px solid #ddd;
+    /*border-radius: 5px;*/
+    padding: 10px;
+    overflow: auto;
+}
+
+.document-scan-thumbnail {
+    float: left;
+    width: 100px;
+    height: 120px;
+    margin: 5px 5px 0 0;
+    overflow-y: hidden;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, .3);
+}
+
+.document-scan-thumbnail img {
+    width: 100%;
+}
+
+.document-scan-selectbox {
+    border: 1px solid #FF0000;
+    position: absolute;
+}
+
+#scanCanvas:active {
+    cursor: crosshair;
+}

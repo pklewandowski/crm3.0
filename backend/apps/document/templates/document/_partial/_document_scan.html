@@ -1,0 +1,42 @@
+<div class="panel panel-default">
+    <div class="panel-heading" style="display: inline-block; width: 100%;">
+        <div style="float:left;">Skan dokumentu</div>
+        <div style="float:right;">
+            <i id="add_scan_btn" class="fa fa-plus-circle"
+               data-toggle="tooltip" title="Dodaj&nbsp;stronę..." data-placement="top"
+               style="font-size: 15px;cursor: pointer;"></i>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="documentScanContainer"></div>
+
+        {#        <div class="thumbnail-container" id="scan_thumbnail_container">#}
+        {#            <div id="scan_thumbnail_film">#}
+        {#                {% if scan %}#}
+        {#                    {% for i in scan %}#}
+        {#                        <div class="thumbnail scan-thumbnail"><img src="/media/document/scan/tmp/{{ i.file_name }}"/></div>#}
+        {#                    {% endfor %}#}
+        {#                {% endif %}#}
+        {#            </div>#}
+        {#        </div>#}
+    </div>
+    <div class="panel-body" style="padding-top: 0;">
+        <div id="documentScanThumbnailContainer" data-template="documentScanThumbnailTemplate">
+
+            {% for scan_form in scan_formset %}
+                <div class="document-scan-thumbnail">
+                    <img src="/media/document/scan/{{ scan_form.file_name.value }}">
+                    {{ scan_form.file_name.as_hidden }}
+                    {{ scan_form.sq.as_hidden }}
+                    {{ scan_form.id.as_hidden }}
+                </div>
+            {% endfor %}
+
+{#            <div class="document-scan-thumbnail">#}
+{#                <img src="/media/document/scan/fk.jpg" style="width:100%;"/>#}
+{#            </div>#}
+        </div>
+    </div>
+</div>
+
+{% include 'document/_template/_document_scan_template.html' %}

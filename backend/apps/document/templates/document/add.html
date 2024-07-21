@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fa fa-file{% endblock %}
+{% block form_title %}Nowy dokument: {{ type.name }}{% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <button id="save_doc_btn" class="btn btn-success" type="button"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    <div class="loader-container" id="loaderContainer">
+        <div class="loader"></div>
+    </div>
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        {{ attachment_formset.management_form }}
+        {{ scan_formset.management_form }}
+
+        {% for k, v in section_formsets.items %}
+            {{ v.management_form }}
+        {% endfor %}
+
+        {% for k, v in table_formsets.items %}
+            {{ v.formset.management_form }}
+        {% endfor %}
+
+        {% if type.is_owner %}
+            {% if owner %}
+
+                <div class="header-name clearfix">
+                    {% if owner.avatar_filename %}
+                        <div class="avatar-image-big pull-left">
+                            <img src="{{ MEDIA_URL }}avatar/{{ owner.avatar_filename }}">
+                        </div>
+                    {% else %}
+                        <div class="avatar-image-big pull-left">
+                            <div class="name-letter-big"><i class="fa fa-user"></i></div>
+                        </div>
+                    {% endif %}
+                    <div style="font-size:30px;">{{ owner.first_name|default_if_none:'' }} {{ owner.last_name }} </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#document-tab">Dane podstawowe</a></li>
+            <li>
+                <a href="#attribute-tab" data-toggle="tab">Atrybuty<i id="accordionHorizontal" class="fas fa-arrow-alt-circle-right"></i></a>
+            </li>
+            {#            <li><a data-toggle="tab" href="#attachment-tab">Załączniki</a></li>#}
+        </ul>
+
+        <div class="tab-content pad-t">
+            <div id="document-tab" class="tab-pane fade in active">
+                {% include 'document/_partial/_form_elements.html' %}
+            </div>
+
+            <div id="attribute-tab" class="tab-pane fade in">
+                {% include 'document/type/_partial/_attributes.html' with attr=attr form=attr_form autocollapse=True %}
+            </div>
+
+
+            {#            <div id="attachment-tab" class="tab-pane fade in">#}
+            {#                {% include 'attachment/basic_attachment/_partial/_attachment_partial.html' with attachment_formset=attachment_formset %}#}
+            {#            </div>#}
+        </div>
+        {% include 'document/_modal/_add_note_modal.html' %}
+    </form>
+
+    {% include 'attachment/_modal/_add_attachment_form.html' %}
+    {% include 'attachment/basic_attachment/_modal/_add_paste_screen_modal.html' %}
+    {% include 'attachment/_template/_attachment_upload_template.html' %}
+    {% include 'document/_modal/_image_preview_modal.html' %}
+    {% include 'document/_modal/_add_scan_modal.html' %}
+    {% include 'document/_modal/_add_user_modal.html' %}
+    {% include 'document/_modal/_add_fileFiled_modal.html' %}
+    {#    add-ons#}
+    {% include 'document/add-ons/add_conditions_modal.html' %}
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'attachment/css/attachment.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'document/css/document.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'document/type/css/document_type.css' %}" rel="stylesheet" type="text/css">
+{#    <link href="{% static 'document/css/document-scan.css' %}" rel="stylesheet" type="text/css">#}
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'resource/dropzone/dropzone.js' %}"></script>
+    <script type="text/javascript" src="{% static 'common/js/graphUtils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'attachment/js/basic_attachment_dropzone.js' %}"></script>
+    <script type="module" src="{% static 'attachment/js/basic_attachment.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/js/document.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/type/js/document_type_process_flow.js' %}"></script>
+
+{#    <script type="module" src="{% static 'document/js/document-scan/document-scan-manager.js' %}"></script>#}
+    <script type="module" src="{% static 'document/js/document-file/document-file-field-manager.js' %}"></script>
+
+    {#    <script src="{% static 'document/type/js/calculations/doc-type-1-calculations/loan-value-proposal.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'document/type/js/calculations/doc-type-1-calculations/main.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/type/js/calculations/doc-type-1-custom-control-actions.js' %}"></script>
+
+
+
+{% endblock %}
+
+{% block site_any_script %}
+    {% include 'document/_js.html' %}
+    <script>
+        var upload_attachment_url = '{% url 'attachment.basic_file_upload' %}';
+        var upload_scan_url = '{% url 'attachment.basic_scan_upload' %}';
+        var upload_file_url = '/media/document/filefield/';
+        var upload_prtscn_url = '{% url 'attachment.basic_prtscn_upload' %}';
+        let documentId = null;
+    </script>
+
+{% endblock %}

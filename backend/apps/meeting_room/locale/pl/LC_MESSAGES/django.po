@@ -1,0 +1,121 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-16 13:20+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#: .\meeting_room\forms.py:12
+msgid "meeting_room.form.label.is_local"
+msgstr "lokalne"
+
+#: .\meeting_room\forms.py:13
+msgid "meeting_room.form.label.name"
+msgstr "Nazwa"
+
+#: .\meeting_room\forms.py:14
+msgid "meeting_room.form.label.seats"
+msgstr "Nominalna liczba miejsc"
+
+#: .\meeting_room\forms.py:15
+msgid "meeting_room.form.label.max_seats"
+msgstr "Maksymalna liczba miejsc"
+
+#: .\meeting_room\forms.py:16
+msgid "meeting_room.form.label.av_hour_from"
+msgstr "Dostępność od"
+
+#: .\meeting_room\forms.py:17
+msgid "meeting_room.form.label.av_hour_to"
+msgstr "Dostępność do"
+
+#: .\meeting_room\forms.py:29
+#, fuzzy
+#| msgid "meeting_room.form.label.name"
+msgid "meeting_room_attribute.form.label.name"
+msgstr "Nazwa"
+
+#: .\meeting_room\forms.py:30
+#, fuzzy
+#| msgid "meeting_room.form.label.seats"
+msgid "meeting_room_attribute.form.label.description"
+msgstr "Nominalna liczba miejsc"
+
+#: .\meeting_room\models.py:34
+#, fuzzy
+#| msgid "meeting_room.seats"
+msgid "meeting_room.hierarchy"
+msgstr "Liczba miejsc"
+
+#: .\meeting_room\models.py:43
+#, fuzzy
+#| msgid "meeting_room.seats"
+msgid "meeting_room.max_continous_events"
+msgstr "Liczba miejsc"
+
+#: .\meeting_room\models.py:46
+#, fuzzy
+#| msgid "meeting_room.name"
+msgid "meeting_room.min_break"
+msgstr "Nazwa"
+
+#: .\meeting_room\models.py:47
+msgid "meeting_room.color"
+msgstr "Wyświetlany kolor"
+
+#: .\meeting_room\templates\meeting_room\_partial\_form_elements.html:17
+msgid "meeting_room.panel.label.meeting_place_data"
+msgstr "Dane miejsca"
+
+#: .\meeting_room\templates\meeting_room\_partial\_form_elements.html:38
+msgid "meeting_room.panel.label.meeting_place_address_data"
+msgstr "Adres miejsca"
+
+#: .\meeting_room\templates\meeting_room\attribute_add.html:11
+#, fuzzy
+#| msgid "meeting_room.form.title"
+msgid "meeting_room_attribute.form.title"
+msgstr "Miejsca spotkań"
+
+#: .\meeting_room\templates\meeting_room\attribute_add.html:42
+#, fuzzy
+#| msgid "meeting_room.panel.label.meeting_place_data"
+msgid "meeting_room_attribute.panel.label.attribute_data"
+msgstr "Dane miejsca"
+
+#: .\meeting_room\templates\meeting_room\attributes_list.html:13
+#, fuzzy
+#| msgid "meeting_room.add_new_room"
+msgid "meeting_room.add_new_room_attribute"
+msgstr "Dodaj salę"
+
+#: .\meeting_room\templates\meeting_room\attributes_list.html:23
+#, fuzzy
+#| msgid "meeting_room.name"
+msgid "meeting_room_attributes.name"
+msgstr "Nazwa"
+
+#: .\meeting_room\templates\meeting_room\list.html:19
+msgid "meeting_room.name"
+msgstr "Nazwa"
+
+#: .\meeting_room\templates\meeting_room\list.html:20
+msgid "meeting_room.seats"
+msgstr "Liczba miejsc"
+
+#~ msgid "meeting_room.form.label.attributes"
+#~ msgstr "Atrybuty miejsca"

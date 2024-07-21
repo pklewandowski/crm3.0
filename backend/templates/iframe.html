@@ -1,0 +1,84 @@
+{% load static %}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <link href="{% static 'resource/bootstrap/css/bootstrap.min.css' %}?v3.3.7" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/eonasdan-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css' %}?v3.3.8" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/bootstrap-timepicker/css/bootstrap-timepicker.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/select2/dist/css/select2.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/select2-bootstrap-theme/dist/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/sweetalert2/sweetalert2.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fonts/font-awesome-5.0.13/css/fontawesome-all.css' %}" rel="stylesheet" type="text/css">
+
+    <link href="{% static 'common/css/bootstrap.datepicker.override.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'common/css/style.css' %}?10" rel="stylesheet" type="text/css">
+
+    {% block site_css %}{% endblock %}
+
+    <link href="{% static 'common/css/bootstrap.datepicker.override.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'common/css/style.css' %}?12132456773" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+
+{% include "base/script.html" %}
+
+{#    <script>#}
+{#        let _g = {#}
+{#            csrfmiddlewaretoken: '{{ csrf_token }}',#}
+{#            credentials: {#}
+{#                user: {#}
+{#                    id: '{{ request.user.pk }}',#}
+{#                    first_name: '{{ request.user.first_name }}',#}
+{#                    last_name: '{{ request.user.first_name }}',#}
+{#                }#}
+{#            },#}
+{#            notifications: {#}
+{#                urls: {close: "{% url 'notification.close' %}"}#}
+{#            }#}
+{#        };#}
+{#    </script>#}
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>
+                {% block form_title %} {% endblock %}
+            </h3>
+        </div>
+    </div>
+    <div style="float:right; display: inline; margin-right: 20px;">
+        {% block form_title_right %}{% endblock %}
+    </div>
+
+    <div class="page-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script type="text/javascript" src="{% static 'resource/moment/min/moment-with-locales.min.js' %}?v2.13.0"></script>
+    <script type="text/javascript" src="{% static 'resource/jquery.min.js' %}?v3.3.1"></script>
+    <script type="text/javascript" src="{% static 'resource/jquery-ui.js' %}?v1.12.1"></script>
+    <script type="text/javascript" src="{% static 'resource/sweetalert2/sweetalert2.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/bootstrap/js/bootstrap.min.js' %}?v3.3.7"></script>
+    {#<script type="text/javascript" src="{% static 'resource/bootstrap-4.0.0/dist/js/bootstrap.min.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'resource/eonasdan-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/select2/dist/js/select2.full.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/select2/dist/js/i18n/pl.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/wNumb.js' %}"></script>
+    <script type="text/javascript" src="{% static 'common/js/controls.js' %}?v1.343.1"></script>
+    <script type="text/javascript" src="{% static 'common/js/script.js' %}?v1.0.0"></script>
+
+    {% block site_js %}{% endblock %}
+
+    <script type="text/javascript">
+        {% block site_script %}{% endblock %}
+    </script>
+    {% block site_inline_js %}{% endblock %}
+    {% block site_any_script %}{% endblock %}
+
+</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-sm-6 pull-left">{{ filter. }}</div>
+    <div class="col-sm-6 pull-right">
+        <form id="filter-form" method="post">
+            {{ filter_form.p3_sort_field }}
+            {{ filter_form.p3_sort_dir }}
+            {{ filter_form.p3_csv }}
+            {{ filter_form.page }}
+            <div class="input-group">
+                {{ filter_form.search }}
+                <input type="hidden" id="search" value="{{ search|default_if_none:'' }}">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary page-search" type="submit">&nbsp;<i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>

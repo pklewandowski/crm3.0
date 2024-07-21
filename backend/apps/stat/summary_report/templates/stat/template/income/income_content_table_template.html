@@ -1,0 +1,34 @@
+<template id="incomeContentTableHeaderTemplate">
+    <thead>
+    <tr>
+        <th class="text-center">Doradca</th>
+        <th class="text-center">szt.</th>
+        <th class="text-center">Kwota wnioskowana</th>
+        <th class="text-center">Kwota przyznana</th>
+        <th class="text-center">Prowizja</th>
+{#        <th class="sumarize">Razem szt.</th>#}
+{#        <th class="sumarize">Razem: Suma z wnioskowana</th>#}
+{#        <th class="sumarize">Razem: Suma z przyznana</th>#}
+    </tr>
+    </thead>
+</template>
+
+<template id="incomeContentTableRowTemplate">
+    <tr>
+        <td>__ADVISER_NAME__</td>
+        <td class="text-center">__COUNT__</td>
+        <td class="number-cell">__AMOUNT_REQUESTED__</td>
+        <td class="number-cell">__AMOUNT_GRANTED__</td>
+        <td>__COMMISSION__</td>
+    </tr>
+</template>
+
+<template id="incomeContentTableSumRowTemplate">
+    <tr style="background-color: #eeeeee;">
+        <td class="text-right sum-cell">SUMA</td>
+        <td class="text-center sum-cell">__COUNT__</td>
+        <td class="number-cell sum-cell">__AMOUNT_REQUESTED__</td>
+        <td class="number-cell sum-cell">__AMOUNT_GRANTED__</td>
+        <td><strong>__COMMISSION__</strong></td>
+    </tr>
+</template>

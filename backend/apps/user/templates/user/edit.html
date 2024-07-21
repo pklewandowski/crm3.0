@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fas fa-user-edit{% endblock %}
+{% block form_title %}Edycja {% if type == 'CLIENT' %}klienta{% elif type == 'EMPLOYEE' %}pracownika{% elif type == 'BROKER' %}pośrednika{% elif type == 'ADVISER' %}doradcy{% endif %}
+    {% if form.errors %} - <span class="error-header-info">wystąpiły błędy!</span>
+    {% endif %} {% endblock %}
+{% block form_subtitle %}{{ form.instance.first_name }} {{ form.instance.last_name }}{% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit-user-form" type="button"><i class="fas fa-check"></i></button>
+    <button class="btn btn-default pull-right send-agreement-request-btn" type="button"
+            data-toggle="tooltip" title="Wyślij prośbę o zaakceptowanie zgód"><i class="fas fa-share-square"></i></button>
+{% endblock %}
+
+{% block content %}
+    <div class="loader-container" id="loaderContainer">
+        <div class="loader"></div>
+    </div>
+    {% for i in processing_agreement_forms %}
+        {{ i.errors }}
+    {% endfor %}
+    {{ perm_form.errors }}
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            {% include "user/_partial/_form_elements.html" with form=form mode=mode cadr=companyaddress_form hadr=homeaddress_form madr=mailaddress_form %}
+        </div>
+    </div>
+    {% include 'document/_modal/_image_preview_modal.html' %}
+    {% include 'attachment/_template/_attachment_upload_template.html' %}
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'resource/fileinput/css/fileinput.css' %}" rel="stylesheet" type="text/css">
+{#    <link href="{% static 'attachment/css/attachment.css' %}" rel="stylesheet" type="text/css">#}
+    <link href="{% static 'user/css/user.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/jstree/css/themes/default/style.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/document/document-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/user/user-bundle.css' %}" rel="stylesheet" type="text/css">
+    <style>
+        a, a:hover {
+            color: unset;
+        }
+    </style>
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'resource/fileinput/js/fileinput.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/dropzone/dropzone.js' %}"></script>
+    <script type="text/javascript" src="{% static 'common/js/graphUtils.js' %}"></script>
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'resource/jstree/dist/jstree.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user/js/user.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/user/user-bundle.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    {% include 'user/_partial/_site_script.html' %}
+
+    {#-------------------------------------- INCLUDES ---------------------------------------#}
+    {% include 'user/_modal/_address_history_modal.html' %}
+    {% include 'attachment/_modal/_add_attachment_form.html' %}
+    {% include 'user/_modal/_user_relation_modal.html' %}
+    {% include 'attachment/basic_attachment/_modal/_add_paste_screen_modal.html' %}
+    {% include 'attachment/_template/_attachment_upload_template.html' %}
+    {% include 'document/_modal/_image_preview_modal.html' %}
+
+{% endblock %}
+
+

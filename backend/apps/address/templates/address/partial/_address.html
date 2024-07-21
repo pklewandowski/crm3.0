@@ -1,0 +1,82 @@
+{% load i18n %}
+<div class="row">
+    <div class="col-lg-3 col-sm-3">
+        <div class="form-group clearfix">
+            <label for="{{ form.street_prefix.id_for_label }}">{{form.street_prefix.label}}:</label>
+            {{form.street_prefix}}
+            {{form.street_prefix.errors}}
+        </div>
+    </div>
+
+
+    <div class="col-lg-9 col-sm-9">
+        <div class="form-group clearfix">
+            <label for="{{ form.street.id_for_label }}">{{form.street.label}}:</label>
+            {{form.street}}
+            {{form.street.errors}}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 col-sm-4">
+        <div class="form-group clearfix">
+            <label for="{{ form.street_no.id_for_label }}">{{form.street_no.label}}:</label>
+            {{form.street_no}}
+            {{form.street_no.errors}}
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-4">
+        <div class="form-group clearfix">
+            <label for="{{ form.apartment_no.id_for_label }}">{{form.apartment_no.label}}:</label>
+            {{form.apartment_no}}
+            {{form.apartment_no.errors}}
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-4">
+        <div class="form-group clearfix">
+            <label for="{{ form.post_code.id_for_label }}">{{form.post_code.label}}:</label>
+            {{form.post_code}}
+            {{form.post_code.errors}}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-sm-4">
+        <div class="form-group clearfix">
+            <label for="{{ form.city.id_for_label }}">{{form.city.label}}:</label>
+            {{form.city}}
+            {{form.city.errors}}
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-4">
+        <div class="form-group clearfix">
+            <label for="{{ form.province.id_for_label }}">{{form.province.label}}:</label>
+            {{form.province}}
+            {{form.province.errors}}
+        </div>
+    </div>
+    <div class="col-lg-4 col-sm-4">
+        <div class="form-group clearfix">
+            <label for="{{ form.country.id_for_label }}">{{form.country.label}}:</label>
+            {{form.country}}
+            {{form.country.errors}}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 col-sm-4">
+        <div class="form-group clearfix">
+            <label for="{{ form.phone.id_for_label }}">{{form.phone.label}}:</label>
+            {{form.phone}}
+            {{form.phone.errors}}
+        </div>
+    </div>
+    <div class="col-lg-8 col-sm-8">
+        <div class="form-group clearfix">
+            <label for="{{ form.email.id_for_label }}">{{form.email.label}}:</label>
+            {{form.email}}
+            {{form.email.errors}}
+        </div>
+    </div>
+</div>

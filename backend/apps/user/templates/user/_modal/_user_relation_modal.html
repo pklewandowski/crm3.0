@@ -1,0 +1,35 @@
+<div class="modal fade" id="userRelationModal" tabindex="-1" role="dialog"
+     aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" style="width: 70%">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">Nowa relacja użytkownika</h4>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form id="userRelationForm">
+                            {{ user_relation_form.left.as_hidden }}
+                            {% include 'py3ws/forms/fields/p3form_field.html' with field=user_relation_form.right %}
+                            {% include 'py3ws/forms/fields/p3form_field.html' with field=user_relation_form.type %}
+                            {% include 'py3ws/forms/fields/p3form_field.html' with field=user_relation_form.description %}
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary saveUserRelationBtn" id="saveRelationBtn">Zapisz</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+            </div>
+        </div>
+    </div>
+</div>
+

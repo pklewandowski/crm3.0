@@ -1,0 +1,22 @@
+<div class="pagination">
+    <ul class="pagination">
+
+        {% for i in list.paginator.num_pages|times %}
+            <li {% if forloop.counter == list.number %}class="active"{% endif %}><a href="?page={{ forloop.counter }}" >{{ forloop.counter }} </a></li>
+        {% endfor %}
+
+    </ul>
+{#    <span class="step-links">#}
+{#        {% if list.has_previous %}#}
+{#            <a href="?page={{ list.previous_page_number }}">poprzednia</a>#}
+{#        {% endif %}#}
+{##}
+{#        <span class="current">#}
+{#            Strona {{ list.number }} z {{ list.paginator.num_pages }}.#}
+{#        </span>#}
+{##}
+{#        {% if list.has_next %}#}
+{#            <a href="?page={{ list.next_page_number }}">następna</a>#}
+{#        {% endif %}#}
+{#    </span>#}
+</div>

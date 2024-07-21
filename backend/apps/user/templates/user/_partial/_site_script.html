@@ -1,0 +1,61 @@
+{% load static %}
+{% load l10n %}
+
+{% localize off %}
+
+    <script>
+
+        {#    TODO: docelowo przepisać na _g, tak jak poniżej. Sprawdzić, czy nie wykorzystuje gdzieś tej zmiennej#}
+        var user = {
+            id_exist_url: "{% url 'user.id_exist' %}",
+            type: '{{ type }}',
+            autocomplete_check_url: "{% url 'user.autocomplete_check' %}",
+            initials: {
+                idBroker: '{{ user_func_form.initial.broker.pk }}'
+            }
+        };
+
+        _g['document'] = {
+            id: {{ user.pk|unlocalize }},
+            code: '{{ user.username }}',
+            type: {id: {{ document_type.pk }}, code: '{{ document_type.code }}'},
+            urls: {
+                upload_attachment_url: '{% url 'user.api.attachment' %}'
+            },
+        };
+
+        _g['user'] = {
+            id: {{ user.pk }},
+            id_exist_url: "{% url 'user.id_exist' %}",
+            type: '{{ type }}',
+            autocomplete_check_url: "{% url 'user.autocomplete_check' %}",
+            initials: {
+                idBroker: '{{ user_func_form.initial.broker.pk }}'
+            },
+            urls: {
+                gusApi: '{% url 'gus.api' %}',
+                agreementRequestUrl: '{% url 'user.api.agreement_request' %}',
+                userRelationUrl: '{% url 'user.api.relation' %}',
+                clientAutocompleteUrl: '{% url 'client.get_list_for_select2' %}',
+                predefinedTagListUrl: '{% url 'tag.api' %}',
+            }
+        };
+
+        {#        TODO: docelowo przepisać na _g #}
+
+        var upload_attachment_url = '{% url 'attachment.basic_file_upload' %}';
+        var upload_prtscn_url = '{% url 'attachment.basic_prtscn_upload' %}';
+        var broker_for_adviser_url = '{% url 'broker.get_brokers_for_adviser' %}';
+        var imgSrc = '{% static '/images/default_avatar_male.jpg' %}';
+        var USER_TYPE_REQUIRED_FIELDS = {{ USER_TYPE_REQUIRED_FIELDS|safe }};
+        var USER_TYPE_COMPANY_REQUIRED_FIELDS = {{ USER_TYPE_COMPANY_REQUIRED_FIELDS|safe }};
+
+        var csrf_token = '{{ csrf_token }}';
+        var autocomplete_check ={% if config.autocomplete_check %} true{% else %} false{% endif %};
+        window.autocomplete_check = autocomplete_check;
+        {% if form.instance.avatar_filename %}
+            imgSrc = '{% get_media_prefix %}avatar/{{ form.instance.avatar_filename }}';
+        {% endif %}
+
+    </script>
+{% endlocalize %}

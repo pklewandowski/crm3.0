@@ -1,0 +1,52 @@
+<div class="col-lg-6 col-sm-6 pad-t">
+    <div class="panel panel-default">
+        <div class="panel-heading">Dane typu harmonogramu</div>
+        <div class="panel-body">
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.name %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.event_kind %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.default_title %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.color %}
+
+            <div class="panel panel-default pad-t">
+                <div class="panel-heading">Właściwości</div>
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {% include 'forms/checkboxField.html' with field=form.location_required %}
+                            {% include 'forms/checkboxField.html' with field=form.title_required %}
+
+                            <hr style="margin: 5px 0">
+
+                            {% include 'forms/checkboxField.html' with field=form.work_break %}
+                            {% include 'forms/checkboxField.html' with field=form.whole_day_event %}
+                            {% include 'forms/checkboxField.html' with field=form.single_person %}
+
+                        </div>
+                        <div class="col-lg-6">
+
+                            {% include 'forms/checkboxField.html' with field=form.superior_confirmation %}
+                            {% include 'forms/checkboxField.html' with field=form.participant_confirmation %}
+                            {% include 'forms/checkboxField.html' with field=form.host_user_confirmation %}
+
+                            <hr style="margin: 5px 0">
+
+                            {% include 'forms/checkboxField.html' with field=form.host_user_editable %}
+                            {% include 'forms/checkboxField.html' with field=form.send_message %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6 col-sm-6 pad-t">
+    <div class="panel panel-default">
+        <div class="panel-heading">Opis</div>
+        <div class="panel-body">
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.description nolabel=True %}
+        </div>
+    </div>
+</div>

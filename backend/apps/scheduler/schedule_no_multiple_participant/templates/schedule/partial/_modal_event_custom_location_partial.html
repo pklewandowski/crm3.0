@@ -1,0 +1,47 @@
+<div id="custom-location-address">
+    <table class="table table-hover table-condensed">
+        <tbody>
+        <!--<tr data-type="street_prefix">-->
+        <!--<td>Prefiks:</td>-->
+        <!--<td>{{custom_address_form.street_prefix}}</td>-->
+        <!--</tr>-->
+        <tr data-type="route">
+            <td>Ulica:</td>
+            <td>{{ custom_address_form.street }}</td>
+        </tr>
+        <tr data-type="street_number">
+            <td>Nr:</td>
+            <td>{{ custom_address_form.street_no }}</td>
+        </tr>
+        <tr data-type="apartment_no">
+            <td>Nr lokalu:</td>
+            <td>{{ custom_address_form.apartment_no }}</td>
+        </tr>
+        <tr data-type="locality">
+            <td>Miasto:</td>
+            <td>{{ custom_address_form.city }}</td>
+        </tr>
+        {#                <tr data-type="administrative_area_level_1">#}
+        {#                    <td>Województwo:</td>#}
+        {#                    <td>{{custom_address_form.province}}</td>#}
+        {#                </tr>#}
+        <tr data-type="post_code">
+            <td>Kod:</td>
+            <td>{{ custom_address_form.post_code }}</td>
+        </tr>
+        <tr data-type="country">
+            <td>Państwo:</td>
+            <td>{{ custom_address_form.country }}</td>
+        </tr>
+        <tr data-type="email">
+            <td>E-mail:</td>
+            <td>{{ custom_address_form.email }}</td>
+        </tr>
+        <tr data-type="phone">
+            <td>Telefon:</td>
+            <td>{{ custom_address_form.phone }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block site_css %}
+    <link href="{% static 'resource/treant/Treant.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/hierarchy/hierarchy-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block form_icon %}fas fa-user-edit{% endblock %}
+{% block form_title %}Struktura Firmy{% endblock %}
+{% block form_subtitle %}Zarządzanie strukturą Firmy{% endblock %}
+{% block form_title_right %}{% endblock %}
+
+{% block content %}
+    {{ form.errors }}
+
+    <div class="panel panel-default hierarchy-panel">
+        <div class="panel-body">
+
+            <div class="col-lg-12 col-sm-12">
+                <div class="chart" id="hierarchyStructure"></div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'hierarchy/modal/hierarchy_form_modal.html' %}
+{#    {% include "hierarchy/template/user_list_template.html" %}#}
+{#    {% include "hierarchy/modal/user_list_modal.html" %}#}
+
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'resource/raphael.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/hierarchy/hierarchy-bundle.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        _g.hierarchy = {
+            urls: {
+                apiUrl: '{% url 'hierarchy.api' %}',
+                moveUrl: '{% url 'hierarchy.api.move' %}',
+                groupUrl: '{% url 'hierarchy.api.groups' %}',
+                userListUrl: '{% url 'hierarchy.user_list' %}',
+                userEditUrl: '/user/edit/'
+            },
+            rootNode: {{ root.pk }}
+        }
+    </script>
+{#    {% include 'hierarchy/_partial/chart_config_partial.html' %}#}
+{% endblock %}
+
+
+
+

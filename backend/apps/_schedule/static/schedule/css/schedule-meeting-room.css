@@ -1,0 +1,25 @@
+.meeting-room-select-button {
+    color: white;
+    border: 3px solid #ccc;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    width: 50px;
+    height: 50px;
+}
+
+.meeting-room-select-button-color {
+    width: 100%;
+    height: 5px;
+}
+
+.meeting-room-btn {
+    font-size: 30px;
+    width: 80px;
+    height: 65px;
+}
+
+.headquarter-meeting_room-container {
+    display:none;
+}
+

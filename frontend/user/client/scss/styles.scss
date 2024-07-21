@@ -1,0 +1,12 @@
+.csv-data-container table tr, .csv-data-container table td {
+  position: relative;
+}
+
+.csv-data-container {
+  overflow: auto;
+  width: 100%;
+  min-height: 170px;
+  max-height: calc(100vh - 300px);
+  max-width: calc(100% - 30px);
+  margin-top: 15px;
+}

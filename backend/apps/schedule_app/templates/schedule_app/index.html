@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load  static %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body" style="height: calc(100vh - 120px);">
+                    <div class="row">
+                        <div class="col-lg-2 nopadding-right">
+                            <div id="datepicker11"></div>
+                            <div>
+                                <hr>
+                                <h5>Kalendarze</h5>
+                            <div id="calendarTypesContainer"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-10" style="height: calc(100vh - 160px);">
+                            <div class="calendar-container" id="calendarContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block site_css %}
+
+    <link href="{% static 'dist/scheduleApp/scheduleApp-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_any_script %}
+    <script type="text/javascript" src="{% static 'dist/scheduleApp/scheduleApp-bundle.js' %}"></script>
+{% endblock %}

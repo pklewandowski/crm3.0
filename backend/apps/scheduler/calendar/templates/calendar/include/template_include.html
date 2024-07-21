@@ -1,0 +1,10 @@
+{% include "schedule/template/_form_main_template.html" %}
+{% include "schedule/modal/template/form_basic_template.html" %}
+{% include "schedule/modal/template/form_advanced_template.html" %}
+{% include "schedule/template/_event_user_list_row_template.html" %}
+{% include "schedule/template/event_popover_data_template.html" %}
+{% include "schedule/template/event_popover_participant_data_template.html" %}
+{% include "schedule/modal/template/_action_buttons_template.html" %}
+
+{# TODO: zrobić warunek, czy zainstalowana aplikacja product_retail #}
+{% include "product_retail/formset/product_client_formset/template/product_client_formset_template.html" with formset=product_retail_client_formset %}

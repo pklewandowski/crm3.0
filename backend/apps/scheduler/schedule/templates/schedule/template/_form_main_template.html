@@ -1,0 +1,64 @@
+<template id="form_main_template">
+    {% csrf_token %}
+    <input type="hidden" id="id_user" name="id_user" value="{{ user.pk }}"/>
+    <input type="hidden" id="id" name="id"/>
+    <input type="hidden" id="status" name="status"/>
+    <input type="hidden" id="id_created_by" name="id_created_by"/>
+    <input type="hidden" id="editable" name="editable"/>
+    <input type="hidden" id="wholeDayOnly" name="wholeDayOnly"/>
+
+    {{ form.participants_json.as_hidden }}
+    {{ form.mode }}
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <div style="float: left" class="clearfix">
+                <h4 class="modal-title">Dodawanie / Edycja wydarzenia <span id="error_list" class="alert-danger"
+                                                                            style="display:none; padding:5px; border:1px solid #ba0000; border-radius: 5px;font-weight:700"></span></h4>
+                <div id="created_by-container"><h5>Utworzył: <span></span></h5></div>
+            </div>
+            <div class="col-lg-12">
+                <div style="float:right">
+                    <button id="mode_toggle_btn" class="btn-default btn btn-md" type="button">Basic / Advanced</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div id="form_content"></div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="btn-group">
+                <div class="dropup">
+                    <button class="btn btn-danger dropdown-toggle" type="button" id="cancelMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Odwołaj...
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="cancelMenu">
+                        <li><a href="#" id="delete-btn">Usuń</a></li>
+                        {#                            <li><a href="#" id="cancel-btn">Anuluj</a></li>#}
+                        <li><a href="#" id="delete_and_set-btn">Usuń i umów ponownie</a></li>
+                    </ul>
+                </div>
+            </div>
+            {##}
+            <div class="btn-group">
+                <div class="dropup">
+                    <button class="btn btn-success dropdown-toggle" type="button" id="saveMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Wykonaj...
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="saveMenu">
+                        {#                            <li><a href="#" id="activate-btn">Aktywuj</a></li>#}
+                        <li><a href="#" id="submit-btn">Zapisz</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" id="close-btn">Zakończ</a></li>
+                        <li><a href="#" id="closeAndSetBtn">Zakończ i umów ponownie</a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

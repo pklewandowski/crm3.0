@@ -1,0 +1,16 @@
+#newAdviserContainer {
+    overflow: auto;
+    max-height:400px;
+}
+
+#newAdviserContainer table td:nth-child(2) {
+    width: 60%;
+}
+
+.client-list-vindication-row {
+    background-color: #f8d095;
+}
+
+.client-list-execution-row {
+    background-color: #ffdddd;
+}

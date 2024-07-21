@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block form_icon %}fas fa-user-edit{% endblock %}
+{% block form_title %}Grupy uprawnień{% endblock %}
+{% block form_subtitle %}Lista zdefiniowanych grup uprawnień użytkowników{% endblock %}
+{% block form_title_right %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="content-transparent-background">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div>
+                            <table id="user-list-table-{% if mode == mode_edit %}edit{% else %}view{% endif %}" class="table table-hover table-condensed ">
+                                <thead>
+                                    <tr>
+                                        <th class="sort sort-unsorted">Nazwa</th>
+                                        <th>Opis</th>
+                                        <th style="width:80px">Akcje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for group in groups %}
+                                        <tr data-id="{{ group.pk }}">
+                                            <td><a href="{% url 'user.editgroup' group.id %}">{{ group.name }}</a></td>
+                                            <td>{{ group.description|default_if_none:'' }}</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    {% if  perms.user.change_groupuser %}
+                                                        <a href="{% url 'user.editgroup' group.id %}" class="btn btn-default btn-sm edit">
+                                                            <i class="far fa-edit" aria-hidden="true"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block site_inline_js %}
+{% endblock %}
+
+{% block site_script %}
+{% endblock %}

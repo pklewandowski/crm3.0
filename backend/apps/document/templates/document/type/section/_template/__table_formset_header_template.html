@@ -1,0 +1,11 @@
+<template id="attr_formset_{{ c.section.pk }}_header_template">
+<thead>
+    <tr>
+        {% for col in c.columns %}
+            {% for at in col.attributes %}
+                <th>{{ at.name }}</th>
+            {% endfor %}
+        {% endfor %}
+    </tr>
+</thead>
+</template>

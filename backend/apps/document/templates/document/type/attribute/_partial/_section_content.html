@@ -1,0 +1,14 @@
+<div class="section-content">
+    {% for j in i.column_set.all %}
+        {% include 'document/type/section/_partial/_column_attributes_patrial.html' with c=j section=i %}
+    {% endfor %}
+
+    {% for j in i.children.all %}
+        <div class="col-lg-12">
+            {% include 'document/type/attribute/_partial/_repeat_subsection_panel.html' with i=j %}
+            {% for k in j.column_set.all %}
+                {% include 'document/type/section/_partial/_column_attributes_patrial.html' with c=k section=j%}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

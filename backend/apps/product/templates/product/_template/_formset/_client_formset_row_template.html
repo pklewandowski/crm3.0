@@ -1,0 +1,24 @@
+<template id="client-formset-row-template">
+
+    {% config_var 'MODE_EDIT' as mode_edit %}
+
+    <tr data-id="__ID_CLIENT__" data-removable="true">
+
+        <td>__NAME__</td>
+        <td>__EMAIL__</td>
+        <td>__PERSONAL_ID__</td>
+        <td>__NIP__</td>
+        <td>{{ client_formset.empty_form.function }}</td>
+        <td>
+            <div class="btn-group">
+                <a class="btn btn-danger btn-sm delete-client delete">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+            </div>
+        </td>
+        <input type="hidden" name="{{ client_formset.empty_form.product.html_name }}" value="__ID_PRODUCT__"/>
+        <input type="hidden" name="{{ client_formset.empty_form.client.html_name }}" value="__ID_CLIENT__"/>
+        {{ client_formset.empty_form.id.as_hidden }}
+
+    </tr>
+</template>

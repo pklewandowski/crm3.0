@@ -1,0 +1,83 @@
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    background-color: #4a4545;
+    overflow-x: hidden;
+    transition: 0.5s;
+    /*padding-top: 20px;*/
+    margin-top: 70px;
+    margin-left: -165px;
+    /*opacity: .3;*/
+}
+
+/*.sidenav:hover {*/
+/*margin-left: 0;*/
+/*opacity: 1;*/
+/*}*/
+
+.sidenav-open {
+    margin-left: 0;
+    /*!*opacity: 1;*/
+}
+
+.main-open {
+    margin-left: 205px !important;
+    /*!*opacity: 1;*/
+}
+
+.sidenav a {
+    padding-left: 10px;
+    text-decoration: none;
+    color: #c7c7c7;
+    display: block;
+    transition: 0.3s;
+    /*font-family: tahoma, sans-serif;*/
+    font-weight: 700;
+}
+
+.sidenav a:hover, .offcanvas a:focus {
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 23px 16px 16px 16px;
+    margin-left: 35px;
+    margin-top: 70px;
+}
+
+/* ------ Override bootstrap navbar ------------------*/
+
+.navbar {
+    margin-bottom: 0;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.navbar-brand {
+    padding: 10px 5px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 18px;
+    }
+}

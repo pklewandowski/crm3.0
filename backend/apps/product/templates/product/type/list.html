@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+{% block content %}
+
+    <div class="">
+        <table id="attribute_datatype" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th style="width:80px;">Harmonogram</th>
+
+                <th style="width:170px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for type in product_types %}
+                <tr>
+                    <td>{{ type.name }}</td>
+
+                    {% if type.is_schedule %}
+                        <td class="text-center"><a class="yes-no-bookmark active"><i class="fa fa-check"></i></a></td>
+                    {% else %}
+                        <td class="text-center"><a class="yes-no-bookmark active"><i class="fa fa-times"></i></a></td>
+                    {% endif %}
+
+                    <td>
+                        <div class="btn-group">
+
+                            <a href="{% url 'product.list' type.pk %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="fa fa-bars" aria-hidden="true"></i>
+                            </a>
+                        </div>
+
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+{% endblock %}
+
+{% block site_script %}
+
+    $('#user_list a.password-reset').click(function (e) {
+
+    el = $(this).parents('tr');
+
+    swal({
+    title: 'Jesteś pewien?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: "Tak, generuj nowe hasło!",
+    cancelButtonText: "Nie",
+    closeOnConfirm: false,
+    }, function () {
+
+    });
+    });
+
+{% endblock %}

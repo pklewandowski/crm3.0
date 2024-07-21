@@ -1,0 +1,60 @@
+<form method="post" id="agreement-form">
+    {% csrf_token %}
+
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group clearfix">
+                {{form.product_type.label_tag}}
+                {{form.product_type}}
+                {{form.product_type.errors}}
+            </div>
+
+            <div class="form-group clearfix">
+                {{form.signature.label_tag}}
+                {{form.signature}}
+                {{form.signature.errors}}
+            </div>
+        </div>
+
+        {% if mode == 'CLIENT' %}
+        <div class="col-lg-6 col-sm-6">
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="display: inline-block;width: 100%;">
+                            <div style="float:left;">Dane klienta</div>
+                            <div style="float: right;"><a class="btn btn-default btn-sm"><span>
+                            <i class="fa fa-arrow-circle-up"></i></span></a></div>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="suggestion-box-wrapper suggestion-list">
+                                <input class="form-control input-sm" type="text" id="search-box"
+                                       placeholder="Wpisz nazwisko klienta"/>
+
+                                <div id="suggestion-box" class="suggestion-box"></div>
+                            </div>
+
+                            <table id="client-list-row-table"
+                                   class="table table-hover table-condensed">
+                                <thead>
+                                <th>Imię i nazwisko</th>
+                                <th>PESEL</th>
+                                <th>NIP</th>
+
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        {{form.client.as_hidden}}
+        {% endif %}
+    </div>
+</form>

@@ -1,0 +1,19 @@
+#!/bin/bash
+LOGFILE="/webapps/speedcash_crm/scripts/msg/msg_queue.log"
+ERRFILE="/webapps/speedcash_crm/scripts/msg/msg_queue_err.log"
+STATUS_FILE="/webapps/speedcash_crm/scripts/msg/msg_queue_status"
+STATUS=`cat $STATUS_FILE`
+source /webapps/speedcash_crm/_env/bin/activate
+if [ "$STATUS" != "0" ]; then
+    echo `date '+%Y-%m-%d %H:%M:%S'` "process iddle" >> $LOGFILE
+    python3 /webapps/speedcash_crm/speedcash_crm/manage.py process_busy_cmd >> $LOGFILE
+    exit
+fi
+echo "1" > $STATUS_FILE
+echo "----------------------------------------------" >> $LOGFILE
+echo `date '+%Y-%m-%d %H:%M:%S'` "Start sending message queue" >> $LOGFILE
+python3 /webapps/speedcash_crm/speedcash_crm/manage.py text_cmd >> $LOGFILE
+echo `date '+%Y-%m-%d %H:%M:%S'` "done!" >> $LOGFILE
+echo "0" > $STATUS_FILE
+
+

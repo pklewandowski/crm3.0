@@ -1,0 +1,20 @@
+<div class="lvh-txt-container lvh-txt-control">
+    {{ field.label_tag }}
+    <div class="{% if not dtc_disabled %}input-group input-group-sm{% else %}form-group{% endif %}">
+
+        {% if not dtc_disabled %}
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="hierarchy-tree" id="hierarchy-tree" data-json="{{ field.field.json }}"></div>
+                </div>
+            </div>
+        {% endif %}
+
+        <input type="text" class="form-control input-sm lvh-txt-display"
+               name="{{ field.html_name }}_display"  readonly="readonly" disabled="disabled"/>
+    </div>
+    {{ field.errors }}
+    <input class="lvh-txt-json" type="hidden" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default_if_none:"" }}"/>
+</div>

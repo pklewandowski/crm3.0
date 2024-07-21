@@ -1,0 +1,2013 @@
+Delivered-To: pklewandowski@gmail.com
+Received: by 2002:a05:6a10:6205:0:0:0:0 with SMTP id v5csp34098pxh;
+        Wed, 6 Apr 2022 23:11:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyNPUK0qMMtwKvKbV9D86AJVxvdbNkPY40LV4lvRQcJKs0mvqypZbNcab02ncX3Mknxbpiy
+X-Received: by 2002:a05:620a:4083:b0:67d:a6e3:523c with SMTP id f3-20020a05620a408300b0067da6e3523cmr8286489qko.601.1649311877450;
+        Wed, 06 Apr 2022 23:11:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1649311877; cv=none;
+        d=google.com; s=arc-20160816;
+        b=FzvBbHVEzlmzChHwlMtGMveTkvBBoL7nRR3v8ohUcBEUQOWe/EPxdHV74Yl3ExZzT2
+         5qYlMY0b5TnUuR8IVvXhw5KE5mCpRV5o4IDlIyP3Gvk0/jZ5cFon99uh5mROh7pcapLq
+         9+jNvIcePMxsIi9tAKVOJ8h6Z+cqP/+9YPo4qwKk6JbNKcMIxDJ5X99nZTaejP1WBCg6
+         VdMwoN12qqFpho2wzm2RT6hfKjn+qkawajCSTuxvYWn23izSY/vfNIDIGGWcQtGAzTW8
+         YXb4JncGV6zxtMpJVnT6TD/8Tx756iy/W66CVIC2FWdr1sKXnDAG98GYl/NzRFPbv1uo
+         O6yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-unsubscribe:mime-version:subject:message-id:to:reply-to:from
+         :date:dkim-signature:dkim-signature;
+        bh=okxztdF/OE4ta2Hbj0qAqwSDl0UCyONN6f1nh1luOEQ=;
+        b=rGPkgqW0J+PqCm5B5yelbCjKEycesbQCIg9CtUvF2jN/Z3Hf+6nfNCd90OriyzlTug
+         hOEEJuTgQvHWZhV+NqH+f5uIkDkrg/SPQqssHvLzJWD5A6CqQ/CVy6w3Us0Doo02gxEL
+         XtA/EJyfEaTAZzqSTb8nyp8Eo4jlpcAsNPALLfKvb4voelHxwRLryKKEVDCvSoWtRs6o
+         3BXaVSucMVA0TJPicZUMiUQgyGLJ1eANW2SYOnpotp1/ymlxEqbO9IuL/WulrAzlz6iP
+         fCk4UjQbW/lwxQtDMuXiCY7a1s6IL7Ks+gJ3aEy2jb7ptMYVgkDc5bCQeHiT9yAaf4Fa
+         K76Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@f5.com header.s=m1 header.b=Y1rcLjD4;
+       dkim=pass header.i=@mktdns.com header.s=m1 header.b=Iov98CAC;
+       spf=pass (google.com: domain of 653-smc-783.0.854863.0.0.263740.9.68768563-14@mkt.f5.com designates 199.15.213.134 as permitted sender) smtp.mailfrom=653-SMC-783.0.854863.0.0.263740.9.68768563-14@mkt.f5.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=f5.com
+Return-Path: <653-SMC-783.0.854863.0.0.263740.9.68768563-14@mkt.f5.com>
+Received: from mkt.f5.com (mkt.f5.com. [199.15.213.134])
+        by mx.google.com with ESMTPS id k126-20020a37ba84000000b0067e4be237e4si7104419qkf.41.2022.04.06.23.11.17
+        for <pklewandowski@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Apr 2022 23:11:17 -0700 (PDT)
+Received-SPF: pass (google.com: domain of 653-smc-783.0.854863.0.0.263740.9.68768563-14@mkt.f5.com designates 199.15.213.134 as permitted sender) client-ip=199.15.213.134;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@f5.com header.s=m1 header.b=Y1rcLjD4;
+       dkim=pass header.i=@mktdns.com header.s=m1 header.b=Iov98CAC;
+       spf=pass (google.com: domain of 653-smc-783.0.854863.0.0.263740.9.68768563-14@mkt.f5.com designates 199.15.213.134 as permitted sender) smtp.mailfrom=653-SMC-783.0.854863.0.0.263740.9.68768563-14@mkt.f5.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=f5.com
+X-MSFBL: tSSjvErJmSuHG4/TUB05VmobPCZyzQLbJtS8KXOJFQM=|eyJyIjoicGtsZXdhbmR
+	vd3NraUBnbWFpbC5jb20iLCJ1IjoiNjUzLVNNQy03ODM6MDoyNzg2NDg6MTkyMjg
+	zOTo3OTM5ODQ4OjI2Mzc0MDo5Ojg1NDg2Mzo2ODc2ODU2My0xNCIsImIiOiJkdnA
+	tMTk5LTE1LTIxMy0xMzQiLCJnIjoiYmctYWJkLTY5In0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1649311392;
+	s=m1; d=f5.com; i=@f5.com;
+	h=Content-Type:MIME-Version:Subject:To:From:Date;
+	bh=okxztdF/OE4ta2Hbj0qAqwSDl0UCyONN6f1nh1luOEQ=;
+	b=Y1rcLjD4jPJV3AAtGQIi0ae0SCLYGIvGiGnmp0TRcWuufEulGxfUbs1xHvolNxg7
+	QXWdzA7LV1+fXpJmQmetwXsMuehayWofjDYiCrFnlFSi6PwDM9hQE0hAtF88yt9H/mO
+	EQe/MOIerX3JNvjysXqCtVVjypgAIYmPla/C8ab0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1649311392;
+	s=m1; d=mktdns.com; i=@mktdns.com;
+	h=Content-Type:MIME-Version:Subject:To:From:Date;
+	bh=okxztdF/OE4ta2Hbj0qAqwSDl0UCyONN6f1nh1luOEQ=;
+	b=Iov98CACEgFm416QJrHEwNz0T0jzhaVrur5C4UXDZa5ZpCT0TwHY7FiXMW9/6Fkn
+	Y8MEnHIMvEojEEM/1edB7Z9kHfNo0ljlSzf1VP1BA9ykdc9aX5iUVSI7ZCCeX9j9i60
+	Ectfm2NE9jVIDqOdVlKFlj1L1nKXiEhXku2JmD5g=
+Date: Thu, 7 Apr 2022 01:03:12 -0500 (CDT)
+From: Emily Turner <e.turner@f5.com>
+Reply-To: e.turner@f5.com
+To: pklewandowski@gmail.com
+Message-ID: <2134721670.128341446.1649311392435@abmktmail-batch1c.marketo.org>
+Subject: NGINX Monthly Newsletter - April
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_128341443_698221384.1649311392434"
+X-Binding: bg-abd-69
+List-Unsubscribe: <mailto:PBRV65CNJJNE6RCMNNYFIVDMHBHTARDMONYTA4KTLF4G4OKGGFMTG5KYIRRVCQ3JOVVGOPI=.854863.263740.9@unsub-ab.mktomail.com>
+X-PVIQ: mkto-653SMC783-000001-000000-854863
+X-MarketoID: 653-SMC-783:0:278648:1922839:7939848:263740:9:854863:68768563-14
+X-Mailfrom: 653-SMC-783.0.854863.0.0.263740.9.68768563-14@mkt.f5.com
+X-MktArchive: false
+X-MSYS-API: {"options":{"open_tracking":false,"click_tracking":false}}
+X-MktMailDKIM: true
+
+------=_Part_128341443_698221384.1649311392434
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+NEWSLETTER
+This updated O=E2=80=99Reilly eBook shows developers and operations staff h=
+ow to apply industry-standard DevOps practices to Kubernetes in a cloud-nat=
+ive context. Learn how to build, deploy, and scale modern applications in t=
+he cloud.
+Download eBook <https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk6pu-pZmiY80s782=
+PhqUnuRTM6m7Frep_v8I-iUhQfHNRSifII-O_SF3Vcgl3xtAAv8ATvWoTmxBOEP3LUx0LOI8oKD=
+QbNTfBfCgIXmGThHMDrpplrMPR4SwbbqjGgHqm86JPVZM40DDSRg8RMhwJlqIVoItn6eS8MFYnE=
+BFRK2MP3gVxewh-5EDulJUbCdM8Q=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfH=
+n1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D>
+ON DEMAND TRAINING=20
+Microservices March 2022: Kubernetes Networking  <https://buzz.f5.com/dc/PX=
+-d3BUIYY13OoIgLxhSk4EwwHWeTL7Xd19iPonzX-HYuR-Y4k1Fmz1727ENUmTdJWSojMD04aOQd=
+_hZmB9lfY3m9qXKFaBb1J9KpLUBhkkqDZtJ8Gqen0lHtbSmJrFfa8V69rPR4-tlsg34YA3enb-y=
+zALdgPZA8WcorGjxdl0yBEMMu5hHDBxqY3d_iTRza-AWQLPcPqhjfJkTnrfymw=3D=3D/NjUzLV=
+NNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV=
+_RR3LIpuDQ=3D>
+Increase your Kubernetes networking knowledge and get hands-on experience w=
+ith tools including Helm, Jaeger, KEDA, NGINX Ingress Controller, NGINX Ser=
+vice Mesh, and Prometheus.
+Register Now =E2=80=BA   <https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk4EwwH=
+WeTL7Xd19iPonzX-HYuR-Y4k1Fmz1727ENUmTdJWSojMD04aOQd_hZmB9lfY3m9qXKFaBb1J9Kp=
+LUBhkkqDZtJ8Gqen0lHtbSmJrFfa8V69rPR4-tlsg34YA3enb-yzALdgPZA8WcorGjxdl0yBEMM=
+u5hHDBxqY3d_iTRza-AWQLPcPqhjfJkTnrfymw=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_=
+dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D>
+BLOG
+Integrating OpenTelemetry into the Modern Apps Reference Architecture <http=
+s://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk8XOCMczDjllCT14xfzxk4dDJ0RdsdUbXrWt=
+Dyx6bmlRHEg-iCfqliEnjGRE_hXh2nwPP_szowGY3gc9ZwIw395-B7tc3fzpfy3BTUcC439hRM9=
+Dvv8XITKDySsqpoNJxw=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6=
+kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D>
+We've completed the first phase of adding observability to the NGINX Modern=
+ Apps Reference Architecture (MARA). Here's how and why we chose OpenTeleme=
+try as our base solution and how we integrated it.
+Learn More =E2=80=BA   <https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk8XOCMcz=
+DjllCT14xfzxk4dDJ0RdsdUbXrWtDyx6bmlRHEg-iCfqliEnjGRE_hXh2nwPP_szowGY3gc9ZwI=
+w395-B7tc3fzpfy3BTUcC439hRM9Dvv8XITKDySsqpoNJxw=3D=3D/NjUzLVNNQy03ODMAAAGDo=
+ZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D>
+BLOG
+Seven Guidelines for Implementing Zero Trust in Kubernetes  <https://buzz.f=
+5.com/dc/PX-d3BUIYY13OoIgLxhSk56J__hACZH62lQLl875Kvma5KzjOapRf7gp1j3vkDazOM=
+wAVh8WYs15VcTw_zdS67pxJ8LhhbnGw6edTdkjYLM=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_=
+dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D>
+More and more organizations, including the U.S. government, are recognizing=
+ the need for Zero Trust security. ZT is particularly important for distrib=
+uted environments like Kubernetes. Follow our seven practical guidelines to=
+ implement ZT more easily and effectively.
+Read the Blog =E2=80=BA   <https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk56J_=
+_hACZH62lQLl875Kvma5KzjOapRf7gp1j3vkDazOMwAVh8WYs15VcTw_zdS67pxJ8LhhbnGw6ed=
+TdkjYLM=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqg=
+U-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D>
+TUTORIAL
+Reduce Kubernetes Latency with Autoscaling <https://buzz.f5.com/dc/PX-d3BUI=
+YY13OoIgLxhSk-Gz7rq33ccQrudXS6CEB4SggehGvakBzK0dlPl9Prm06D75nweJnHdHoGpb9Vz=
+DYF3ej08frEkyNOhaqKTCw6KVb8aQ1Sswby_cg2Ta1dgT/NjUzLVNNQy03ODMAAAGDoZdSp2mib=
+_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D>
+Traffic surges can cause bottlenecks, leading to dropped connections and lo=
+st customers. In this tutorial, Daniele Polencic of learnk8s shows how to r=
+educe latency for a Kubernetes app by autoscaling the number of NGINX Ingre=
+ss Controller pods in response to high traffic.
+Dive In =E2=80=BA   <https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk-Gz7rq33cc=
+QrudXS6CEB4SggehGvakBzK0dlPl9Prm06D75nweJnHdHoGpb9VzDYF3ej08frEkyNOhaqKTCw6=
+KVb8aQ1Sswby_cg2Ta1dgT/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFe=
+Q_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D>
+UPCOMING EVENTS
+
+
+=09- <span style=3D"font-size: 16px;"><strong><a href=3D "https://buzz.f5.c=
+om/NjUzLVNNQy03ODMAAAGDoZdSp44b2YyGufoWwpR4Mzi0y_XEWVC3NM93nrwQ-765gj6SSaIq=
+dmc1fcpuueOjd3oW58Y=3D" target=3D"_blank" style=3D"text-decoration: none; t=
+ransition: opacity 0.1s ease-in; color: #00aced;" >Fundamentals of Microser=
+vices, Linux Foundation</a></strong>, <em>April 5, 9:00AM PDT </em></span>
+=09- <span style=3D"font-size: 16px;"><strong><a href=3D "https://buzz.f5.c=
+om/NjUzLVNNQy03ODMAAAGDoZdSqCML_Mg55T-wwDor11BxQJICEp4ODiWQv1XCMaPhoHT9R8Ny=
+ZWLcCh8HNYptF3tr47I=3D" target=3D"_blank" style=3D"text-decoration: none; t=
+ransition: opacity 0.1s ease-in; color: #00aced;" >NGINX Kubernetes Trainin=
+g</a></strong>, <em>April 12, 9:00AM GMT </em></span>
+Connect with us
+
+<https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSpzmdyoMtMNod0Q0KYfVoMI5g_OGVUF=
+7-CAKtUl5KKalddy_n-5l0EDAQ1FS9ATNy0DA=3D>
+<https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSqJahGl5LErwUW9GP3cFn1rNJ4IoMEL=
+BawIeGDs0DvzA3L4L8wYKW6M-vM6siGKvJwto=3D>
+<https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSp8xZKTVs0mnEnXJsYaGrM9qL_Wrijz=
+fndtgrX_Gxn_sdvlgS6msJqTC8x9CNsXHkQlw=3D>
+<https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSp899JFY_FQ5DCs-MCYfmKfsOJKcqK1=
+czFYIy_XW9_sl-y5u37gxFBCAzNTVDJllo-bk=3D>
+<https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSqJ1xPnW-yLkMvOJuw4ibv59sPkBRm9=
+lP94viEOMBlwI_vsxDZVoP8DL_HJ-mL9hB1Ww=3D>
+
+This email was sent by: F5 NGINX
+ 43-47 London Street, Chertsey, KT16 8AP, UK | nginx.com
+=C2=A92022 F5, Inc. All rights reserved.
+Policies <https://f5.com/about-us/policies> | Privacy <https://f5.com/about=
+-us/policies/privacy-policy> | Trademarks <https://f5.com/about-us/policies=
+/trademarks> | Preference Center <https://f5.com/about-us/preferences> | Un=
+subscribe <https://interact.f5.com/email-subscription-center.html?mkt_unsub=
+scribe=3D1>
+
+
+
+
+.
+
+------=_Part_128341443_698221384.1649311392434
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www=
+.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:o=3D"urn:schemas-microso=
+ft-com:office:office" xmlns:v=3D"urn:schemas-microsoft-com:vml">
+<head>=20
+<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPer=
+Inch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->=20
+<meta content=3D"text/html; charset=3Dutf-8" http-equiv=3D"Content-Type" />=
+=20
+<meta content=3D"width=3Ddevice-width" name=3D"viewport" />=20
+<!--[if !mso]><!-->=20
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge" />=20
+<meta name=3D"robots" content=3D"noindex,nofollow" />=20
+<!--<![endif]-->=20
+<title>F5.com</title>=20
+<!--[if !mso]><!-->=20
+<!--<![endif]-->=20
+<!-- hero background image --> =20
+<!-- hero background image --> =20
+<!-- hero background image --> =20
+<!-- hero background image --> =20
+<!--| START: style/style |-->=20
+<style type=3D"text/css">
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    table,
+    td,
+    tr {
+      vertical-align: top;
+      border-collapse: collapse;
+    }
+
+    * {
+      line-height: inherit;
+    }
+
+    a[x-apple-data-detectors=3Dtrue] {
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+
+    a {
+      color:#1d9cd3;
+    }
+  </style>=20
+<style id=3D"media-query" type=3D"text/css">
+    @media (max-width: 740px) {
+
+      .block-grid,
+      .col {
+        min-width: 320px !important;
+        max-width: 100% !important;
+        display: block !important;
+      }
+
+      .block-grid {
+        width: 100% !important;
+      }
+
+      .col {
+        width: 100% !important;
+      }
+
+      .col>div {
+        margin: 0 auto;
+      }
+
+      img.fullwidth,
+      img.fullwidthOnMobile {
+        max-width: 100% !important;
+      }
+
+      .no-stack .col {
+        min-width: 0 !important;
+        display: table-cell !important;
+      }
+
+      .no-stack.two-up .col {
+        width: 50% !important;
+      }
+
+      .no-stack .col.num4 {
+        width: 33% !important;
+      }
+
+      .no-stack .col.num8 {
+        width: 66% !important;
+      }
+
+      .no-stack .col.num4 {
+        width: 33% !important;
+      }
+
+      .no-stack .col.num3 {
+        width: 25% !important;
+      }
+
+      .no-stack .col.num6 {
+        width: 50% !important;
+      }
+
+      .no-stack .col.num9 {
+        width: 75% !important;
+      }
+
+      .video-block {
+        max-width: none !important;
+      }
+
+      .mobile_hide {
+        min-height: 0px;
+        max-height: 0px;
+        max-width: 0px;
+        display: none;
+        overflow: hidden;
+        font-size: 0px;
+      }
+
+      .desktop_hide {
+        display: block !important;
+        max-height: none !important;
+      }
+      .fs38 {
+        font-size: 38px!important;
+        line-height: 40px!important;
+      }
+
+      /*/////////*/
+
+      .pr0 {
+        padding-right: 0px!important;
+      }
+      .pl0 {
+        padding-left: 0px!important;
+      }
+      .pb20 {
+        padding-bottom: 20px!important;
+      }
+
+      .fullwidth{width:100%!important;}
+      .floatleft {
+        float: left !important
+      }
+
+      .hero1 {
+        background-image: url(https://interact.f5.com/rs/653-SMC-783/images=
+/f5com_img_datacenter_16-9_dark-desk.jpg) !important;
+        background-position:top center !important;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+      }
+
+      .hero02 {
+        background-image: url(https://interact.f5.com/rs/653-SMC-783/images=
+/C07-GoodBotBadBot-XL-dimmed.jpg) !important;
+        background-position:top center!important;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+      }
+    }
+  </style>=20
+<style type=3D"text/css">
+    body {
+      margin: 0;
+      padding: 0
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      border-spacing: 0;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt
+    }
+
+    .ExternalClass * {
+      line-height: 100%;
+      margin: 0px;
+      padding: 0px
+    }
+
+    img {
+      display: block !important
+    }
+
+    a {
+      text-decoration: none
+    }
+
+    a,
+    td {
+      -webkit-text-size-adjust: none
+    }
+
+    th {
+      font-weight: normal;
+      padding: 0px;
+      margin: 0px
+    }
+
+    button {
+      font-weight: normal;
+      padding: 0px;
+      margin: 0px
+    }
+
+    a[x-apple-data-detectors] {
+      color: inherit !important;
+      text-decoration: none !important;
+      font-size: inherit !important;
+      font-family: inherit !important;
+      font-weight: inherit !important;
+      line-height: inherit !important
+    }
+
+    div.WordSection1>div>table.MsoNormalTable>tbody>tr>td>div>table.MsoNorm=
+alTable {
+      width: 600px !important
+    }
+
+    div.WordSection1 table.MsoNormalTable {
+      width: initial !important
+    }
+
+    .noWrap {
+      white-space: nowrap !important
+    }
+
+    .d-noWrap {
+      white-space: nowrap
+    }
+
+    .show_on_mobile,
+    .de_footer {
+      display: none !important;
+      height: 0px;
+      max-height: 0px;
+      mso-hide: all
+    }
+
+    .mobiledate span,
+    .mobiledate span:hover {
+      border-bottom: 0px none transparent!important;
+    }
+
+    .mobiledate a {
+      color: inherit!important;
+      text-decoration: none!important;
+      white-space: nowrap;
+      border-bottom: none!important;
+    }
+
+    @media only screen and (max-width: 800px) {
+      .block-grid {
+        max-width: 100%!important;
+        width: 100%!important;
+      }
+    }
+
+    @media handheld,
+    only screen and (-webkit-min-device-pixel-ratio: 3) and (max-width: 108=
+0px),
+    screen and (max-width: 740px) {
+      div.generic {
+        min-width: calc(100vw - 30px) !important
+      }
+      .backgroundnone {
+        background-image: none !important;
+        background-color: #ffffff !important;
+        background: #ffffff !important
+      }
+      .hide {
+        display: none !important;
+        font-size: 0 !important;
+        max-height: 0 !important;
+        line-height: 0 !important
+      }
+      .show_on_mobile,
+      .de_footer {
+        display: block !important;
+        width: 100% !important;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        float: none !important
+      }
+      .de_footer table,
+      .de_footer td {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        float: none !important
+      }
+      .de_footer table {
+        display: table !important;
+        width: 100% !important
+      }
+      .de_footer td {
+        display: block !important
+      }
+      .break {
+        display: block !important;
+        width: 100% !important;
+        height: 1px !important;
+        line-height: 1px !important;
+        min-height: 1px !important;
+        max-height: 1px !important
+      }
+      .floatleft {
+        float: left !important
+      }
+      .floatright {
+        float: right !important
+      }
+      .floatoff {
+        float: none !important
+      }
+      .heightauto {
+        height: auto !important
+      }
+      .widthauto {
+        width: auto !important
+      }
+
+      .fullwidth {
+        width: 100% !important
+      }
+      .halfwidth {
+        width: 50% !important
+      }
+      .imgfullwidth {
+        width: 100% !important;
+        height: auto !important
+      }
+      .perc30 {
+        width: 30% !important
+      }
+      .alc {
+        text-align: center !important
+      }
+      .all {
+        text-align: left !important
+      }
+      .alr {
+        text-align: right !important
+      }
+      .m-noWrap {
+        white-space: nowrap !important
+      }
+      .d-noWrap {
+        white-space: nowrap !important
+      }
+      .tablewidth300 {
+        width: 300px !important
+      }
+      .tablewidth280 {
+        width: 280px !important
+      }
+
+      /*=09=09=09padding bottom*/
+
+      .pb0 {
+        padding-bottom: 0px !important
+      }
+      .pb5 {
+        padding-bottom: 5px !important
+      }
+      .pb10 {
+        padding-bottom: 10px !important
+      }
+      .pb15 {
+        padding-bottom: 15px !important
+      }
+      .pb20 {
+        padding-bottom: 20px !important
+      }
+      .pb25 {
+        padding-bottom: 25px !important
+      }
+      .pb30 {
+        padding-bottom: 30px !important
+      }
+      .pb35 {
+        padding-bottom: 35px !important
+      }
+      .pb40 {
+        padding-bottom: 40px !important
+      }
+
+      /*=09=09=09padding left*/
+
+      .pl0 {
+        padding-left: 0px !important
+      }
+      .pl10 {
+        padding-left: 10px !important
+      }
+
+      .pl15 {
+        padding-left: 15px !important
+      }
+
+      .pl20 {
+        padding-left: 20px !important
+      }
+
+      .pl25 {
+        padding-left: 25px !important
+      }
+
+      .pl30 {
+        padding-left: 30px !important
+      }
+
+      .pl35 {
+        padding-left: 35px !important
+      }
+
+      .pl40 {
+        padding-left: 40px !important
+      }
+
+      /*=09=09=09padding right*/
+
+      .pr0 {
+        padding-right: 0px !important
+      }
+      .pr10 {
+        padding-right: 10px !important
+      }
+      .pr23 {
+        padding-right: 23% !important
+      }
+      .pr15 {
+        padding-right: 15px !important
+      }
+      .pr20 {
+        padding-right: 20px !important
+      }
+      .pr25 {
+        padding-right: 25px !important
+      }
+      .pr30 {
+        padding-right: 30px !important
+      }
+      .pr35 {
+        padding-right: 35px !important
+      }
+      .pr40 {
+        padding-right: 40px !important
+      }
+
+      /*=09=09=09padding top*/
+
+      .pt0 {
+        padding-top: 0px !important
+      }
+      .pt5 {
+        padding-top: 5px !important
+      }
+      .pt10 {
+        padding-top: 10px !important
+      }
+      .pt15 {
+        padding-top: 15px !important
+      }
+      .pt20 {
+        padding-top: 20px !important
+      }
+      .pt25 {
+        padding-top: 25px !important
+      }
+      .pt30 {
+        padding-top: 30px !important
+      }
+      .pt35 {
+        padding-top: 35px !important
+      }
+      .pt40 {
+        padding-top: 40px !important
+      }
+
+
+      .showmob {
+        overflow: visible !important;
+        float: none !important;
+        display: block !important;
+        line-height: 100% !important;
+        visibility: visible !important
+      }
+      .showmobimg {
+        width: 100% !important;
+        height: auto !important
+      }
+      .showLink {
+        overflow: visible !important;
+        float: none !important;
+        display: block !important;
+        line-height: 18px !important;
+        font-size: 16px !important;
+        visibility: visible !important
+      }
+      .showmob img {
+        width: 100% !important;
+        height: auto !important
+      }
+      .fullwidthimg {
+        width: 100% !important;
+        height: auto !important;
+        display: block !important
+      }
+      .center-image {
+        display: block !important;
+        text-align: center !important
+      }
+      .center-image img {
+        margin: 0 auto !important
+      }
+      .align-image-left {
+        text-align: left!important;
+      }
+    }
+
+    * {
+      box-sizing: border-box!important
+    }
+  </style>=20
+<!--[if gte mso 9]>
+  <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml>
+  <![endif]-->=20
+<!--[if gt mso 15]>
+     <style type=3D"text/css" media=3D"all">
+     /* Outlook 2016 Height Fix */
+     table, tr, td {border-collapse: collapse;}
+     tr { font-size:0px; line-height:0px; border-collapse: collapse; }
+     </style>
+     <![endif]-->=20
+</head>=20
+<body class=3D"clean-body" style=3D"margin: 0; padding: 0; -webkit-text-siz=
+e-adjust: 100%; background-color: #FFFFFF;">=20
+<!--[if IE]><div class=3D"ie-browser"><![endif]-->=20
+<table align=3D"center" width=3D"100%" border=3D"0" cellspacing=3D"0" cellp=
+adding=3D"0">=20
+<tbody>
+<tr>=20
+<td align=3D"center">=20
+<table width=3D"600" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" align=
+=3D"center" class=3D"fullwidth">=20
+<tbody>=20
+<tr>=20
+<td style=3D"display:none !important; visibility: hidden; mso-hide:all; fon=
+t-size:1px; color:#ffffff; line-height:1px; max-height:0px; max-width:0px; =
+opacity:0; overflow:hidden;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>=20
+<!-- module area -->=20
+<tr>=20
+<td>=20
+<table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" width=3D"100%" clas=
+s=3D"mktoContainer" id=3D"mkto-container">
+<tr id=3D"mkto-hero-j-modulea136a9cb-3ae4-404a-9770-68fd1734c074" class=3D"=
+mktoModule">=20
+<td>=20
+<div style=3D"background-color:transparent;">=20
+<div class=3D"block-grid mixed-two-up" style=3D"Margin: 0 auto; min-width: =
+320px; max-width: 800px; overflow-wrap: break-word; word-wrap: break-word; =
+word-break: break-word; background-color: transparent;">=20
+<div style=3D"border-collapse: collapse;display: table;width: 100%;backgrou=
+nd-color:transparent;">=20
+<!--[if (mso)|(IE)]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"=
+0" border=3D"0" style=3D"background-color:transparent;"><tr><td align=3D"ce=
+nter"><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" style=3D"widt=
+h:800px"><tr class=3D"layout-full-width" style=3D"background-color:transpar=
+ent"><![endif]-->=20
+<!--[if (mso)|(IE)]><td align=3D"center" width=3D"200" style=3D"background-=
+color:transparent;width:200px; border-top: 0px solid transparent; border-le=
+ft: 0px solid transparent; border-bottom: 0px solid transparent; border-rig=
+ht: 0px solid transparent;" valign=3D"top"><table width=3D"100%" cellpaddin=
+g=3D"0" cellspacing=3D"0" border=3D"0"><tr><td style=3D"padding-right: 20px=
+; padding-left: 20px; padding-top:20px; padding-bottom:20px;"><![endif]-->=
+=20
+<div class=3D"col num3" style=3D"display: table-cell; vertical-align: top; =
+max-width: 320px; min-width: 198px; width: 200px;">=20
+<div style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div style=3D"border-top:0px solid transparent; border-left:0px solid trans=
+parent; border-bottom:0px solid transparent; border-right:0px solid transpa=
+rent; padding-top:20px; padding-bottom:20px; padding-right: 20px; padding-l=
+eft: 20px;">=20
+<!--<![endif]-->=20
+<div align=3D"left" class=3D"img-container left fixedwidth" style=3D"paddin=
+g-right: 0px;padding-left: 0px;">=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr style=3D"line-height:0px"><td style=3D"padding-right: 0px;padd=
+ing-left: 0px;" align=3D"left"><![endif]-->=20
+<div id=3D"hero-logo-j-modulea136a9cb-3ae4-404a-9770-68fd1734c074" class=3D=
+"mktEditable">=20
+<table class=3D"mktoModule" id=3D"logo" mktoname=3D"Logo" width=3D"100%" bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"min-width: 100%;">=
+=20
+<tbody>=20
+<tr>=20
+<td align=3D"center" class=3D"stack" style=3D"text-align: justify;"><a href=
+=3D
+"https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSqKJ46BAos0xmhcSkN8k9hya7FnvRRc=
+HvNNyG2CKsSAkxVeEnE7Y-3KJ2J5NcS68R6LM=3D" target=3D"_blank"
+><img src=3D"https://interact.f5.com/rs/653-SMC-783/images/NGINX Part of F5=
+ Horizontal Black Type with Padding - 106x77.png" alt=3D"NGINX logo" border=
+=3D"0" width=3D"106" height=3D"77" style=3D"display: block; margin-left: au=
+to; margin-right: auto; float: left;" constrain=3D"true" imagepreview=3D"fa=
+lse" /></a></td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+</div>=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td><td align=3D"center" width=3D"600" style=3D"backgr=
+ound-color:transparent;width:600px; border-top: 0px solid transparent; bord=
+er-left: 0px solid transparent; border-bottom: 0px solid transparent; borde=
+r-right: 0px solid transparent;" valign=3D"top"><table width=3D"100%" cellp=
+adding=3D"0" cellspacing=3D"0" border=3D"0"><tr><td style=3D"padding-right:=
+ 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;"><![endif]-->=
+=20
+<div class=3D"col num9 mobile_hide" style=3D"display: table-cell; vertical-=
+align: top; min-width: 320px; max-width: 594px; width: 600px;">=20
+<div class=3D"mobile_hide" style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div class=3D"mobile_hide" style=3D"border-top:0px solid transparent; borde=
+r-left:0px solid transparent; border-bottom:0px solid transparent; border-r=
+ight:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-ri=
+ght: 0px; padding-left: 0px;">=20
+<!--<![endif]-->=20
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"divider mo=
+bile_hide" role=3D"presentation" style=3D"table-layout: fixed; vertical-ali=
+gn: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0p=
+t; mso-table-rspace: 0pt; min-width: 100%; -ms-text-size-adjust: 100%; -web=
+kit-text-size-adjust: 100%;" valign=3D"top" width=3D"100%">=20
+<tbody>=20
+<tr style=3D"vertical-align: top;" valign=3D"top">=20
+<td class=3D"divider_inner mobile_hide" style=3D"word-break: break-word; ve=
+rtical-align: top; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-tex=
+t-size-adjust: 100%; padding-top: 10px; padding-right: 10px; padding-bottom=
+: 10px; padding-left: 10px;" valign=3D"top">=20
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" cl=
+ass=3D"divider_content" height=3D"0" role=3D"presentation" style=3D"table-l=
+ayout: fixed; vertical-align: top; border-spacing: 0; border-collapse: coll=
+apse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-top: 0px solid t=
+ransparent; height: 0px; width: 100%;" valign=3D"top" width=3D"100%">=20
+<tbody>=20
+<tr style=3D"vertical-align: top;" valign=3D"top">=20
+<td height=3D"0" style=3D"word-break: break-word; vertical-align: top; -ms-=
+text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign=3D"top"><sp=
+an></span></td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->=20
+</div>=20
+</div>=20
+</div>=20
+<div style=3D"background-color:transparent;">=20
+<div class=3D"block-grid" style=3D"Margin: 0 auto; min-width: 320px; max-wi=
+dth: 800px; overflow-wrap: break-word; word-wrap: break-word; word-break: b=
+reak-word; background-color: transparent;">=20
+<div style=3D"border-collapse: collapse;display: table;width: 100%;backgrou=
+nd-color:transparent;">=20
+<!--[if (mso)|(IE)]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"=
+0" border=3D"0" style=3D"background-color:transparent;"><tr><td align=3D"ce=
+nter"><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" style=3D"widt=
+h:800px"><tr class=3D"layout-full-width" style=3D"background-color:transpar=
+ent"><![endif]-->=20
+<!--[if (mso)|(IE)]><td align=3D"center" width=3D"800" style=3D"background-=
+color:transparent;width:800px; border-top: 0px solid transparent; border-le=
+ft: 0px solid transparent; border-bottom: 0px solid transparent; border-rig=
+ht: 0px solid transparent;" valign=3D"top"><table width=3D"100%" cellpaddin=
+g=3D"0" cellspacing=3D"0" border=3D"0"><tr><td style=3D"padding-right: 20px=
+; padding-left: 20px; padding-top:0px; padding-bottom:15px;"><![endif]-->=
+=20
+<div class=3D"col num12" style=3D"min-width: 320px; max-width: 800px; displ=
+ay: table-cell; vertical-align: top; width: 800px;">=20
+<div style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div style=3D"border-top:0px solid transparent; border-left:0px solid trans=
+parent; border-bottom:0px solid transparent; border-right:0px solid transpa=
+rent; padding-top:0px; padding-bottom:5px; padding-right: 20px; padding-lef=
+t: 20px;">=20
+<!--<![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 0px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div class=3D"pt0" style=3D"color:#343434;font-family:Arial, Helvetica Neue=
+, Helvetica, sans-serif;line-height:1.2;padding-top:0px;padding-right:0px;p=
+adding-bottom:0px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"hero-j-hero-eyebrowa136a9cb-3ae4-404a-9770-68=
+fd1734c074" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans-se=
+rif; font-size: 12px; line-height: 1.2; color: #343434; mso-line-height-alt=
+: 14px;">=20
+<p style=3D"font-size: 14px; line-height: 1.2; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 17px; margin: 0;">NEWSLETTER<br /></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, 'Helvetica Neue', Helvetica,=
+ sans-serif;line-height:1.1;padding-top:0px;padding-right:0px;padding-botto=
+m:10px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"hero-j-headlinea136a9cb-3ae4-404a-9770-68fd17=
+34c074" style=3D"font-size: 12px; line-height: 1.1; font-family: Arial, 'He=
+lvetica Neue', Helvetica, sans-serif; color: #343434; mso-line-height-alt: =
+14px;"></div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->=20
+</div>=20
+</div>=20
+</div>=20
+<div style=3D"background-color:transparent;">=20
+<div class=3D"block-grid" style=3D"Margin: 0 auto; min-width: 320px; max-wi=
+dth: 800px; overflow-wrap: break-word; word-wrap: break-word; word-break: b=
+reak-word; background-color: transparent;">=20
+<div style=3D"border-collapse: collapse;display: table;width: 100%;backgrou=
+nd-color:transparent;">=20
+<!--[if (mso)|(IE)]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"=
+0" border=3D"0" style=3D"background-color:transparent;"><tr><td align=3D"ce=
+nter"><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" style=3D"widt=
+h:800px"><tr class=3D"layout-full-width" style=3D"background-color:transpar=
+ent"><![endif]-->=20
+<!--[if (mso)|(IE)]><td align=3D"center" width=3D"800" style=3D"background-=
+color:transparent;width:800px; border-top: 0px solid transparent; border-le=
+ft: 0px solid transparent; border-bottom: 0px solid transparent; border-rig=
+ht: 0px solid transparent;" valign=3D"top"><table width=3D"100%" cellpaddin=
+g=3D"0" cellspacing=3D"0" border=3D"0"><tr><td style=3D"padding-right: 20px=
+; padding-left: 20px; padding-top:0px; padding-bottom:0px;"><![endif]-->=20
+<div class=3D"col num12" style=3D"min-width: 320px; max-width: 800px; displ=
+ay: table-cell; vertical-align: top; width: 800px;">=20
+<div style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div class=3D"full-image pb30" style=3D"border-top:0px solid transparent; b=
+order-left:0px solid transparent; border-bottom:0px solid transparent; bord=
+er-right:0px solid transparent; padding-top:0px; padding-bottom:0px; paddin=
+g-right: 20px; padding-left: 20px;">=20
+<!--<![endif]-->=20
+<div align=3D"center" class=3D"img-container center autowidth" style=3D"pad=
+ding-right: 0px;padding-left: 0px;">=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr style=3D"line-height:0px"><td style=3D"padding-right: 0px;padd=
+ing-left: 0px;" align=3D"center"><![endif]-->=20
+<div id=3D"hero-j-imagea136a9cb-3ae4-404a-9770-68fd1734c074" class=3D"mktoI=
+mg" mktolockimgsize=3D"true">=20
+<a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk6pu-pZmiY80s782PhqUnuRTM6m7Fre=
+p_v8I-iUhQfHNRSifII-O_SF3Vcgl3xtAAv8ATvWoTmxBOEP3LUx0LOI8oKDQbNTfBfCgIXmGTh=
+HMDrpplrMPR4SwbbqjGgHqm86JPVZM40DDSRg8RMhwJlqIVoItn6eS8MFYnEBFRK2MP3gVxewh-=
+5EDulJUbCdM8Q=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_A=
+xV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank"
+><img src=3D"https://interact.f5.com/rs/653-SMC-783/images/EBK - Cloud Nati=
+ve DevOps with Kubernetes 2nd Edition - 760x284.png " width=3D"760" alt=3D"=
+Cloud Native DevOps with Kubernetes, 2nd Edition" class=3D"center autowidth=
+" style=3D"text-decoration: none; -ms-interpolation-mode: bicubic; border: =
+0; height: auto; width: 100%; max-width: 760px; display: block;" /></a>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+</div>=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->=20
+</div>=20
+</div>=20
+</div> </td>=20
+</tr>
+<tr id=3D"mkto-paragraph-c-module70c38b95-54d6-4dce-b3f3-3f4734a18c38" clas=
+s=3D"mktoModule">=20
+<td class=3D"pt30 pb30" style=3D"padding-bottom: 15px; padding-top: 15px;">=
+=20
+<div style=3D"background-color:transparent;">=20
+<div class=3D"block-grid" style=3D"padding-bottom: 15px; Margin:0 auto;min-=
+width:320px; max-width: 800px; overflow-wrap: break-word; word-wrap: break-=
+word; word-break: break-word; background-color: transparent;">=20
+<div style=3D"border-collapse: collapse;display: table;width: 100%;backgrou=
+nd-color:transparent;">=20
+<!--[if (mso)|(IE)]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"=
+0" border=3D"0" style=3D"background-color:transparent;"><tr><td align=3D"ce=
+nter"><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" style=3D"widt=
+h:800px"><tr class=3D"layout-full-width" style=3D"background-color:transpar=
+ent"><![endif]-->=20
+<!--[if (mso)|(IE)]><td align=3D"center" width=3D"800" style=3D"background-=
+color:transparent;width:800px; border-top: 0px solid transparent; border-le=
+ft: 0px solid transparent; border-bottom: 0px solid transparent; border-rig=
+ht: 0px solid transparent;" valign=3D"top"><table width=3D"100%" cellpaddin=
+g=3D"0" cellspacing=3D"0" border=3D"0"><tr><td style=3D"padding-right: 0px;=
+ padding-left: 0px; padding-top:0px; padding-bottom:0px;"><![endif]-->=20
+<div class=3D"col num12" style=3D"min-width: 320px; max-width: 800px; displ=
+ay: table-cell; vertical-align: top; width: 800px;">=20
+<div style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div style=3D"border-top:0px solid transparent; border-left:0px solid trans=
+parent; border-bottom:0px solid transparent; border-right:0px solid transpa=
+rent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left=
+: 0px;">=20
+<!--<![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 20px; padding-left: 20px; padding-=
+top: 0px; padding-bottom: 5px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.5;padding-top:0px;padding-right:20px;padding-bottom=
+:5px;padding-left:20px;">=20
+<div class=3D"mktoText" id=3D"paragraph-c-block-c70c38b95-54d6-4dce-b3f3-3f=
+4734a18c38" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans-se=
+rif; font-size: 12px; line-height: 1.5; color: #343434; mso-line-height-alt=
+: 18px;">=20
+<p style=3D"font-size: 16px; line-height: 1.5; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 24px; margin: 0;"><span style=3D"font-size: 16px;">This updated O=E2=80=99=
+Reilly eBook shows developers and operations staff how to apply industry-st=
+andard DevOps practices to Kubernetes in a cloud-native context. Learn how =
+to build, deploy, and scale modern applications in the cloud.</span></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 20px; padding-left: 20px; padding-=
+top: 0px; padding-bottom: 20px; font-family: Arial, sans-serif"><![endif]--=
+>=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.5;padding-top:0px;padding-right:20px;padding-bottom=
+:0px;padding-left:20px;">=20
+<div class=3D"mktoText" id=3D"paragraph-c-block-d70c38b95-54d6-4dce-b3f3-3f=
+4734a18c38" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans-se=
+rif; font-size: 12px; line-height: 1.5; color: #343434; mso-line-height-alt=
+: 18px;"></div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->=20
+</div>=20
+</div>=20
+</div>=20
+<div style=3D"background-color:transparent;">=20
+<table width=3D"800" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" align=
+=3D"center" class=3D"fullwidth" role=3D"presentation">=20
+<tbody>=20
+<tr>=20
+<td>=20
+<div align=3D"left" class=3D"button-container" style=3D"padding-top:0px;pad=
+ding-right:0px;padding-bottom:0px;padding-left:0px;">=20
+<div style=3D"text-decoration:none;display:inline-block;color:#ffffff;borde=
+r-radius:0px;-webkit-border-radius:0px;-moz-border-radius:0px;width:auto; w=
+idth:auto;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;text-ali=
+gn:center;mso-border-alt:none;word-break:keep-all;">=20
+<div>=20
+<table width=3D"190" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" align=
+=3D"left">=20
+<tbody>=20
+<tr>=20
+<td style=3D"padding-left: 20px">=20
+<table width=3D"190" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" align=
+=3D"left">=20
+<tbody>=20
+<tr>=20
+<td>=20
+<table width=3D"190" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">=20
+<tbody>=20
+<tr>=20
+<td align=3D"center" bgcolor=3D"#1D9CD3" class=3D"mktoText" id=3D"paragraph=
+-c-block-cta70c38b95-54d6-4dce-b3f3-3f4734a18c38" style=3D"font-size: 16px;=
+ line-height: 18px; font-family: Helvetica, Arial, sans-serif; color: #ffff=
+ff; padding: 12px 18px;"><p style=3D"margin: 0px;"><a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk6pu-pZmiY80s782PhqUnuRTM6m7Fre=
+p_v8I-iUhQfHNRSifII-O_SF3Vcgl3xtAAv8ATvWoTmxBOEP3LUx0LOI8oKDQbNTfBfCgIXmGTh=
+HMDrpplrMPR4SwbbqjGgHqm86JPVZM40DDSRg8RMhwJlqIVoItn6eS8MFYnEBFRK2MP3gVxewh-=
+5EDulJUbCdM8Q=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_A=
+xV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank" style=3D"font-si=
+ze: 16px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; col=
+or: #ffffff; text-decoration: none; border: 1px solid #1D9CD3; display: inl=
+ine-block; font-weight: bold;"
+>Download eBook</a></p></td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+</div>=20
+</div>=20
+</div> </td>=20
+</tr>=20
+</tbody>=20
+</table>=20
+</div> </td>=20
+</tr>
+<tr id=3D"mkto-spacer15-modulebc9add7e-429d-4037-8265-b40246f994e8" class=
+=3D"mktoModule">=20
+<td style=3D"word-break: break-word; vertical-align: top; -ms-text-size-adj=
+ust: 100%; -webkit-text-size-adjust: 100%; padding-bottom: 7px; padding-top=
+: 8px">=20
+<table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" alig=
+n=3D"center" class=3D"fullwidth" role=3D"presentation">=20
+<tbody>=20
+<tr>=20
+<td height=3D"15" style=3D"word-break: break-word; vertical-align: top; -ms=
+-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign=3D"top"><s=
+pan></span></td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr id=3D"mkto-blade-b-module6ee7a36a-81e6-4899-82f3-48f38c1e2d7a" class=3D=
+"mktoModule">=20
+<td>=20
+<div style=3D"background-color:transparent;">=20
+<div class=3D"block-grid two-up" style=3D"Margin: 0 auto; min-width: 320px;=
+ max-width: 800px; overflow-wrap: break-word; word-wrap: break-word; word-b=
+reak: break-word; background-color: transparent;">=20
+<div style=3D"border-collapse: collapse;display: table;width: 100%;backgrou=
+nd-color:transparent;">=20
+<!--[if (mso)|(IE)]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"=
+0" border=3D"0" style=3D"background-color:transparent;"><tr><td align=3D"ce=
+nter"><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" style=3D"widt=
+h:800px"><tr class=3D"layout-full-width" style=3D"background-color:transpar=
+ent"><![endif]-->=20
+<!--[if (mso)|(IE)]><td align=3D"center" width=3D"400" style=3D"background-=
+color:transparent;width:400px; border-top: 0px solid transparent; border-le=
+ft: 0px solid transparent; border-bottom: 0px solid transparent; border-rig=
+ht: 0px solid transparent;" valign=3D"top"><table width=3D"100%" cellpaddin=
+g=3D"0" cellspacing=3D"0" border=3D"0"><tr><td style=3D"padding-right: 30px=
+; padding-left: 30px; padding-top:15px; padding-bottom:15px;"><![endif]-->=
+=20
+<div class=3D"col num6" style=3D"min-width: 320px; max-width: 400px; displa=
+y: table-cell; vertical-align: top; width: 400px;">=20
+<div style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div class=3D"pb0" style=3D"border-top:0px solid transparent; border-left:0=
+px solid transparent; border-bottom:0px solid transparent; border-right:0px=
+ solid transparent; padding-top:15px; padding-bottom:15px; padding-right: 3=
+0px; padding-left: 30px;">=20
+<!--<![endif]-->=20
+<div align=3D"center" class=3D"img-container center autowidth" style=3D"pad=
+ding-right: 0px;padding-left: 0px;">=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr style=3D"line-height:0px"><td style=3D"padding-right: 0px;padd=
+ing-left: 0px;" align=3D"center"><![endif]-->=20
+<div id=3D"blade-b-box-a-photo6ee7a36a-81e6-4899-82f3-48f38c1e2d7a" class=
+=3D"mktoImg" mktolockimgsize=3D"true">=20
+<a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk4EwwHWeTL7Xd19iPonzX-HYuR-Y4k1=
+Fmz1727ENUmTdJWSojMD04aOQd_hZmB9lfY3m9qXKFaBb1J9KpLUBhkkqDZtJ8Gqen0lHtbSmJr=
+Ffa8V69rPR4-tlsg34YA3enb-yzALdgPZA8WcorGjxdl0yBEMMu5hHDBxqY3d_iTRza-AWQLPcP=
+qhjfJkTnrfymw=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_A=
+xV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank"
+><img src=3D"https://interact.f5.com/rs/653-SMC-783/images/bots-solution-pa=
+ge-hero_xs_1.jpg" width=3D"340" alt=3D"Microservices March 2022: Kubernetes=
+ Networking " class=3D"center autowidth" style=3D"text-decoration: none; -m=
+s-interpolation-mode: bicubic; border: 0; height: auto; width: 100%; max-wi=
+dth: 340px; display: block;" /></a>=20
+</div>=20
+<div style=3D"font-size:1px;line-height:20px">=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+</div>=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 20px; padding-bottom: 5px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:20px;padding-top:20px;padding-right:0px;padding-botto=
+m:5px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-a-eyebrow6ee7a36a-81e6-4899-82f3-=
+48f38c1e2d7a" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans-=
+serif; font-size: 12px; line-height: 20px; color: #343434; mso-line-height-=
+alt: 14px;">=20
+<p style=3D"font-size: 14px; line-height: 20px; word-break: break-word; fon=
+t-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt=
+: 17px; margin: 0;">ON DEMAND TRAINING </p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.1;padding-top:0px;padding-right:0px;padding-bottom:=
+10px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-a-headline6ee7a36a-81e6-4899-82f3=
+-48f38c1e2d7a" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans=
+-serif; font-size: 12px; line-height: 1.1; color: #343434; mso-line-height-=
+alt: 14px;">=20
+<p style=3D"font-size: 14px; line-height: 1.1; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 17px; margin: 0;"><strong><span style=3D"font-size: 30px;"><a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk4EwwHWeTL7Xd19iPonzX-HYuR-Y4k1=
+Fmz1727ENUmTdJWSojMD04aOQd_hZmB9lfY3m9qXKFaBb1J9KpLUBhkkqDZtJ8Gqen0lHtbSmJr=
+Ffa8V69rPR4-tlsg34YA3enb-yzALdgPZA8WcorGjxdl0yBEMMu5hHDBxqY3d_iTRza-AWQLPcP=
+qhjfJkTnrfymw=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_A=
+xV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank" style=3D"text-de=
+coration: none; transition: opacity 0.1s ease-in; color: #000000"
+>Microservices March 2022: Kubernetes Networking </a></span></strong></p>=
+=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 20px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.5;padding-top:0px;padding-right:0px;padding-bottom:=
+20px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-a-description6ee7a36a-81e6-4899-8=
+2f3-48f38c1e2d7a" style=3D"font-family: Arial, Helvetica Neue, Helvetica, s=
+ans-serif; font-size: 12px; line-height: 1.5; color: #343434; mso-line-heig=
+ht-alt: 18px;">=20
+<p style=3D"font-size: 16px; line-height: 1.5; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 24px; margin: 0;"><span style=3D"font-size: 16px;">Increase your Kubernete=
+s networking knowledge and get hands-on experience with tools including Hel=
+m, Jaeger, KEDA, NGINX Ingress Controller, NGINX Service Mesh, and Promethe=
+us.</span></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 0px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#1d9cd3;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.2;padding-top:0px;padding-right:0px;padding-bottom:=
+0px;padding-left:0px;" class=3D"pb30">=20
+<div class=3D"mktoText" id=3D"blade-b-box-a-cta6ee7a36a-81e6-4899-82f3-48f3=
+8c1e2d7a" style=3D"font-size: 14px; line-height: 1.2; color: #1d9cd3; font-=
+family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt: =
+17px;">=20
+<p style=3D"font-size: 16px; line-height: 1.2; word-break: break-word; mso-=
+line-height-alt: 19px; margin: 0;"><a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk4EwwHWeTL7Xd19iPonzX-HYuR-Y4k1=
+Fmz1727ENUmTdJWSojMD04aOQd_hZmB9lfY3m9qXKFaBb1J9KpLUBhkkqDZtJ8Gqen0lHtbSmJr=
+Ffa8V69rPR4-tlsg34YA3enb-yzALdgPZA8WcorGjxdl0yBEMMu5hHDBxqY3d_iTRza-AWQLPcP=
+qhjfJkTnrfymw=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_A=
+xV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank" style=3D"text-de=
+coration: none;"
+> <span style=3D"font-size: 16px; color: #1d9cd3;"> <strong>Register Now =
+=E2=80=BA</strong> </span> </a></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td><td align=3D"center" width=3D"400" style=3D"backgr=
+ound-color:transparent;width:400px; border-top: 0px solid transparent; bord=
+er-left: 0px solid transparent; border-bottom: 0px solid transparent; borde=
+r-right: 0px solid transparent;" valign=3D"top"><table width=3D"100%" cellp=
+adding=3D"0" cellspacing=3D"0" border=3D"0"><tr><td style=3D"padding-right:=
+ 30px; padding-left: 30px; padding-top:15px; padding-bottom:15px;"><![endif=
+]-->=20
+<div class=3D"col num6" style=3D"min-width: 320px; max-width: 400px; displa=
+y: table-cell; vertical-align: top; width: 400px;">=20
+<div style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div class=3D"pt0 pb0" style=3D"border-top:0px solid transparent; border-le=
+ft:0px solid transparent; border-bottom:0px solid transparent; border-right=
+:0px solid transparent; padding-top:15px; padding-bottom:15px; padding-righ=
+t: 30px; padding-left: 30px;">=20
+<!--<![endif]-->=20
+<div align=3D"center" class=3D"img-container center autowidth" style=3D"pad=
+ding-right: 0px;padding-left: 0px;">=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr style=3D"line-height:0px"><td style=3D"padding-right: 0px;padd=
+ing-left: 0px;" align=3D"center"><![endif]-->=20
+<div id=3D"blade-b-box-b-photo6ee7a36a-81e6-4899-82f3-48f38c1e2d7a" class=
+=3D"mktoImg" mktolockimgsize=3D"true">=20
+<a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk8XOCMczDjllCT14xfzxk4dDJ0RdsdU=
+bXrWtDyx6bmlRHEg-iCfqliEnjGRE_hXh2nwPP_szowGY3gc9ZwIw395-B7tc3fzpfy3BTUcC43=
+9hRM9Dvv8XITKDySsqpoNJxw=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wc=
+HkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank"
+><img src=3D"https://interact.f5.com/rs/653-SMC-783/images/BG - Integrating=
+ OpenTelemetry into the Modern Apps Reference Architecture - 340x195.png  "=
+ width=3D"340" alt=3D"Integrating OpenTelemetry into the Modern Apps Refere=
+nce Architecture" class=3D"center autowidth" style=3D"text-decoration: none=
+; -ms-interpolation-mode: bicubic; border: 0; height: auto; width: 100%; ma=
+x-width: 340px; display: block;" /></a>=20
+</div>=20
+<div style=3D"font-size:1px;line-height:20px">=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+</div>=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 20px; padding-bottom: 5px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:20px;padding-top:20px;padding-right:0px;padding-botto=
+m:5px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-b-eyebrow6ee7a36a-81e6-4899-82f3-=
+48f38c1e2d7a" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans-=
+serif; font-size: 12px; line-height: 1.2; color: #343434; mso-line-height-a=
+lt: 14px;">=20
+<p style=3D"font-size: 14px; line-height: 20px; word-break: break-word; fon=
+t-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt=
+: 17px; margin: 0;">BLOG</p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.1;padding-top:0px;padding-right:0px;padding-bottom:=
+10px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-b-headline6ee7a36a-81e6-4899-82f3=
+-48f38c1e2d7a" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans=
+-serif; font-size: 12px; line-height: 1.1; color: #343434; mso-line-height-=
+alt: 14px;">=20
+<p style=3D"font-size: 14px; line-height: 1.1; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 17px; margin: 0;"><strong><span style=3D"font-size: 30px;"><a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk8XOCMczDjllCT14xfzxk4dDJ0RdsdU=
+bXrWtDyx6bmlRHEg-iCfqliEnjGRE_hXh2nwPP_szowGY3gc9ZwIw395-B7tc3fzpfy3BTUcC43=
+9hRM9Dvv8XITKDySsqpoNJxw=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wc=
+HkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank" style=
+=3D"text-decoration: none; transition: opacity 0.1s ease-in; color: #000000=
+;"
+>Integrating OpenTelemetry into the Modern Apps Reference Architecture</a><=
+/span></strong></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 20px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.5;padding-top:0px;padding-right:0px;padding-bottom:=
+20px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-b-description6ee7a36a-81e6-4899-8=
+2f3-48f38c1e2d7a" style=3D"font-family: Arial, Helvetica Neue, Helvetica, s=
+ans-serif; font-size: 12px; line-height: 1.5; color: #343434; mso-line-heig=
+ht-alt: 18px;">=20
+<p style=3D"font-size: 16px; line-height: 1.5; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 24px; margin: 0;"><span style=3D"font-size: 16px;">We've completed the fir=
+st phase of adding observability to the NGINX Modern Apps Reference Archite=
+cture (MARA). Here's how and why we chose OpenTelemetry as our base solutio=
+n and how we integrated it.</span></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 0px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#1d9cd3;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.2;padding-top:0px;padding-right:0px;padding-bottom:=
+0px;padding-left:0px;" class=3D"pb30">=20
+<div class=3D"mktoText" id=3D"blade-b-box-b-cta6ee7a36a-81e6-4899-82f3-48f3=
+8c1e2d7a" style=3D"font-size: 14px; line-height: 1.2; color: #1d9cd3; font-=
+family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt: =
+17px;">=20
+<p style=3D"font-size: 16px; line-height: 1.2; word-break: break-word; mso-=
+line-height-alt: 19px; margin: 0;"><a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk8XOCMczDjllCT14xfzxk4dDJ0RdsdU=
+bXrWtDyx6bmlRHEg-iCfqliEnjGRE_hXh2nwPP_szowGY3gc9ZwIw395-B7tc3fzpfy3BTUcC43=
+9hRM9Dvv8XITKDySsqpoNJxw=3D=3D/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wc=
+HkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank" style=
+=3D"text-decoration: none;"
+> <span style=3D"font-size: 16px; color: #1d9cd3;"> <strong>Learn More =E2=
+=80=BA</strong> </span> </a></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->=20
+</div>=20
+</div>=20
+</div> </td>=20
+</tr>
+<tr id=3D"mkto-blade-b-module00eafea1-54fa-409a-a75e-9cb0f9b8a4e8" class=3D=
+"mktoModule">=20
+<td>=20
+<div style=3D"background-color:transparent;">=20
+<div class=3D"block-grid two-up" style=3D"Margin: 0 auto; min-width: 320px;=
+ max-width: 800px; overflow-wrap: break-word; word-wrap: break-word; word-b=
+reak: break-word; background-color: transparent;">=20
+<div style=3D"border-collapse: collapse;display: table;width: 100%;backgrou=
+nd-color:transparent;">=20
+<!--[if (mso)|(IE)]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"=
+0" border=3D"0" style=3D"background-color:transparent;"><tr><td align=3D"ce=
+nter"><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" style=3D"widt=
+h:800px"><tr class=3D"layout-full-width" style=3D"background-color:transpar=
+ent"><![endif]-->=20
+<!--[if (mso)|(IE)]><td align=3D"center" width=3D"400" style=3D"background-=
+color:transparent;width:400px; border-top: 0px solid transparent; border-le=
+ft: 0px solid transparent; border-bottom: 0px solid transparent; border-rig=
+ht: 0px solid transparent;" valign=3D"top"><table width=3D"100%" cellpaddin=
+g=3D"0" cellspacing=3D"0" border=3D"0"><tr><td style=3D"padding-right: 30px=
+; padding-left: 30px; padding-top:15px; padding-bottom:15px;"><![endif]-->=
+=20
+<div class=3D"col num6" style=3D"min-width: 320px; max-width: 400px; displa=
+y: table-cell; vertical-align: top; width: 400px;">=20
+<div style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div class=3D"pb0" style=3D"border-top:0px solid transparent; border-left:0=
+px solid transparent; border-bottom:0px solid transparent; border-right:0px=
+ solid transparent; padding-top:15px; padding-bottom:15px; padding-right: 3=
+0px; padding-left: 30px;">=20
+<!--<![endif]-->=20
+<div align=3D"center" class=3D"img-container center autowidth" style=3D"pad=
+ding-right: 0px;padding-left: 0px;">=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr style=3D"line-height:0px"><td style=3D"padding-right: 0px;padd=
+ing-left: 0px;" align=3D"center"><![endif]-->=20
+<div id=3D"blade-b-box-a-photo00eafea1-54fa-409a-a75e-9cb0f9b8a4e8" class=
+=3D"mktoImg" mktolockimgsize=3D"true">=20
+<a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk56J__hACZH62lQLl875Kvma5KzjOap=
+Rf7gp1j3vkDazOMwAVh8WYs15VcTw_zdS67pxJ8LhhbnGw6edTdkjYLM=3D/NjUzLVNNQy03ODM=
+AAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuD=
+Q=3D" target=3D"_blank"
+><img src=3D"https://interact.f5.com/rs/653-SMC-783/images/BG - Guidelines =
+for Implementing Zero Trust in Kubernetes - 340x195.png" width=3D"340" alt=
+=3D"Seven Guidelines for Implementing Zero Trust in Kubernetes " class=3D"c=
+enter autowidth" style=3D"text-decoration: none; -ms-interpolation-mode: bi=
+cubic; border: 0; height: auto; width: 100%; max-width: 340px; display: blo=
+ck;" /></a>=20
+</div>=20
+<div style=3D"font-size:1px;line-height:20px">=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+</div>=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 20px; padding-bottom: 5px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:20px;padding-top:20px;padding-right:0px;padding-botto=
+m:5px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-a-eyebrow00eafea1-54fa-409a-a75e-=
+9cb0f9b8a4e8" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans-=
+serif; font-size: 12px; line-height: 20px; color: #343434; mso-line-height-=
+alt: 14px;">=20
+<p style=3D"font-size: 14px; line-height: 20px; word-break: break-word; fon=
+t-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt=
+: 17px; margin: 0;">BLOG</p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.1;padding-top:0px;padding-right:0px;padding-bottom:=
+10px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-a-headline00eafea1-54fa-409a-a75e=
+-9cb0f9b8a4e8" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans=
+-serif; font-size: 12px; line-height: 1.1; color: #343434; mso-line-height-=
+alt: 14px;">=20
+<p style=3D"font-size: 14px; line-height: 1.1; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 17px; margin: 0;"><strong><span style=3D"font-size: 30px;"><a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk56J__hACZH62lQLl875Kvma5KzjOap=
+Rf7gp1j3vkDazOMwAVh8WYs15VcTw_zdS67pxJ8LhhbnGw6edTdkjYLM=3D/NjUzLVNNQy03ODM=
+AAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuD=
+Q=3D" target=3D"_blank" style=3D"text-decoration: none; transition: opacity=
+ 0.1s ease-in; color: #000000;"
+>Seven Guidelines for Implementing Zero Trust in Kubernetes </a></span></st=
+rong></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 20px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.5;padding-top:0px;padding-right:0px;padding-bottom:=
+20px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-a-description00eafea1-54fa-409a-a=
+75e-9cb0f9b8a4e8" style=3D"font-family: Arial, Helvetica Neue, Helvetica, s=
+ans-serif; font-size: 12px; line-height: 1.5; color: #343434; mso-line-heig=
+ht-alt: 18px;">=20
+<p style=3D"font-size: 16px; line-height: 1.5; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 24px; margin: 0;"><span style=3D"font-size: 16px;">More and more organizat=
+ions, including the U.S. government, are recognizing the need for Zero Trus=
+t security. ZT is particularly important for distributed environments like =
+Kubernetes. Follow our seven practical guidelines to implement ZT more easi=
+ly and effectively.</span></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 0px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#1d9cd3;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.2;padding-top:0px;padding-right:0px;padding-bottom:=
+0px;padding-left:0px;" class=3D"pb30">=20
+<div class=3D"mktoText" id=3D"blade-b-box-a-cta00eafea1-54fa-409a-a75e-9cb0=
+f9b8a4e8" style=3D"font-size: 14px; line-height: 1.2; color: #1d9cd3; font-=
+family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt: =
+17px;">=20
+<p style=3D"font-size: 16px; line-height: 1.2; word-break: break-word; mso-=
+line-height-alt: 19px; margin: 0;"><a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk56J__hACZH62lQLl875Kvma5KzjOap=
+Rf7gp1j3vkDazOMwAVh8WYs15VcTw_zdS67pxJ8LhhbnGw6edTdkjYLM=3D/NjUzLVNNQy03ODM=
+AAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ3EgvZKOGV_RR3LIpuD=
+Q=3D" target=3D"_blank" style=3D"text-decoration: none;"
+> <span style=3D"font-size: 16px; color: #1d9cd3;"> <strong>Read the Blog =
+=E2=80=BA</strong> </span> </a></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td><td align=3D"center" width=3D"400" style=3D"backgr=
+ound-color:transparent;width:400px; border-top: 0px solid transparent; bord=
+er-left: 0px solid transparent; border-bottom: 0px solid transparent; borde=
+r-right: 0px solid transparent;" valign=3D"top"><table width=3D"100%" cellp=
+adding=3D"0" cellspacing=3D"0" border=3D"0"><tr><td style=3D"padding-right:=
+ 30px; padding-left: 30px; padding-top:15px; padding-bottom:15px;"><![endif=
+]-->=20
+<div class=3D"col num6" style=3D"min-width: 320px; max-width: 400px; displa=
+y: table-cell; vertical-align: top; width: 400px;">=20
+<div style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div class=3D"pt0 pb0" style=3D"border-top:0px solid transparent; border-le=
+ft:0px solid transparent; border-bottom:0px solid transparent; border-right=
+:0px solid transparent; padding-top:15px; padding-bottom:15px; padding-righ=
+t: 30px; padding-left: 30px;">=20
+<!--<![endif]-->=20
+<div align=3D"center" class=3D"img-container center autowidth" style=3D"pad=
+ding-right: 0px;padding-left: 0px;">=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr style=3D"line-height:0px"><td style=3D"padding-right: 0px;padd=
+ing-left: 0px;" align=3D"center"><![endif]-->=20
+<div id=3D"blade-b-box-b-photo00eafea1-54fa-409a-a75e-9cb0f9b8a4e8" class=
+=3D"mktoImg" mktolockimgsize=3D"true">=20
+<a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk-Gz7rq33ccQrudXS6CEB4SggehGvak=
+BzK0dlPl9Prm06D75nweJnHdHoGpb9VzDYF3ej08frEkyNOhaqKTCw6KVb8aQ1Sswby_cg2Ta1d=
+gT/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ=
+3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank"
+><img src=3D"https://interact.f5.com/rs/653-SMC-783/images/Tutorial - Reduc=
+e Kubernetes Latency with Autoscaling  - 340x195.png " width=3D"340" alt=3D=
+"Reduce Kubernetes Latency with Autoscaling" class=3D"center autowidth" sty=
+le=3D"text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; he=
+ight: auto; width: 100%; max-width: 340px; display: block;" /></a>=20
+</div>=20
+<div style=3D"font-size:1px;line-height:20px">=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+</div>=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 20px; padding-bottom: 5px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:20px;padding-top:20px;padding-right:0px;padding-botto=
+m:5px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-b-eyebrow00eafea1-54fa-409a-a75e-=
+9cb0f9b8a4e8" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans-=
+serif; font-size: 12px; line-height: 1.2; color: #343434; mso-line-height-a=
+lt: 14px;">=20
+<p style=3D"font-size: 14px; line-height: 20px; word-break: break-word; fon=
+t-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt=
+: 17px; margin: 0;">TUTORIAL</p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 10px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.1;padding-top:0px;padding-right:0px;padding-bottom:=
+10px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-b-headline00eafea1-54fa-409a-a75e=
+-9cb0f9b8a4e8" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans=
+-serif; font-size: 12px; line-height: 1.1; color: #343434; mso-line-height-=
+alt: 14px;">=20
+<p style=3D"font-size: 14px; line-height: 1.1; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 17px; margin: 0;"><strong><span style=3D"font-size: 30px;"><a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk-Gz7rq33ccQrudXS6CEB4SggehGvak=
+BzK0dlPl9Prm06D75nweJnHdHoGpb9VzDYF3ej08frEkyNOhaqKTCw6KVb8aQ1Sswby_cg2Ta1d=
+gT/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ=
+3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank" style=3D"text-decoration: none; t=
+ransition: opacity 0.1s ease-in; color: #000000;"
+>Reduce Kubernetes Latency with Autoscaling</a></span></strong></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 20px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.5;padding-top:0px;padding-right:0px;padding-bottom:=
+20px;padding-left:0px;">=20
+<div class=3D"mktoText" id=3D"blade-b-box-b-description00eafea1-54fa-409a-a=
+75e-9cb0f9b8a4e8" style=3D"font-family: Arial, Helvetica Neue, Helvetica, s=
+ans-serif; font-size: 12px; line-height: 1.5; color: #343434; mso-line-heig=
+ht-alt: 18px;">=20
+<p style=3D"font-size: 16px; line-height: 1.5; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 24px; margin: 0;"><span style=3D"font-size: 16px;">Traffic surges can caus=
+e bottlenecks, leading to dropped connections and lost customers. In this t=
+utorial, Daniele Polencic of learnk8s shows how to reduce latency for a Kub=
+ernetes app by autoscaling the number of NGINX Ingress Controller pods in r=
+esponse to high traffic.</span></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-to=
+p: 0px; padding-bottom: 0px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#1d9cd3;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.2;padding-top:0px;padding-right:0px;padding-bottom:=
+0px;padding-left:0px;" class=3D"pb30">=20
+<div class=3D"mktoText" id=3D"blade-b-box-b-cta00eafea1-54fa-409a-a75e-9cb0=
+f9b8a4e8" style=3D"font-size: 14px; line-height: 1.2; color: #1d9cd3; font-=
+family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt: =
+17px;">=20
+<p style=3D"font-size: 16px; line-height: 1.2; word-break: break-word; mso-=
+line-height-alt: 19px; margin: 0;"><a href=3D
+"https://buzz.f5.com/dc/PX-d3BUIYY13OoIgLxhSk-Gz7rq33ccQrudXS6CEB4SggehGvak=
+BzK0dlPl9Prm06D75nweJnHdHoGpb9VzDYF3ej08frEkyNOhaqKTCw6KVb8aQ1Sswby_cg2Ta1d=
+gT/NjUzLVNNQy03ODMAAAGDoZdSp2mib_dpZzT6QTfHn1wcHkZD6kFeQ_AxV30EnRqgU-ddl7wZ=
+3EgvZKOGV_RR3LIpuDQ=3D" target=3D"_blank" style=3D"text-decoration: none;"
+> <span style=3D"font-size: 16px; color: #1d9cd3;"> <strong>Dive In =E2=80=
+=BA</strong> </span> </a></p>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->=20
+</div>=20
+</div>=20
+</div> </td>=20
+</tr>
+<tr id=3D"mkto-linedivider-800-module3af21d9b-8b66-4717-9ea3-3fdb95404cab" =
+class=3D"mktoModule">=20
+<td style=3D"word-break: break-word; vertical-align: top; -ms-text-size-adj=
+ust: 100%; -webkit-text-size-adjust: 100%; padding-bottom: 15px; padding-to=
+p: 15px">=20
+<table width=3D"800" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" align=
+=3D"center" class=3D"fullwidth" role=3D"presentation">=20
+<tbody>=20
+<tr>=20
+<td height=3D"1" style=3D"word-break: break-word; vertical-align: top; -ms-=
+text-size-adjust: 100%; -webkit-text-size-adjust: 100%;border-top: 1px soli=
+d #BBBBBB" valign=3D"top"><span></span></td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr id=3D"mkto-paragraph-b-module126e4501-74b6-4489-bbc5-1a2102ffdba5" clas=
+s=3D"mktoModule">=20
+<td class=3D"pb30 pt30" style=3D"padding-bottom: 15px; padding-top: 15px">=
+=20
+<div style=3D"background-color:transparent;">=20
+<div class=3D"block-grid" style=3D"Margin: 0 auto; min-width: 320px; max-wi=
+dth: 800px; overflow-wrap: break-word; word-wrap: break-word; word-break: b=
+reak-word;">=20
+<div style=3D"border-collapse: collapse;display: table;width: 100%;">=20
+<!--[if (mso)|(IE)]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"=
+0" border=3D"0" style=3D"background-color:transparent;"><tr><td align=3D"ce=
+nter"><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" style=3D"widt=
+h:800px"><tr class=3D"layout-full-width"><![endif]-->=20
+<!--[if (mso)|(IE)]><td align=3D"center" width=3D"800" style=3D"width:800px=
+; border-top: 0px solid transparent; border-left: 0px solid transparent; bo=
+rder-bottom: 0px solid transparent; border-right: 0px solid transparent;" v=
+align=3D"top"><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bor=
+der=3D"0"><tr><td style=3D"padding-right: 0px; padding-left: 0px; padding-t=
+op:0px; padding-bottom:0px;"><![endif]-->=20
+<div class=3D"col num12" style=3D"min-width: 320px; max-width: 800px; displ=
+ay: table-cell; vertical-align: top; width: 800px;">=20
+<div style=3D"width:100% !important;">=20
+<!--[if (!mso)&(!IE)]><!-->=20
+<div style=3D"border-top:0px solid transparent; border-left:0px solid trans=
+parent; border-bottom:0px solid transparent; border-right:0px solid transpa=
+rent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left=
+: 0px;">=20
+<!--<![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 30px; padding-left: 30px; padding-=
+top: 0px; padding-bottom: 5px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.5;padding-top:0px;padding-right:30px;padding-bottom=
+:5px;padding-left:30px;">=20
+<div class=3D"mktoText" id=3D"hero-block-b-3-1126e4501-74b6-4489-bbc5-1a210=
+2ffdba5" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans-serif=
+; font-size: 12px; line-height: 1.5; color: #343434; mso-line-height-alt: 1=
+8px;">=20
+<p style=3D"font-size: 16px; line-height: 1.5; word-break: break-word; font=
+-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt:=
+ 24px; margin: 0;"><strong>UPCOMING EVENTS</strong></p>=20
+<ul style=3D"list-style-type: disc;">=20
+<li style=3D"font-size: 16px; line-height: 1.5; word-break: break-word; mso=
+-line-height-alt: 24px;"><span style=3D"font-size: 16px;"><strong><a href=
+=3D "https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSp44b2YyGufoWwpR4Mzi0y_XEWV=
+C3NM93nrwQ-765gj6SSaIqdmc1fcpuueOjd3oW58Y=3D" target=3D"_blank" style=3D"te=
+xt-decoration: none; transition: opacity 0.1s ease-in; color: #00aced;" >Fu=
+ndamentals of Microservices, Linux Foundation</a></strong>, <em>April 5, 9:=
+00AM PDT </em></span></li>=20
+<li style=3D"font-size: 16px; line-height: 1.5; word-break: break-word; mso=
+-line-height-alt: 24px;"><span style=3D"font-size: 16px;"><strong><a href=
+=3D "https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSqCML_Mg55T-wwDor11BxQJICEp=
+4ODiWQv1XCMaPhoHT9R8NyZWLcCh8HNYptF3tr47I=3D" target=3D"_blank" style=3D"te=
+xt-decoration: none; transition: opacity 0.1s ease-in; color: #00aced;" >NG=
+INX Kubernetes Training</a></strong>, <em>April 12, 9:00AM GMT </em></span>=
+</li>=20
+</ul>=20
+</div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if mso]><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0"><tr><td style=3D"padding-right: 30px; padding-left: 30px; padding-=
+top: 0px; padding-bottom: 0px; font-family: Arial, sans-serif"><![endif]-->=
+=20
+<div style=3D"color:#343434;font-family:Arial, Helvetica Neue, Helvetica, s=
+ans-serif;line-height:1.5;padding-top:0px;padding-right:30px;padding-bottom=
+:0px;padding-left:30px;">=20
+<div class=3D"mktoText" id=3D"hero-block-c-3-1126e4501-74b6-4489-bbc5-1a210=
+2ffdba5" style=3D"font-family: Arial, Helvetica Neue, Helvetica, sans-serif=
+; font-size: 12px; line-height: 1.5; color: #343434; mso-line-height-alt: 1=
+8px;"></div>=20
+</div>=20
+<!--[if mso]></td></tr></table><![endif]-->=20
+<!--[if (!mso)&(!IE)]><!-->=20
+</div>=20
+<!--<![endif]-->=20
+</div>=20
+</div>=20
+<!--[if (mso)|(IE)]></td></tr></table><![endif]-->=20
+<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->=20
+</div>=20
+</div>=20
+</div> </td>=20
+</tr>
+<tr id=3D"mkto-spacer15-module" class=3D"mktoModule">=20
+<td style=3D"word-break: break-word; vertical-align: top; -ms-text-size-adj=
+ust: 100%; -webkit-text-size-adjust: 100%; padding-bottom: 7px; padding-top=
+: 8px">=20
+<table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" alig=
+n=3D"center" class=3D"fullwidth" role=3D"presentation">=20
+<tbody>=20
+<tr>=20
+<td height=3D"15" style=3D"word-break: break-word; vertical-align: top; -ms=
+-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign=3D"top"><s=
+pan></span></td>=20
+</tr>=20
+</tbody>=20
+</table> </td>=20
+</tr>
+<tr id=3D"mkto-footer-a-module" class=3D"mktoModule">=20
+<td>=20
+<div id=3D"mkto-snippet" class=3D"mktEditable" style=3D"text-align:center">
+
+<div style=3D"background-color: transparent;">
+<div class=3D"block-grid" style=3D"margin: 0 auto; min-width: 320px; max-wi=
+dth: 800px; overflow-wrap: break-word; word-wrap: break-word; word-break: b=
+reak-word; background-color: #000000;">
+<div style=3D"border-collapse: collapse; display: table; width: 100%; backg=
+round-color: #000000;"><!--[if (mso)|(IE)]>
+<table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" border=3D"0" styl=
+e=3D"background-color:transparent;">
+<tr>
+<td align=3D"center">
+<table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" style=3D"width:800p=
+x">
+<tr class=3D"layout-full-width" style=3D"background-color:#000000">
+<![endif]--> <!--[if (mso)|(IE)]>
+<td align=3D"center" width=3D"800" style=3D"background-color:#000000;width:=
+800px; border-top: 0px solid transparent; border-left: 0px solid transparen=
+t; border-bottom: 0px solid transparent; border-right: 0px solid transparen=
+t;" valign=3D"top">
+<table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" border=3D"0">
+<tr>
+<td style=3D"padding-right: 30px; padding-left: 30px; padding-top:30px; pad=
+ding-bottom:30px;"><![endif]-->
+<div class=3D"col num12" style=3D"min-width: 320px; max-width: 800px; displ=
+ay: table-cell; vertical-align: top; width: 800px;">
+<div style=3D"width: 100% !important;"><!--[if (!mso)&(!IE)]><!-->
+<div style=3D"border: 0px solid transparent; padding: 30px;"><!--<![endif]-=
+-> <!--[if mso]>
+<table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" border=3D"0">
+<tr>
+<td style=3D"padding-right: 0px; padding-left: 0px; padding-top: 0px; paddi=
+ng-bottom: 15px; font-family: Arial, sans-serif"><![endif]--> <!--[if mso]>=
+</td>
+</tr>
+</table>
+<![endif]-->
+<table class=3D"social_icons" role=3D"presentation" style=3D"table-layout: =
+fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; m=
+so-table-lspace: 0pt; mso-table-rspace: 0pt;" valign=3D"top" width=3D"100%"=
+ cellspacing=3D"0" cellpadding=3D"0">
+<tbody>
+<tr style=3D"vertical-align: top;" valign=3D"top">
+<td style=3D"word-break: break-word; vertical-align: top; padding: 0px 20px=
+ 20px 20px;" valign=3D"top">
+<table class=3D"social_table" role=3D"presentation" style=3D"table-layout: =
+fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; m=
+so-table-tspace: 0; mso-table-rspace: 0; mso-table-bspace: 0; mso-table-lsp=
+ace: 0;" valign=3D"top" cellspacing=3D"0" cellpadding=3D"0" align=3D"center=
+">
+<tbody>
+<tr class=3D"mktoText" id=3D"footer-social" mktoname=3D"Footer Social Area"=
+ style=3D"vertical-align: top; display: inline-block; text-align: center;" =
+valign=3D"top" align=3D"center">
+<td style=3D"word-break: break-word; vertical-align: top; padding-bottom: 2=
+0px; padding-right: 10px; padding-left: 10px;" valign=3D"top"><a href=3D
+"https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSqEER3G_nbW4fDzawgdOBs9tZp54L-N=
+LqY_dFIxMhkKcaDgybodsDyh4HFHegmOkthDQ=3D" target=3D"_blank"
+><img alt=3D"Custom" src=3D"https://interact.f5.com/rs/653-SMC-783/images/f=
+ooter_icon_1-twitter.png" style=3D"text-decoration: none; -ms-interpolation=
+-mode: bicubic; height: auto; border: none; display: block;"=20
+title=3D"Custom" width=3D"32" height=3D"32" /></a></td>
+<td style=3D"word-break: break-word; vertical-align: top; padding-bottom: 2=
+0px; padding-right: 10px; padding-left: 10px;" valign=3D"top"><a href=3D
+"https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSp681zVl80zPN3tNW-p4sbb62uAMG82=
+VdPgUrpgJFgABCYUbqLzCDg5gH-Dlch5DBuGY=3D" target=3D"_blank"
+><img alt=3D"Custom" src=3D"https://interact.f5.com/rs/653-SMC-783/images/f=
+ooter_icon_2-linkedin.png" style=3D"text-decoration: none; -ms-interpolatio=
+n-mode: bicubic; height: auto; border: none; display:=20
+block;" title=3D"Custom" width=3D"32" height=3D"32" /></a></td>
+<td style=3D"word-break: break-word; vertical-align: top; padding-bottom: 2=
+0px; padding-right: 10px; padding-left: 10px;" valign=3D"top"><a href=3D
+"https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSp8xZKTVs0mnEnXJsYaGrM9qL_Wrijz=
+fndtgrX_Gxn_sdvlgS6msJqTC8x9CNsXHkQlw=3D" target=3D"_blank"
+><img alt=3D"Custom" src=3D"https://interact.f5.com/rs/653-SMC-783/images/f=
+ooter_icon_3-facebook.png" style=3D"text-decoration: none; -ms-interpolatio=
+n-mode: bicubic; height: auto; border: none; display: block;"=20
+title=3D"Custom" width=3D"32" height=3D"32" /></a></td>
+<td style=3D"word-break: break-word; vertical-align: top; padding-bottom: 2=
+0px; padding-right: 10px; padding-left: 10px;" valign=3D"top"><a href=3D
+"https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSp899JFY_FQ5DCs-MCYfmKfsOJKcqK1=
+czFYIy_XW9_sl-y5u37gxFBCAzNTVDJllo-bk=3D" target=3D"_blank"
+><img alt=3D"Custom" src=3D"https://interact.f5.com/rs/653-SMC-783/images/f=
+ooter_icon_4-youtube.png" style=3D"text-decoration: none; -ms-interpolation=
+-mode: bicubic; height: auto; border: none; display:=20
+block;" title=3D"Custom" width=3D"32" height=3D"32" /></a></td>
+<td style=3D"word-break: break-word; vertical-align: top; padding-bottom: 2=
+0px; padding-right: 10px; padding-left: 10px;" valign=3D"top"><a href=3D
+"https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSp30iy1SMtonCfwynBtJ99KoJVKf6E2=
+A08QSMby5o1v-gssIBr03ut7_W_EaKtO2MBlc=3D" target=3D"_blank"
+><img alt=3D"Custom" src=3D"https://interact.f5.com/rs/653-SMC-783/images/f=
+ooter_icon_5-devcentral.png" style=3D"text-decoration: none; -ms-interpolat=
+ion-mode: bicubic; height: auto; border: none; display: block;"=20
+title=3D"Custom" width=3D"32" height=3D"32" /></a></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<!--[if mso]>
+<table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" border=3D"0">
+<tr>
+<td style=3D"padding-right: 0px; padding-left: 0px; padding-top: 0px; paddi=
+ng-bottom: 0px; font-family: Arial, sans-serif"><![endif]-->
+<div style=3D"color: #ffffff; font-family: Arial, Helvetica Neue, Helvetica=
+, sans-serif; line-height: 1.5; padding: 0px;">
+<div class=3D"mktoText" id=3D"footer-content" mktoname=3D"Footer content" s=
+tyle=3D"font-size: 14px; line-height: 1.5; color: #ffffff; font-family: Ari=
+al, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt: 21px;">
+<p style=3D"font-size: 14px; line-height: 1.5; word-break: break-word; text=
+-align: center; mso-line-height-alt: 21px; margin: 0;">This email was sent =
+by: F5 NGINX<br /> <span class=3D"gmaildate">43-47 London Street, Chertsey,=
+ KT16 8AP, UK | nginx.com</span><br />&copy;<span style=3D"color: #ffffff; =
+font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14p=
+x; font-style: normal;=20
+font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400=
+; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px;=
+ text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -=
+webkit-text-stroke-width: 0px; background-color: #000000; text-decoration-t=
+hickness: initial; text-decoration-style: initial; text-decoration-color: i=
+nitial; display: inline=20
+!important; float: none;">2022</span>&nbsp;F5, Inc.
+ All rights reserved.</p>
+<div style=3D"text-align: center;"><a href=3D
+"https://f5.com/about-us/policies" target=3D"_blank" class=3D"mktNoTrack" s=
+tyle=3D"font-size: 14px; line-height: 1.5; word-break: break-word; text-ali=
+gn: center; mso-line-height-alt: 21px; margin: 0; color: #ffffff;"
+>Policies</a> | <a href=3D
+"https://f5.com/about-us/policies/privacy-policy" target=3D"_blank" class=
+=3D"mktNoTrack" style=3D"font-size: 14px; line-height:=20
+1.5; word-break: break-word; text-align: center; mso-line-height-alt: 21px;=
+ margin: 0; color: #ffffff;"
+>Privacy</a> | <a href=3D
+"https://f5.com/about-us/policies/trademarks" target=3D"_blank" class=3D"mk=
+tNoTrack" style=3D"font-size: 14px; line-height: 1.5; word-break: break-wor=
+d; text-align: center; mso-line-height-alt: 21px; margin: 0; color: #ffffff=
+;"
+>Trademarks</a> | <a  href=3D
+"https://f5.com/about-us/preferences" target=3D"_blank" class=3D"mktNoTrack=
+" style=3D"ffont-size: 14px; line-height: 1.5; word-break: break-word; text=
+-align: center; mso-line-height-alt: 21px; margin: 0; color: #ffffff;"
+>Preference Center</a> | <a href=3D
+"https://interact.f5.com/email-subscription-center.html?mkt_unsubscribe=3D1=
+" target=3D"_blank" class=3D"mktNoTrack" style=3D"font-size: 14px; line-hei=
+ght:=20
+1.5; word-break: break-word; text-align: center; mso-line-height-alt: 21px;=
+ margin: 0; color: #ffffff;"
+>Unsubscribe</a></div>
+</div>
+</div>
+<!--[if mso]></td>
+</tr>
+</table>
+<![endif]--> <!--[if (!mso)&(!IE)]><!--></div>
+<!--<![endif]--></div>
+</div>
+<!--[if (mso)|(IE)]></td>
+</tr>
+</table>
+<![endif]--> <!--[if (mso)|(IE)]></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<![endif]--></div>
+</div>
+</div>
+
+</div> </td>=20
+</tr>
+</table> </td>=20
+</tr>=20
+<!-- module area -->=20
+</tbody>
+</table>=20
+<!--[if (IE)]></div><![endif]--> =20
+<a href=3D
+"https://buzz.f5.com/NjUzLVNNQy03ODMAAAGDoZdSp0y0Ta60cdE1zzBMpN6bV_t9LQinr9=
+sjkXIAf4jQbOQjxf7na-9MWgWycaThpmG-Ueg=3D"
+></a>
+<img src=3D"https://buzz.f5.com/trk?t=3D1&mid=3DNjUzLVNNQy03ODM6MDoyNzg2NDg=
+6MTkyMjgzOTo3OTM5ODQ4OjI2Mzc0MDo5Ojg1NDg2Mzo2ODc2ODU2My0xNDpwa2xld2FuZG93c2=
+tpQGdtYWlsLmNvbQ%3D%3D" width=3D"1" height=3D"1" style=3D"display:none !imp=
+ortant;" alt=3D"" />
+
+<p>  </p>
+</body>
+</html>
+------=_Part_128341443_698221384.1649311392434--

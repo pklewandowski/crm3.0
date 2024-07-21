@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load client_tags %}
+{% load humanize %}
+
+{% block form_icon %}far fa-file-alt{% endblock %}
+{% block form_title %}Landing Page{% endblock %}
+{% block form_subtitle %}Lista wpisów{% endblock %}
+{% block form_title_right %}
+    <div style="float: left;"><a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fas fa-filter"></i></a></div>
+    <div class="dropdown" style="float:left;">
+        <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-plus"></i></a>
+        <ul class="dropdown-menu dropdown-menu-right">
+            <li><a href="#">Dodaj źródło...</a></li>
+            <li><a href="#">Dodaj stronę...</a></li>
+            <li><a href="#">Dodaj medium...</a></li>
+        </ul>
+    </div>
+    <a href="#" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"><i class="fas fa-times"></i></a>
+{% endblock %}
+
+
+{% block content %}
+
+    {% include 'py3ws/lists/_partial/_list_filter.html' %}
+    <div class="panel panel-default">
+        <div class="panel-body list-panel">
+
+            <div class="list-container">
+                <table id="lp_list" class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th style="width:25px;"></th>
+
+                        <th data-name="id"
+                            class="sort sort-{% if sort_field == 'id' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">ID
+                        </th>
+                        <th data-name="lp"
+                            class="sort sort-{% if sort_field == 'lp' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">LP
+                        </th>
+                        <th data-name="source"
+                            class="sort sort-{% if sort_field == 'source' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Źródło
+                        </th>
+                        <th data-name="medium"
+                            class="sort sort-{% if sort_field == 'medium' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Medium
+                        </th>
+                        <th data-name="created"
+                            class="sort sort-{% if sort_field == 'created' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Data dodania
+                        </th>
+                        <th data-name="first_name"
+                            class="sort sort-{% if sort_field == 'first_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Imię
+                        </th>
+                        <th data-name="last_name"
+                            class="sort sort-{% if sort_field == 'last_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Nazwisko
+                        </th>
+                        <th data-name="client_type"
+                            class="sort sort-{% if sort_field == 'client_type' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Firma
+                        </th>
+                        <th data-name="company_name"
+                            class="sort sort-{% if sort_field == 'company_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Firma
+                        </th>
+                        <th data-name="phone"
+                            class="sort sort-{% if sort_field == 'phone' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Telefon
+                        </th>
+                        <th data-name="email"
+                            class="sort sort-{% if sort_field == 'email' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">E-mail
+                        </th>
+                        <th data-name="amount"
+                            class="sort sort-{% if sort_field == 'amount' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Kwota pożyczki/wartość inna
+                        </th>
+                        <th data-name="accept1"
+                            class="sort sort-{% if sort_field == 'accept1' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Zgoda 1 (elektroniczna)
+                        </th>
+                        <th data-name="accept2"
+                            class="sort sort-{% if sort_field == 'accept2' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Zgoda 1 (telekom)
+                        </th>
+                        <th data-name="epi"
+                            class="sort sort-{% if sort_field == 'epi' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">EPI
+                        </th>
+                        <th data-name="message"
+                            class="sort sort-{% if sort_field == 'message' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Wiadomość
+                        </th>
+                        <th data-name="office_space"
+                            class="sort sort-{% if sort_field == 'office_space' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Pow. biura
+                        </th>
+                        <th data-name="location"
+                            class="sort sort-{% if sort_field == 'location' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Lokalizacja
+                        </th>
+
+
+                        <th style="width:130px">Akcje</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in page %}
+                        <tr>
+                            <td><input type="checkbox" name="row_selected" value="{{ p.pk }}"/></td>
+                            <td>{{ p.pk|unlocalize }}</td>
+                            <td>{{ p.lp.name|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.source.name|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.medium.name|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.created|date:'Y-m-d H:i:s'  }}</td>
+                            <td>{{ p.first_name|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.last_name|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.client_type|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.company_name|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.phone|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.email|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.amount|floatformat:2|intcomma|default_if_none:'(Brak)' }}</td>
+                            <td class="text-center"><i class="fas fa-{% if p.accept1 %}check{% else %}times{% endif %}"></i></td>
+                            <td class="text-center"><i class="fas fa-{% if p.accept2 %}check{% else %}times{% endif %}"></i></td>
+                            <td>{{ p.epi|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.message|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.office_space|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.location|default_if_none:'(Brak)' }}</td>
+
+                            <td></td>
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% include 'py3ws/lists/_partial/_pagination_current_form.html' %}
+    </div>
+
+
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'lp/css/lp.css' %}" rel="stylesheet" type="text/css">
+    <style>
+        a, a:hover {
+            color: unset;
+        }
+    </style>
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'lp/js/lp.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+{% endblock %}

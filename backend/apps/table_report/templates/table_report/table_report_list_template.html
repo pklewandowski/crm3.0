@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        .table-report-tile {
+            padding: 15px;
+            margin: 5px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+
+            height: 170px;
+            max-width: 260px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-report-tile-title {
+            color: #337ab7;
+            pointer-events: none;
+        }
+
+
+        .table-report-tile:hover {
+            background-color: #f5f5f5;
+            box-shadow: 0 0 5px rgb(0 0 0 / 10%);
+            cursor: pointer;
+        }
+
+        .table-report-tile p {
+            font-size: 12px;
+            margin: auto 0 0;
+            pointer-events: none;
+        }
+
+        .table-report-tile-aggregate {
+            text-align: right;
+            color: #959595;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .table-report-list-container-flex {
+            overflow: auto;
+            padding-top: 15px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+    </style>
+    <div class="row">
+        <div class="col-lg-3 nopadding-right">
+            <div class="commission-sum-widget"></div>
+        </div>
+        <div class="col-lg-2 nopadding-right">
+            <div class="instalment-sum-widget"></div>
+        </div>
+        <div class="col-lg-2 nopadding-right">
+            <div class="cost-sum-widget"></div>
+        </div>
+        <div class="col-lg-2 nopadding-right">
+            <div class="balance-sum-widget"></div>
+        </div>
+        <div class="col-lg-3">
+            <div class="products-sum-widget"></div>
+        </div>
+    </div>
+    <div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="table-report-list-container"
+                     style="position: relative; overflow: auto;height: calc(100vh - 260px);">
+                    <div class="table-report-list-container-flex">
+                        <div class="table-report-tile" data-url="{% url 'table_report.report' 'winpr' 26 %}">
+                            <div class="table-report-tile-title">Wnioski w procesie</div>
+                            <div class="table-report-tile-aggregate winpr"></div>
+                            <p>Wszystkie wnioski, które są obecnie procesowane, dla których nie utworzono jeszcze produktów</p>
+                        </div>
+                        <div class="table-report-tile" data-url="{% url 'table_report.report' 'wnstatustimeline' 26 %}">
+                            <div class="table-report-tile-title">Wnioski w osi czasu</div>
+                            <div class="table-report-tile-aggregate"></div>
+                            <div class="table-report-tile-aggregate"></div>
+                            <p>Czas realizacji kolejnych statusów wniosków</p>
+                        </div>
+
+                        <div class="table-report-tile" data-url="{% url 'table_report.report' 'prinpr' 26 %}">
+                            <div class="table-report-tile-title">Pożyczki w procesie</div>
+                            <div class="table-report-tile-aggregate prinpr-count"></div>
+                            <div class="table-report-tile-aggregate prinpr-total_value"></div>
+                            <p>Wszystkie aktywne, obecnie procesowane, "zdrowe" niezakończone pożyczki </p>
+                        </div>
+
+                        <div class="table-report-tile" data-url="{% url 'table_report.report' 'prinwdk' 26 %}">
+                            <div class="table-report-tile-title">Pożyczki w windykacji</div>
+                            <div class="table-report-tile-aggregate prinwdk-count"></div>
+                            <div class="table-report-tile-aggregate prinwdk-total_value"></div>
+                            <p>Wszystkie aktywne, niezakończone, obecnie procesowane pożyczki w windykacji</p>
+                        </div>
+
+                        <div class="table-report-tile" data-url="{% url 'table_report.report' 'agrenddays' 26 %}">
+                            <div class="table-report-tile-title">Produkty umowy raty</div>
+                            <p>Klienci, produkty, spłacalność, saldo, liczba dni...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'dist/home/home-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/widget/widget-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'dist/widget/widget-bundle.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        _g.tableReport = {
+            urls: {
+                tableReportApiUrl: '{% url 'table_report.api' %}',
+                tableReportAggregateUrl: '{% url 'table_report.api.aggregate' %}'
+            }
+        };
+
+        ajaxCall({
+                method: 'get',
+                url: _g.tableReport.urls.tableReportAggregateUrl,
+                data: {id: 26} //todo: DRUT
+            },
+            (data) => {
+                document.querySelector('.winpr').innerText = jsUtils.Format.formatNumber(data.winpr, {precision: 0});
+
+                document.querySelector('.prinpr-count').innerText = jsUtils.Format.formatNumber(data.prinpr.count, {precision: 0});
+                document.querySelector('.prinpr-total_value').innerText = jsUtils.Format.formatNumber(data.prinpr.total_value);
+
+                document.querySelector('.prinwdk-count').innerText = jsUtils.Format.formatNumber(data.prinwdk.count, {precision: 0});
+                document.querySelector('.prinwdk-total_value').innerText = jsUtils.Format.formatNumber(data.prinwdk.total_value);
+            }
+        );
+
+        document.addEventListener('DOMContentLoaded', () => {
+            ajaxCall({
+                    method: 'get',
+                    url: _g.tableReport.urls.tableReportApiUrl
+                },
+                (data) => {
+                    new jsUtils.widget.NumberWidget(document.querySelector('.commission-sum-widget'),
+                        data.total_commission.name,
+                        `${jsUtils.Format.formatNumber(data.total_commission.total)} / ${jsUtils.Format.formatNumber(data.total_commission.active)}`);
+
+                    new jsUtils.widget.NumberWidget(document.querySelector('.instalment-sum-widget'),
+                        data.total_instalment.name, jsUtils.Format.formatNumber(data.total_instalment.total));
+
+                    new jsUtils.widget.NumberWidget(document.querySelector('.cost-sum-widget'),
+                        data.total_cost.name, jsUtils.Format.formatNumber(data.total_cost.total));
+
+                    new jsUtils.widget.NumberWidget(document.querySelector('.balance-sum-widget'),
+                        data.total_balance.name, jsUtils.Format.formatNumber(data.total_balance.total));
+
+                    new jsUtils.widget.NumberWidget(document.querySelector('.products-sum-widget'),
+                        data.total_products.name,
+                        `${jsUtils.Format.formatNumber(data.total_products.count, {precision: 0})} / ${jsUtils.Format.formatNumber(data.total_products.total)}`);
+                },
+                (error) => {
+                    throw new Error(error);
+                }
+            );
+        });
+
+        document.querySelector('.table-report-list-container').addEventListener('click', (evt) => {
+            if (evt.target?.classList?.contains('table-report-tile')) {
+                window.location = evt.target.dataset['url'];
+            }
+        });
+
+    </script>
+{% endblock %}

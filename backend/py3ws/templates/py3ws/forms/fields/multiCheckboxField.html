@@ -1,0 +1,16 @@
+{#{% for pk, label in field.field.choices %}#}
+{#    <div class="input-group">#}
+{#        <label for="{{ field.field.id_for_label }}_{{ forloop.counter0 }}" style="display:inline-block">#}
+{#            <input style="width:20px;" name="{{ field.html_name }}" value="{{ pk|default_if_none:'' }}" class="{{ field.field.widget.attrs.class }}"#}
+{#                   id="{{ field.field.id_for_label }}_{{ forloop.counter0 }}"#}
+{#                   type="checkbox"#}
+{#                                       {% for i in initial %}{% if pk == i %}checked="checked"{% endif %}{% endfor %}#}
+{#                    {% if pk.checked %} checked="checked"{% endif %}#}
+{#                    />#}
+{#            {{ label }}#}
+{#        </label>#}
+{#    </div>#}
+{#{% endfor %}#}
+<span class="checkbox-horizontal">{{ field }}</span>
+
+

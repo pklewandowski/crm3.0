@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+{%  load static %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'product/type/js/product-type.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-xs-12">
+        <a href="{% url 'product.type.attribute.add' product_type.pk %}" class="btn btn-success btn-sm pull-right">{% trans "product.type.attribute.add.button.label" %}</a>
+    </div>
+
+    <div class="">
+        <table id="attribute_datatype" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Nazwa</th>
+                <th>Typ podstawowy</th>
+                <th>Sekcja</th>
+                <td>Sekwencja</td>
+                <th style="width:80px;">Wymagalny</th>
+
+
+                <th style="width:130px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody class="sortable">
+            {% for attribute in attributes %}
+                <tr>
+                    <td><i class="fa fa-arrows-v sortable-handle" aria-hidden="true"></i></td>
+                    <td>{{ attribute.name }}</td>
+                    <td>{{ attribute.data_type.name }}</td>
+                    <td>{{ attribute.section.name }}</td>
+                    <td>{{ attribute.sq }}</td>
+                    {% if attribute.is_required %}
+                        <td class="text-center"><a class="yes-no-bookmark active"><i class="fa fa-check"></i></a></td>
+                    {% else %}
+                        <td class="text-center"><a class="yes-no-bookmark active"><i class="fa fa-times"></i></a></td>
+                    {% endif %}
+
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'product.type.attribute.edit' attribute.id %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+{% endblock %}
+
+{% block site_script %}
+
+
+{% endblock %}

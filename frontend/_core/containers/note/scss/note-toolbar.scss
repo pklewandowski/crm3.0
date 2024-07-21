@@ -1,0 +1,42 @@
+.container-note-toolbar {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .4s;
+}
+
+.container-note-toolbar .toolbar-btn{
+  position: relative;
+}
+
+.container-note-container:hover .container-note-toolbar {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .4s;
+}
+
+.container-note-toolbar-button-container {
+  cursor: pointer;
+  float: left;
+
+}
+.container-note-toolbar-button-container .toolbar-btn {
+  height: 20px;
+  width: 20px;
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.container-note-toolbar-button-container {
+  color: #6e6e6e;
+}
+
+.container-note-toolbar-button-container .toolbar-save-btn {
+}
+
+.container-note-toolbar-button-container .toolbar-delete-btn {
+  color:inherit;
+  background-color: unset;
+}

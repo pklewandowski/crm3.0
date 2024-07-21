@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block form_icon %}fa fa-users{% endblock %}
+{% block form_title %} Lista produktów detalicznych
+    {% if form.errors %} - <span class="error-header-info">wystąpiły błędy!</span>{% endif %}
+{% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <a class="btn btn-success btn-sm btn-submit"><i class="fas fa-check"></i></a>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% include 'product_retail/partial/_form_elements.html' %}
+    </form>
+    {% include 'product_retail/globals.js.html' %}
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'resource/jstree/css/themes/default/style.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'resource/jstree/js/jstree.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'product_retail/js/product-retail.js' %}"></script>
+    <script type="text/javascript" src="{% static 'product_retail/js/addChangeProductRetail.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+
+    </script>
+{% endblock %}

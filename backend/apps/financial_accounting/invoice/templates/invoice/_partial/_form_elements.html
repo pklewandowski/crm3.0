@@ -1,0 +1,172 @@
+{% config_var 'MODE_EDIT' as mode_edit %}
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#invoice-data-tab">Dane Faktury</a></li>
+    <li><a data-toggle="tab" href="#invoice-position-tab">Pozycje Faktury</a></li>
+    <li><a data-toggle="tab" href="#invoice-extra-position-tab">Dodatkowe pozycje faktury</a></li>
+    <li><a data-toggle="tab" href="#invoice-description-tab">Opis</a></li>
+</ul>
+
+<div class="tab-content pad-t">
+
+    <div id="invoice-data-tab" class="tab-pane fade in active">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Dane faktury</div>
+                    <div class="panel-body">
+                        {% include "py3ws/forms/fields/p3form_field.html" with field=form.number %}
+                        <div class="row">
+                            <div class="col-lg-6 no-gutters">
+                                {% include "py3ws/forms/fields/p3form_field.html" with field=form.issuer %}
+                            </div>
+                            <div class="col-lg-6 no-gutters">
+                                {% include "py3ws/forms/fields/p3form_field.html" with field=form.recipient %}
+                            </div>
+                        </div>
+
+                        {% if mode == mode_edit %}
+                            {{ document_form.status }}
+                            {% include "py3ws/forms/fields/p3form_field.html" with field=document_form.status_flow %}
+                            <div class="form-group" style="display:none">
+                                <label for="av_hierarchy">Departament:</label>
+                                <select class="form-control input-md" id="av_hierarchy"></select>
+                                {{ document_form.hierarchy.as_hidden }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+            {#            <div class="col-lg-6">#}
+            {#                <div class="panel panel-default">#}
+            {#                    <div class="panel-heading">Przekaż do...</div>#}
+            {#                    <div class="panel-body">#}
+            {#                        <div style="max-height: 400px; overflow: auto;">#}
+            {#                            {% include 'hierarchy/_partial/_hierarchy_tree_radio.html' with field=document_form.hierarchy hierarchy=hierarchy %}#}
+            {#                        </div>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            </div>#}
+        </div>
+    </div>
+
+    <div id="invoice-position-tab" class="tab-pane fade in">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="display: inline-block; width: 100%;">
+                        <div style="float:left;">Pozycje faktury</div>
+                        <div style="float:right;">
+                            <i id="add_invoice_item_btn" class="fa fa-plus-circle" style="font-size: 15px;cursor: pointer;"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+
+                        <div id="invoice_item_container">
+                            {#                            <a href="#" class="btn btn-default add">Dodaj pozycję</a>#}
+                            <table id="invoice_item_table" class="table table-hover table-condensed">
+                                <thead>
+                                <th style="width:40%;">{{ invoice_item_formset.empty_form.name.label }}</th>
+                                <th>{{ invoice_item_formset.empty_form.code.label }}</th>
+                                <th>{{ invoice_item_formset.empty_form.quantity.label }}</th>
+                                <th>{{ invoice_item_formset.empty_form.unit_of_measure.label }}</th>
+                                <th style="width:15%;">{{ invoice_item_formset.empty_form.unit_price.label }}</th>
+                                <th style="width:12%;">{{ invoice_item_formset.empty_form.tax_value.label }}</th>
+                                </thead>
+                                <tbody>
+                                {% for i in invoice_item_formset %}
+                                    <tr>
+                                        <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=i.name nolabel=True %}</td>
+                                        <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=i.code nolabel=True %}</td>
+                                        <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=i.quantity nolabel=True %}</td>
+                                        <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=i.unit_of_measure nolabel=True %}</td>
+                                        <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=i.unit_price nolabel=True %}</td>
+                                        <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=i.tax_value nolabel=True %}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if i.id.value %}
+                                                    {{ i.DELETE }}
+                                                {% else %}
+                                                    <a class="btn btn-danger btn-sm delete">
+                                                        <i class="fa fa-trash-alt"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        {{ i.invoice.as_hidden }}
+                                        {{ i.id.as_hidden }}
+                                    </tr>
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="invoice-extra-position-tab" class="tab-pane fade in">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="display: inline-block; width: 100%;">
+                        <div style="float:left;">Dodatkowe pozycje faktury</div>
+                        <div style="float:right;">
+                            <i id="add_invoice_extra_item_btn" class="fa fa-plus-circle" style="font-size: 15px;cursor: pointer;"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="invoice_extra_item_container">
+                            <table id="invoice_extra_item_table" class="table table-hover table-condensed">
+                                <thead>
+                                <th>{{ invoice_extra_item_formset.empty_form.name.label }}</th>
+                                <th>{{ invoice_extra_item_formset.empty_form.value.label }}</th>
+                                <th>Usuń</th>
+                                </thead>
+                                <tbody>
+                                {% for i in invoice_extra_item_formset %}
+                                    <tr>
+                                        <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=i.name nolabel=True %}</td>
+                                        <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=i.value nolabel=True %}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if i.id.value %}
+                                                    {{ i.DELETE }}
+                                                {% else %}
+                                                    <a class="btn btn-danger btn-sm delete">
+                                                        <i class="fa fa-trash-alt"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        {{ i.invoice.as_hidden }}
+                                        {{ i.id.as_hidden }}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="invoice-description-tab" class="tab-pane fade in">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Opis</div>
+                    <div class="panel-body">
+                        {% include "py3ws/forms/fields/p3form_field.html" with field=form.description nolabel=True %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

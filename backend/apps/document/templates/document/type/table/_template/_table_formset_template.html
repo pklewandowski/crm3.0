@@ -1,0 +1,20 @@
+{% for idx,tf in table_formsets.items %}
+    {% with tf.formset.empty_form as frm %}
+        <template id="attr_table_formset_{{ idx }}_template">
+            <tr data-id="{{ idx }}" data-status="NEW">
+                {% for at in tf.attributes %}
+                    <td>
+                        {% include "py3ws/forms/fields/p3form_field.html" with field=frm|get_form_field:at.code nolabel=True %}
+                    </td>
+                {% endfor %}
+                <td>
+                    <a href="#" class="table-formset-row-delete-btn btn btn-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+                <input type="hidden" id="{{ frm.row_uid.id_for_label }}" name="{{ frm.row_uid.html_name }}" value="__ROW_UID_VALUE__"/>
+                <input type="hidden" id="{{ frm.parent_row_uid.id_for_label }}" name="{{ frm.parent_row_uid.html_name }}" value="__PARENT_ROW_UID_VALUE__"/>
+            </tr>
+        </template>
+    {% endwith %}
+{% endfor %}

@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block form_icon %}fa fa-file{% endblock %}
+{% block form_title %}{{ document.code }}:
+    <a style="color:inherit;" href="{% url "client.add" document.owner.id %}">
+        {{ document.owner.first_name|default_if_none:"" }}
+        {{ document.owner.last_name|default_if_none:"" }}
+        {{ document.owner.company_name|default_if_none:"" }}
+    </a>
+{% endblock %}
+
+{% block form_subtitle %}
+    {% if form.instance.hierarchy %}W departamencie: {{ form.instance.hierarchy.name }} | {% endif %}
+    {{ document.type.name }}:
+    {% if not document.product %}
+        {{ document.status.name }}
+        {% if previous_status %}
+            (poprzedni status: {{ previous_status.name }})
+        {% endif %}
+    {% else %}
+        {{ document.product.status }}
+    {% endif %}
+
+{% endblock %}
+
+{% block form_title_right %}
+    {% if document.product %}
+        <a href="{% url "product.edit" document.product.pk %}" class="btn btn-default" type="button"><i class="fas fa-industry"></i></a>
+    {% endif %}
+    {% if not document.product %}
+        {% if previous_status and document.status.can_revert %}
+            <a data-id="{{ form.instance.pk }}"
+               data-id_status="{{ previous_status.pk }}"
+               id="revertStatus" href="#" class="btn btn-default" type="button" data-placement="bottom"
+               data-toggle="tooltip" title="Cofnij do: {{ previous_status.name }}">
+                <i class="fa fa-undo" aria-hidden="true"></i>
+            </a>
+        {% endif %}
+    {% endif %}
+
+    <div style="float: right" class="available-statuses-btn-container">
+        <div class="dropdown">
+            <div id="changeStatus" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button id="changeStatusBtn" class="btn btn-success" type="button" style="transform: rotate(90deg);">
+                    <i class="fas fa-code-branch" style="pointer-events: none"></i></button>
+            </div>
+            <div class="dropdown-menu dropdown-menu-right available-statuses-dropdown" aria-label="changeStatus">
+                <ul id="availableStatuses"></ul>
+                <input type="hidden" id="id-documentStatus">
+            </div>
+        </div>
+    </div>
+    {% if not document.product or not document.status.is_closing_process %}
+        <button id="saveDocBtn" class="btn btn-success btn-save" type="button">
+            <i class="fas fa-check" style="pointer-events: none"></i>
+        </button>
+    {% endif %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
+
+    <ul class="nav nav-tabs">
+        {#        <li class="nav-item active"><a data-toggle="tab" href="#document-tab">Dane podstawowe</a></li>#}
+        <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#attribute-tab">Dane dokumentu</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#attachment-tab">Załączniki</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#report-tab">Pisma wychodzące</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#process_flow-tab">Przebieg procesu</a></li>
+        {#        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#report-tab">Pisma wychodzące</a></li>#}
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#note-tab">Notatki</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#actions-tab">Zdarzenia i powiadomienia</a></li>
+        {% if document.product %}
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#product-tab">Produkt</a></li>
+        {% endif %}
+    </ul>
+
+    <div class="tab-content pad-t">
+
+        <div id="attribute-tab" class="tab-pane fade in active">
+            <div id="documentAttributeContainer"></div>
+        </div>
+
+        <div id="attachment-tab" class="tab-pane fade in">
+            <div id="attachmentContainer">
+                <div id="attachmentDirectoryPanel" class="col-lg-2">
+                    <div class="row">
+                        <div class="col-lg-12 nopadding">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Drzewo katalogów</div>
+                                <div class="panel-body">
+                                    <div style="overflow: auto">
+                                        <div id="atmDirectoryTree"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-10">
+                    <div class="row">
+                        <div class="col-lg-12 nopadding-right">
+                            <div id="attachmentPanel">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="report-tab" class="tab-pane fade in">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body section-content">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div style="float: right">
+                                        <div class="action-button">
+                                            <div class="round">
+                                                <div class="dropdown report-list-menu">
+                                                    <button id="addReportBtn" type="button"
+                                                            class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="addReportBtn">
+                                                        {% for i in report_types %}
+                                                            <li><a href="#" data-code="{{ i.template.code }}" data-templateid="{{ i.template.pk }}">{{ i.name }}</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% include 'document/_partial/_report.html' with attr=attr form=attr_form autocollapse=True %}
+                            <div id="reportList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="process_flow-tab" class="tab-pane fade in">
+            {% include 'document/_partial/_process_flow.html' with processflow=processflow %}
+        </div>
+
+        <div id="note-tab" class="tab-pane fade in">
+            <div id="notesContainer"></div>
+        </div>
+        <div id="actions-tab" class="tab-pane fade in"></div>
+        {% if document.product %}
+            <div id="product-tab" class="tab-pane fade in">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="productDashboardContainer"></div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+
+    {#-------------------------------------- INCLUDES ---------------------------------------#}
+    {% include 'attachment/_modal/_add_attachment_form.html' %}
+    {% include 'attachment/basic_attachment/_modal/_add_paste_screen_modal.html' %}
+    {% include 'attachment/_template/_attachment_upload_template.html' %}
+    {% include 'document/_modal/_image_preview_modal.html' %}
+
+    {% include 'document/_template/v2/document_attibute_template.html' %}
+    {% include 'document/_modal/_report_modal.html' %}
+    {% include 'document/form/report_edit_form.html' %}
+
+    {% include 'product/_template/_product_dashboard_template.html' %}
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'resource/jstree/css/themes/default/style.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/document/document-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/report/report-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block  site_any_script %}
+    {% include 'document/edit_v2/script.html' %}
+{% endblock %}

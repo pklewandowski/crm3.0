@@ -1,0 +1,108 @@
+$defaultFontColor: #767676;
+$defaultBorderColor: #dddddd;
+$defaultTitleBgColor: #a5a5a5;
+$defaultTitleColor: #f9f9f9;
+$dataBigFontSize: 50px;
+$dataMiddleFontSize: 35px;
+
+
+.product-dashboard-data-middle-font {
+  font-size: $dataMiddleFontSize;
+}
+
+.product-dashboard-font-stretched {
+  font-family: 'Roboto-Condensed';
+  //font-stretch: extra-condensed;
+}
+
+.product-dashboard-decimal-integer {
+  font-size: 50px !important;
+}
+
+.product-dashboard-decimal-fractional {
+  font-size: 35px !important;
+}
+
+.product-dashboard-decimal-integer-small {
+  font-size: 22px !important;
+}
+
+.product-dashboard-decimal-fractional-small {
+  font-size: 18px !important;
+}
+
+.product-dashboard-container {
+  //display: inline-block;
+  position: relative;
+  color: $defaultFontColor;
+  font-weight: 700;
+}
+
+.product-dashboard-title {
+  font-size: 14px;
+  font-weight: 700;
+  border-bottom: 1px solid $defaultBorderColor;
+  width: 100%;
+  text-align: left;
+  background-color: $defaultTitleBgColor;
+  color: $defaultTitleColor;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.product-dashboard-title-capital-bg {
+  background-color: #b775ac;
+}
+
+.product-dashboard-title-interest-bg {
+  background-color: #c36560;
+}
+
+.product-dashboard-title-cost-bg {
+  background-color: #6299db;
+}
+
+.product-dashboard-title-payment-bg {
+  background-color: #60ab6e;
+}
+
+.product-dashboard-capital-container {
+  color: $defaultFontColor;
+}
+
+.product-dashboard-capital-container {
+  color: #b775ac;
+}
+
+.product-dashboard-interest-for-delay-container {
+  color: #c36560;
+}
+
+.product-dashboard-cost-container {
+  color: #6299db;
+}
+
+.product-dashboard-payment-container {
+  color: #61ab6e;
+}
+
+.product-dashboard-decimal {
+  text-align: right;
+}
+
+.product-dashboard-datatable tbody td {
+  font-size: 14px;
+  //color: $defaultFontColor;
+  font-weight: 700;
+}
+
+.product-dashboard-datatable tbody td:nth-child(1) {
+  text-align: left;
+}
+
+.product-dashboard-datatable tbody td:nth-child(2) {
+  text-align: right;
+  white-space: nowrap;
+}
+
+

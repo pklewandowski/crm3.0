@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-lg-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Drzewo katalogów</div>
+            <div class="panel-body">
+                <div style="overflow: auto; height: 100%;">
+                    <div id="atmDirectoryTree"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9 nopadding-left">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="display: inline-block; width: 100%;">
+                <div style="float:left;">Załączniki</div>
+                <div style="float: left;" id="atmSizeToggle"><i class="fas fa-search" style="font-size: 15px;cursor: pointer; margin-right:5px;"></i></div>
+                {% if attachment_formset|length %}
+                    <div style="float:right;">
+                        <div><a style="color: unset;" href="{% url 'attachment.get_zip_attachemnts' form.instance.pk %}">
+                            <i class="fas fa-download" style="font-size: 15px;cursor: pointer;"></i></a></div>
+                    </div>
+                {% endif %}
+                <div style="float:right;">
+                    <div id="add_attachment_btn"><i id="paste_screen_btn" class="fas fa-camera" style="font-size: 15px;cursor: pointer; margin-right:5px;"></i></div>
+                </div>
+                <div style="float:right;">
+                    <div id="add_attachment_btn"><i id="add_file_btn" class="fas fa-paperclip" style="font-size: 15px;cursor: pointer; margin-right:5px;"></i></div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+
+                <div style="overflow: auto; height: 100%;">
+                    {% include 'attachment/basic_attachment/_partial/_attachment_thumbnail.html' with attachment=attachment %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

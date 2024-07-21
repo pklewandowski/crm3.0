@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load l10n %}
+{% load static %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Bieżące kontakty{% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+{% endblock %}
+
+{% block content %}
+    {% localize off %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Bieżące kontakty</div>
+                    <div class="panel-body tag-list"
+                         style="height: calc(100vh - 200px); overflow: auto;">
+                        <table class="table table-hover current-contacts-table">
+                            <thead>
+                            <tr style="top: -15px">
+                                <th style="width: 1%"></th>
+                                <th>Liczba dni</th>
+                                <th>Data ostatniego spotkania</th>
+                                <th>Imię i nazwisko</th>
+                                <th>Nazwa firmy</th>
+                                <th>Telefon</th>
+                                <th>E-mail</th>
+                                <th>Tagi</th>
+                                <th>Status</th>
+                                <th>Produkty</th>
+                                <th>Notatki</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for contact in object_list %}
+                                <tr data-id="{{ contact.pk }}">
+                                    <td class="widget-user-details" style="cursor: pointer;">
+                                        {% include 'client/partial/current_contacts_dot.html' with date_diff=contact.date_diff %}
+                                    </td>
+                                    <td class="current-contacts-date-diff">{% if contact.date_diff == -9999999999 %}<strong>brak kontaktu</strong>{% else %}{{ contact.date_diff }}{% endif %}</td>
+                                    <td>{{ contact.max_event_date|default_if_none:'-' }}</td>
+                                    <td>{{ contact.user.first_name }} {{ contact.last_name }}</td>
+                                    <td>{{ contact.user.company_name|default_if_none:'-' }}</td>
+                                    <td>{{ contact.user.phone_one|default_if_none:'-' }}</td>
+                                    <td>{{ contact.user.email|default_if_none:'-' }}</td>
+                                    <td>
+                                        <div>
+                                            {% for tag in contact.user.tags %}
+                                                <div class="current-contacts-tag">{{ tag }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                    <td>{{ contact.status|default_if_none:'-' }}</td>
+                                    <td>
+                                        {% for product in contact.product_set.all %}
+                                            <div class="current-contacts-products">
+                                                <span style="float: left"><a href="{% url 'product.edit' product.pk %}">
+                                                    {{ product.start_date }}:
+                                                    {{ product.agreement_no }}: {{ product.value }} {{ product.status.name }}</a></span>
+                                            </div>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ contact.user.note_set.all.0.note.text }}</td>
+                                </tr>
+
+                            {% endfor %}
+                            <tr></tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endlocalize %}
+    {% if is_paginated %}
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                {% include "py3ws/lists/_partial/simple_paginator.html" with page_obj=page_obj %}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+{% block site_css %}
+    <link href="{% static 'client/css/current-contacts.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/home/home-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        _g.currentContacts = {
+            urls: {
+                userDetailsUrl: '{% url "user.api.user_details" %}'
+            }
+        }
+    </script>
+    <script type="text/javascript" src="{% static 'dist/userCurrentContacts/userCurrentContacts-bundle.js' %}"></script>
+{% endblock %}

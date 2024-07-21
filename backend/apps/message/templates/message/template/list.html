@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Szablony wiadomości{% endblock %}
+{% block form_subtitle %}Lista sablonów wiadomości{% endblock %}
+{% block form_title_right %}
+    <a href="{% url 'message.template.add' %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12 message-template-list">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div style="height: 100%; overflow: auto">
+                        <table id="attribute_datatype" class="table table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Nazwa</th>
+                                    <th>Kod</th>
+                                    <th>Data utworzenia</th>
+                                    <th>Typ</th>
+                                    <th style="width:60px">Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for template in templates %}
+                                    <tr>
+                                        <td>{{ template.name }}</td>
+                                        <td>{{ template.code }}</td>
+                                        <td>{{ template.creation_date }}</td>
+                                        <td>{{ template.type }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="{% url 'message.template.edit' template.pk %}"
+                                                   class="btn btn-default btn-sm edit" data-toggle="tooltip" title="Edytuj">
+                                                    <i class="far fa-edit"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'message/css/message.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}

@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load client_tags %}
+{% load humanize %}
+
+{% block form_icon %}far fa-file-alt{% endblock %}
+{% block form_title %}Landing Page{% endblock %}
+{% block form_subtitle %}Lista wpisów{% endblock %}
+{% block form_title_right %}
+    {#    <div style="float: left;"><a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fas fa-filter"></i></a></div>#}
+    {#    <div class="dropdown" style="float:left;">#}
+    {#        <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-plus"></i></a>#}
+    {#        <ul class="dropdown-menu dropdown-menu-right">#}
+    {#            <li><a href="#">Dodaj źródło...</a></li>#}
+    {#            <li><a href="#">Dodaj stronę...</a></li>#}
+    {#            <li><a href="#">Dodaj medium...</a></li>#}
+    {#        </ul>#}
+    {#    </div>#}
+    {#    <a href="#" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"><i class="fas fa-times"></i></a>#}
+{% endblock %}
+
+
+{% block content %}
+
+    {% include 'py3ws/lists/_partial/_list_filter.html' %}
+    <div class="panel panel-default">
+        <div class="panel-body list-panel">
+
+            <div class="py3ws-list-container">
+                <table class="py3ws-list table table-hover table-condensed partner-lead-table">
+                    <thead>
+                    <tr>
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='id' label='ID' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='creation_date' label='Data wpisu' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='first_name' label='Imię' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='last_name' label='Nazwisko' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='company_name' label='Firma' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='nip' label='NIP' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='phone' label='Telefon' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='email' label='E-mail' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='prefered_adviser_email' label='E-mail pref. doradcy' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='amount' label='Wnioskowana kwota pożyczki' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='security_type' label='Zabezpieczenie' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='mortgage_register_no' label='Nr księgi wieczystej' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='security_location' label='Miejscowość' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='partner_first_name' label='Partner - Imię' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='partner_last_name' label='Partner - Nazwisko' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='partner_email' label='Partner - E-mail' %}
+                        {% include 'py3ws/lists/_partial/_list_sort_header.html' with field='partner_phone' label='Partner - Telefon' %}
+                        <th>Doradca</th>
+                        <th>Partner</th>
+                        <th>Klient</th>
+                        <th class="tooltip-pointer">
+                            <div data-toggle="tooltip" title="{{ agreement_list.0|slice:"200" }}...">Zgoda 1</div>
+                        </th>
+                        <th class="tooltip-pointer">
+                            <div data-toggle="tooltip" title="{{ agreement_list.1|slice:"200" }}...">Zgoda 2</div>
+                        </th>
+                        <th class="tooltip-pointer">
+                            <div data-toggle="tooltip" title="{{ agreement_list.2|slice:"200" }}...">Zgoda 3</div>
+                        </th>
+                        <th class="tooltip-pointer">
+                            <div data-toggle="tooltip" title="{{ agreement_list.3|slice:"200" }}...">Zgoda 4</div>
+                        </th>
+                        <th class="tooltip-pointer">
+                            <div data-toggle="tooltip" title="{{ agreement_list.4|slice:"200" }}...">Zgoda 5</div>
+                        </th>
+
+                        <th>Wniosek</th>
+
+                        <th style="width:180px;">Akcje</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in page %}
+                        <tr {% if p.status == 'CL' %} class="lead-closed"{% endif %} data-id="{{ p.pk }}">
+
+                            <td>{{ p.pk }}</td>
+                            <td>{{ p.creation_date|date:'Y-m-d H:i:s' }}</td>
+                            <td {% if p.client %} class="identified" {% endif %}>
+                                {{ p.first_name|default_if_none:'(Brak)' }}
+                                {% if p.client and p.first_name|upper != p.client.user.first_name|upper %}
+                                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ p.client.user.first_name|default_if_none:'(brak)' }}"></i>
+                                {% endif %}
+                            </td>
+                            <td {% if p.client %} class="identified" {% endif %}>
+                                {{ p.last_name|default_if_none:'(Brak)' }}
+                                {% if p.client and p.last_name|upper != p.client.user.last_name|upper %}
+                                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ p.client.user.last_name|default_if_none:'(brak)' }}"></i>
+                                {% endif %}
+                            </td>
+                            <td {% if p.client %} class="identified" {% endif %}>
+                                {{ p.company_name|default_if_none:'(Brak)' }}
+                                {% if p.client and p.company_name|upper != p.client.user.company_name|upper %}
+                                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ p.client.user.company_name|default_if_none:'(brak)' }}"></i>
+                                {% endif %}
+                            </td>
+                            <td {% if p.client %} class="identified" {% endif %}>
+                                {{ p.nip|default_if_none:'(Brak)' }}
+                                {% if p.client and p.nip|upper != p.client.user.nip|upper %}
+                                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ p.client.user.nip|default_if_none:'(brak)' }}"></i>
+                                {% endif %}
+                            </td>
+                            <td {% if p.client %} class="identified" {% endif %}>
+                                {{ p.phone|default_if_none:'(Brak)' }}
+                                {% if p.client and p.phone|upper != p.client.user.phone_one|upper %}
+                                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ p.client.user.phone_one|default_if_none:'(brak)' }}"></i>
+                                {% endif %}
+                            </td>
+                            <td {% if p.client %} class="identified" {% endif %}>
+                                {% if p.client %}
+                                    <a href="{% url 'user.edit' p.client.user.pk 'CLIENT' %}">{{ p.email|default_if_none:'(Brak)' }}</a>
+                                {% else %}
+                                    {{ p.email|default_if_none:'(Brak)' }}
+                                {% endif %}
+                                {% if p.client and p.email|upper != p.client.user.email|upper %}
+                                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ p.client.user.email|default_if_none:'(brak)' }}"></i>
+                                {% endif %}
+                            </td>
+                            <td>{{ p.prefered_adviser_email|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.amount|floatformat:2|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.security_type.name|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.mortgage_register_no|default_if_none:'(Brak)' }}</td>
+                            <td>{{ p.security_location|default_if_none:'(Brak)' }}</td>
+                            <td {% if p.broker %} class="identified" {% endif %}>
+                                {{ p.partner_first_name|default_if_none:'(Brak)' }}
+                                {% if p.broker and p.partner_first_name|upper != p.broker.user.first_name|upper %}
+                                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ p.broker.user.first_name|default_if_none:'(brak)' }}"></i>
+                                {% endif %}
+                            </td>
+                            <td{% if p.broker %} class="identified" {% endif %}>
+                                {{ p.partner_last_name|default_if_none:'(Brak)' }}
+                                {% if p.broker and p.partner_last_name|upper != p.broker.user.last_name|upper %}
+                                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ p.broker.user.last_name|default_if_none:'(brak)' }}"></i>
+                                {% endif %}
+                            </td>
+                            <td {% if p.broker %} class="identified" {% endif %}>
+                                {% if p.broker %}
+                                    <a href="{% url 'user.edit' p.broker.user.pk 'BROKER' %}">{{ p.partner_email|default_if_none:'(Brak)' }}</a>
+                                {% else %}
+                                    {{ p.partner_email|default_if_none:'(Brak)' }}
+                                {% endif %}
+
+                            <td {% if p.broker %} class="identified" {% endif %}>
+                                {{ p.partner_phone|default_if_none:'(Brak)' }}
+                                {% if p.broker and p.partner_phone != p.broker.user.phone_one %}
+                                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ p.broker.user.phone_one|default_if_none:'(brak)' }}"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if p.broker and p.broker.adviser %}
+                                    {{ p.broker.adviser.user.first_name|default_if_none:'' }} {{ p.broker.adviser.user.last_name|default_if_none:'' }}
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if p.broker %}
+                                    <i class="fas fa-check"></i>
+                                {% else %}
+                                    <a href="{% url 'partner.lead.add.broker' p.pk %}">
+                                        <i class="fa fa-plus-circle"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td class="text-center table-border-right">
+                                {% if p.client %}
+                                    <i class="fas fa-check"></i>
+                                {% elif p.broker %}
+                                    {% if not p.broker.adviser %}
+                                        <i class="fa fa-times cursor-pointer" data-toggle="tooltip" title="Pośrednik nie ma doradcy."></i>
+                                    {% else %}
+                                        <a href="{% url 'partner.lead.add.client' p.pk %}">
+                                            <i class="fa fa-plus-circle"></i>
+                                        </a>
+                                    {% endif %}
+                                {% else %}
+                                    <i class="fa fa-times cursor-pointer" data-toggle="tooltip" title="Utwórz najpierw pośrednika."></i>
+
+                                {% endif %}
+                            </td>
+
+                            {% for agr in p.agreement_set.all %}
+                                <td class="text-center">
+                                    <i class="fas fa-{% if agr.is_checked %}check{% else %}times{% endif %}"></i>
+                                </td>
+                            {% endfor %}
+
+                            {% if p.document.code %}
+                                <td><a href="{% url 'document.edit' p.document.pk %}">{{ p.document.code }}</a></td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+
+                            <td nowrap>
+                                {% if not p.status == 'CL' %}
+                                    <div class="btn-group" role="group" style="width:70px">
+
+                                        {% if p.broker and p.broker.adviser and p.client %}
+                                            <a href="{% url 'partner.lead.add.document' p.pk %}" class="btn btn-default btn-sm add-document-btn">
+                                                <i class="far fa-file-alt"></i>
+                                            </a>
+                                        {% endif %}
+                                        <a href="#" class="btn btn-default btn-sm delete-lead-btn">
+                                            <i class="fa fa-trash-alt"></i>
+                                        </a>
+
+                                    </div>
+                                {% endif %}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% include 'py3ws/lists/_partial/_pagination_current_form.html' %}
+    </div>
+
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'partner/css/partner.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'partner/js/partner.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        _g['partner'] = {
+            urls: {status: "{% url 'partner.lead.status' %}"}
+        }
+    </script>
+{% endblock %}

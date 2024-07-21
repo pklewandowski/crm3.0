@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load document_tags %}
+{% load product_tags %}
+{% load i18n %}
+{% load humanize %}
+
+{% block form_icon %}far fa-file-alt{% endblock %}
+{% block form_title %}Dokumenty typu: {{ document_type.name }} {% endblock %}
+
+{% block form_subtitle %}Lista dokumentów w windykacji - stan na dzień wczorajszy: <strong>{{ -1|addDays|date:'Y-m-d' }}</strong>{% endblock %}
+
+{% block content %}
+    {% include 'py3ws/lists/_partial/_list_filter.html' %}
+
+    <div class="panel panel-default">
+        <div class="panel-body list-panel">
+            <div class="list-container ">
+                <table id="document_list" class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th data-name="code" class="sort sort-{% if sort_field == 'code' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Numer</th>
+                        <th data-name="owner__first_name"
+                            class="sort sort-{% if sort_field == 'owner__first_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Imię
+                        </th>
+                        <th data-name="owner__last_name"
+                            class="sort sort-{% if sort_field == 'owner__last_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Nazwisko
+                        </th>
+                        <th data-name="owner__company_name"
+                            class="sort sort-{% if sort_field == 'owner__company_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Firma
+                        </th>
+
+                        <th data-name="owner__email" class="sort sort-{% if sort_field == 'owner__email' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">E-mail
+                        </th>
+                        <th data-name="status" class="sort sort-{% if sort_field == 'status' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Stan</th>
+                        <th>Wartość</th>
+                        <th data-name="creation_date"
+                            class="sort sort-{% if sort_field == 'creation_date' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Data utworzenia
+                        </th>
+
+                        <th style="min-width:100px;">Saldo</th>
+                        <th>Suma zobowiązań</th>
+                        <th>Zaległe raty</th>
+                        <th>Kapitał niewymagalny</th>
+                        <th>Kapitał wymagalny</th>
+                        <th>Prowizja wymagalna</th>
+                        <th>Prowizja niewymagalna</th>
+                        <th>Odsetki wymagalne</th>
+                        <th>Odsetki naliczone</th>
+                        <th>Odsetki / dzień</th>
+                        <th>Wpłaty (suma)</th>
+                        <th>Koszty - stan na dzień</th>
+                        <th style="width:130px">Akcje</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in page %}
+                        <tr>
+                            <td><a href="{% url 'document.edit' product.document.pk %}">{{ product.document.code }}</a></td>
+                            {% if product.document.owner %}
+                                <td><a href="{% url 'user.edit' product.document.owner.pk 'CLIENT' %}">{{ product.document.owner.first_name|default_if_none:'----' }}</a></td>
+                                <td><a href="{% url 'user.edit' product.document.owner.pk 'CLIENT' %}">{{ product.document.owner.last_name|default_if_none:'----' }}</a></td>
+                                <td><a href="{% url 'user.edit' product.document.owner.pk 'CLIENT' %}">{{ product.document.owner.company_name|default_if_none:'----' }}</a></td>
+                                <td><a href="{% url 'user.edit' product.document.owner.pk 'CLIENT' %}">{{ product.document.owner.email|default_if_none:'----' }}</a></td>
+                            {% else %}
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            {% endif %}
+
+                            <td><a href="{% url 'document.edit' product.document.pk %}">{{ product.status.name }}</a></td>
+                            {% if product %}
+                                <td class="text-right number-value-cell"><a href="{% url 'product.edit' product.pk %}">{{ product.value|float_or_dash }}</a></td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+
+                            <td class="border-right"><a href="{% url 'document.edit' product.document.pk %}">{{ product.document.creation_date|date:'Y-m-d H:i:s' }}</a></td>
+
+                            {% with product|product_calculation as calc %}
+                                {% if calc %}
+                                    <td class="product-calculation border-right saldo text-right"
+                                        style="font-weight: 700;">{{ product|count_balance }}
+                                    </td>
+                                    <td class="product-calculation text-right cost border-right number-value-cell">{{ calc.required_liabilities_sum }}</td>
+                                    <td class="product-calculation text-right border-right text-center ">{{ calc.instalment_overdue_count|max_value:0 }}</td>
+                                    <td class="product-calculation text-right capital number-value-cell">{{ calc.capital_not_required }}</td>
+                                    <td class="product-calculation text-right border-right capital number-value-cell">{{ calc.capital_required }}</td>
+                                    <td class="product-calculation text-right border-right capital number-value-cell">{{ calc.commission_required }}</td>
+                                    <td class="product-calculation text-right border-right capital number-value-cell">{{ calc.commission_not_required }}</td>
+                                    <td class="product-calculation text-right interest number-value-cell">{{ calc.interest_for_delay_required }}</td>
+                                    <td class="product-calculation text-right interest number-value-cell">{{ calc.interest_for_delay_total }}</td>
+                                    <td class="product-calculation text-right interest border-right number-value-cell">{{ calc.interest_for_delay_required_daily }}</td>
+                                    <td class="product-calculation text-right border-right number-value-cell">{{ calc.instalment_total }}</td>
+                                    <td class="product-calculation text-right cost border-right number-value-cell">{{ calc.cost }}</td>
+
+                                {% else %}
+                                    <td colspan="9" class="product-calculation text-center border-right"><strong>BRAK PRZELICZEŃ DLA WYBRANEGO DNIA</strong></td>
+                                {% endif %}
+                            {% endwith %}
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'product.edit' product.pk %}"
+                                       class="btn btn-default btn-sm edit">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% include 'py3ws/lists/_partial/_pagination_current_form.html' %}
+
+{% endblock %}
+
+{% block site_css %}
+    <style>
+        a, a:hover {
+            color: unset;
+        }
+
+        .product-calculation {
+            background-color: #f4f9ff;
+        }
+
+        .saldo {
+        }
+
+        .capital {
+            color: #31926a;
+        }
+
+        .interest {
+            color: red;
+        }
+
+        .cost {
+            color: #0a6aa1;
+        }
+
+    </style>
+{% endblock %}
+
+{% block site_any_script %}
+
+
+{% endblock %}

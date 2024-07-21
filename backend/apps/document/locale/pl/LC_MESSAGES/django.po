@@ -1,0 +1,494 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-16 13:20+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+msgid "Document matching query does not exist."
+msgstr "Dokument nie istnieje w bazie danych"
+
+#: .\document\forms.py:22
+msgid "document.status_flow"
+msgstr "Procesowanie dokumentu"
+
+#: .\document\forms.py:105
+msgid "document.type.attribute.section.column"
+msgstr "Kolumna sekcji"
+
+#: .\document\forms.py:108
+msgid "document.type.attribute.null_value"
+msgstr "Wartość pusta"
+
+#: .\document\models.py:32
+#, fuzzy
+#| msgid "document.type.attribute.section"
+msgid "document.type.accounting.type.direction"
+msgstr "Sekcja"
+
+#: .\document\models.py:33
+#, fuzzy
+#| msgid "document.type.editable"
+msgid "document.type.accounting.type.is_editable"
+msgstr "Edytowalny"
+
+#: .\document\models.py:34
+#, fuzzy
+#| msgid "document.type.attribute.is_required"
+msgid "document.type.accounting.type.is_accounting_order"
+msgstr "Wymagalny"
+
+#: .\document\models.py:36
+#, fuzzy
+#| msgid "document.type.attribute.section"
+msgid "document.type.accounting.type.due_day_accounting_only"
+msgstr "Sekcja"
+
+#: .\document\models.py:50
+#, fuzzy
+#| msgid "document.code"
+msgid "document.category.name"
+msgstr "Numer / Sygnatura"
+
+#: .\document\models.py:51
+#, fuzzy
+#| msgid "document.code"
+msgid "document.category.code"
+msgstr "Numer / Sygnatura"
+
+#: .\document\models.py:52
+#, fuzzy
+#| msgid "document.description"
+msgid "document.category.description"
+msgstr "Opis"
+
+#: .\document\models.py:70
+msgid "Kategoria"
+msgstr ""
+
+#: .\document\models.py:71
+msgid "Nazwa"
+msgstr ""
+
+#: .\document\models.py:72
+msgid "Kod"
+msgstr ""
+
+#: .\document\models.py:74
+msgid "Pattern dla kodu automatycznego"
+msgstr ""
+
+#: .\document\models.py:75
+msgid "Opis"
+msgstr ""
+
+#: .\document\models.py:77
+#, fuzzy
+#| msgid "document.type.editable"
+msgid "document.type.icon_font_name"
+msgstr "Edytowalny"
+
+#: .\document\models.py:78
+msgid "document.type.editable"
+msgstr "Edytowalny"
+
+#: .\document\models.py:79
+msgid "Posiada harmonogram"
+msgstr ""
+
+#: .\document\models.py:81
+msgid "Posiada zarządzanie odsetkami"
+msgstr ""
+
+#: .\document\models.py:83
+msgid "document.type.is_product"
+msgstr "Jest produktem sprzedażowym"
+
+#: .\document\models.py:84
+#, fuzzy
+#| msgid "document.type.is_product"
+msgid "document.type.is_process_flow"
+msgstr "Jest produktem sprzedażowym"
+
+#: .\document\models.py:85
+#, fuzzy
+#| msgid "document.type.is_product"
+msgid "document.type.is_shadow"
+msgstr "Jest produktem sprzedażowym"
+
+#: .\document\models.py:86
+#, fuzzy
+#| msgid "document.type.is_product"
+msgid "document.type.is_active"
+msgstr "Jest produktem sprzedażowym"
+
+#: .\document\models.py:87
+#, fuzzy
+#| msgid "document.type.is_product"
+msgid "document.type.is_code"
+msgstr "Jest produktem sprzedażowym"
+
+#: .\document\models.py:88
+#, fuzzy
+#| msgid "document.type.editable"
+msgid "document.type.is_code_editable"
+msgstr "Edytowalny"
+
+#: .\document\models.py:89
+#, fuzzy
+#| msgid "document.type.is_product"
+msgid "document.type.is_owner"
+msgstr "Jest produktem sprzedażowym"
+
+#: .\document\models.py:91
+#, fuzzy
+#| msgid "document.type.add.button.label"
+msgid "document.type.calculation_class"
+msgstr "Nowy typ dokumentu"
+
+#: .\document\models.py:93
+#, fuzzy
+#| msgid "document.type.attribute.name"
+msgid "document.type.form_name"
+msgstr "Nazwa"
+
+#: .\document\models.py:118
+#, fuzzy
+#| msgid "document.type.section.add.button.label"
+msgid "document.type.section.view.type"
+msgstr "Nowa sekcja"
+
+#: .\document\models.py:131
+#, fuzzy
+#| msgid "document.type.attribute.section.column"
+msgid "attribute.section.column.panel_name"
+msgstr "Kolumna sekcji"
+
+#: .\document\models.py:132
+#, fuzzy
+#| msgid "document.type.attribute.section.column"
+msgid "attribute.section.column.lg_width"
+msgstr "Kolumna sekcji"
+
+#: .\document\models.py:133
+#, fuzzy
+#| msgid "document.type.attribute.section.column"
+msgid "attribute.section.column.md_width"
+msgstr "Kolumna sekcji"
+
+#: .\document\models.py:134
+#, fuzzy
+#| msgid "document.type.attribute.section.column"
+msgid "attribute.section.column.sm_width"
+msgstr "Kolumna sekcji"
+
+#: .\document\models.py:135
+#, fuzzy
+#| msgid "document.type.attribute.section.column"
+msgid "attribute.section.column.xs_width"
+msgstr "Kolumna sekcji"
+
+#: .\document\models.py:136
+#, fuzzy
+#| msgid "document.type.attribute.section.column"
+msgid "attribute.section.column.sq"
+msgstr "Kolumna sekcji"
+
+#: .\document\models.py:171
+#, fuzzy
+#| msgid "document.type.attribute.section"
+msgid "document.type.attribute.dictionary"
+msgstr "Sekcja"
+
+#: .\document\models.py:173
+msgid "document.type.attribute.attribute"
+msgstr "Typ danych"
+
+#: .\document\models.py:177
+#, fuzzy
+#| msgid "document.type.attribute.name"
+msgid "document.type.attribute.type"
+msgstr "Nazwa"
+
+#: .\document\models.py:178
+msgid "document.type.attribute.name"
+msgstr "Nazwa"
+
+#: .\document\models.py:179
+#, fuzzy
+#| msgid "document.type.attribute.name"
+msgid "document.type.attribute.name_short"
+msgstr "Nazwa"
+
+#: .\document\models.py:182
+msgid "document.type.attribute.code"
+msgstr "Kod"
+
+#: .\document\models.py:185
+#, fuzzy
+#| msgid "document.type.attribute.code"
+msgid "document.type.attribute.css_class"
+msgstr "Kod"
+
+#: .\document\models.py:186
+#, fuzzy
+#| msgid "document.type.attribute.section"
+msgid "document.type.attribute.selector_class"
+msgstr "Sekcja"
+
+#: .\document\models.py:189
+msgid "document.type.attribute.description"
+msgstr "Opis"
+
+#: .\document\models.py:190
+#, fuzzy
+#| msgid "document.type.attribute.code"
+msgid "document.type.attribute.placeholder"
+msgstr "Kod"
+
+#: .\document\models.py:191
+#, fuzzy
+#| msgid "document.type.attribute.null_value"
+msgid "document.type.attribute.default_value"
+msgstr "Wartość pusta"
+
+#: .\document\models.py:192
+msgid "document.type.attribute.is_required"
+msgstr "Wymagalny"
+
+#: .\document\models.py:193
+#, fuzzy
+#| msgid "document.type.attribute.name"
+msgid "document.type.attribute.is_table"
+msgstr "Nazwa"
+
+#: .\document\models.py:194
+#, fuzzy
+#| msgid "document.type.attribute.section"
+msgid "document.type.attribute.is_section"
+msgstr "Sekcja"
+
+#: .\document\models.py:195
+#, fuzzy
+#| msgid "document.type.attribute.section"
+msgid "document.type.attribute.is_column"
+msgstr "Sekcja"
+
+#: .\document\models.py:196
+#, fuzzy
+#| msgid "document.type.attribute.code"
+msgid "document.type.attribute.is_combo"
+msgstr "Kod"
+
+#: .\document\models.py:198
+#, fuzzy
+#| msgid "document.type.attribute.name"
+msgid "document.type.attribute.sq"
+msgstr "Nazwa"
+
+#: .\document\models.py:235
+msgid "document.attribute.document_id"
+msgstr ""
+
+#: .\document\models.py:252
+msgid "document.owner"
+msgstr "Właściciel / Klient / Kontrahent"
+
+#: .\document\models.py:254
+#, fuzzy
+#| msgid "document.status_flow"
+msgid "document.status"
+msgstr "Procesowanie dokumentu"
+
+#: .\document\models.py:255
+msgid "document.code"
+msgstr "Numer / Sygnatura"
+
+#: .\document\models.py:256
+#, fuzzy
+#| msgid "document.code"
+msgid "document.creation_date"
+msgstr "Numer / Sygnatura"
+
+#: .\document\models.py:257
+#, fuzzy
+#| msgid "document.code"
+msgid "document.created_by"
+msgstr "Numer / Sygnatura"
+
+#: .\document\models.py:258
+msgid "document.description"
+msgstr "Opis"
+
+#: .\document\models.py:259
+#, fuzzy
+#| msgid "document.code"
+msgid "document.form_data"
+msgstr "Numer / Sygnatura"
+
+#: .\document\models.py:271
+msgid "permissions.app.document.view.all"
+msgstr ""
+
+#: .\document\models.py:272
+msgid "permissions.app.document.view.department"
+msgstr ""
+
+#: .\document\models.py:273
+msgid "permissions.app.document.view.position"
+msgstr ""
+
+#: .\document\models.py:274
+msgid "permissions.app.document.view.own"
+msgstr ""
+
+#: .\document\models.py:276
+msgid "permissions.app.document.list.all"
+msgstr ""
+
+#: .\document\models.py:277
+msgid "permissions.app.document.list.department"
+msgstr ""
+
+#: .\document\models.py:278
+msgid "permissions.app.document.list.position"
+msgstr ""
+
+#: .\document\models.py:279
+msgid "permissions.app.document.list.own"
+msgstr ""
+
+#: .\document\models.py:281
+msgid "permissions.app.document.add.all"
+msgstr ""
+
+#: .\document\models.py:282
+msgid "permissions.app.document.add.department"
+msgstr ""
+
+#: .\document\models.py:283
+msgid "permissions.app.document.add.position"
+msgstr ""
+
+#: .\document\models.py:284
+msgid "permissions.app.document.add.own"
+msgstr ""
+
+#: .\document\models.py:286
+msgid "permissions.app.document.change.all"
+msgstr ""
+
+#: .\document\models.py:287
+msgid "permissions.app.document.change.department"
+msgstr ""
+
+#: .\document\models.py:288
+msgid "permissions.app.document.change.position"
+msgstr ""
+
+#: .\document\models.py:289
+msgid "permissions.app.document.change.own"
+msgstr ""
+
+#: .\document\models.py:367
+#, fuzzy
+#| msgid "document.type.attribute.name"
+msgid "document.type.status.name"
+msgstr "Nazwa"
+
+#: .\document\models.py:368
+#, fuzzy
+#| msgid "document.type.attribute.code"
+msgid "document.type.status.code"
+msgstr "Kod"
+
+#: .\document\models.py:369
+#, fuzzy
+#| msgid "document.type.attribute.description"
+msgid "document.type.status.permission"
+msgstr "Opis"
+
+#: .\document\models.py:370
+#, fuzzy
+#| msgid "document.type.editable"
+msgid "document.type.status.is_initial"
+msgstr "Edytowalny"
+
+#: .\document\models.py:371
+#, fuzzy
+#| msgid "document.type.is_product"
+msgid "document.type.status.is_product"
+msgstr "Jest produktem sprzedażowym"
+
+#: .\document\models.py:372
+#, fuzzy
+#| msgid "document.type.attribute.section"
+msgid "document.type.status.is_active"
+msgstr "Sekcja"
+
+#: .\document\models.py:373
+#, fuzzy
+#| msgid "document.type.attribute.name"
+msgid "document.type.status.is_alternate"
+msgstr "Nazwa"
+
+#: .\document\models.py:374
+#, fuzzy
+#| msgid "document.type.attribute.is_required"
+msgid "document.type.status.is_required_validation"
+msgstr "Wymagalny"
+
+#: .\document\models.py:375
+#, fuzzy
+#| msgid "document.type.attribute.name"
+msgid "document.type.status.can_revert"
+msgstr "Nazwa"
+
+#: .\document\models.py:378
+#, fuzzy
+#| msgid "document.type.editable"
+msgid "document.type.redirect"
+msgstr "Edytowalny"
+
+#: .\document\models.py:389
+msgid "permissions.app.document.status.list_document_status"
+msgstr ""
+
+#: .\document\models.py:415
+#, fuzzy
+#| msgid "document.type.attribute.name"
+msgid "document.type.attribute.mapping.mapped_name"
+msgstr "Nazwa"
+
+#: .\document\templates\document\category\list.html:7
+#: .\document\templates\document\type\category\list.html:7
+msgid "document.type.add.button.label"
+msgstr "Nowy typ dokumentu"
+
+#: .\document\templates\document\type\edit.html:10
+msgid "Zapisz"
+msgstr ""
+
+#: .\document\templates\document\type\section\list.html:8
+msgid "document.type.section.add.button.label"
+msgstr "Nowa sekcja"
+
+#~ msgid "document.type.attribute.add.button.label"
+#~ msgstr "Nowy atrybut"
+
+#~ msgid "document.add.button.label"
+#~ msgstr "Dodaj dokument"

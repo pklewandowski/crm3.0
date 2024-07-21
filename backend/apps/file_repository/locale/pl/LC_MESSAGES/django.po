@@ -1,0 +1,5 @@
+msgid "report.template.repo.name"
+msgstr "Nazwa"
+
+msgid "report.template.repo.description"
+msgstr "Opis"

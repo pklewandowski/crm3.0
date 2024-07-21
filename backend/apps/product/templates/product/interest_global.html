@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load product_tags %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Nowa wartość % raty dla typu produktu: {{ type_name }} {% endblock %}
+{% block form_subtitle %}Wprowadzenie nowej wartości % dla wszystkich produktów typu {% endblock %}
+{% block form_title_right %}
+    <a href="{% url 'product.interest_global' %}" class="btn btn-default btn-sm btn-show-doc"><i class="far fa-file-alt"></i></a>
+    <button class="btn btn-success btn-sm btn-save" type="button"><i class="fas fa-check"></i></button>
+
+{% endblock %}
+
+{% block site_css %}
+{% endblock %}
+
+{% block site_js %}
+{% endblock %}
+
+{% block site_inline_js %}{% endblock %}
+
+{% block content %}
+
+{#    {{ form }}#}
+{% endblock %}

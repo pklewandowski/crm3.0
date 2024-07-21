@@ -1,0 +1,33 @@
+//.modal-body .calendar-body {
+//  overflow: auto;
+//  height: calc(100vh - 150px);
+//}
+
+#calendarModal .modal-body {
+  display: inline-block;
+  width: 100%;
+  height: calc(100vh - 140px);
+}
+
+.fc .fc-timegrid-col.fc-day-today {
+  background-color: rgba(70, 150, 255, 0.15);
+}
+
+.fc .fc-highlight {
+  border: 1px solid #4776cb;
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 40%);
+  border-radius: 3px;
+  background-color: #005dc191;
+  z-index: 1000;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:hover {
+  background-color: #316da9;
+  border-color: #abcef1;
+}
+
+.fc .fc-button-primary {
+  color: #fff;
+  background-color: #4f90d2;
+  border-color: #abcef1;
+}

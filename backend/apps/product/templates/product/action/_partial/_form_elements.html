@@ -1,0 +1,21 @@
+<div class="col-lg-6 col-sm-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">Dane</div>
+        <div class="panel-body">
+            {% include "py3ws/forms/fields/p3form_field.html" with field=form.name %}
+            {% include "py3ws/forms/fields/p3form_field.html" with field=form.send_date %}
+            {% include "py3ws/forms/fields/p3form_field.html" with field=form.receive_date %}
+            {% include "py3ws/forms/fields/p3form_field.html" with field=form.cost %}
+            {{ form.report.as_hidden }}
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6 col-sm-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">Opis</div>
+        <div class="panel-body">
+            {% include "py3ws/forms/fields/p3form_field.html" with field=form.description %}
+        </div>
+    </div>
+</div>

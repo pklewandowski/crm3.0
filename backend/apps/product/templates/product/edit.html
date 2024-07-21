@@ -1,0 +1,303 @@
+{% extends override_base|default:'base.html' %}
+{% load i18n %}
+{% load l10n %}
+{% load static %}
+{% load humanize %}
+{% load product_tags %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Edycja produktu:
+    {% if  form.instance.client.user.company_name %}
+        {{ form.instance.client.user.company_name }} ({{ form.instance.client.user.first_name|default_if_none:'' }} {{ form.instance.client.user.last_name }})
+    {% else %}
+        {{ form.instance.client.user.first_name|default_if_none:'' }} {{ form.instance.client.user.last_name|default_if_none:'' }}
+    {% endif %}
+{% endblock %}
+{% block form_subtitle %}{{ form.instance.type.name }} | Nr Umowy: {{ form.instance.agreement_no }}, utworzył: {{ form.instance.creation_user.first_name }}
+    {{ form.instance.creation_user.last_name }}{% endblock %}
+{% block form_title_right %}
+    <a id="showDocBtn" href="{% url 'document.edit' form.instance.document.pk %}" class="btn btn-default btn-sm btn-show-doc"><i class="far fa-file-alt"></i></a>
+    <a href="#" id="removeProductBtn" class="btn btn-danger btn-sm btn-remove-product"><i class="fa fa-times"></i></a>
+    <button class="btn btn-success btn-sm btn-save" type="button"><i class="fas fa-check"></i></button>
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'dist/product/product-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'resource/dropzone/dropzone.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/jstree/dist/jstree.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/js/document.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/type/js/document_type_process_flow.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/type/js/utils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/product/product-bundle.js' %}"></script>
+{% endblock %}
+
+{% block site_inline_js %}{% endblock %}
+
+{% block site_any_script %}
+    {% include "product/_partial/_site_script.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="loader-container" id="loaderContainer">
+        <div class="loader"></div>
+    </div>
+
+{#        form:{{ form.errors }}#}
+{#        schedule: {{ schedule_formset.errors }}#}
+{#        cashflow: {{ cashflow_formset.errors }}#}
+{#        interest: {{ interest_formset.errors }}#}
+
+    {% config_var 'MODE_VIEW' as mode_view %}
+
+    {#    {% include 'product/_partial/header.html' %}#}
+    {% if commission_formset.errors %}
+        {{ commission_formset.errors }}
+    {% endif %}
+
+    {% if form %}
+
+        <form method="post" id="product-form">
+            {% csrf_token %}
+            {% if form.instance.type.is_schedule %}
+                {{ schedule_formset.management_form }}
+            {% endif %}
+            {{ cashflow_formset.management_form }}
+            {{ interest_formset.management_form }}
+            {{ commission_formset.management_form }}
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#detail-tab">Parametry</a></li>
+                <li><a data-toggle="tab" href="#schedule-tab">Harmonogram i oprocentowanie</a></li>
+                {#                <li><a data-toggle="tab" href="#daystate-tab">Stan na dzień</a></li>#}
+                <li><a id="calcTab" data-toggle="tab" href="#calc-tab">Kalkulacja</a></li>
+                <li><a id="cashFlowTab" data-toggle="tab" href="#cashflow-tab">Przepływy</a></li>
+            </ul>
+
+            <div class="tab-content pad-t">
+                <div id="detail-tab" class="tab-pane fade in active">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="productDashboardContainer"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Dane</div>
+                                <div class="panel-body">
+                                    {{ form.client.as_hidden }}
+                                    {% include "py3ws/forms/fields/p3form_field.html" with field=form.agreement_no %}
+                                    {% include "py3ws/forms/fields/p3form_field.html" with field=form.value %}
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.start_date %}
+                                        </div>
+                                        <div class="col-lg-6">
+                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.end_date %}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.capitalization_date %}
+                                        </div>
+                                        <div class="col-lg-6">
+                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.termination_date %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="schedule-tab" class="tab-pane fade in">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div id="product-schedule-formset-container">
+                                <div class="panel panel-default">
+                                    <div style="width: 100%; display: inline-block" class="panel-heading">
+                                        <div style="float: left">
+                                            Harmonogram ({{ schedule|length }} rat)
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        {% if form.instance.type.is_schedule %}
+                                            <div style="overflow: auto; height: 100%;">
+
+                                                <table id="product-schedule-formset-table" class="table table-hover table-condensed table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>lp</th>
+                                                        <th style="width:18%">Data wymagalności</th>
+                                                        <th>Dzień</th>
+                                                        <th class="text-right">Rata kapitałowa</th>
+                                                        <th class="text-right">Rata prowizyjna</th>
+{#                                                        <th class="text-right">Rata odsetkowa</th>#}
+{#                                                        <th style="min-width: 100px;" class="text-right">Rata całkowita</th>#}
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="instalment-schedule-row-container">
+                                                    {% for i in schedule %}
+                                                        {% include 'product/_partial/_formset/_row/_schedule_formset_row_partial_tmp.html' with sch=i index=forloop.counter length=schedule|length %}
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        {% else %}
+                                            <h3>Brak harmonogramu</h3>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 nopadding-left">
+                            <div id="product-interest-formset-container">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" style="width: 100%">Odsetki
+                                        <div style="float: right;">
+                                            <div>
+                                                <a class="add interest-add-btn panel-heading-add-btn" data-product-id="{{ form.instance.pk|unlocalize }}">
+                                                    <i class="fa fa-plus-circle"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div style="height: 100%; overflow-y: auto;">
+                                            <table id="product-interest-formset-table" class="table table-hover table-condensed table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width:20%">Data od</th>
+                                                    <th style="width:15%">Odsetki umowne</th>
+                                                    <th style="width:15%">Odsetki za opóźnienie</th>
+                                                    <th style="width:15%">Odsetki max. za opóźnienie</th>
+                                                    <th>Sposób rozliczania</th>
+                                                    <th style="width:50px"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for i in interest_formset %}
+                                                    {% include 'product/_partial/_formset/_row/_interest_formset_row_partial.html' with i=i index=forloop.counter0 %}
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div id="commission-tab" class="tab-pane fade in">
+
+                    <div class="dropdown  pad-t">
+                        <a href="#" class="dropdown-toggle btn btn-default btn-sm" type="button" data-toggle="dropdown" id="commission_dropdown_btn" aria-haspopup="true"
+                           aria-expanded="false"><i class="fa fa-plus"></i></a>
+                        <ul class="dropdown-menu" aria-labelledby="commission_dropdown_btn">
+                            {% for c in form.instance.type.commission_set.all %}
+                                <li><a href="#" class="product-type-commission"
+                                       data-id="{{ c.pk }}"
+                                       data-type="{{ c.type }}"
+                                       data-calculation_type="{{ c.calculation_type }}"
+                                       data-period="{{ c.period }}"
+                                >{{ c.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-12 pad-t">
+                        <table id="product-commission-formset-table" data-id="{{ form.instance.pk }}" class="table table-hover table-condensed">
+                            <thead>
+                            <th>Nazwa</th>
+                            <th>typ</th>
+                            <th>Okres</th>
+                            <th>Kalkulacja</th>
+                            <th>Wartość</th>
+                            <th>od</th>
+                            <th>do</th>
+                            <th>Opis</th>
+                            <th style="width:80px;">Aktywna</th>
+                            <th>Usuń</th>
+                            </thead>
+                            <tbody>
+                            {% for i in commission_formset %}
+                                {% include 'product/_partial/_formset/_row/_commission_formset_row_partial.html' with i=i index=forloop.counter0 %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div id="daystate-tab" class="tab-pane fade in">
+                    <div class="col-sm-12 pad-b">
+                        <button id="datepicker_btn" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Dodaj stan na dzień</button>
+                        <ul class="dropdown-menu" aria-labelledby="datepicker_btn">
+                            <li>
+                                <div id="datepicker11" class="center-text"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Stan na dzień</div>
+                            <div class="panel-body">
+                                <table id="calc_day_table" class="table table-hover table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Kapitał niewymagalny</th>
+                                        <th>Kapitał wymagalny</th>
+                                        <th>Odsetki wymagalne</th>
+                                        <th>Odsetki naliczone</th>
+                                        <th>Odsetki / dzień</th>
+                                        <th>Wpłaty (suma)</th>
+                                        <th>Koszty - stan na dzień</th>
+                                        <th>Saldo</th>
+                                        <th>Akcje</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="calc-tab" class="tab-pane fade in">
+                    {% include 'product/_partial/_calc_table_partial2.html' with calculation_list=calculation_list %}
+                </div>
+
+                <div id="cashflow-tab" class="tab-pane fade in">
+                    {% include 'product/_partial/_cashflow_partial.html' with cashflow_formset=cashflow_formset %}
+                </div>
+            </div>
+        </form>
+
+    {% endif %}
+
+    {% include 'product/_template/_main_client_row_template.html' %}
+    {% include 'product/_template/_formset/_client_formset_row_template.html' %}
+    {% include 'product/_template/_formset/_schedule_formset_row_template.html' with ef=schedule_formset.empty_form %}
+    {% include 'product/_template/_formset/_cashflow_formset_row_template_v2.html' with ef=cashflow_formset.empty_form %}
+    {% include 'product/_template/_formset/_interest_formset_row_template.html' with ef=interest_formset.empty_form %}
+    {% include 'product/_template/_formset/_commission_formset_row_template.html' %}
+    {% include 'product/_template/calc_row_template.html' %}
+    {% include 'product/_template/_product_dashboard_template.html' %}
+
+    {% include 'product/_modal/calc_table_modal.html' %}
+    {% include 'product/_modal/cashflow_aggregates_modal.html' %}
+
+
+{% endblock %}
+
+
+

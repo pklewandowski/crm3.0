@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Nowy typ danych {% endblock %}
+{% block form_subtitle %}Typy danych dla atrybutów produktów{% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit" type="submit"><i class="fa fa-user pad-r"></i>Zapisz</button>
+{% endblock %}
+
+{% block site_script %}
+    {#    {% include "employee/_partial/_site_script._js" %}#}
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'attribute/data_type/js/attribute-data-type.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <form method="post" id="issue-form">
+        {% csrf_token %}
+        {% include "attribute/data_type/_partial/_form_elements.html" with form=form %}
+
+    </form>
+
+{% endblock %}

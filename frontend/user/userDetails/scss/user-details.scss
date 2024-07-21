@@ -1,0 +1,147 @@
+.widget-user-details-container {
+
+}
+
+.widget-user-details-header {
+  display: inline-block;
+  width: 100%;
+}
+
+.widget-user-details-header a {
+  color: inherit;
+}
+
+.widget-user-details-header-data {
+  display: inline-block;
+  width: 100%;
+}
+
+.widget-user-details-avatar {
+  width: 20%;
+  display: block;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  overflow: hidden;
+  float: left;
+  box-shadow: 0 0 5px #00000090;
+  text-align: center;
+}
+
+.widget-user-details-avatar img {
+  width: 105%;
+  position: relative;
+  left: -5px;
+}
+
+.widget-user-details-title {
+  float: left;
+  font-size: 25px;
+  font-weight: 700;
+  color: #747474;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+}
+
+.widget-user-details-section-title {
+  font-size: 30px;
+  font-weight: 700;
+  //color: #747474;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.widget-user-details-product-title {
+  background-color: #75c762;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.widget-user-details-field-icon {
+  margin-right: 5px;
+}
+
+.widget-user-details-list {
+  overflow: auto;
+  padding: 15px;
+  height: calc(100% - 34px);
+}
+
+.widget-user-details-personal-data {
+  float: left;
+  width: 100%;
+}
+
+.widget-user-details-personal-data-tags {
+  padding: 3px 5px;
+  margin-right: 5px;
+  background-color: #dddddd;
+  //color: white;
+  border-radius: 5px;
+  font-weight: 700;
+}
+
+.widget-user-details-tag-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 5px;
+}
+
+.widget-user-details-personal-data table {
+  position: relative;
+  width: 100%;
+}
+
+.widget-user-details-personal-data table td {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #747474;
+}
+
+.widget-user-details-personal-data table td:nth-child(1) {
+  font-weight: 700;
+  width: 20%
+}
+
+.widget-user-details-personal-data table td:nth-child(2) {
+  width: 80%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.widget-user-details-notes {
+  overflow: auto;
+  height: 100%;
+}
+
+
+.widget-user-details-avatar-initcap {
+  font-size: 100px;
+  font-weight: bold;
+  margin: auto;
+  color: #7a7a7a;
+}
+
+.add-btn {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.widget-user-details-events-container .fc-button {
+  font-size: 0.8em !important;
+}
+
+.widget-user-details-events-container .fc-toolbar-title {
+  font-size: 1.5em !important;
+}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Prowizje dla typu produktu: {{ document_type.name }}{% endblock %}
+{% block form_subtitle %}Lista prowizji{% endblock %}
+{% block form_title_right %}
+    <a href="{% url 'product.type.commission.add' document_type.pk %}" class="btn btn-success btn-sm">{% trans "Dodaj prowizję..." %}</a>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="">
+
+        <table id="product_list" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Typ</th>
+                <th>Okres</th>
+                <th>Typ kalkulacji</th>
+                <th>Wartość domyślna</th>
+
+                <th style="width:130px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for commission in commission_list %}
+
+                <tr>
+                    <td>{{ commission.name }}</td>
+                    <td>{{ commission.type }}</td>
+                    <td>{{ commission.period }}</td>
+                    <td>{{ commission.calculation_type }}</td>
+                    <td>{{ commission.default_value }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'product.type.commission.edit' commission.pk %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}
+
+{% block site_script %}
+
+{% endblock %}

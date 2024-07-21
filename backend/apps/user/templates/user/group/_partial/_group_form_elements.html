@@ -1,0 +1,18 @@
+{#{% load my_template_tags %}#}
+{% load i18n %}
+{% config_var 'MODE_CREATE' as mode_create %}
+
+
+<div class="col-lg-4 col-sm-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">Dane grupy</div>
+        <div class="panel-body">
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.name %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.description %}
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-8 col-sm-8 center-block">
+    {% include 'user/_partial/_app_permissions_elements.html' with form=perm_form %}
+</div>

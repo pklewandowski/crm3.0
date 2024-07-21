@@ -1,0 +1,74 @@
+<div id="hierarchyFormModal" class="modal fade" role="dialog">
+    <div class="vertical-alignment-helper" style="max-width:80%">
+        <div class="modal-dialog vertical-align-center">
+
+            <form id="hierarchy-form" method="post" autocomplete="off">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Dodawanie / edycja struktury </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-8 col-sm-8">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Dane</div>
+                                    <div class="panel-body">
+                                        <fieldset id="hierachyFormHierarchyData">
+                                            <div class="form-group">
+                                                <select name="type" class="form-control input-md">
+                                                    <option id="type_null"></option>
+                                                    <option id="type_cmp" value="CMP">Firma / spółka zależna</option>
+                                                    <option id="type_hdq" value="HDQ">Oddział</option>
+                                                    <option id="type_dep" value="DEP">Departament</option>
+                                                    <option id="type_pos" value="POS">Stanowisko</option>
+                                                </select>
+                                                <label>Typ</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="name" class="form-control input-md"/>
+                                                <label>Nazwa</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <textarea name="description" class="form-control input-md"></textarea>
+                                                <label>Opis</label>
+                                            </div>
+
+                                            <input type="hidden" name="parent"/>
+                                            <input type="hidden" name="id"/>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 priv-list">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Grupy uprawnień</div>
+                                    <div class="panel-body">
+                                        <div>
+                                            <select id="groupSelect2" multiple="multiple"
+                                                    class="form-control input-md" name="groups">
+                                                <option value="1">Pracownik</option>
+                                                <option value="2">Doradca</option>
+                                            </select>
+                                        </div>
+                                        <fieldset id="hierarchyFormGroupData">
+
+                                        </fieldset>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success save-hierarchy-btn">Zapisz...</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

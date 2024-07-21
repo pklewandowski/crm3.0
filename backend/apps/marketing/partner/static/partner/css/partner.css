@@ -1,0 +1,32 @@
+.broker-match {
+    color: #2864a5;
+    font-weight:700;
+    text-decoration: underline !important;
+}
+
+
+.identified {
+    color: #2f73b5;
+    font-weight: 700
+}
+
+i.fa-exclamation-circle {
+    color: #d81f24;
+    cursor: pointer;
+}
+i.fa-plus-circle {
+    font-size: 20px;
+}
+
+.tooltip-pointer {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.lead-closed, .lead-closed:hover {
+    background-color: #ddd;
+}
+
+.table-border-right {
+    border-right: 1px solid #ddd;
+}

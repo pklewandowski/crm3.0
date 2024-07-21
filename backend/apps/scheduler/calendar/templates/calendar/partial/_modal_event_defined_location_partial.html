@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        {% if is_headquarter %}
+            <div style="float:left; margin-right: 10px;">
+                <select id="id_schedule-headquarter" name="schedule-headquarter" class="form-control input-sm">
+                    {% for i in request.session.user_headquarters %}
+                        <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        <div style="float:left">
+            <label for="{{ form.meeting_room.id_for_label }}">Lokalizcja zdefiniowana: <span data-id="" id="defined_location_title"></span></label>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+
+        <div class="meeting-room-select-buttons" data-toggle="buttons">
+            {% if is_headquarter %}
+                {% for j in request.session.user_headquarters %}
+                    <div data-id="{{ j.id }}" id="headquarter_{{ j.id }}" class="headquarter-meeting_room-container">
+                        {% for i in form.meeting_room.field.queryset %}
+                            {% if i.headquarter.pk == j.id %}
+                                {% include 'schedule/partial/_meeting_room_button_partial.html' with name=i.name %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                {% for i in form.meeting_room.field.queryset %}
+                    {% if i.headquarter.pk == j.id %}
+                        {% include 'schedule/partial/_meeting_room_button_partial.html' with name=i.name %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+

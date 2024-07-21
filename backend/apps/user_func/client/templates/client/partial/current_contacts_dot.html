@@ -1,0 +1,5 @@
+<div class="current-contacts-dot {% if date_diff == -9999999999 %}current-contacts-exclamation-dot
+{% elif date_diff >= 0 %}current-contacts-green-dot
+{% elif date_diff > -14 %}current-contacts-yellow-dot
+{% else %}current-contacts-red-dot
+{% endif %}"></div>

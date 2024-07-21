@@ -1,0 +1,189 @@
+@font-face {
+    font-family: 'fontItim';
+    src: url('Itim-Regular.ttf') format('truetype');
+}
+
+.sticky-notes-container {
+    left: 0;
+    top: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.sticky-notes-container-blur {
+    backdrop-filter: blur(2px);
+    z-index: 10;
+    background-color: rgba(129, 116, 105, 0.18);
+}
+
+.sticky-note {
+    width: 200px;
+    height: 200px;
+    box-shadow: 4px 4px 10px rgba(34, 34, 34, .7);
+    transition: all 0.3s ease;
+    transform: rotate(-8deg);
+    z-index: 11;
+}
+
+.sticky-note input, .sticky-note textarea {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+    font-family: 'fontItim', sans-serif;
+}
+
+.sticky-note:hover {
+    transform: scale(1.35);
+    z-index: 1001;
+}
+
+.sticky-note-drag {
+    transition: none;
+    transform: none;
+    opacity: 0.5;
+}
+
+.sticky-note-title {
+    display: block;
+    background: transparent;
+    border: none;
+    width: 90%;
+    height: 30px;
+    margin: 0 10px 5px 10px;
+    overflow: hidden;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    font-family: 'fontItim', sans-serif;
+}
+
+.sticky-note-body {
+    display: block;
+    background: transparent;
+    border: none;
+    width: 90%;
+    height: 140px;
+    bottom: 10px;
+    margin: 0px 10px;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'fontItim', sans-serif;
+    word-break: break-word;
+    resize: none;
+    line-height: 1.1em;
+}
+
+.sticky-note-body:focus {
+    overflow-y: auto;
+}
+
+.sticky-note-title:hover, .sticky-note-body:hover {
+    border: 1px dotted #898989;
+}
+
+.sticky-note-bar {
+    display: block;
+    width: 100%;
+    height: 15px;
+}
+
+.sticky-note-bar i {
+    padding: 3px;
+}
+
+.sticky-rotate-10 {
+    transform: rotate(-10deg);
+}
+
+.sticky-rotate-10 {
+    transform: rotate(-10deg);
+}
+
+.sticky-rotate-0 {
+    transform: rotate(-9deg);
+}
+
+.sticky-rotate-8 {
+    transform: rotate(-8deg);
+}
+
+.sticky-rotate-7 {
+    transform: rotate(-7deg);
+}
+
+.sticky-rotate-6 {
+    transform: rotate(-6deg);
+}
+
+.sticky-rotate-5 {
+    transform: rotate(-5deg);
+}
+
+.sticky-rotate-4 {
+    transform: rotate(-4deg);
+}
+
+.sticky-rotate-3 {
+    transform: rotate(-3deg);
+}
+
+.sticky-rotate-2 {
+    transform: rotate(-2deg);
+}
+
+.sticky-rotate-1 {
+    transform: rotate(-1deg);
+}
+
+.sticky-rotate0 {
+}
+
+.sticky-rotate1 {
+    transform: rotate(1deg);
+}
+
+.sticky-rotate2 {
+    transform: rotate(2deg);
+}
+
+.sticky-rotate3 {
+    transform: rotate(3deg);
+}
+
+.sticky-rotate4 {
+    transform: rotate(4deg);
+}
+
+.sticky-rotate5 {
+    transform: rotate(5deg);
+}
+
+.sticky-rotate1 {
+    transform: rotate(1deg);
+}
+
+.sticky-rotate6 {
+    transform: rotate(6deg);
+}
+
+.sticky-rotate7 {
+    transform: rotate(7deg);
+}
+
+.sticky-rotate8 {
+    transform: rotate(8deg);
+}
+
+.sticky-rotate1 {
+    transform: rotate(1deg);
+}
+
+.sticky-rotate9 {
+    transform: rotate(9deg);
+}
+
+.sticky-rotate10 {
+    transform: rotate(10deg);
+}

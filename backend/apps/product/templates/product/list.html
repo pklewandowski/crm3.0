@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Produkty typu: {{ product_type.name }} {% endblock %}
+{% block form_subtitle %}Lista produktów{% endblock %}
+{% block form_title_right %}
+    <a href="{% url 'document.add' product_type.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></a>
+{% endblock %}
+
+{% block site_css %}
+    <style>
+    a, a:hover {
+        color:unset;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="">
+        <table id="product_list" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Nr umowy</th>
+                <th>Wartość / Limit</th>
+                <th>Imię i Nazwisko / Firma</th>
+                <th>PESEL</th>
+                <th>NIP</th>
+                <th>Adres</th>
+                <th>E-mail</th>
+                <th>Data utworzenia</th>
+                <th>Utworzył</th>
+
+                <th style="width:130px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in products %}
+                <tr>
+                    <td><a href="{% url 'product.edit' product.pk %}">{{ product.agreement_no }}</a></td>
+                    <td><a href="{% url 'product.edit' product.pk %}">{{ product.value }}</a></td>
+                    <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.first_name|default_if_none:'----' }} {{ product.client.user.last_name }}</a></td>
+                    <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.personal_id|default_if_none:'----' }}</a></td>
+                    <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.nip|default_if_none:'----' }}</a></td>
+                    <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.mail_address|compact_address }}</a></td>
+                    <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.email|default_if_none:'----' }}</a></td>
+                    <td><a href="{% url 'product.edit' product.pk %}">{{ product.creation_date }}</a></td>
+                    {% if product.creation_user.is_superuser %}
+                        <td>{{ product.creation_user.first_name|default_if_none:'----' }} {{ product.creation_user.last_name }}</td>
+                    {% else %}
+                        <td><a href="{% url 'user.edit' product.creation_user.pk %}">{{ product.creation_user.first_name|default_if_none:'----' }} {{ product.creation_user.last_name }}</a></td>
+                    {% endif %}
+
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'product.edit' product.pk %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

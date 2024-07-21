@@ -1,0 +1,62 @@
+$toolbarBtnOpacity: .8;
+//---------------- TOOLBAR SM BTN ----------------//
+$toolbarSmBtnSize: 30px;
+$toolbarSmBtnFontSize: 18px;
+$toolbarSmBtnPaddingTop: 4px;
+
+.toolbar-btn {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 50%;
+  text-align: center;
+  z-index: 10;
+  opacity: $toolbarBtnOpacity;
+  transition: opacity .4s;
+  font-size: 18px;
+  float: right;
+  width: 30px;
+  height: 30px;
+  border: 2px solid white;
+  box-shadow: 0 0 3px #00000063;
+}
+
+//toolbar button when used inline like at the end od list item positioned relative
+.toolbar-btn-inline {
+  position: absolute;
+  cursor: pointer;
+  text-align: center;
+  z-index: 10;
+  opacity: $toolbarBtnOpacity;
+  transition: opacity .4s;
+  font-size: 18px;
+  float: right;
+  width: 30px;
+  height: 30px;
+}
+
+.toolbar-btn:hover {
+  opacity: 1;
+  transition: opacity .4s;
+}
+
+.toolbar-delete-btn {
+  color: white;
+  background-color: #ec4242;
+}
+
+.toolbar-delete-btn-inline {
+  //color: white;
+  //background-color: #ec4242;
+}
+
+.toolbar-close-btn {
+  color: white;
+  background-color: #3f3d3d;
+}
+
+.toolbar-sm-btn {
+  width: $toolbarSmBtnSize;
+  height: $toolbarSmBtnSize;
+  font-size: $toolbarSmBtnFontSize;
+  //padding-top: $toolbarSmBtnPaddingTop;
+}

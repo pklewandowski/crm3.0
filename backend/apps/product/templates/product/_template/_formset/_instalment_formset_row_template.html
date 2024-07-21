@@ -1,0 +1,16 @@
+<template id="instalment-formset-row-template">
+
+    <tr data-id="__PRODUCT_ID__" data-removable="true">
+        <td>{{ instalment_formset.empty_form.start_date }}</td>
+        <td>{{ instalment_formset.empty_form.value }}</td>
+        <td>
+            <div class="btn-group">
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </div>
+        </td>
+        <input type="hidden" name="{{instalment_formset.empty_form.product.html_name}}" value="__PRODUCT_ID__"/>
+        {{instalment_formset.empty_form.id.as_hidden}}
+    </tr>
+</template>

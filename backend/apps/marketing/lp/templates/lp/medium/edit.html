@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fa fa-file{% endblock %}
+{% block form_title %}Medium {{ form.instance.name }}{% endblock %}
+{% block form_subtitle %}Edycja medium {% endblock %}
+{% block form_title_right %}
+    <button id="save_doc_btn" class="btn btn-success" type="button"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    <form method="post" autocomplete="off">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dane</div>
+                <div class="panel-body">
+                    {% include 'lp/medium/_partial/_form_elements.html' %}
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

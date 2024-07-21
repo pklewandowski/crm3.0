@@ -1,0 +1,71 @@
+<template id="form_basic_template">
+    <div id="basic_form_container">
+        <fieldset id="main_fieldset">
+            <div class="panel panel-default">
+                <div class="panel-heading">Szybkie spotkanie</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-9">
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    {{ form.type.as_hidden }}
+                                    {% include 'schedule/partial/_event_type_select_partial.html' %}
+                                </div>
+                                <div class="col-lg-6">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.title %}
+                                </div>
+                            </div>
+
+                            <div id="participantContainer" class="row">
+                                <div class="col-lg-4">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.service %}
+                                </div>
+                                <div class="col-lg-4 nopadding-left">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.employee_ %}
+                                </div>
+                                <div class="col-lg-4 nopadding-left">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.client_ %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div id="event_range">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div id="event_basic_start_date">
+                                            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.start_date %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div id="event_basic_end_date">
+                                            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.end_date %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="event_location_panel">
+                                {% include 'schedule/partial/_modal_event_defined_location_partial.html' with form=form %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div style="display:none">
+                {{ form.host_user_.as_hidden }}
+                {{ note_form.text.as_hidden }}
+            </div>
+        </fieldset>
+    </div>
+</template>

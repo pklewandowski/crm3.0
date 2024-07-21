@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+
+{% block form_icon %}fa fa-calendar-alt{% endblock %}
+{% block form_title %}Kalendarz - statystyki {% endblock %}
+{% block form_subtitle %}Statystyki zdarzeń{% endblock %}
+{% block form_title_right %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-8 col-sm-8 pad-t">
+            <div class="panel panel-default">
+                <div class="panel-heading">Ranking zdarzeń przeniesionych</div>
+                <div class="panel-body">
+                    <table id="top_ten_move" class="table table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Typ</th>
+                            <th>Tytuł</th>
+                            <th>Prowadzący / Właściciel</th>
+                            <th class="text-center">Liczba przeniesień</th>
+                            <th class="text-center">Data utworzenia</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for t in top_ten_move %}
+                            <tr>
+                                <td>{{ t.type_name }}</td>
+                                <td>{{ t.title }}</td>
+                                <td>{{ t.first_name }} {{ t.last_name }}</td>
+                                <td class="text-center">{{ t.cnt }}</td>
+                                <td class="text-center">{{ t.history_date | date:"Y-m-d H:i:s" }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block site_script %}{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Nowy użytkownik {% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit" type="submit"><i class="fa fa-user pad-r"></i>Zapisz</button>
+{% endblock %}
+
+{% block site_script %}
+    {#    {% include "employee/_partial/_site_script._js" %}#}
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'user/js/user.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <form method="post" id="issue-form">
+        {% csrf_token %}
+        {% include "user/_partial/_form_elements.html" with form=form mode=mode %}
+
+    </form>
+
+{% endblock %}

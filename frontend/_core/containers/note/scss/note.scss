@@ -1,0 +1,47 @@
+@import "note-container";
+@import "note-header";
+@import "note-body";
+@import "note-toolbar";
+
+.container-notes {
+  position: relative;
+}
+
+.container-notes-container {
+  display: block;
+  height: calc(100vh - 180px);
+  overflow: auto;
+  background-color: #89744e5c;
+  padding-top: 15px;
+  border-radius: 5px;
+}
+
+.container-notes-addnotebtn {
+  position: absolute;
+  left: -10px;
+  top: -12px;
+  width: 26px;
+  height: 26px;
+  font-size: 25px;
+  color: #2b8de1;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 10;
+
+  border-radius: 50%;
+  background-color: white;
+}
+.container-notes-addnotebtn i {
+  position: relative;
+  top: -4px;
+  left: 2px;
+}
+
+.document-notes-note-container {
+margin-bottom: 15px;
+min-width: 25%;
+width:25%;
+//max-width: 100%;
+float: left;
+padding-left: 15px;
+}

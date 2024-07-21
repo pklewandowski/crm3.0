@@ -1,0 +1,60 @@
+@import "_globals";
+
+.container-note-body-content {
+  max-height: $note-body-height;
+  overflow-y: auto;
+  scrollbar-color: #88888800 #f1f1f100;
+  scrollbar-width: thin;
+}
+
+.container-note-body-content:hover {
+  scrollbar-color: #888888 #f1f1f1;
+  scrollbar-width: thin;
+}
+
+.container-note-body-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+.container-note-body-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  visibility: hidden;
+}
+
+.container-note-body-content:hover::-webkit-scrollbar-track {
+  visibility: visible;
+}
+
+/* Handle */
+.container-note-body-content::-webkit-scrollbar-thumb {
+  background: #888888;
+  visibility: hidden;
+}
+
+.container-note-body-content:hover::-webkit-scrollbar-thumb {
+  visibility: visible;
+}
+
+/* Handle on hover */
+.container-note-body-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+.container-note-body-editable {
+  color: #4f98d7 !important;
+  border: 1px dashed #ddd;
+}
+
+.container-note-body {
+  color: #5e5e5e;
+  min-height: 30px;
+  padding: 5px;
+}
+
+.container-note-body:empty:not(:focus):before {
+  content: attr(data-text);
+  font-style: italic;
+  color: #b1b1b1;
+}

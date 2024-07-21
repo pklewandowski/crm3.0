@@ -1,0 +1,28 @@
+<label for="{{ form.type.id_for_label }}">Typ:</label>
+<select id="{{ form.type.id_for_label }}" name="{{ form.type.html_name }}"
+        class="form-control input-md">
+
+    {% for i in schedule_type %}
+        <option data-location_required="{{ i.location_required }}"
+
+                data-event_kind="{{ i.event_kind }}"
+                data-title_required="{{ i.title_required }}"
+                data-default_title="{{ i.default_title }}"
+
+                data-single_person="{{ i.single_person }}"
+                data-whole_day_event="{{ i.whole_day_event }}"
+
+                data-superior_confirmation="{{ i.superior_confirmation }}"
+                data-participant_confirmation="{{ i.participant_confirmation }}"
+                data-host_user_confirmation="{{ i.host_user_confirmation }}"
+                data-exclusive_participant_mode="{{ i.exclusive_participant_mode }}"
+
+                data-is_default="{{ i.is_default_event }}"
+
+                data-color="{{ i.color }}"
+                value="{{ i.id }}"
+        >{{ i.name }}
+        </option>
+    {% endfor %}
+
+</select>

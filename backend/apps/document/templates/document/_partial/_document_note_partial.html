@@ -1,0 +1,8 @@
+<ul class="message-container">
+    {% for i in form.instance.note_set.all|order_by:"-creation_date" %}
+        <li>
+            <div class="message-header">{{ i.creation_date }} {{ i.created_by }}</div>
+            <div class="message-text">{{ i.text }}</div>
+        </li>
+    {% endfor %}
+</ul>

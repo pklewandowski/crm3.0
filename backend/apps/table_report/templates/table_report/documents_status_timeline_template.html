@@ -1,0 +1,106 @@
+{% extends 'table_report/_base_template.html' %}
+{% load previous_next_tags %}
+
+{% block table_report_head %}
+    <style>
+        .table-report-status-track {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: baseline;
+            padding: 10px 0 0;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .table-report-status-track-status {
+            position: relative;
+            padding: 5px;
+            border: 2px solid #a6d1a6;
+            border-radius: 10px;
+            background-color: #e3f5df;
+            color: #509959;
+            font-weight: bold;
+        }
+
+        .table-report-status-track-status-overtime {
+            background-color: #fde0b5;
+            color: #98581c;
+            font-weight: bold;
+            border-color: #eba86d;
+        }
+
+        .table-report-status-track-status-delayed {
+            background-color: #ffdbdb;
+            color: #b73030;
+            font-weight: bold;
+            border-color: #df8c8c;
+        }
+
+        .table-report-status-track-status-created-by {
+            font-size: 11px;
+        }
+
+        .table-report-status-track-status-days {
+            position: absolute;
+            top: -15px;
+            right: -8px;
+            border: inherit;
+            border-radius: 5px;
+            padding: 2px 2px 0;
+            font-size: 12px;
+            font-weight: bold;
+            color: #565656;
+            background-color: white;;
+        }
+
+        .table-report-status-track-arrow {
+            color: #4b4b4b;
+            padding: 0 5px;
+        }
+    </style>
+    <tr>
+        <th>Nr wniosku</th>
+        <th>Data utworzenia</th>
+        <th>Klient</th>
+        <th>Oś statusów</th>
+    </tr>
+{% endblock %}
+
+{% block table_report_body %}
+    {% for item in object_list %}
+        <tr>
+            <td><a href="{% url "document.edit" item.pk %}">{{ item.code }}</a></td>
+            <td style="white-space: nowrap">{{ item.creation_date|date:'Y-m-d H:i' }}</td>
+            <td>{{ item.owner }}</td>
+            <td style="white-space: nowrap">
+                <div class="table-report-status-track">
+                    {% with item.status_track.all as status_track_items %}
+                        {% for status_track in item.status_track.all %}
+                            {% with status_track_items|next_item:forloop.counter0|get_object_attr:"creation_date" as next_date %}
+                                {% with status_track.creation_date|datediffdays:next_date as days %}
+                                    <div class="table-report-status-track-status
+                                      {% if not status_track.status.is_closing_process %}
+                                        {% if days > 5 and days < 10 %}
+                                        table-report-status-track-status-overtime
+                                        {% elif days > 10 %} table-report-status-track-status-delayed
+                                        {% endif %}
+                                    {% endif %}">
+                                        {{ status_track.status.name }}
+                                        <span class="table-report-status-track-status-days">{{ days }}</span>
+                                        <div class="table-report-status-track-status-created-by">
+                                            {{ status_track.creation_date|date:'Y-m-d H:i' }}&nbsp;{{ status_track.created_by }}
+                                        </div>
+                                    </div>
+                                    {% if forloop.counter <  status_track_items.count %}
+                                        <i class="fa fa-arrow-right table-report-status-track-arrow"></i>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endwith %}
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

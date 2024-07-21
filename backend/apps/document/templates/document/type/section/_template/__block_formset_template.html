@@ -1,0 +1,18 @@
+<template id="attr_formset_{{ c.section.pk }}_template">
+    <div class="document-section-row-body" data-child="true">
+        {% for col in c.columns %}
+            <div class="col-sm-{{ col.column.sm_width }}">
+                <div class="panel-body">
+                    {% for at in col.attributes %}
+                        {% if at.is_table %}
+                            {% include 'document/type/attribute/_partial/_table_attribute_container.html' with at=at formset=table_formsets|get_item:at.pk template=True %}
+                        {% else %}
+                            {% include "py3ws/forms/fields/p3form_field.html" with field=empty_formset|get_form_field:at.code %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        <input type="hidden" id="{{ empty_formset.row_uid.id_for_label }}" name="{{ empty_formset.row_uid.html_name }}" value="__ROW_UID_VALUE__"/>
+    </div>
+</template>

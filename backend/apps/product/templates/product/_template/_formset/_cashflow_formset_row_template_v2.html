@@ -1,0 +1,37 @@
+{% load l10n %}
+<template id="cashflow-formset-row-template">
+    <tr data-id="__PRODUCT_ID__"
+        data-removable="true"
+        data-accounting_type="__ACCOUNTING_TYPE_ID__"
+        class="cash-flow-payment-__ACCOUNTING_TYPE_CODE__">
+
+        <td class="cashflow-date">{{ ef.cash_flow_date|unlocalize }}</td>
+        <td class="cashflow-accounting-type-id">
+            __ACCOUNTING_DATE__
+        </td>
+        <td class="cashflow-accounting-type-name" style="text-align: center;"><span>__ACCOUNTING_TYPE_NAME__</span>{{ ef.type.as_hidden }}</td>
+        <td class="cashflow-subtype"></td>
+        <td class="decimal-field cashflow-value">{{ ef.value }}</td>
+        <td class="cashflow-description">{{ ef.description }}</td>
+        <td class="cashflow-action">
+            <div>
+                <a href="#" class="btn btn-danger delete">
+                    <i class="far fa-trash-alt"></i>
+                </a>
+                {{ ef.DELETE.as_hidden }}
+            </div>
+        </td>
+        <input type="hidden" name="{{ ef.product.html_name }}" value="__PRODUCT_ID__"/>
+        <input type="hidden" name="{{ ef.entry_source.html_name }}" value="HAND"/>
+        <input type="hidden" name="{{ ef.editable.html_name }}" value="True"/>
+        {{ ef.id.as_hidden }}
+    </tr>
+</template>
+
+<template id="cashflow-formset-row-template-kst">
+    {{ ef.accounting_date }}
+</template>
+
+<template id="cashflow-formset-row-template-other">
+    {{ ef.accounting_date.as_hidden }}
+</template>

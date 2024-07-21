@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+
+{% block form_icon %}fa fa-file{% endblock %}
+{% block form_title %}Edycja dokumentu: {{ type.name }} nr: {{ form.instance.code }}.
+    {{ form.instance.owner.first_name|default_if_none:"" }} {{ form.instance.owner.last_name|default_if_none:"" }} {{ form.instance.owner.company_name|default_if_none:"" }}{% endblock %}
+{% block form_subtitle %}
+
+    {% if form.instance.hierarchy %}W departamencie: {{ form.instance.hierarchy.name }} | {% endif %}
+    Status: {{ form.instance.status.name }}
+    {% if previous_status %}
+        (poprzedni status: {{ previous_status.name }})
+    {% endif %}
+{% endblock %}
+{% block form_title_right %}
+    {% if form.instance.product %}
+        <a href="{% url "product.edit" form.instance.product.pk %}" class="btn btn-default" type="button"><i class="fas fa-industry"></i></a>
+    {% endif %}
+    {% if previous_status and form.instance.status.can_revert %}
+        <a data-id="{{ form.instance.pk }}"
+           data-id_status="{{ previous_status.pk }}"
+           id="revertStatus" href="#" class="btn btn-default" type="button" data-placement="bottom"
+           data-toggle="tooltip" title="Cofnij do: {{ previous_status.name }}">
+            <i class="fa fa-undo" aria-hidden="true"></i>
+        </a>
+    {% endif %}
+
+    <button id="save_doc_btn" class="btn btn-success" type="button"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    <div class="loader-container" id="loaderContainer">
+        <div class="loader"></div>
+    </div>
+
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        {{ attachment_formset.management_form }}
+        {{ scan_formset.management_form }}
+
+        {% for k, v in section_formsets.items %}
+            {{ v.management_form }}
+        {% endfor %}
+
+        {% for k, v in table_formsets.items %}
+            {{ v.formset.management_form }}
+        {% endfor %}
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item active"><a data-toggle="tab" href="#document-tab">Dane podstawowe</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#process_flow-tab">Przebieg procesu</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#attribute-tab">Atrybuty<i id="accordionHorizontal" class="fas fa-arrow-alt-circle-right"></i></a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#attachment-tab">Załączniki</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#report-tab">Pisma wychodzące</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#note-tab">Notatki</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#actions-tab">Zdarzenia i powiadomienia</a></li>
+        </ul>
+
+        <div class="tab-content pad-t">
+
+            <div id="document-tab" class="tab-pane fade in active">
+                {% include 'document/_partial/_form_elements.html' with form=form mode=mode %}
+            </div>
+
+            <div id="process_flow-tab" class="tab-pane fade in">
+                {% include 'document/_partial/_process_flow.html' with processflow=processflow %}
+            </div>
+
+            <div id="attribute-tab" class="tab-pane fade in">
+                {% include 'document/type/_partial/_attributes.html' with attr=attr form=attr_form autocollapse=True status=form.instance.status %}
+            </div>
+
+            <div id="attachment-tab" class="tab-pane fade in">
+                {% include 'attachment/basic_attachment/_partial/_attachment_partial.html' with attachment_formset=attachment_formset document_id=form.instance.id %}
+            </div>
+
+            <div id="report-tab" class="tab-pane fade in">
+                {% include 'document/_partial/_report.html' with attr=attr form=attr_form autocollapse=True %}
+
+            </div>
+
+            <div id="note-tab" class="tab-pane fade in">
+                {% include 'document/_partial/_document_note_partial.html' %}
+            </div>
+        </div>
+
+        {% include 'document/_modal/_add_note_modal.html' %}
+
+        <input type="hidden" name="post_type" id="id_post_type"/>
+
+    </form>
+
+    {% include 'attachment/_modal/_add_attachment_form.html' %}
+    {% include 'attachment/basic_attachment/_modal/_add_paste_screen_modal.html' %}
+    {% include 'attachment/_template/_attachment_upload_template.html' %}
+    {% include 'document/_modal/_image_preview_modal.html' %}
+    {% include 'document/_modal/_add_scan_modal.html' %}
+    {% include 'document/_modal/_add_fileFiled_modal.html' %}
+    {% include 'document/_modal/_print_process_flow_modal.html' %}
+    {% include 'document/_template/_print_process_flow_template.html' %}
+    {#    add-ons#}
+    {% include 'document/add-ons/add_conditions_modal.html' %}
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'resource/dropzone/dropzone-5.5.1/dropzone.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/jstree/css/themes/default/style.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'attachment/css/attachment.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'document/css/document.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'document/type/css/document_type.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'document/css/document-process-flow.css' %}" rel="stylesheet" type="text/css">
+    {#    <link href="{% static 'document/css/document-scan.css' %}" rel="stylesheet" type="text/css">#}
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'resource/dropzone/dropzone-5.5.1/dropzone.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/jstree/dist/jstree.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'common/js/graphUtils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'attachment/js/basic_attachment_dropzone.js' %}"></script>
+    <script type="module" src="{% static 'attachment/js/basic_attachment.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/js/document.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/type/js/document_type_process_flow.js' %}"></script>
+
+    {#    <script type="module" src="{% static 'document/js/document-scan/document-scan-manager.js' %}"></script>#}
+    <script type="module" src="{% static 'document/js/document-file/document-file-field-manager.js' %}"></script>
+
+
+    {#    <script src="{% static 'document/type/js/calculations/doc-type-1-calculations/loan-value-proposal.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'document/type/js/calculations/doc-type-1-calculations/main.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/type/js/calculations/doc-type-1-custom-control-actions.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/js/table-resizable.js' %}"></script>
+    {#    <script type="text/javascript" src="{% static 'attachment/js/attachment.js' %}"></script>#}
+
+{% endblock %}
+
+{% block site_js %}
+
+    <script>
+        var root_name = '{{ atm_root_name }}';
+        var atm = {
+            "id": "{{ form.instance.pk }}",
+            "root_name": "{{ form.instance.code }}" ? "{{ form.instance.code }}" : 'DOKUMENT',
+            "root_dir_name": '',
+            "classname": "{{ atm_classname }}",
+            "owner_classname": "{{ atm_owner_classname }}"
+        };
+        var documentType = {{ form.instance.type.pk }};
+        var documentStatus = '{{form.instance.status }}';
+        var upload_attachment_url = '{% url 'attachment.basic_file_upload' %}';
+        var upload_scan_url = '{% url 'attachment.basic_scan_upload' %}';
+        var upload_prtscn_url = '{% url 'attachment.basic_prtscn_upload' %}';
+        var documentId ={{ form.instance.pk }};
+    </script>
+
+{% endblock %}
+
+{% block site_any_script %}
+
+    {% include 'document/_js.html' %}
+
+    <script>
+
+        $(document).ready(function () {
+
+            let tables = document.getElementsByClassName('table-resizable');
+
+            for (let i = 0; i < tables.length; i++) {
+                resizableGrid(tables[i]);
+            }
+
+            let documentProcessFlow = new DocumentTypeProcessFlow(documentType);
+            $("#id_document-status_flow").change(function () {
+                documentProcessFlow.getStatusFlow($(this).val());
+            });
+
+            $("#av_hierarchy").change(function () {
+                $("#id_document-hierarchy").val($(this).val());
+            });
+        });
+    </script>
+
+{% endblock %}

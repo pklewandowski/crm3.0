@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+
+<div class="col-lg-12">
+    <div class="">
+        <h3>{% trans "employee_contract_type.form.title" %}</h3>
+        <hr>
+    </div>
+    <div style="margin-top:10px;" class="form-group clearfix" style="display:inlineblock">
+        <button class="btn btn-success pull-right pad-t btn-submit" type="submit">Zapisz</button>
+    </div>
+
+    <div class="col-lg-6" id="employee-contract-type-panel">
+        <div class="panel panel-default">
+            <div class="panel-heading">{% trans "employee_contract_type.panel.label.contract_type_data" %}</div>
+            <div class="panel-body">
+                <form method="post" id="contract-type-form">
+                    {% csrf_token %}
+                    {{ form }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block site_script %}
+
+    $(".btn-submit").click(function(){
+        $("form#contract-type-form").submit();
+    });
+
+{% endblock %}

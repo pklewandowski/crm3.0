@@ -1,0 +1,60 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-16 13:20+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#: .\address\forms.py:21
+msgid "address.form.street_prefix.label"
+msgstr "Prefiks"
+
+#: .\address\forms.py:22
+msgid "address.form.street.label"
+msgstr "Ulica"
+
+#: .\address\forms.py:23
+msgid "address.form.street_no.label"
+msgstr "Nr"
+
+#: .\address\forms.py:24
+msgid "address.form.apartment_no.label"
+msgstr "Nr lokalu"
+
+#: .\address\forms.py:25
+msgid "address.form.post_code.label"
+msgstr "Kod"
+
+#: .\address\forms.py:26
+msgid "address.form.city.label"
+msgstr "Miasto"
+
+#: .\address\forms.py:27
+msgid "address.form.province.label"
+msgstr "Województwo"
+
+#: .\address\forms.py:28
+msgid "address.form.country.label"
+msgstr "Państwo"
+
+#: .\address\forms.py:29
+msgid "address.form.email.label"
+msgstr "Email"
+
+#: .\address\forms.py:30
+msgid "address.form.phone.label"
+msgstr "Telefon"

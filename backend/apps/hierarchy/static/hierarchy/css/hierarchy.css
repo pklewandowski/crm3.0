@@ -1,0 +1,80 @@
+.chart {
+    overflow: auto;
+}
+
+.hierarchy-position {
+    background-color: #FFFFFF;
+    color: #737373;
+    border: 2px dotted #a8a8a8;
+}
+
+.hierarchy-company {
+    background-color: #c9edc4;
+    border: 3px solid #8cc98d;
+    color: #2f7838;
+}
+
+.hierarchy-headquarter {
+    background-color: #e5edff;
+    border: 2px solid #a2c6e0;
+}
+
+.hierarchy-action-buttons {
+    float: right;
+}
+
+.node-inner-content a.btn {
+    font-size: 10px;
+}
+
+.hierarchy-action-buttons {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.node:hover .hierarchy-action-buttons {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .5s;
+}
+
+.node:hover .node-draggable {
+    visibility: visible;
+}
+
+.hierarchy-action-buttons a {
+    margin: 0 5px;
+    color: inherit;
+}
+
+.hierarchy-dragenter {
+    border-style: dotted;
+}
+
+.node-draggable {
+    position: absolute;
+    left: -15px;
+    top: -18px;
+    border: 2px solid #a9a9a9;
+    border-radius: 50%;
+    padding: 6px 5px;
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    background-color: white;
+    visibility: hidden;
+    color: #808080;
+
+}
+
+.node-dropable {
+    right: 10px;
+    position: absolute;
+    padding: 10px;
+    background-color: white;
+    display: none;
+}
+
+.node-dropable * {
+    pointer-events: none;
+}

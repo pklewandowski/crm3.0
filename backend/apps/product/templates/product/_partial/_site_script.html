@@ -1,0 +1,37 @@
+{% load static %}
+{% load l10n %}
+{% localize off %}
+    <script>
+        const csrf_token = '{{ csrf_token }}';
+        const client = {"client_list_url": "{% url 'client.get_list' %}"};
+        const calc_day_url = '{% url 'product.day_calculation' %}';
+        const action_delete_url = '{% url 'product.action.delete' %}';
+        const root_name = '{{ atm_root_name }}';
+        const atm = {"id": "{{ form.instance.pk }}", "root_dir_name": "product", "classname": "{{ atm_classname }}", "owner_classname": "{{ atm_owner_classname }}"};
+        const id_product = {% if form.instance.pk %}{{form.instance.pk}}{% else %}null{% endif %};
+        const mode = '{{ mode }}';
+
+
+        _g.product = {
+            id: {{ form.instance.id }},
+            document: {
+                id: {{ form.instance.document.id }}
+            },
+            startDate: '{{ form.instance.start_date }}',
+            capitalNet: {{ form.instance.capital_net }},
+            value: {{ form.instance.value }},
+            commission: {{ form.instance.commission }},
+            instalmentNumber: {{ form.instance.schedule_set.all|length }},
+            instalmentCapital: {{ form.instance.instalment_capital }},
+            instalmentCommission: {{ form.instance.instalment_commission }},
+            instalmentInterestRate: {{ form.instance.instalment_interest_rate }},
+            instalmentInterestCapitalTypeCalcSource: '{{ form.instance.capital_type_calc_source }}',
+            total: {{ form.instance.value }},
+            urls: {
+                cashFlowUrl: '{% url 'product.api.cash_flow' %}',
+                cashFlowAggregatesUrl:'{% url 'product.api.cash_flow_aggregates' %}'
+            }
+        }
+    </script>
+{% endlocalize %}
+

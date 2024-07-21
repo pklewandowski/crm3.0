@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block form_icon %}fa fa-file{% endblock %}
+{% block form_title %}Statystyki{% endblock %}
+{% block form_subtitle %}Nowa Grupa statusów dla filtra DRS{% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit" type="submit"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    <div class="loader-container" id="loaderContainer">
+        <div class="loader"></div>
+    </div>
+    {% include 'stat/group/adviser/_partial/form_elements.html' %}
+{% endblock %}

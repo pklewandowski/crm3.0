@@ -1,0 +1,38 @@
+.note-header {
+  font-weight: 700;
+}
+
+.note-body {
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.note-container-no-notes {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 95%;
+  text-align: center;
+}
+
+.note-container-no-notes i.fa-comment-dots {
+  font-size: 200px;
+  color: #ddd;
+}
+
+.note-no-notes-header {
+  font-size: 40px;
+  font-family: 'Roboto-Condensed', sans-serif;
+  font-weight: bold;
+  color: #bdbdbd;
+}
+
+.note-no-notes-description {
+  font-size: 20px;
+  font-family: 'Roboto-Condensed', sans-serif;
+  font-weight: bold;
+  color: #bdbdbd;
+}

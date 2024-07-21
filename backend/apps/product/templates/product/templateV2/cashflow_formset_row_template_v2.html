@@ -1,0 +1,33 @@
+{% load l10n %}
+<template id="cashflow-formset-row-template">
+
+    <tr data-id="__PRODUCT_ID__" data-removable="true" data-status="new"
+            {# TODO: DRUT!!! #}
+        data-accounting_type="1">
+
+        <td class="cashflow-calculable">{{ ef.calculable }}</td>
+        <td class="cashflow-date">{{ ef.cash_flow_date|unlocalize }}</td>
+        <td>{{ ef.accounting_date }}</td>
+        <td>{{ ef.type }}</td>
+        {#        <td>#}
+        {#            <select id="{{ ef.type.id_for_label }}"#}
+        {#                    name="{{ ef.ype.html_name }}" class="form-control input-md">#}
+        {#                <option value="1">koszty</option>#}
+        {#            </select>#}
+        {#        </td>#}
+        <td class="decimal-field">{{ ef.value }}</td>
+        <td>{{ ef.description }}</td>
+        <td>
+            <div class="btn-group">
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+            </div>
+        </td>
+        <input type="hidden" name="{{ ef.product.html_name }}" value="__PRODUCT_ID__"/>
+        <input type="hidden" name="{{ ef.editable.html_name }}" value="True"/>
+        <input type="hidden" name="{{ ef.entry_source.html_name }}" value="HAND"/>
+        {{ ef.id.as_hidden }}
+
+    </tr>
+</template>

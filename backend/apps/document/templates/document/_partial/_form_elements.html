@@ -1,0 +1,53 @@
+{% config_var 'MODE_EDIT' as mode_edit %}
+
+<div class="row">{% if type.code != 'FK' %}
+{#    <div class="col-lg-7">#}
+{##}
+{#        {% include 'document/_partial/_document_scan.html' %}#}
+{##}
+{#    </div>#}
+{% endif %}
+    <div class="col-lg-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dane</div>
+            <div class="panel-body">
+                {% if type.is_owner %}
+                    {% if not owner %}
+                        {{ form.owner.label_tag }}
+                        <div class="input-group">
+                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.owner pure=True nolabel=True %}
+                        </div>
+                    {% else %}
+                        <input type="hidden" name="{{ form.owner.html_name }}" value="{{ owner.pk }}"/>
+                    {% endif %}
+                {% endif %}
+
+                {% if type.is_code %}
+                    {% include "py3ws/forms/fields/p3form_field.html" with field=form.code %}
+                {% endif %}
+
+                {% if mode == mode_edit %}
+                    {{ form.status.as_hidden }}
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.status_flow %}
+                        </div>
+{#                        <div class="col-lg-6">#}
+{#                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.effective_date %}#}
+{#                        </div>#}
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label for="av_hierarchy">Departament:</label>
+                        <select class="form-control input-md" id="av_hierarchy"></select>
+                        {{ form.hierarchy.as_hidden }}
+                    </div>
+
+                {% endif %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.description %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

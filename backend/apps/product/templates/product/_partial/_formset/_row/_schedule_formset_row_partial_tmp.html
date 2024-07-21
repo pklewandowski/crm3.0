@@ -1,0 +1,23 @@
+{#{% load my_template_tags %}#}
+{% load humanize %}
+{% load l10n %}
+{% now "Y-m-d" as todays_date %}
+
+<tr data-id="{{ sch.pk }}" data-removable="true">
+    <td>{{ forloop.counter }}</td>
+    {% localize off %}
+        <td class="text-center">
+        <p>{{ sch.maturity_date }}</p>
+        </td>
+    {% endlocalize %}
+    <td class="day">{{ sch.maturity_date|date:"D"|lower }}</td>
+    <td class="decimal-field  text-right">
+        <p>{{ sch.instalment_capital }}</p>
+    </td>
+    <td class="decimal-field text-right">
+        <p>{{ sch.instalment_commission }}</p>
+    </td>
+    {{ sch.product.as_hidden }}
+    {{ sch.id.as_hidden }}
+</tr>
+

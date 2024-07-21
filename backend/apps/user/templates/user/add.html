@@ -1,0 +1,76 @@
+{% extends override_base|default:'base.html' %}
+{% load static %}
+
+{% block form_icon %}fa fa-user-plus{% endblock %}
+{% block form_title %}
+    {% if not override_base %}
+        Nowy {% if type == 'CLIENT' %}klient
+    {% elif type == 'EMPLOYEE' %}pracownik
+    {% elif type == 'BROKER' %}pośrednik
+    {% elif type == 'ADVISER' %}doradca
+    {% elif type == 'LAWOFFICE' %}kancelaria
+    {% endif %}
+    {% endif %}
+{% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit" type="submit"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    {% if not form.errors and config.initial_check %}
+
+        <div class="col-sm-12" id="id_number_search_box">
+            <div class="col-sm-6 text-center">
+
+                <div class="input-group input-group-lg">
+                    <input type="text" id="id_number" class="form-control" placeholder="Wprowadź PESEL, NIP lub KRS"/>
+
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" id="check_id_number_btn">Dalej...</button>
+                    </span>
+
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <div id="form_container">
+        {% if not form.errors and config.initial_check %}
+            <template id="form_template">
+        {% endif %}
+
+        <form method="post" id="user-form" autocomplete="off" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include "user/_partial/_form_elements.html" with form=form mode=mode type=type hadr=homeaddress_form madr=mailaddress_form cadr=companyaddress_form ldap_enabled=config.ldap_enabled override_base=override_base %}
+
+        </form>
+
+        {% if not form.errors and config.initial_check %}
+            </template>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'dist/coreControls/coreControls-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/fileinput/css/fileinput.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'user/css/user.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/document/document-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/user/user-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'user/js/user.js' %}?v1.0.0"></script>
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'resource/fileinput/js/fileinput.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/user/user-bundle.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    {% include 'user/_partial/_site_script.html' %}
+{% endblock %}

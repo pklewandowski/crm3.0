@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+
+{% block content %}
+    <div style="background-color: #ddd; width: 100%; height: 30px;">
+    <div id="tabelka"></div>
+    </div>
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'dist/_temp/_temp-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'dist/_temp/_temp-bundle.js' %}"></script>
+{% endblock %}

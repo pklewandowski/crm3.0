@@ -1,0 +1,32 @@
+{% extends override_base|default:'base.html' %}
+
+{% load static %}
+
+{% block form_icon %}fa fa-user-plus{% endblock %}
+{% block form_title %}Nowy {% if type == 'CLIENT' %}klient{% elif type == 'EMPLOYEE' %}pracownik{% elif type == 'BROKER' %}pośrednik{% elif type == 'ADVISER' %}doradca{% endif %} {% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit" type="submit"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'user/js/user.js' %}?v1.0.0"></script>
+{% endblock %}
+
+{% block content %}
+
+
+{% endblock %}
+
+{% block site_css %}
+{% endblock %}
+
+{% block site_js %}
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+
+    </script>
+{% endblock %}

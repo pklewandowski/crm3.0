@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block form_icon %}fa fa-file{% endblock %}
+{% block form_title %}Nowy dokument: {{ document_type.name }}.
+{% endblock %}
+
+{% block form_subtitle %}
+
+{% endblock %}
+
+{% block form_title_right %}
+    <button id="saveDocBtn" class="btn btn-success" type="button"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
+
+    <div class="panel panel-default" style="height: calc(100% - 120px);">
+        <div class="panel-body">
+            <div id="documentData" class="panel-body" data-ownerId= {{ owner_id }}></div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'dist/document/document-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/newDocument/newDocument-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block  site_any_script %}
+    {% include 'document/add_v2/script.html' %}
+{% endblock %}

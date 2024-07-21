@@ -1,0 +1,37 @@
+{% load rest_framework %}
+<div class="modal fade" id="reportTemplateFormModal" tabindex="-1" role="dialog"
+     aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" style="width: 70%">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">Szablon dokumentu</h4>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form id="reportTemplateForm">
+                            <input type="hidden" name="id">
+                            <div class="form-group">
+                                <input class="form-control" type="file" name="file"/>
+                            </div>
+                            <div class="form-group">
+                                {% render_field serializer.name style=style %}
+                                {% render_field serializer.description style=style %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="saveReportTemplateBtn" type="button" class="btn btn-primary">Zapisz</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                </div>
+            </div>
+        </div>
+    </div>
+

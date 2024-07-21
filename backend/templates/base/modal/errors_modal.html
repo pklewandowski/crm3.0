@@ -1,0 +1,34 @@
+<div class="modal fade" id="errorsModal" tabindex="-1" role="dialog" aria-labelledby="errorsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorsModalLabel">Błędy walidacji</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    {% for form, items in errors.items %}
+                        <li>{{ form }}</li>
+                        <ul>
+                            {% for kitem, item in items.items %}
+                                <li>{{ kitem }}</li>
+                                <ul>
+                                {% for i in item %}
+                                    <li>{{ i }}</li>
+                                    {% endfor %}
+                                </ul>
+
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                {#        <button type="button" class="btn btn-primary">Save changes</button>#}
+            </div>
+        </div>
+    </div>
+</div>

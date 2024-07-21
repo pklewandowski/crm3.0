@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+
+{% block site_css %}
+{% endblock %}
+
+{% block site_js %}
+<script type="text/javascript" src="{% static 'js/tesseract.js' %}"></script>
+{% endblock %}
+
+{% block form_icon %}fa fa-book{% endblock %}
+{% block form_title %}OCR{% endblock %}
+{% block form_subtitle %}Rozpoznawanie tekstu dokumentów i analiza treści{% endblock %}
+{% block form_title_right %}<a id="start-ocr-btn" class="btn btn-success btn-sm pull-right"><i class="fa fa-book pad-r"></i>Rozpocznij proces OCR</a>{% endblock %}
+
+{% block content %}
+
+<div class="col-lg-6 col-sm-6">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Skan dokumentu</div>
+        <div class="panel-body">
+            <div>
+                <img src="{% static 'ocr/przechwyt.jpg' %}" style="max-height:600px; max-width:100%;"/>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6 col-sm-6">
+
+    <div class="panel panel-default">
+        <div class="panel-heading"  style="display: inline-block; width: 100%;">
+            <div style="float:left">Rezultat</div>
+            <div id="ocr_status" style="float:right"></div>
+        </div>
+        <div class="panel-body">
+            <div id="ocr_results"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block site_script %}
+var imgUrl = '{% static 'ocr/przechwyt.jpg' %}';
+{% endblock %}
+
+{% block site_inline_js %}
+
+<script type="text/javascript" src="{% static 'ocr/js/ocr.js' %}"></script>
+
+{% endblock %}

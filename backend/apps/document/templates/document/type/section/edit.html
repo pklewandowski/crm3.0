@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+
+{% block content %}
+
+    {% if form %}
+
+        <div class="col-lg-12 col-sm-12 header-title">
+            <div style="float:left">
+                <h3>Nowa sekcja dla: {{ product_type.name }}</h3>
+                <h4>Tworzenie sekcji dla typu produku</h4>
+            </div>
+            <div style="float:right; margin:0 auto">
+                <button class="btn btn-success pull-right pad-t btn-submit" type="submit"><i class="fa fa-user pad-r"></i>Zapisz</button>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-sm-12">
+            <hr style="margin:0 0 10px 0">
+        </div>
+
+        {% if form.errors %}
+            <div class="col-lg-12">
+                <div style="height:120px; overflow:auto; width:100%; background-color: #eee; border-radius:5px; margin:20px; padding:10px; border:1px solid #ddd">
+                    <h3>błędy danych</h3>
+                    {{ form.errors }}
+                </div>
+            </div>
+        {% endif %}
+
+        <form method="post" id="user-form">
+            {% csrf_token %}
+
+            <div id="user" class="col-lg-4 pad-t">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Dane sekcji</div>
+                    <div class="panel-body">
+                        {% include 'document/type/section/_partial/_form_elements.html' with form=form %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 pad-t">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Kolumny sekcji</div>
+                    <div class="panel-body">
+
+                        <div class="col-xs-12 pad-b">
+                            <div class="pull-right">
+                                <div class="btn-group">
+                                    <a id="remove_column" href="#" class="btn btn-default"><i class="fa fa-minus"></i></a>
+                                    <a id="add_column" href="#" class="btn btn-default"><i class="fa fa-plus"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12" style="padding:0 20px 50px 20px">
+                            <div id="slider"></div>
+                        </div>
+
+                        <div class="col-xs-12" style="padding:0 20px 50px 20px">
+                            <div id="sliderPrc"></div>
+                        </div>
+                        <input type="text" name="section_columns" id="section_columns"/>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block site_css %}
+
+    <style>
+        * {
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .noUi-value-horizontal {
+            padding-top: 5px;
+        }
+
+    </style>
+
+    <link href="{% static 'css/nouislider.css' %}?v3.3.7" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'resource/nouislider.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/wNumb.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/section/js/section.js' %}"></script>
+{% endblock %}
+
+
+{% block site_any_script %}
+    <script>
+
+        $(document).ready(function () {
+
+            let gColumns = {{ columns }};
+
+            $('#section_columns').val(gColumns);
+            let slider = new ColumnSlider(
+                document.getElementById('slider'),
+                gColumns,
+                {
+                    min: [0],
+                    max: [12],
+                    density: 8
+                }
+            );
+
+            let sliderPrc = new ColumnSlider(
+                document.getElementById('sliderPrc'),
+                [10,23,70],
+                {
+                    min: [0],
+                    max: [100],
+                    density: 5,
+                    step:5,
+                    margin: 5
+                }
+            );
+
+            $(".noUi-handle").tooltip({title: 'qwerty'});
+
+
+            $("#add_column").click(function () {
+                slider.addColumn();
+            });
+
+            $("#remove_column").click(function () {
+                slider.removeColumn();
+            });
+
+            $('form').on('submit', function () {
+                $('#section_columns').val(slider.getColumns().join());
+                // return false;
+            });
+
+
+        });
+
+    </script>
+
+{% endblock %}

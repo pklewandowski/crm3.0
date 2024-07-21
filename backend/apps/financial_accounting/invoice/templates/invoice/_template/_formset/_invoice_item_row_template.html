@@ -1,0 +1,19 @@
+<template id="invoice_item_row_template">
+    <tr data-id="" data-removable="true">
+        <td>{{ invoice_item_formset.empty_form.name }}</td>
+        <td>{{ invoice_item_formset.empty_form.code }}</td>
+        <td>{{ invoice_item_formset.empty_form.quantity }}</td>
+        <td>{{ invoice_item_formset.empty_form.unit_of_measure }}</td>
+        <td>{{ invoice_item_formset.empty_form.unit_price }}</td>
+        <td>{{ invoice_item_formset.empty_form.tax_value }}</td>
+        <td>
+            <div class="btn-group">
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+            </div>
+        </td>
+        {{ invoice_item_formset.empty_form.id.as_hidden }}
+        <input type="hidden" name="{{ invoice_item_formset.empty_form.invoice.html_name }}" value="__INVOICE_ID__"/>
+    </tr>
+</template>

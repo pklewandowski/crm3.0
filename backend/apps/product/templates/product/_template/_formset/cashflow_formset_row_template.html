@@ -1,0 +1,26 @@
+<template id="cashflowwww-formset-row-template">
+
+    <tr data-id="__PRODUCT_ID__" data-removable="true">
+{#        <td>__EMPLOYEE_NAME__</td>#}
+{#        <td>__EMPLOYEE_EMAIL__</td>#}
+{#        <td>__EMPLOYEE_PHONE__</td>#}
+{#        <td>__EMPLOYEE_POSITION__</td>#}
+        <td>{{ cashflow_formset.empty_form.cash_flow_date }}</td>
+        <td>{{ cashflow_formset.empty_form.type }}</td>
+        <td>{{ cashflow_formset.empty_form.value }}</td>
+        <td>{{ cashflow_formset.empty_form.description }}</td>
+{#        <td>{{ employee_formset.empty_form.cost_overtime }}</td>#}
+{#        <td>{{ employee_formset.empty_form.worktime }}</td>#}
+{#        <td>{{ employee_formset.empty_form.worktime_overtime }}</td>#}
+        <td>
+            <div class="btn-group">
+{#                {{ employee_formset.empty_form.DELETE }}#}
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </div>
+        </td>
+        <input type="hidden" name="{{cashflow_formset.empty_form.product.html_name}}" value="__PRODUCT_ID__"/>
+        {{employee_formset.empty_form.id.as_hidden}}
+    </tr>
+</template>

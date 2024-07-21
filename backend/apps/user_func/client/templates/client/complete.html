@@ -1,0 +1,211 @@
+{% extends "user_complete.html" %}
+{% load static %}
+
+
+<h5>Dane klienta</h5>
+{% block content %}
+    <form method="POST" autocomplete="off" novalidate>
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="text-center">
+                <h3>Witamy w Serwisie Klienta</h3>
+                <h5>W celu wypełnienia obowiązku wynikającego z RODO prosimy o zaakceptowanie zgód. Jeśli dane personalne zawierają błąd tu można je skorygować</h5>
+            </div>
+            <div class="col-lg-12">
+                <div class="center-block pad-t">
+                    <div class="panel panel-default background-opacity">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.first_name %}
+                                </div>
+                                <div class="col-md-4">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.second_name %}
+                                </div>
+                                <div class="col-md-4">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.last_name %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.email %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.phone_one %}
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.phone_two %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.personal_id %}
+                                </div>
+                                <div class="col-md-4">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.nip %}
+                                </div>
+                                <div class="col-md-4">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.krs %}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class=col-lg-12">
+                                    <button id="selectAllBtn" style="margin: 10px 0" class="btn btn-primary" type="button">Zaznacz wszystkie zgody</button>
+                                    <button id="infoDutyBtn" style="margin: 10px 0" class="btn btn-secondary" type="button">Przeczytaj obowiązek informacyjny</button>
+                                </div>
+                            </div>
+
+
+                            <div style="max-height: 300px; overflow: auto;">
+
+                                <table id="agreementContainer" class="table table-hover">
+                                    <tbody>
+                                        {% for i in processing_agreement_form %}
+                                            <tr>
+                                                <td>{{ i }}</td>
+                                                <td><span {% if i.field.required %} class="form-field-required" {% endif %}><strong>{{ i.label }}{{ i.errors }}</strong></span></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <span>Pola oznaczone <span class="form-field-required">&nbsp;</span>są dobrowolne, jednakże niezbędne do oznaczenia w celu zamówienia usługi</span>
+                            </div>
+                        </div>
+
+
+                        <div class="center-block" style="width:50px;">
+                            <button class="btn btn-success" type="submit">Zapisz</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="modal fade" id="infoDutyModal" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="atmFormLabel">Obowiązek informacyjny</h4>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div class="info-duty">
+                        <div>
+                            <div>Administratorem Twoich danych osobowych przekazanych w formularzu kontaktowym jest Grupa Nord Finance:</div>
+                            <p>
+                            <ol style="margin: 10px;">
+                                <li>
+                                    NORD FINANCE spółka akcyjna z siedzibą w Warszawie (adres: 00-844 Warszawa, ulica Grzybowska 62, piętro II), REGON: 386051171, NIP: 7010981434), wpisana
+                                    do
+                                    rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS 0000840686.Wysokość kapitału własnego wynosi 10 000 000, 00 złotych (opłacony w
+                                    całości
+                                    gotówką). Wysokość kapitału zakładowego wynosi 2 158 380, 00 złotych (wpłacony w całości)
+                                </li>
+                                <li>
+                                    NORD FINANCE 1 spółka z ograniczoną odpowiedzialnością z siedzibą w Warszawie przy ul. Grzybowskiej 62, piętro II (00-844 Warszawa) wpisana do rejestru
+                                    przedsiębiorców Krajowego Rejestru Sądowego pod numerem 0000782291, NIP: 7010920817, REGON: 383142772, wysokość kapitału zakładowego wynosi 5 000, 00
+                                    złotych (wpłacony w całości).
+                                </li>
+                                <li>
+                                    NORD FINANCE 2 spółka z ograniczoną odpowiedzialnością z siedzibą w Warszawie przy ul. Grzybowskiej 62, piętro II (00-844 Warszawa) wpisana do rejestru
+                                    przedsiębiorców Krajowego Rejestru Sądowego pod numerem 0000864810, NIP: 5272938881, REGON: 387322710, wysokość kapitału zakładowego wynosi 5 000, 00
+                                    złotych (wpłacony w całości).
+                                </li>
+                                <li>
+                                    BROKER NORD FINANCE 1 SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ SPÓŁKA KOMANDYTOWA z siedzibą w Warszawie, 00-844, przy ul. Grzybowskiej 62 p. II wpisanej
+                                    do
+                                    Rejestru Przedsiębiorców Krajowego Rejestru Sądowego prowadzonego pod numerem KRS 0000797727, NIP 7010938384, Regon 384016319.
+                                </li>
+                            </ol>
+                            </p>
+                            <p>
+                                Możesz skontaktować się z Administratorem pisząc na adres e-mail: {{ kontakt }} lub telefonując pod numer: {{ tel }}.
+                            </p>
+                            <p>
+                                Twoje dane osobowe będą przetwarzane w celu udzielenia odpowiedzi na Twoje żądanie kontaktu i przedstawienia Ci oferty produktów i usług świadczonych przez
+                                Administratora (art. 6 ust. 1 lit. b) RODO).
+                            </p>
+                            <p>
+                                Podstawą prawną przetwarzania Twoich danych jest podjęcie działań na Twoje żądanie przed zawarciem ewentualnej umowy pomiędzy Tobą i Administratorem, jak i
+                                realizacja prawnie uzasadnionych interesów Administratora w postaci komunikacji (art. 6 ust. 1 lit. f) RODO).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button id="closeAdviserBtn" type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block site_css %}
+    <style>
+        .background-opacity {
+            background-color: rgba(255, 255, 255, .6);
+            padding: 10px;
+            border: solid 1px white;
+        }
+
+        .background-opacity input {
+            background-color: rgba(255, 255, 255, .8);
+            color: #000;
+        }
+
+        .info-duty {
+            background-color: #efefef;
+            margin-right: 10px;
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .center-block {
+            width: 50%;
+        }
+
+        #agreementContainer tbody td {
+            text-align: justify;
+        }
+
+        @media(max-width: 1200px) {
+            .center-block {
+                width: 80%;
+            }
+        }
+
+        @media(max-width: 800px) {
+            .center-block {
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'client/js/complete.js' %}"></script>
+{% endblock %}

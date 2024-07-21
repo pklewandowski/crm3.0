@@ -1,0 +1,51 @@
+{% load mptt_tags %}
+
+<script>
+
+    let chartConfig = {
+        chart: {
+            container: "#basic-example",
+            connectors: {
+                type: 'step'
+            },
+            node: {
+                HTMLclass: 'nodeExample1'
+            }
+        },
+        nodeStructure: {
+            id: "{{root.id}}",
+            type: 'ROOT',
+            HTMLclass: {% include 'hierarchy/_partial/html_class_partial.html' with node=root %},
+            innerHTML: '<div class="node-inner-content node-root"><p class="node-name">{{root.name}}</p>' +
+                '<a data-id="{{root.id}}" class="add-hierarchy btn btn-default btn-sm"><i class="fa fa-plus"></i></a>' +
+                '</div>',
+            connectors: {
+                style: {
+                    "stroke": "#a8a8a8",
+                    "stroke-width": 2,
+                    {#'arrow-end': 'oval-wide-long'#}
+                }
+            },
+            children: [
+                {% recursetree nodes %}
+                    {
+                        parentId: '{{ node.parent.id }}',
+                        HTMLclass: {% include 'hierarchy/_partial/html_class_partial.html' with node=node %},
+                        id: "{{ node.id }}",
+                        name: "{{ node.name }}",
+                        text: {name: "{{node.name}}"},
+                        type: "{{ node.type }}",
+                        connectors: {
+                            style: {
+                                "stroke": "#a8a8a8",
+                                "stroke-width": 2,
+                            }
+                        },
+                        innerHTML: `{% include "hierarchy/_partial/node_inner_html.html"  with node=node %}`,
+                        children: [{{ children }}]
+                    },
+                {% endrecursetree %}
+            ]
+        }
+    };
+</script>

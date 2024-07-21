@@ -1,0 +1,14 @@
+{% load static %}
+<script>
+    _g.document = {
+        ownerType: '{{ type.owner_type }}',
+        url: {
+            clientsForSelect2: '{% url 'client.get_list_for_select2' %}',
+            employeesForSelect2: '{% url 'employee.get_list_for_select2' %}',
+            contractorsForSelect2: '{% url 'contractor.get_list_for_select2' %}',
+            revertStatus: '{% url 'document.revert_status' %}',
+            printProcessFlow: '{% url 'document.print_process_flow' %}',
+            ocrBox: '{% url 'document.ocr.box' %}'
+        },
+    };
+</script>

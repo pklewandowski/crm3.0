@@ -1,0 +1,456 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-16 13:20+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: .\product\forms.py:171
+msgid "product.schedule.feature.nominal_instalment_value"
+msgstr "Nominalna wartość raty"
+
+#: .\product\forms.py:172
+msgid "product.schedule.feature.nominal_instalment_number"
+msgstr "Nominalna ilość rat"
+
+#: .\product\forms.py:183
+msgid "product.interest.feature.interest_percentage"
+msgstr "Procent odsetek"
+
+#: .\product\forms.py:184
+msgid "product.interest.feature.interest_type"
+msgstr "Typ odsetek"
+
+#: .\product\forms.py:235 .\product\models.py:322
+msgid "product.type.commission.type"
+msgstr "Typ"
+
+#: .\product\forms.py:236 .\product\models.py:324
+msgid "product.type.commission.period"
+msgstr "Okres"
+
+#: .\product\forms.py:237 .\product\models.py:331
+msgid "product.type.commission.calculation_type"
+msgstr "Obliczona od"
+
+#: .\product\models.py:52
+msgid "product.agreement_no"
+msgstr "Nr umowy"
+
+#: .\product\models.py:54
+msgid "product.start_date"
+msgstr "Data rozpoczęcia"
+
+#: .\product\models.py:55
+msgid "product.end_date"
+msgstr "Data zakończenia"
+
+#: .\product\models.py:56
+msgid "product.termination_date"
+msgstr "Data wypowiedzenia"
+
+#: .\product\models.py:57
+msgid "product.capitalization_date"
+msgstr "Data kapitalizacji"
+
+#: .\product\models.py:58
+#, fuzzy
+#| msgid "product.termination_date"
+msgid "product.creation_date"
+msgstr "Data wypowiedzenia"
+
+#: .\product\models.py:59
+#, fuzzy
+#| msgid "product.creditor"
+msgid "product.creation_user"
+msgstr "Kredytodawca"
+
+#: .\product\models.py:60
+#, fuzzy
+#| msgid "product.start_date"
+msgid "product.status"
+msgstr "Data rozpoczęcia"
+
+#: .\product\models.py:61
+#, fuzzy
+#| msgid "product.action.receive_date"
+msgid "product.recount_required_date"
+msgstr "Data wpływu"
+
+#: .\product\models.py:64
+msgid "product.creditor_bank_account"
+msgstr "Rachunek pożyczkodawcy"
+
+#: .\product\models.py:65
+msgid "product.debtor_bank_account"
+msgstr "Rachunek pożyczkobiorcy"
+
+#: .\product\models.py:67
+msgid "product.value"
+msgstr "Wartość / Limit"
+
+#: .\product\models.py:68
+#, fuzzy
+#| msgid "product.capitalization_date"
+msgid "product.capital_net"
+msgstr "Data kapitalizacji"
+
+# prowizja
+#: .\product\models.py:69
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.commision"
+msgstr "Nazwa"
+
+#: .\product\models.py:71
+#, fuzzy
+#| msgid "product.creditor"
+msgid "product.grace_period"
+msgstr "Kredytodawca"
+
+#: .\product\models.py:72
+#, fuzzy
+#| msgid "product.type.commission.period"
+msgid "product.debt_collection_fee_period"
+msgstr "Okres"
+
+#: .\product\models.py:73
+#, fuzzy
+#| msgid "product.debtor_bank_account"
+msgid "product.debt_collection_fee"
+msgstr "Rachunek pożyczkobiorcy"
+
+# prowizja
+#: .\product\models.py:82
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.permissions.add.all"
+msgstr "Nazwa"
+
+# prowizja
+#: .\product\models.py:83
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.permissions.add.own"
+msgstr "Nazwa"
+
+# prowizja
+#: .\product\models.py:85
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.permissions.change.all"
+msgstr "Nazwa"
+
+# prowizja
+#: .\product\models.py:86
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.permissions.change.own"
+msgstr "Nazwa"
+
+# prowizja
+#: .\product\models.py:88
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.permissions.list.all"
+msgstr "Nazwa"
+
+#: .\product\models.py:89
+#, fuzzy
+#| msgid "product.type.commission.period"
+msgid "product.permissions.list.own"
+msgstr "Okres"
+
+# prowizja
+#: .\product\models.py:91
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.permissions.view.all"
+msgstr "Nazwa"
+
+#: .\product\models.py:92
+#, fuzzy
+#| msgid "product.type.commission.period"
+msgid "product.permissions.view.own"
+msgstr "Okres"
+
+#: .\product\models.py:99
+#, fuzzy
+#| msgid "product.action.description"
+msgid "product.client.function"
+msgstr "Opis"
+
+#: .\product\models.py:124
+msgid "product.cash.flow.value"
+msgstr ""
+
+#: .\product\models.py:126
+msgid "product.cash.flow.cash_flow_date"
+msgstr ""
+
+#: .\product\models.py:128
+#, fuzzy
+#| msgid "product.cash.flow.type.direction"
+msgid "product.cash.flow.accounting_date"
+msgstr "Kierunek"
+
+#: .\product\models.py:129
+#, fuzzy
+#| msgid "product.cash.flow.type.direction"
+msgid "product.cash.flow.entry_source"
+msgstr "Kierunek"
+
+#: .\product\models.py:154
+#, fuzzy
+#| msgid "product.action.description"
+msgid "product.action.definition.name"
+msgstr "Opis"
+
+#: .\product\models.py:175
+msgid "product.action.name"
+msgstr "Nazwa"
+
+#: .\product\models.py:176
+msgid "product.action.description"
+msgstr "Opis"
+
+#: .\product\models.py:177
+msgid "product.action.cost"
+msgstr "Koszt"
+
+#: .\product\models.py:178
+msgid "product.action.send_date"
+msgstr "Data wysłania"
+
+#: .\product\models.py:179
+msgid "product.action.receive_date"
+msgstr "Data wpływu"
+
+#: .\product\models.py:180
+#, fuzzy
+#| msgid "product.action.send_date"
+msgid "product.action.action_date"
+msgstr "Data wysłania"
+
+#: .\product\models.py:181
+#, fuzzy
+#| msgid "product.action.send_date"
+msgid "product.action.action_execution_date"
+msgstr "Data wysłania"
+
+#: .\product\models.py:214
+#, fuzzy
+#| msgid "product.interest.global.interest_type"
+msgid "product.interest.type"
+msgstr "Typ"
+
+#: .\product\models.py:215
+#, fuzzy
+#| msgid "product.interest.global.start_date"
+msgid "product.interest.start_date"
+msgstr "Obowiązuje od"
+
+#: .\product\models.py:216
+#, fuzzy
+#| msgid "product.interest.global.value"
+msgid "product.interest.value"
+msgstr "Wartość nominalna"
+
+#: .\product\models.py:217
+#, fuzzy
+#| msgid "product.interest.global.value"
+msgid "product.interest.statutory_rate"
+msgstr "Wartość nominalna"
+
+#: .\product\models.py:218
+#, fuzzy
+#| msgid "product.interest.global.value"
+msgid "product.interest.is_set_globally"
+msgstr "Wartość nominalna"
+
+#: .\product\models.py:227
+msgid "product.interest.global.interest_type"
+msgstr "Typ"
+
+#: .\product\models.py:228
+#, fuzzy
+#| msgid "product.interest.global.value"
+msgid "product.interest.global.type"
+msgstr "Wartość nominalna"
+
+#: .\product\models.py:229
+msgid "product.interest.global.start_date"
+msgstr "Obowiązuje od"
+
+#: .\product\models.py:230
+msgid "product.interest.global.value"
+msgstr "Wartość nominalna"
+
+#: .\product\models.py:231
+msgid "product.interest.global.value_overdue"
+msgstr "Wartość po kapitalizacji"
+
+#: .\product\models.py:232
+#, fuzzy
+#| msgid "product.interest.global.start_date"
+msgid "product.interest.global.creation_date"
+msgstr "Obowiązuje od"
+
+#: .\product\models.py:233
+#, fuzzy
+#| msgid "product.interest.global.value"
+msgid "product.interest.global.created_by"
+msgstr "Wartość nominalna"
+
+# prowizja
+#: .\product\models.py:320
+msgid "product.type.commission.name"
+msgstr "Nazwa"
+
+#: .\product\models.py:334
+msgid "product.type.commission.default_value"
+msgstr "Wartość domyślna"
+
+# prowizja
+#: .\product\models.py:351
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.commission.value"
+msgstr "Nazwa"
+
+# prowizja
+#: .\product\models.py:352 .\product\models.py:353
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.commission.name"
+msgstr "Nazwa"
+
+# prowizja
+#: .\product\models.py:354
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.commission.is_active"
+msgstr "Nazwa"
+
+#: .\product\models.py:355
+#, fuzzy
+#| msgid "product.type.commission.period"
+msgid "product.commission.date_from"
+msgstr "Okres"
+
+# prowizja
+#: .\product\models.py:356
+#, fuzzy
+#| msgid "product.type.commission.name"
+msgid "product.commission.date_to"
+msgstr "Nazwa"
+
+#: .\product\templates\product\actions\add.html:10
+#, fuzzy
+#| msgid "product.add.button.label"
+msgid "product.action.add.button.label"
+msgstr "Dodaj produkt"
+
+#: .\product\templates\product\add.html:11
+msgid "product.add.button.label"
+msgstr "Dodaj produkt"
+
+#: .\product\templates\product\commission\type\add.html:11
+msgid "Dodaj..."
+msgstr ""
+
+#: .\product\templates\product\commission\type\edit.html:11
+msgid "Zapisz..."
+msgstr ""
+
+#: .\product\templates\product\commission\type\list.html:9
+msgid "Dodaj prowizję..."
+msgstr ""
+
+#: .\product\templates\product\type\attribute\list.html:13
+msgid "product.type.attribute.add.button.label"
+msgstr ""
+
+#: .\product\templates\product\type\edit.html:10
+msgid "Zapisz"
+msgstr ""
+
+#: .\product\templates\product\type\section\list.html:7
+msgid "product.type.section.add.button.label"
+msgstr ""
+
+#: .\product_retail\forms.py:10 .\product_retail\models.py:16
+#, fuzzy
+#| msgid "product.action.name"
+msgid "product.retail.category.name"
+msgstr "Nazwa"
+
+#: .\product_retail\models.py:17
+#, fuzzy
+#| msgid "product.action.description"
+msgid "product.retail.category.description"
+msgstr "Opis"
+
+#: .\product_retail\models.py:29
+#, fuzzy
+#| msgid "product.action.name"
+msgid "product.retail.name"
+msgstr "Nazwa"
+
+#: .\product_retail\models.py:30
+#, fuzzy
+#| msgid "product.action.description"
+msgid "product.retail.description"
+msgstr "Opis"
+
+#: .\product_retail\models.py:31
+#, fuzzy
+#| msgid "product.creditor"
+msgid "product.retail.unit_price"
+msgstr "Kredytodawca"
+
+#: .\product_retail\models.py:45
+msgid "product.retail.client.quantity"
+msgstr ""
+
+#: .\product_retail\models.py:46
+#, fuzzy
+#| msgid "product.interest.global.interest_type"
+msgid "product.retail.client.unit_price"
+msgstr "Typ"
+
+#: .\product_retail\models.py:47 .\product_retail\models.py:49
+#, fuzzy
+#| msgid "product.action.cost"
+msgid "product.retail.client.total_cost"
+msgstr "Koszt"
+
+#: .\product_retail\models.py:48
+#, fuzzy
+#| msgid "product.interest.global.interest_type"
+msgid "product.retail.client.payment_type"
+msgstr "Typ"
+
+#~ msgid "product.instalment_number"
+#~ msgstr "Liczba rat"
+
+#~ msgid "product.nominal_instalment"
+#~ msgstr "Kwota raty"
+
+#~ msgid "product.nominal_interest"
+#~ msgstr "Nominalne oprocentowanie"

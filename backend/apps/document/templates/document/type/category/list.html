@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+{% block content %}
+
+    <div class="col-xs-12">
+        <a href="{% url 'document.type.add' %}" class="btn btn-success btn-sm pull-right">{% trans "document.type.add.button.label" %}</a>
+    </div>
+
+    <div class="">
+        <table id="attribute_datatype" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Kod</th>
+                <th>opis</th>
+                <th style="width:110px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for type in categories %}
+                <tr>
+                    <td>{{ type.name }}</td>
+                    <td>{{ type.code }}</td>
+                    <td>{{ type.description }}</td>
+
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'document.type.list' type.pk %}"
+                               class="btn btn-default btn-sm">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </div>
+
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block site_script %}
+
+{% endblock %}

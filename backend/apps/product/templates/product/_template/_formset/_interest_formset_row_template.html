@@ -1,0 +1,21 @@
+{% load l10n %}
+<template id="interest-formset-row-template">
+
+    <tr data-id="__PRODUCT_ID__" data-removable="true" data-status="new">
+        <td>{{ ef.start_date }}</td>
+        <td class="decimal-field">{{ ef.statutory_rate }}</td>
+        <td class="decimal-field">{{ ef.delay_rate }}</td>
+        <td class="decimal-field">{{ ef.delay_max_rate }}</td>
+        <td>{{ ef.type }}</td>
+        <td>
+            <div class="delete-indicator">
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="far fa-trash-alt"></i>
+                </a>
+                {{ ef.DELETE.as_hidden }}
+            </div>
+        </td>
+        <input type="hidden" name="{{ef.product.html_name}}" value="__PRODUCT_ID__"/>
+        {{ef.id.as_hidden|unlocalize}}
+    </tr>
+</template>

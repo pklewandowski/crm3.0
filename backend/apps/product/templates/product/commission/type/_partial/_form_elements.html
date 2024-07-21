@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dane prowizji</div>
+            <div class="panel-body">
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.name %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.type %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.period %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.calculation_type %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.default_value %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+{#{% load my_template_tags %}#}
+<tr data-id="{{ i.pk }}" data-removable="true">
+    <td>{{ i.start_date }}{{ i.start_date.errors }}</td>
+    <td>{{ i.value }}{{ i.value.errors }}</td>
+    {% if index != 0 %}
+        <td>
+            <div class="btn-group">
+                {% if i.id.value %}
+                    {{ i.DELETE }}
+                {% else %}
+                    <a class="btn btn-danger btn-sm delete">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </td>
+    {% else %}
+        <td></td>
+    {% endif %}
+    {{ i.product.as_hidden }}
+    {{ i.id }}
+</tr>

@@ -1,0 +1,100 @@
+<div class="form-group">
+    <div class="table-attribute-container panel panel-default" data-dependency="{{ at.dependency }}"
+         data-id="{{ at.pk }}"
+         data-row_uid="{% if template %}__ROW_UID_VALUE__{% else %}{{ row_uid }}{% endif %}">
+        <div class="panel-heading panel-heading-action-buttons">
+            <div class="pull-left"> {{ at.name }}</div>
+            {% if mode != mode_view %}
+                <div data-id="{{ at.pk }}" class="pull-right table-formset-row-add-btn" tabindex="-1">
+                    <i class="fa fa-plus-circle"></i>
+                </div>
+            {% endif %}
+        </div>
+        <div class="panel-body">
+            <div class="table-attribute-row-container" style="overflow: auto">
+                {% if formset %}
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            {% for at in formset.attributes %}
+                                <th>{{ at.name }}</th>
+                            {% endfor %}
+                            <th>Usuń</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% if not template %}
+                            {% for formset_form in formset.formset %}
+                                {% if formset_form.parent_row_uid.value == row_uid or row_uid == None %}
+                                    <tr data-id="{{ at.pk }}"{% if not formset_form.initial|length %} data-status="NEW"{% endif %}>
+                                        {% for atr in formset.attributes %}
+                                            <td>
+
+                                                {% with formset_form|get_form_field:atr.code as fl %}
+                                                    {% if atr.attribute.generic_datatype == 'file' %}
+
+                                                        <div class="btn-group file-upload-field-container">
+                                                            <button type="button" class="btn btn-default file-upload-field">+</button>
+                                                            <button type="button" class="btn btn-default dropdown-toggle file-upload-field-list-btn" data-toggle="dropdown" aria-haspopup="true"
+                                                                    aria-expanded="false">
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right file-upload-field-list">
+                                                                {% if fl.value %}
+                                                                    {% for val in fl.value|to_json %}
+                                                                        <li data-type="{{ val.type }}"
+                                                                            data-file_original_name="{{ val.file_original_name }}"
+                                                                            data-file_name="{{ val.file_name }}"
+                                                                            data-file_path="{{ val.file_path }}"
+                                                                            data-file_mime_type="{{ val.file_mime_type }}">
+                                                                            <a href="#"><img src="{{ val.file_name|mime_type_icon:'sm' }}"/>
+                                                                                {{ val.file_original_name }}</a></li>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                            </ul>
+                                                            {{ fl }}
+                                                        </div>
+
+                                                    {% elif atr.attribute.generic_datatype == 'hyperlink' %}
+                                                        <div class="input-group">
+                                                            {{ fl }}
+                                                            <span class="input-group-btn">
+                                                                <a target="_blank" href="{{ fl.value }}" type="button"
+                                                                   class="btn btn-default"
+                                                                   name="add_category_btn" id="id_add_category_btn">link</a>
+                                                            </span>
+                                                        </div>
+
+                                                    {% else %}
+                                                        {% include "py3ws/forms/fields/p3form_field.html" with field=formset_form|get_form_field:atr.code nolabel=True %}
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>
+                                        {% endfor %}
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if mode != mode_view and not formset_form.readonly %}
+                                                    {% if formset_form.initial|length %}
+                                                        {{ formset_form.DELETE }}
+                                                    {% else %}
+                                                        <a href="#" class="table-formset-row-delete-btn btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        {{ formset_form.row_uid }}
+                                        {{ formset_form.parent_row_uid }}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

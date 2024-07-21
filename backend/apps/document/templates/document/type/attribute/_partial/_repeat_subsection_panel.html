@@ -1,0 +1,27 @@
+<div class="document-type-repeat-subsection">
+    <div style="float:left">
+        <span class="section-name">{{ i.name }}</span>
+    </div>
+
+    <div style="float:right">
+        <div class="btn-group">
+            <a href="{% url 'document.type.attribute.add' document_type.pk i.pk %}" class="btn btn-default btn-sm add-attribute">
+                <i class="fa fa-plus" style="color:#333"></i>
+            </a>
+            <a href="{% url 'document.type.section.edit' i.pk %}"
+               class="btn btn-default btn-sm">
+                <i class="far fa-edit" aria-hidden="true" style="color:#333"></i>
+            </a>
+
+            <a href="{% url 'document.type.attribute.feature' document_type.pk i.pk %}" class="btn btn-default btn-sm">
+                <i class="fas fa-check-circle"  aria-hidden="true" style="color:#333"></i>
+            </a>
+
+{#            <a class="btn btn-danger btn-sm delete-section">#}
+{#                <i class="fa fa-trash-alt"></i>#}
+{#            </a>#}
+        </div>
+    </div>
+</div>
+{#<input type="hidden" name="section_sq" class="sq-input" value="{{ i.sq }}"/>#}
+<input type="hidden" name="section_id" value="{{ i.pk }}"/>

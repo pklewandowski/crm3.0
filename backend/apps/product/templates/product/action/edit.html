@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Nowa akcja dla produktu: {{ product.document.code }} {% endblock %}
+{% block form_subtitle %}Nowa akcja: {{ action.name }}{% endblock %}
+
+{% block form_title_right %}
+    <a href="{% url "product.edit" id_product %}" class="btn btn-default" type="button"><i class="fas fa-industry"></i></a>
+    <a class="btn btn-success btn-sm btn-submit"><i class="fas fa-check"></i></a>
+{% endblock %}
+
+{% block content %}
+    {% if form %}
+        {{ form.errors }}
+    {% endif %}
+
+
+    <form method="post" id="product-form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="action-tab" class="tab-pane fade in active">
+                    {% if form %}
+                        {% include 'product/action/_partial/_form_elements_edit.html' with form=form %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'product/action/js/product_action.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        let _globals = {
+            csrf_token: '{{ csrf_token }}',
+            idAction: {{ action.pk }}
+        }
+    </script>
+{% endblock %}
+

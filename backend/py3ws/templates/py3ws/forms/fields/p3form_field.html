@@ -1,0 +1,42 @@
+
+{% if field %}
+    {% if not pure %}
+        <div class="form-group{% if field.errors %} form-field-error{% endif %}">
+    {% endif %}
+{% if field.field|classname == 'LvTxt' %}
+    {% if field.field.multi %}
+        {% if not hierarchy %}
+            {% include 'py3ws/forms/fields/_lvm_txt.html' with field=field %}
+        {% else %}
+            {% include 'py3ws/forms/fields/_lvh_txt.html' with field=field %}
+        {% endif %}
+    {% else %}
+        {% if not hierarchy %}
+            {% include 'py3ws/forms/fields/_lv_txt.html' with field=field %}
+        {% else %}
+            {% include 'py3ws/forms/fields/_lvh_txt.html' with field=field %}
+        {% endif %}
+    {% endif %}
+{% else %}
+
+    {{ field }}
+
+    {% if not nolabel %}
+        {% if field.field.required %}
+            {{ field.label_tag }}
+        {% else %}
+            <label class="{% for class in field.field.label_classes %}{{ class }} {% endfor %}"
+                   for="{{ field.id_for_label }}">{{ field.label }}{{ form.label_suffix }}</label>
+        {% endif %}
+    {% endif %}
+
+    {{ field.errors }}
+
+{% endif %}
+{% if not pure %}
+    </div>
+{% endif %}
+{% endif %}
+
+
+

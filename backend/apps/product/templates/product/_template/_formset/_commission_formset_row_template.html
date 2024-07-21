@@ -1,0 +1,25 @@
+<template id="commission_formset_row_template">
+
+    <tr data-id="__ID_COMMISSION__" data-removable="true">
+    <tr>
+        <td>{{ commission_formset.empty_form.name }}</td>
+        <td>__TYPE__</td>
+        <td>__PERIOD__</td>
+        <td>__CALCULATION_TYPE__</td>
+        <td>{{ commission_formset.empty_form.value }}</td>
+        <td>{{ commission_formset.empty_form.date_from }}</td>
+        <td>{{ commission_formset.empty_form.date_to }}</td>
+        <td>{{ commission_formset.empty_form.description }}</td>
+        <td>{{ commission_formset.empty_form.is_active }}</td>
+        <td>
+            <div class="btn-group">
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+            </div>
+        </td>
+        <input type="hidden" name="{{ commission_formset.empty_form.commission.html_name }}" value="__ID_COMMISSION__"/>
+        <input type="hidden" name="{{ commission_formset.empty_form.product.html_name }}" value="__ID_PRODUCT__"/>
+        {{ commission_formset.empty_form.id.as_hidden }}
+    </tr>
+</template>

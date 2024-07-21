@@ -1,0 +1,114 @@
+
+[data-theme="dark"] {
+  $backgroundColor: #323232;
+  $controlBackgroundColor: #444444;
+  $disabledControlBackgroundColor: #5a5a5a;
+  $hoverBackgroundColor: #525252;
+  $oddRowBackgroundColor: #3a3a3a;
+  $panelBodyBackgroundColor: #3c3c3c;
+
+  $color: #cfcfcf;
+  $labelColor: #cfcfcf;
+  //$labelColor: #d58540;
+
+  $borderColor: #767676;
+  $panelBorderColor: #767676;
+  $panelHeadingBackgroundColor: #4c4c4c;
+  $panelHeadingColor: #b5b5b5;
+
+
+  body {
+    background-color: $backgroundColor;
+    color: $color;
+  }
+
+
+  label {
+    color: $labelColor;
+    background-color: $controlBackgroundColor;
+    border-color: $borderColor;
+    border-radius: 3px;
+  }
+
+  // disabled control label
+  .form-control:disabled label, .form-control:disabled + label, .form-control:disabled + span + label, .form-control:disabled + span.select2 + label, input:read-only + label, textarea:read-only + label {
+    color: $labelColor;
+    background-color: $disabledControlBackgroundColor;
+    border-color: $borderColor;
+  }
+
+
+  hr {
+    border-color: $borderColor;
+  }
+
+  table thead tr, table th {
+    background-color: $backgroundColor;
+  }
+
+  table thead tr:hover, table th:hover {
+    background-color: $hoverBackgroundColor;
+  }
+
+  table body tr td, table tr td {
+    border-color: $borderColor;
+  }
+
+  td {
+    color: $color;
+  }
+
+  .table > thead > tr > th {
+    border-bottom: $borderColor;
+  }
+
+  .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: $oddRowBackgroundColor;
+  }
+
+  .table-hover > tbody > tr:hover {
+    background-color: $hoverBackgroundColor;
+  }
+
+  .panel, .panel-body {
+    background-color: $panelBodyBackgroundColor;
+    border-color: $panelBorderColor;
+  }
+
+  .panel-default > .panel-heading {
+    background-color: $panelHeadingBackgroundColor;
+    color: $panelHeadingColor;
+    border-color: $panelBorderColor;
+  }
+
+  .form-control {
+    background-color: $controlBackgroundColor;
+    color: $color;
+    border-color: $borderColor;
+  }
+
+  .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: $disabledControlBackgroundColor;
+    color: $color;
+    border-color: $borderColor;
+  }
+
+  .combo-container {
+    background-color: $backgroundColor;
+  }
+
+  .input-group-addon {
+    color: $color;
+    background-color: $backgroundColor;
+    border-color: $borderColor;
+  }
+
+  .heading-title {
+    background-color: $backgroundColor;
+  }
+
+  .nav-tabs {
+    border-color: $borderColor;
+  }
+
+}

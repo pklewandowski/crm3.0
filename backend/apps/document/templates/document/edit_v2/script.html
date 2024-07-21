@@ -1,0 +1,50 @@
+{% load static %}
+{% load l10n %}
+{% localize off %}
+    <script>
+        _g.document = {
+            id: {{ document.pk }},
+            code: '{{ document.code }}',
+            status: {id: {{ document.status.pk }}, name: '{{ document.status }}'},
+            type: {id: {{ document.type.pk }}, code: '{{ document.type.code }}'},
+            urls: {
+                upload_attachment_url: '{% url 'document.api.attachment' %}',
+                productInstalmentScheduleUrl: '{% url 'product.api.instalment_schedule' %}',
+                productInstalmentScheduleMappingUrl: '{% url 'product.api.instalment_schedule.mapping' %}',
+                revertStatus: '{% url 'document.revert_status' %}',
+                ocrBox: '{% url 'document.ocr.box' %}',
+                generateReportUrl: '{% url 'report.api' %}',
+                agreementsForAnnexUrl: '{% url 'document.api.get_for_annex' %}',
+                noteUrl: '{% url 'document.api.note' %}'
+            },
+            attribute: {
+                urls: {
+                    predefinedUrl: '{% url 'document.api.type.predefined' %}',
+                }
+            },
+            attachment: {
+                "id": "{{ form.instance.pk }}",
+                "root_name": "{{ form.instance.code }}" ? "{{ form.instance.code }}" : 'DOKUMENT',
+                "root_dir_name": '',
+                "classname": "{{ atm_classname }}",
+                "owner_classname": "{{ atm_owner_classname }}"
+            },
+            product: {
+                id: {% if document.product %}{{ document.product.pk|unlocalize }}{% else %}null{% endif %}
+            },
+            report: {
+                urls: {
+                    reportApiUrl: '{% url 'report.api' %}'
+                }
+            }
+        };
+
+    </script>
+{% endlocalize %}
+
+<script type="text/javascript" src="{% static 'resource/jstree/dist/jstree.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'dist/document/document-bundle.js' %}"></script>
+<script type="text/javascript" src="{% static 'dist/report/report-bundle.js' %}"></script>
+
+{#<script type="text/javascript"  src={%  static "resource/ckeditor5-custom-build/ckeditor.js" %}></script>#}
+{#<script type="text/javascript"  src={%  static "resource/ckeditor5-custom-build/translations" %}></script>#}

@@ -1,0 +1,16 @@
+{
+  "presets": [
+    "@babel/preset-env"
+//    "@babel/preset-react"
+  ],
+  "plugins": [
+    // needed for understanding new class and methods syntax
+    "@babel/plugin-proposal-class-properties",
+    ["@babel/plugin-transform-react-jsx", { "pragma": "jsUtils.Utils.createElement" }],
+//    the "Uncaught ReferenceError: regeneratorRuntime is not defined" fix
+//    npm install --save @babel/runtime
+    //npm install --save-dev @babel/plugin-transform-runtime
+    ["@babel/transform-runtime"]
+  ],
+  "comments": false
+}

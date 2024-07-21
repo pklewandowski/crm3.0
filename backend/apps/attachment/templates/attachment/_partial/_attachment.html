@@ -1,0 +1,77 @@
+
+<div class="row">
+    <div class="col-xs-6 pad-t">
+
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="display: inline-block; width: 100%;">
+                    <div style="float:left;">Lista załączników</div>
+                    <div style="float:right;">
+                        <div class="btn-group">
+
+                            <a class="btn btn-default btn-sm open-attachment-btn" disabled="true">
+                                <i class="fa fa-external-link"></i>
+                            </a>
+                            <a class="btn btn-default btn-sm add-attachment-btn" disabled="true">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                            <a href="#" class="btn btn-danger btn-sm remove-attachment-btn">
+                                <i class="fa fa-trash-alt"></i>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="input-group">
+                                <input id="directory-name" placeholder="Wpisz nazwę katalogu..." class="form-control input-sm" type="textbox">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default input-sm add-directory-btn fa fa-folder-open-o" style="font-size:12px;" type="button" id=""></button>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12 pad-t">
+                            <div id="tree" style="min-height: 150px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-6 col-sm-6">
+
+        <div class="col-lg-12 col-sm-12 pad-t">
+            <div class="panel panel-default">
+                <div class="panel-heading">Szczegóły załącznika</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div id="attachment-details" class="table-responsive">
+                            <table class="table table-hover attachment_details table-condensed">
+                                <tbody>
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "attachment/_modal/_add_attachment_form.html" %}
+
+{% include "attachment/_template/_attachment_details_template.html" %}
+{% include "attachment/_template/_attachment_row_template.html" %}
+{% include "attachment/_template/_attachment_upload_template.html" %}

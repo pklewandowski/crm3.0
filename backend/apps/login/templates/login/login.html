@@ -1,0 +1,118 @@
+{% load static %}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <link href="{% static 'resource/bootstrap/css/bootstrap.min.css' %}?v3.3.7" rel="stylesheet" type="text/css">
+    <link href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'common/css/style.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+
+
+    <style type="text/css">
+        input, select, textarea, button, div, a {
+            outline: none !important;
+        }
+        body {
+            background-color: #eeeeee;
+            padding-bottom: 40px;
+            padding-top: 40px;
+        }
+
+        .body-login {
+            text-align: center;
+        {#            background-position: 50% 50%;#} background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .form-signin {
+            margin: 50px auto;
+            max-width: 330px;
+            padding: 15px;
+        }
+
+        .form-signin .form-signin-heading, .form-signin .checkbox {
+            margin-bottom: 10px;
+        }
+
+        .form-signin .checkbox {
+            font-weight: normal;
+        }
+
+        .form-signin .form-control {
+            box-sizing: border-box;
+            font-size: 14px;
+            height: auto;
+            padding: 10px;
+            position: relative;
+        }
+
+        .form-signin .form-control:focus {
+            z-index: 2;
+        }
+
+        .form-signin input[type="text"] {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            margin-bottom: -1px;
+        }
+
+        .form-signin input[type="password"] {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            margin-bottom: 10px;
+        }
+    </style>
+
+</head>
+<body class="body-login">
+
+<div class="container">
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
+    {% if msg %}
+        <div style="margin: 0 auto; width:100%;text-align: center;color:#8b0000; font-size: 12px;">
+            {{ msg }}
+        </div>
+    {% endif %}
+
+    <form method="post" id="login-form">
+        {% csrf_token %}
+
+        <div class="form-signin" style="width: 800px;">
+            <div class="panel panel-default" style="width:340px; opacity: .85; box-shadow: 0px 0px 30px rgba(0,0,0, .6);">
+                <div class="panel-body">
+                    <div style="margin: 0 auto; width:100%;text-align: center;">
+                        <img src="{% static 'images/logo/logo_mid.png' %}" style="border-radius: 3px; margin-bottom: 10px;"/>
+                    </div>
+
+                    <input name="username" id="inputUsername" class="form-control" placeholder="Wprowadź login, PESEL, NIP lub e-mail" autocomplete="off" autofocus="autofocus" required="required"
+                           type="text"/>
+                    <input name="password" id="inputPassword" class="form-control" placeholder="Wprowadź hasło" autocomplete="off" required="required" type="password"/>
+                    <button id="submit-form-btn" class="btn btn-lg btn-default btn-block" type="submit">Zaloguj</button>
+                    <div style="margin-top: 10px;"><a id="passwordReset" href="#" tabindex="-1">zapomniałem hasła</a></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="{% static 'resource/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/js-cookie/js.cookie.js' %}"></script>
+<script type="text/javascript" src="{% static 'dist/login/login-bundle.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+
+        let input = document.getElementById("inputPassword");
+        input.addEventListener("keyup", function (event) {
+            if (event.getModifierState("CapsLock")) {
+                alert('caps is on')
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

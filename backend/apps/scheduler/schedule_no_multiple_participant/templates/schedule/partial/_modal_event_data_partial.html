@@ -1,0 +1,44 @@
+<div class="col-lg-6 col-sm-6">
+
+    <div class="form-group clearfix">
+        {% include 'schedule/partial/_event_type_select_partial.html' %}
+    </div>
+
+    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.host_user_ %}
+    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.single_person_ %}
+    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.title %}
+
+    <div class="row">
+
+        <div class="col-sm-6">
+            <div id="event_start_date">
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.start_date %}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div id="event_end_date">
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.end_date %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.service %}
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6 col-sm-6">
+    <div class="form-group clearfix">
+        <label for="{{ form.description.id_for_label }}">Opis:</label>
+        {{ form.description }}
+    </div>
+    <div class="cyclical-controls">
+        <div style="float:left">
+            {% include 'py3ws/forms/fields/checkboxInlineField.html' with field=form.is_cyclical %}
+        </div>
+        <div style="float:left">
+            <button id="cyclicSettingsBtn" type="button" class="form-control btn-default btn-sm" style="display: none;"><i class="fas fa-cog"></i></button>
+        </div>
+    </div>
+</div>

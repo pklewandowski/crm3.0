@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+
+<div class="col-xs-12">
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <h3>{{user.first_name}} {{user.last_name}} - lista umów</h3>
+        </div>
+    </div>
+    <div class="">
+        <table id="contract_list" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th style="width:30px">ID</th>
+                <th>{% trans "employee_contract.label.type" %}</th>
+                <th>{% trans "employee_contract.label.code" %}</th>
+                <th>{% trans "employee_contract.label.salary" %}</th>
+                <th>{% trans "employee_contract.label.sign_date" %}</th>
+                <th>{% trans "employee_contract.label.start_date" %}</th>
+                <th>{% trans "employee_contract.label.end_date" %}</th>
+                <th>{% trans "employee_contract.label.part_time" %}</th>
+
+                <th style="width:130px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for contract in contracts %}
+            <tr>
+                <td>{{contract.id}}</td>
+                <td>{{contract.type}}</td>
+                <td>{{contract.code}}</td>
+                <td>{{contract.salary}}</td>
+                <td>{{contract.sign_date}}</td>
+                <td>{{contract.start_date}}</td>
+                <td>{{contract.end_date}}</td>
+                <td>{{contract.part_time}}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="{% url 'employee.contract_add' employee.pk  contract.id %}"
+                           class="btn btn-default btn-sm edit">
+                            <i class="far fa-edit"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block site_script %}
+
+    $('#user_list a.password-reset').click(function (e) {
+
+        el = $(this).parents('tr');
+
+        swal({
+            title: 'Jesteś pewien?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: "Tak, generuj nowe hasło!",
+            cancelButtonText: "Nie",
+            closeOnConfirm: false,
+        }, function () {
+
+        });
+    });
+
+{% endblock %}

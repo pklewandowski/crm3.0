@@ -1,0 +1,533 @@
+//------------------- SUBIMPORTS --------------------------//
+@import '../../../scss/globals';
+@import "combo";
+@import "./section/repeatable-section";
+@import "./section/repeatable-table-section";
+@import "./value-list";
+@import "../../../_core/controls/vanillajs-datepicker-3ws/dist/css/datepicker-bulma";
+//---------------------- BODY -----------------------------//
+
+$fa-font-path: "~font-awesome/fonts";
+@import "../../../node_modules/font-awesome/scss/font-awesome";
+@import "../../../product/js/financePack/schedule/scss/schedule";
+
+input, textarea, select, option, button, div {
+  outline: none !important;
+}
+
+.tooltip-inner {
+  background-color: $tooltipBgColor;
+  word-break: break-word;
+}
+
+.tooltip-arrow {
+  border-top-color: $tooltipBgColor !important;
+}
+
+hr {
+  margin-top: $hrMargin;
+  margin-bottom: $hrMargin;
+}
+
+input[type=checkbox]:checked {
+  background: transparent !important;
+  //-webkit-appearance: none;
+  // -moz-appearance: none;
+}
+
+#documentSectionLabelContainer {
+  cursor: pointer;
+}
+
+
+#documentSectionLabelContainer li:hover, #documentSectionLabelContainer li.section-label-active {
+  //box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+  background-color: $sectionLabel-BgColor_hover;
+  color: #ffffff;
+  transition: all ease-out $sectionLabel-transitionTime;
+}
+
+#documentSectionLabelContainer ul {
+  list-style: none;
+  padding: 0;
+}
+
+#documentSectionLabelContainer li {
+  width: 100%;
+  background-color: $sectionLabel-BgColor;
+  border-radius: $sectionLabel-borderRadius;
+  padding: 10px;
+  //font-size: 12px;
+  color: $sectionLabel-Color;
+  font-weight: bold;
+  margin: 0 0 6px 0;
+  transition: all ease-out $sectionLabel-transitionTime;
+}
+
+
+@media(max-width: 1200px) {
+  #documentSectionLabelContainer ul {
+    display: inline-block;
+    overflow: auto;
+  }
+  #documentSectionLabelContainer li {
+    width: unset;
+    float: left;
+    margin-right: 5px;
+  }
+}
+
+#documentSectionLabelContainer li div.section-label-text {
+  //white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+}
+
+.section-content {
+  height: $panelHeight;
+  overflow: auto;
+}
+
+.section-container {
+  transition: $sectionTransition;
+  position: relative;
+  height: 100%;
+  overflow: auto;
+
+  //padding-top: 15px;
+}
+
+.repeatable-section-panel {
+  margin-bottom: 15px;
+}
+
+.repeatable-section-panel thead tr {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  //background-color: white;
+  z-index: 1;
+}
+
+.repeatable-section-panel .panel-default {
+  height: unset;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.repeatable-section-panel fieldset {
+  border: none;
+  padding-top: 15px;
+}
+
+.repeatable-section-container {
+  height: unset;
+  box-shadow: none;
+}
+
+.repeatable-section-container {
+  scrollbar-color: #afafaf #f1f1f1;
+  scrollbar-width: thin;
+}
+
+.repeatable-section-container::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+.repeatable-section-container::-webkit-scrollbar-track {
+  background: #e5e5e5;
+}
+
+/* Handle */
+.repeatable-section-container::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+}
+
+/* Handle on hover */
+.repeatable-section-container::-webkit-scrollbar-thumb:hover {
+  background: #8bb9e0;
+}
+
+.section-container label {
+  margin-bottom: 0;
+}
+
+// when window width smaller then 1200px the col-lg-* all beacame 100% width
+@media (min-width: 1200px) {
+  .section-container .column-container:not(:last-child) {
+    padding-right: 0;
+  }
+
+  .section-container .col-lg-12 {
+    padding-right: 15px !important;
+  }
+}
+
+
+.section-inactive {
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: $sectionTransition;
+  padding: 0;
+}
+
+////move to global css if want to have custom rendered fields in whole app
+//.form-control,
+//.select2-container--bootstrap .select2-selection,
+//.select2-container--bootstrap.select2-container--focus .select2-selection,
+//.select2-container--bootstrap.select2-container--open .select2-selection {
+//  border: 1px solid $fieldBorderColor;
+//  box-shadow: unset;
+//  -webkit-box-shadow: unset;
+//  -moz-border-radius: 0;
+//  border-radius: 4px;
+//  padding-bottom: 0;
+//  padding-top: 2px;
+//  padding-left: 5px;
+//  height: 35px;
+//  position: relative;
+//  color: #3e3e3e;
+//}
+
+//.select2-container--bootstrap .select2-selection,
+//.select2-container--bootstrap.select2-container--focus .select2-selection,
+//.select2-container--bootstrap.select2-container--open .select2-selection {
+//  padding-top: 6px;
+//}
+
+//.form-control::placeholder {
+//  font-style: italic;
+//  font-size: 11px;
+//  color: #b2b2b2;
+//  //text-align: right;
+//}
+//
+//.form-control:focus {
+//  color: $fieldFocusColor;
+//  -webkit-box-shadow: none;
+//  -moz-box-shadow: none;
+//  box-shadow: none;
+//  border-color: $fieldFocusBorderColor;
+//  transition: color .4s;
+//}
+
+//.form-control:focus:read-only {
+//  border-color: $fieldBorderColor;
+//}
+//
+//.form-control:focus + label {
+//  color: $labelColorFocus;
+//  transition: color .4s;
+//}
+//
+//.form-control.important {
+//  border: 2px solid $fieldBorderColor;
+//  font-weight: bold;
+//}
+//
+//.form-group.error input {
+//  background-color: $fieldErrorBorderColor;
+//  color: white;
+//}
+//
+//.form-group.success input {
+//  background-color: $fieldSuccessBgColor;
+//  color: white;
+//}
+
+
+//.form-group.success {
+//  &::after {
+//    content: '\f00c';
+//    font-family: "FontAwesome";
+//    font-size: 18px;
+//    color: green;
+//    position: absolute;
+//    top: -12;
+//    right: -12;
+//    border: 2px solid green;
+//    border-radius: 50%;
+//    width: 28px;
+//    height: 28px;
+//    text-align: center;
+//    background: white;
+//  }
+//}
+//
+//.form-group.error {
+//  &::after {
+//    content: '\f00d';
+//    font-family: "FontAwesome";
+//    font-size: 18px;
+//    color: $fieldErrorBorderColor;
+//    position: absolute;
+//    top: -12;
+//    right: -12;
+//    border: 2px solid $fieldErrorBgColor;
+//    border-radius: 50%;
+//    width: 28px;
+//    height: 28px;
+//    text-align: center;
+//    background: white;
+//  }
+//}
+//
+//.form-group.show-source input, .form-group.show-source select, .form-group.show-source textarea, .form-group.show-source label {
+//  color: red;
+//  border-color: red;
+//}
+//
+//.form-control:disabled label, input:read-only + label, textarea:read-only + label {
+//  background-color: $labelDisabledColor;
+//  margin-left: 3px;
+//  border-top: 1px solid $fieldBorderColor;
+//  border-left: 1px solid $fieldBorderColor;
+//  border-right: 1px solid $fieldBorderColor;
+//  border-top-left-radius: 3px;
+//  border-top-right-radius: 3px;
+//  //border: 1px solid $fieldBorderColor;
+//}
+
+//.form-group {
+//  position: relative;
+//  margin-bottom: 18px;
+//}
+
+.column-container .form-group:last-child {
+  margin-bottom: 15px;
+}
+
+.column-container .input-group .btn {
+  height: 35px;
+}
+
+.row + hr {
+  margin-top: 0;
+}
+
+
+//------------- REPEATABLE SECTIONS ------//
+
+//.repeatable-section-panel .nav-tabs > li > a {
+//  border: 1px dashed #ddd;
+//}
+
+.repeatable-section-container .nav-tabs li .toolbar-btn {
+  top: -14px;
+  right: -14px;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.repeatable-section-container .nav-tabs li.active:hover .toolbar-btn {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .4s;
+}
+
+.section-deleted-header {
+  text-decoration: line-through;
+}
+
+//.section-deleted-header a {
+//  width: 40px;
+//  overflow: hidden;
+//}
+
+.section-deleted {
+  display: none;
+}
+
+//----------------HEADING------------------//
+
+.heading-title {
+  width: 100%;
+  padding: 2px;
+  text-align: center;
+  background-color: #eeeeee;
+  margin-bottom: 20px;
+  border-radius: 3px;
+  font-weight: bold;
+  position: relative;
+  color: $labelColor;
+}
+
+
+//------------ LABELS --------------------//
+
+//label {
+//  //position: absolute;
+//  //color: $labelColor;
+//  //font-size: 11px;
+//  //top: -15px;
+//  //left: -4px;
+//
+//  position: absolute;
+//  white-space: nowrap;
+//  max-width: calc(100% - 10px);
+//  max-width: -moz-calc(100% - 10px);
+//  max-width: -webkit-calc(100% - 10px);
+//  overflow: hidden;
+//  color: $labelColor;
+//  font-size: 11px;
+//  top: -7px;
+//  left: 3px;
+//  opacity: 1;
+//  padding: 0 5px;
+//  background-color: $backgroundColor;
+//  cursor: pointer;
+//  transition: color .4s;
+//  z-index: 3;
+//  // if U want frames over the label then...
+//  //  border-top: 1px solid #c9c9c9;
+//  //  border-left: 1px solid #c9c9c9;
+//  //  border-right: 1px solid #c9c9c9;
+//  //  border-top-left-radius: 3px;
+//  //  border-top-right-radius: 3px;
+//  //  margin-left: 4px;
+//}
+
+#documentSectionContentContainer input[type=checkbox] {
+  //margin: 25px 0;
+}
+
+.column-container .form-group:first-child input[type=checkbox] {
+  //margin: 10px 0 25px 0;
+}
+
+input[type=checkbox] + label {
+  top: 0;
+  left: 15px;
+}
+
+//label:hover {
+//  color: $labelFocusColor;
+//  transition: color .4s;
+//}
+
+//this is in file common/css/style.css in line 124. To be removed. For now masked
+form label {
+  margin-top: 0;
+}
+
+//---------------------- NAV ---------------------------//
+
+.nav li a {
+  color: #848484;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  color: #383838;
+  background-color: #efefef;
+}
+
+//-------------------- ICONS ---------------------------//
+
+.panel-heading i, .control-toolbar i {
+  font-size: 16px;
+  color: $labelColor;
+  cursor: pointer;
+  transition: color .4s;
+  margin-left: 5px;
+}
+
+.panel-heading i:hover {
+  color: $labelFocusColor;
+  transition: color .4s;
+}
+
+.action-btn {
+  height: 35px;
+}
+
+.modal-predefined-container input[type="checkbox"] {
+  margin: 0;
+}
+
+.modal-predefined-label {
+  font-weight: bold;
+}
+
+input[data-type="__rowlabel__"] {
+  background-color: #e0e0e0;
+  border: none;
+  margin-bottom: 10px;
+  height: 20px;
+  padding: 0 5px;
+  font-weight: bold;
+  -webkit-border-radius: unset;
+  -moz-border-radius: unset;
+  border-radius: unset;
+}
+
+.predefined-list-container {
+  max-height: 500px;
+  overflow: auto;
+}
+
+.modal-navbutton {
+  float: right;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  filter: alpha(opacity=20);
+  opacity: 0.2;
+  border: 0;
+  padding: 0;
+  padding-right: 5px;
+}
+
+.modal-navbutton:hover {
+  -webkit-appearance: none;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  opacity: .5;
+  padding-right: 5px;
+}
+
+*[contenteditable="true"] {
+  outline: none;
+}
+
+//
+//span > *[contenteditable="true"] {
+//  color: #2779e0;
+//}
+
+
+.predefined-item-modified {
+  color: #3e8a6a !important;
+}
+
+.predefined-nav-btn-active {
+  opacity: .6 !important;
+}
+
+.predefined-item-check {
+  margin: 0 !important;
+}
+
+.add-navbutton:hover {
+  color: #337ab7;
+  opacity: .8;
+}
+
+.save-navbutton:hover {
+  opacity: .8;
+  color: #5cb85c;
+}
+
+
+
+
+

@@ -1,0 +1,36 @@
+{% load l10n %}
+{% load tags %}
+{% localize off %}
+    {% config_var 'DEBUG' as debug %}
+    <script>
+        let _g = {
+            company: '{% config_var 'COMPANY_NAME' %}',
+            companyCode: '{% config_var 'COMPANY_CODE' %}',
+            debug: {% if debug %} true {% else %} false {% endif %},
+            mode: '{{ mode }}',
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            credentials: {
+                user: {
+                    id: '{{ request.user.pk }}',
+                    first_name: '{{ request.user.first_name }}',
+                    last_name: '{{ request.user.last_name }}',
+                }
+            },
+            notifications: {
+                urls: {close: "{% url 'notification.close' %}"}
+            },
+            formData: {
+                url: '/config/form-data/'
+            },
+            googleMaps: {
+                apiKey: '{% config_var 'GOOGLE_MAPS_API_KEY' %}'
+            },
+        // todo: finally create automat to initalize django settings variables into js context
+            settings: {
+                MINUS_INFINITY_DATE: '{% config_var 'MINUS_INFINITY_DATE' %}',
+                INFINITY_DATE: '{% config_var 'INFINITY_DATE' %}',
+            }
+
+        };
+    </script>
+{% endlocalize %}

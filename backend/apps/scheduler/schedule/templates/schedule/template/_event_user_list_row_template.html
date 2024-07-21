@@ -1,0 +1,24 @@
+<template id="event-user-list-row-template">
+    <tr data-id="__user_id__" data-removable="true" class="__current_participant__">
+        <td><a href="/user/edit/__user_id__/">__user_name__</a></td>
+        <td>__user_email__</td>
+        <td>__user_phone_one__</td>
+        <td>__user_phone_two__</td>
+        <td>__participant_type_label__</td>
+        <td style="text-align: center">
+            <input type="checkbox" name="users-invited_users_exclusive_participant_mode_label" __exclusive_participant_mode_checked__/>
+            <input type="hidden" name="users-invited_users_exclusive_participant_mode" value="__exclusive_participant_mode_value__"/>
+        </td>
+        <td class="text-center"><a class="yes-no-bookmark participant-confirmation"><i class="fa fa-__user_confirmation__ __active__ __opacity__"></i></a></td>
+        <td>
+            <div class="btn-group">
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+            </div>
+        </td>
+        <input type="hidden" name="users-invited_users" value="__user_id__"/>
+        <input type="hidden" name="users-invited_users_confirmed" value="__user_confirmed__"/>
+        <input type="hidden" name="users-invited_users_participant_type" value="__participant_type__"/>
+    </tr>
+</template>

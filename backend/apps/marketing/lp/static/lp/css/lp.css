@@ -1,0 +1,44 @@
+#lp_list {
+    margin-bottom: 30px;
+}
+
+#lp_list th {
+    white-space: nowrap;
+}
+
+#lp_list td {
+    white-space: nowrap;
+}
+
+#lp_list .fa-check, .fa-times {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#lp_list .fa-check {
+    color: #23a722;
+}
+
+#lp_list .fa-times {
+    color: #e70000;
+}
+
+.list-container {
+    overflow: auto;
+    height: calc(100vh - 255px);
+}
+
+.action-button-container a i.fa-filter {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+.pagination {
+    margin-bottom: 15px;
+}
+
+.list-panel {
+    /*background-image: linear-gradient(#ecf8ff, rgba(255,255,255,0) 30%);*/
+}
+
+

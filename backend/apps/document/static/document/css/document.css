@@ -1,0 +1,177 @@
+* {
+    box-sizing: border-box;
+}
+
+ul.message-container {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+ul.message-container li {
+    padding: 5px;
+    border: 1px solid #ddd;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+    margin-bottom: 5px;
+}
+
+div.message-header {
+    text-align: left;
+    font-weight: 700;
+    border-bottom: 1px solid #ddd;
+    color: #337ab7;
+}
+
+div.message-text {
+    margin-top: 5px;
+}
+
+.tab-close-btn, .tab-reopen-btn {
+    position: absolute;
+    right: 6px;
+    top: 5px;
+    z-index: 3;
+    margin: auto;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.calc-changed {
+    background-color: #82dbb6;
+    transition: all 10s;
+}
+
+.document-attribute-textarea {
+    font-size: 11px;
+}
+
+.document-attribute-select {
+    font-size: 11px;
+}
+
+.list-container {
+    overflow: auto;
+    height: calc(100vh - 220px);
+}
+
+.repeated-section-content .panel-body {
+    padding: 0;
+}
+
+#attributeTabContentHorizontal .repeated-section-content div[class^='col-'] {
+    padding-left: 0;
+}
+
+.attributePanelHorizontalContainer {
+    display: none;
+}
+
+#attributeTabPaneHorizontal .document-type-section {
+    font-size: 12px;
+}
+
+#attributeTabPaneHorizontal .btn-sm {
+    padding: 3px;
+}
+
+.repeat_subsection_btn {
+    border: 2px solid;
+}
+
+#attributeTabPaneHorizontal .repeat_subsection_btn {
+    font-size: 10px;
+}
+
+#conditionList .form-group {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #f5f5f5;
+}
+
+#accordionHorizontal {
+    margin-left: 5px;
+    color: #736b6b;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#addUserIframe {
+    width: 100%;
+    min-height: 700px;
+    border: 1px solid #ddd;
+}
+
+.file-upload-field-container .dropdown-menu {
+    font-size: 11px;
+}
+
+.report-row-first {
+    font-weight: bold;
+    color: #1c84c3;
+    background-color: #EEEEEE;
+}
+
+table.table-resizable {
+    border-collapse: collapse;
+}
+
+.columnSelector:hover {
+    border-right: 2px solid #bababa;
+}
+
+textarea {
+    height: auto;
+    overflow: hidden;
+    min-height: 50px;
+}
+
+.lov:not(select), .lov-description:not(select) {
+    font-size: 11px;
+}
+
+@media only screen and (max-width: 1366px) {
+    #attributeTabPaneHorizontal .document-type-section {
+        font-size: 11px;
+    }
+}
+
+.document-section .panel-default, .document-section-row-body .panel-default {
+    box-shadow: none;
+}
+
+.panel-heading .pull-left {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 90%;
+}
+
+.document-type-section a.collapse-trigger:not(.collapsed) {
+    /*color: #a92727;*/
+    text-decoration: underline;
+}
+
+.document-type-section a.collapse-trigger:not(.collapsed)::before {
+    content: '* ';
+    text-decoration: none;
+}
+
+#attachment-tab .panel-body {
+    height: calc(100% - 230px);
+}
+
+#report-list .panel-body {
+    height: calc(100% - 230px);
+}
+
+
+/*#file_thumbnail_container {*/
+/*    height: calc(100% - 250px);*/
+/*}*/
+/*#atmDirectoryTree {*/
+/*    height: calc(100% - 250px);*/
+/*}*/
+
+
+

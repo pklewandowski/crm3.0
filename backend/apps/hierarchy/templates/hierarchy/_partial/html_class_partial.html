@@ -1,0 +1,12 @@
+{% if node.type == 'ROOT' %}
+    'node-root'
+{% elif node.type == 'CMP' %}
+    'hierarchy-company'
+{% elif node.type == 'HDQ' %}
+    'hierarchy-headquarter'
+{% elif node.type == 'DEP' %}
+    'hierarchy-department'
+{% elif node.type == 'POS' %}
+    'hierarchy-position'
+{% else %} ''
+{% endif %}

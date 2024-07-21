@@ -1,0 +1,45 @@
+@import "_globals";
+
+.container-note-container {
+  position: relative;
+  background: #f9eece;
+  border-radius: 2px;
+  padding: 10px;
+  max-height: 200px;
+  height: $note-container-height;
+}
+
+.container-note-container::before,
+.container-note-container::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  width: 40%;
+  height: 10px;
+  box-shadow: 0 5px 14px rgba(0,0,0,.7);
+  z-index: -1;
+  transition: all .3s ease-in-out;
+}
+
+.container-note-container::before {
+  left: 15px;
+  transform: skew(-5deg) rotate(-5deg);
+}
+
+.container-note-container::after {
+  right: 15px;
+  transform: skew(5deg) rotate(5deg);
+}
+
+.container-note-container:hover::before,
+.container-note-container:hover::after {
+  box-shadow: 0 2px 14px rgba(0,0,0,.4);
+}
+
+.container-note-container:hover::before {
+  left: 5px;
+}
+
+.container-note-container:hover::after {
+  right: 5px;
+}

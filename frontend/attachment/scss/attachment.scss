@@ -1,0 +1,349 @@
+.nav-button-container {
+  position: absolute;
+  right: -15px;
+  top: -15px;
+  z-index: 1;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.thumbnail-image-container .scroll-box {
+  bottom: 3px;
+  height: 1.5em;
+  width: 90%;
+  color: #969696;
+}
+
+.scan-thumbnail {
+  width: 98%;
+}
+
+.prtscn-thumbnail {
+  width: 220px;
+  height: 220px;
+}
+
+#scan_thumbnail_container, #prtscn_thumbnail_container, #file_thumbnail_container {
+  /*height: 470px;*/
+  width: 100%;
+}
+
+.thumbnail-btn {
+  //position: absolute;
+  width: 30px;
+  height: 30px;
+  //right: -15px;
+  //top: -15px;
+  text-align: center;
+  z-index: 2;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
+  float: left;
+}
+
+.thumbnail {
+  position: relative;
+  border: 1px solid #ddd;
+  padding: 5px;
+  margin-right: 10px;
+
+  /*overflow-y: hidden;*/
+  cursor: pointer;
+  display: inline-block; /*Display inline and maintain block characteristics.*/
+  vertical-align: top; /*Makes sure all the divs are correctly aligned.*/
+  white-space: normal;
+}
+
+.thumbnail:hover {
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+.thumbnail-dir {
+  border: none;
+  -webkit-box-shadow: unset;
+  -moz-box-shadow: unset;
+  box-shadow: unset;
+}
+
+.thumbnail-container {
+  overflow: auto;
+  /*overflow-y: hidden;*/
+  display: inline-block;
+  /*white-space: nowrap;*/
+}
+
+.thumbnail-image-container {
+  position: relative;
+  width: 200px;
+  height: 250px;
+  outline: none;
+  transition: all .5s;
+}
+
+.thumbnail-image-container img {
+  width: 98%;
+}
+
+.thumbnail-small .thumbnail-image-container {
+  width: 110px;
+  height: 140px;
+  transition: all .5s;
+}
+
+.thumbnail-image-container-small {
+  position: relative;
+  width: 100px;
+  outline: none;
+  transition: all .5s;
+}
+
+
+.thumbnail-removed {
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.thumbnail-removed img {
+  opacity: .3;
+}
+
+.thumbnail-image {
+  height: 90%;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: all .5s;
+}
+
+.thumbnail-small .thumbnail-image {
+  margin-bottom: 3px;
+}
+
+.thumbnail-image-small {
+
+}
+
+.thumbnail-close-btn {
+  background-color: #e83b46;
+  color: white;
+  border-radius: 50%;
+}
+
+.thumbnail-restore-btn {
+  background-color: #3ca703;
+  color: white;
+  border-radius: 50%;
+  display: none;
+}
+
+.thumbnail-btn i {
+  position: relative;
+  margin: auto;
+  top: 2px;
+}
+
+#file_thumbnail_container {
+  overflow-x: hidden;
+}
+
+#file_thumbnail_film {
+  width: 200px;
+  display: inline;
+}
+
+img.desaturate {
+  -webkit-filter: grayscale(95%);
+  filter: grayscale(75%);
+  transition: .3s;
+}
+
+img.desaturate:hover {
+  -webkit-filter: grayscale(0%);
+  filter: grayscale(0%);
+  transition: .3s;
+  /*animation: toColor .3s;*/
+}
+
+#attachmentBeforeUpload ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#attachmentBeforeUpload li {
+  float: left;
+  border: 1px solid #ddd;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+  margin: 0 10px 10px 0;
+}
+
+.thumbnail-image-container .attachment-description-field {
+  width: 95%;
+  height: 98%;
+  resize: none;
+  margin: auto;
+  margin-top: 5px;
+  font-size: 12px;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+  border: none;
+  color: #000000;
+}
+
+.thumbnail-image-container .attachment-description {
+  position: absolute;
+  width: 100%;
+  height: 90%;
+  left: 0;
+  top: 0;
+  display: none;
+  opacity: .8;
+}
+
+.blur-grayscale {
+  filter: grayscale(75%) blur(4px) !important;
+}
+
+.scan-preview {
+
+  border: 1px solid #DDDDDD;
+  border-radius: 5px;
+}
+
+
+.thumbnail-btn .fa-times::before {
+  font-size: 16px;
+}
+
+.thumbnail-btn .fa-redo::before {
+  font-size: 17px;
+}
+
+.thumbnail-btn .fa-times, .thumbnail-btn .fa-redo {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+
+.thumbnail-btn .fa-times {
+  border: 3px solid white;
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+.thumbnail-btn .fa-redo {
+  padding-top: 4px;
+}
+
+.thumbnail:hover .nav-button-container {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .4s;
+}
+
+@keyframes toColor {
+  0% {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+  }
+  25% {
+    -webkit-filter: grayscale(75%);
+    filter: grayscale(75%);
+  }
+  50% {
+    -webkit-filter: grayscale(50%);
+    filter: grayscale(50%);
+  }
+  75% {
+    -webkit-filter: grayscale(25%);
+    filter: grayscale(25%);
+  }
+  100% {
+    -webkit-filter: grayscale(0%);
+    filter: grayscale(0%);
+  }
+}
+
+.upload-progress {
+  display: block;
+  background-color: #5aa1dc;
+  height: 10px;
+  width: 1%;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+#atmSizeToggle {
+  margin: 0 10px;
+  cursor: pointer;
+
+}
+
+.atm-play-music i {
+  font-size: 16px;
+  color: #8c8c8c;
+}
+
+//.tooltip-inner {
+//  word-break: break-all;
+//}
+
+/*
+STYLLING input type="range":
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    input[type='range'] {
+      overflow: hidden;
+      width: 80px;
+      -webkit-appearance: none;
+      background-color: #9a905d;
+    }
+
+    input[type='range']::-webkit-slider-runnable-track {
+      height: 10px;
+      -webkit-appearance: none;
+      color: #13bba4;
+      margin-top: -1px;
+    }
+
+    input[type='range']::-webkit-slider-thumb {
+      width: 10px;
+      -webkit-appearance: none;
+      height: 10px;
+      cursor: ew-resize;
+      background: #434343;
+      box-shadow: -80px 0 0 80px #43e5f7;
+    }
+
+}
+ FF
+input[type="range"]::-moz-range-progress {
+  background-color: #43e5f7;
+}
+input[type="range"]::-moz-range-track {
+  background-color: #9a905d;
+}
+IE
+input[type="range"]::-ms-fill-lower {
+  background-color: #43e5f7;
+}
+input[type="range"]::-ms-fill-upper {
+  background-color: #9a905d;
+}
+ */
+
+.progress-slider {
+
+  -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 8px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+.slider-container {
+  position: absolute;
+  width: 95%;
+  bottom: 25px;
+}

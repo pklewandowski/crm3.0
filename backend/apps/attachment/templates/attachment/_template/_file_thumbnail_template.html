@@ -1,0 +1,28 @@
+<template id="file_thumbnail_template">
+    <div class="thumbnail thumbnail-image-container __THUMBNAIL_SIZE__" tabindex="-1" data-id="__ATTACHMENT_ID__">
+        <div class="thumbnail-btn thumbnail-close-btn"><i class="fa fa-times"></i></div>
+        <div class="thumbnail-btn thumbnail-restore-btn"><i class="fa fa-redo"></i></div>
+        <div class="thumbnail-image __THUMBNAIL_IMAGE_SIZE__" data-id="__ATTACHMENT_ID__" data-file_name="__FILE_NAME__" data-mime_type="__FILE_MIME_TYPE__">
+            <img data-type="scan" class="desaturate" src="__FILE_ICON__"/>
+        </div>
+        <div class="scroll-box">
+            <div class="scroll-text" data-toggle="tooltip" title="__FILE_ORIGINAL_NAME__">__FILE_ORIGINAL_NAME__</div>
+        </div>
+
+
+        <input class="thumbnail-value" type="hidden" name="{{ attachment_formset.empty_form.file_name.html_name }}" value="__FILE_NAME__"/>
+        <input class="thumbnail-value" type="hidden" name="{{ attachment_formset.empty_form.file_original_name.html_name }}" value="__FILE_ORIGINAL_NAME__"/>
+        <input type="hidden" name="{{ attachment_formset.empty_form.file_mime_type.html_name }}" value="__FILE_MIME_TYPE__"/>
+        <input type="hidden" name="{{ attachment_formset.empty_form.file_ext.html_name }}" value="__FILE_EXT__"/>
+        <input type="hidden" name="{{ attachment_formset.empty_form.file_path.html_name }}" value="__FILE_PATH__"/>
+        <input type="hidden" name="{{ attachment_formset.empty_form.DELETE.html_name }}" class="formset-row-delete"/>
+        <input type="hidden" name="{{ attachment_formset.empty_form.type.html_name }}" value="__ATTACHMENT_TYPE__"/>
+        <input type="hidden" name="{{ attachment_formset.empty_form.id.html_name }}"/>
+        <div class="attachment-description">
+            <textarea class="form-control input-md attachment-description-field" placeholder="Dodaj opis..."
+                      name="{{ attachment_formset.empty_form.description.html_name }}"></textarea>
+        </div>
+
+    </div>
+</template>
+

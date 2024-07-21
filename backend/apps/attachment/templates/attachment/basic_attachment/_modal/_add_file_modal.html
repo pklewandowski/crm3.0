@@ -1,0 +1,46 @@
+{% load static %}
+<div class="modal fade" id="add_scan_modal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div id ='scan_dropzone_container' class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="atmFormLabel">
+                    Lista skanów
+                </h4>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 dropzone-container">
+                        <div id="dropzone_atm">
+                            <img class="attachment_img" src="{% static '/images/dropzone.png' %}" alt="" style="pointer-events:none; max-width:100%;">
+                            <input type="file" name="category_attachments" multiple style="display:none">
+                        </div>
+                        {#                        </form>#}
+                        <!-- FILES TO UPLOAD -->
+                        <div class="pad-t" id="attachmentBeforeUpload">
+                            <div id="scan_preview_container">
+                                <ul></ul>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="addAttachmentFiles" class="btn btn-success btn-sm" style="display:none;">Dodaj pliki</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'document/_template/_prtscn_thumbnail_template.html' %}

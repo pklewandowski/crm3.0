@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'dict/js/dict-list.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-lg-12 col-sm-12 header-title">
+        <div style="float:left">
+            <h3>Lista słowników</h3>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-sm-12">
+        <hr style="margin-top:10px">
+    </div>
+    <div>
+        <table id="user_list" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th class="sort sort-unsorted">Nazwa</th>
+                <th style="width:120px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for dict in dictionaries %}
+                <tr>
+                    <td>{{ dict.label }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm edit">
+                                <i class="far fa-edit" aria-hidden="true"></i>
+                            </a>
+                            <a href="{% url 'dict.entry_list_edit' dict.id %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="fa fa-bars" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="position:relative; margin:0 auto;width: 100%; text-align:center;">
+        {% include 'py3ws/lists/_partial/_pagination.html' with list=dictionaries %}
+    </div>
+
+{% endblock %}
+
+
+{% block site_script %}{% endblock %}

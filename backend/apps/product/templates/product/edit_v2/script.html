@@ -1,0 +1,8 @@
+{% load static %}
+<script>
+    _g.product = {
+        id: {{ form.instance.pk }},
+        valueNet: {{ form.instance.value_net }},
+        commission: {{ form.instance.commission }},
+    };
+</script>

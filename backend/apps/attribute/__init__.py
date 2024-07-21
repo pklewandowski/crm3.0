@@ -1,0 +1,1 @@
+NULLBOOLEAN_CHOICES = [('', '?'), ('T', 'Tak'), ('N', 'Nie')]

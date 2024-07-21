@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block form_icon %}fa fa-file{% endblock %}
+{% block form_title %}Statystyki{% endblock %}
+{% block form_subtitle %}Dane zbiorcze, raporty i wykresy {% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-default pull-right btn-refresh" type="button"><i class="fas fa-sync"></i></button>
+{% endblock %}
+
+{% block content %}
+    <form method="post" autocomplete="off">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#income-tab">Wnioski</a></li>
+                    <li><a data-toggle="tab" href="#adviserRank-tab">Ranking doradców</a></li>
+                    <li><a data-toggle="tab" href="#dynamics-tab">Dynamika</a></li>
+                </ul>
+
+                <div class="tab-content pad-t">
+
+                    <div class="tab-pane fade in active" id="income-tab">
+                        {% include 'stat/_partial/income_form_elements.html' with form=form mode=mode %}
+                    </div>
+
+
+                    <div class="tab-pane fade in" id="adviserRank-tab">
+                        {% include 'stat/_partial/adviser_rank_elements.html' with form=form mode=mode %}
+                    </div>
+
+                    <div class="tab-pane fade in" id="dynamics-tab">
+                        {% include 'stat/_partial/dynamics_elements.html' with form=form mode=mode %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% include 'stat/template/income/income_content_table_template.html' %}
+    {% include 'stat/template/income/income_mc_tab_template.html' %}
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'resource/chartjs/Chart.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/pivottable/pivot.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'stat/css/stat.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+{#    <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>#}
+    <script type="text/javascript" src="{% static 'resource/chartjs/Chart.min.js' %}"></script>
+     <script type="text/javascript" src="{% static 'resource/pivottable/pivot.min.js'%}"></script>
+{#    <script type="text/javascript" src="{% static 'resource/pivottable/pivotMultipleMetrics.js' %}"></script>#}
+{#    <script type="text/javascript" src="{% static 'resource/pivottable/plotly_renderers.js' %}"></script>#}
+    <script type="module" src="{% static 'stat/js/stat.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        _g['stat'] = {
+            urls: {
+                getDataUrl: '{% url 'stat.get_data' %}',
+                getPivotDataUrl: '{% url 'stat.get_pivot_data' %}'
+            }
+        }
+    </script>
+{% endblock %}

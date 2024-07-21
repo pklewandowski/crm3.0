@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+
+{% block form_icon %}fas fa-key{% endblock %}
+{% block form_title %}Typy atrybutów {% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <a href="{% url 'attribute.add' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></a>
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="">
+        <table id="attribute_datatype" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Typ podstawowy</th>
+                <th>Wyrażenie regularne</th>
+                <th>Format domyślny</th>
+                <th>Długość danych</th>
+                <th>Liczba miejsc po przecinku</th>
+                <th>Słownik</th>
+
+                <th style="width:130px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for datatype in datatypes %}
+                <tr>
+                    <td>{{ datatype.name }}</td>
+                    <td>{%  dict_label datatype.generic_datatype 'GENERIC_DATATYPES' %}</td>
+                    <td>{{ datatype.regex|default_if_none:'' }}</td>
+                    <td>{{ datatype.default_format|default_if_none:'' }}</td>
+                    <td>{{ datatype.length|default_if_none:'' }}</td>
+                    <td>{{ datatype.decimal_places|default_if_none:'' }}</td>
+                    <td>{{ datatype.dictionary|default_if_none:'' }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'attribute.edit' datatype.pk %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+{% endblock %}
+
+{% block site_script %}
+
+{% endblock %}

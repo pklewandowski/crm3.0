@@ -1,0 +1,95 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Uprawnienia aplikacji</div>
+    <div class="panel-body">
+        <div class="panel-group" id="accordion">
+
+           {% for i in form %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}">{{ i.label }}</a>
+                    </h4>
+                </div>
+                <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        {% include 'forms/multiCheckboxField.html' with field=i initial=form.initial.i %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-heading">#}
+{#                    <h4 class="panel-title">#}
+{#                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Zgłoszenia</a>#}
+{#                    </h4>#}
+{#                </div>#}
+{#                <div id="collapse1" class="panel-collapse collapse">#}
+{#                    <div class="panel-body">#}
+                        {#                           {{ form.app_permissions_issue }}#}
+{#                        {% include 'forms/multiCheckboxField.html' with field=form.app_permissions_issue initial=form.initial.app_permissions_issue %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            #}
+{#            #}
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-heading">#}
+{#                    <h4 class="panel-title">#}
+{#                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Słowniki</a>#}
+{#                    </h4>#}
+{#                </div>#}
+{#                <div id="collapse2" class="panel-collapse collapse">#}
+{#                    <div class="panel-body">#}
+{#                        {% include 'forms/multiCheckboxField.html' with field=form.app_permissions_dict initial=form.initial.app_permissions_dict %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            #}
+{#            #}
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-heading">#}
+{#                    <h4 class="panel-title">#}
+{#                        <a data-toggle="collapse" data-parent="#accordion" href="#dictentry">Wpisy słownikowe</a>#}
+{#                    </h4>#}
+{#                </div>#}
+{#                <div id="dictentry" class="panel-collapse collapse">#}
+{#                    <div class="panel-body">#}
+{#                        {% include 'forms/multiCheckboxField.html' with field=form.app_permissions_dictentry initial=form.initial.app_permissions_dictentry %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            #}
+{#            #}
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-heading">#}
+{#                    <h4 class="panel-title">#}
+{#                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Pracownicy</a>#}
+{#                    </h4>#}
+{#                </div>#}
+{#                <div id="collapse3" class="panel-collapse collapse">#}
+{#                    <div class="panel-body">#}
+{#                        {% include 'forms/multiCheckboxField.html' with field=form.app_permissions_employee initial=form.initial.app_permissions_employee %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            #}
+{#            #}
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-heading">#}
+{#                    <h4 class="panel-title">#}
+{#                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Użytkownicy</a>#}
+{#                    </h4>#}
+{#                </div>#}
+{#                <div id="collapse4" class="panel-collapse collapse">#}
+{#                    <div class="panel-body">#}
+{#                        {% include 'forms/multiCheckboxField.html' with field=form.app_permissions_user initial=form.initial.app_permissions_user %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+
+
+        </div>
+    </div>
+</div>

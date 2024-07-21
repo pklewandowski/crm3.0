@@ -1,0 +1,10 @@
+<template id="attr_formset_{{ c.section.pk }}_template">
+    <tr data-status="NEW" class="tab-pane document-section-row-body" id="__TAB_ID_PANE__">
+        {% for col in c.columns %}
+            {% for at in col.attributes %}
+                <td>{% include "py3ws/forms/fields/p3form_field.html" with field=empty_formset|get_form_field:at.code nolabel=True %}</td>
+            {% endfor %}
+        {% endfor %}
+        <input type="hidden" id="{{ empty_formset.row_uid.id_for_label }}" name="{{ empty_formset.row_uid.html_name }}" value="__ROW_UID_VALUE__"/>
+    </tr>
+</template>

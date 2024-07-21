@@ -1,0 +1,23 @@
+{% load static %}
+{% load l10n %}
+
+{% localize off %}
+    <script>
+        _g.document = {
+            type: {
+                id: {{ document_type.pk }},
+                code: '{{ document_type.pk }}'
+            },
+            initialOwner: {
+                id: {% if initial_owner_id %} {{ initial_owner_id|unlocalize }} {% else %}null{% endif %},
+                text: {% if initial_owner_name %} '{{ initial_owner_name }}'{% else %}null{% endif %},
+            },
+            urls: {
+                agreementsForAnnexUrl: '{% url 'document.api.get_for_annex' %}'
+            }
+        };
+
+    </script>
+{% endlocalize %}
+<script type="text/javascript" src="{% static 'dist/newDocument/newDocument-bundle.js' %}"></script>
+

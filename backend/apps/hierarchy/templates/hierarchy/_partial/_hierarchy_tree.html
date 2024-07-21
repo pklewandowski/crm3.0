@@ -1,0 +1,32 @@
+{% load mptt_tags %}
+{% load hierarchy_tags %}
+<div class="role-tree">
+    {{ field.errors }}
+    <ul>
+        {% recursetree hierarchy %}
+            <li>
+                <label for="hierarchy_{{ node.id }}">
+                    <input
+                            data-groups="{% for i in node.hierarchy_groups.all %}{{ i.pk }},{% endfor %}"
+                            data-position="{% for i in node.position_set.all %}{{ i.pk }},{% endfor %}"
+                            name="{{ form.prefix }}-hierarchy" id="hierarchy_{{ node.id }}" type="checkbox"
+                            value="{{ node.id }}" {% if node.id in field.value|list_str_to_int %} checked="checked" {% endif %}/>
+                     {% if node.type == 'DEP' %}<strong>{{ node.name }}</strong> (manager){% else %}{{ node.name }}{% endif %}
+                </label>
+{#                {% if node.position_set.all %}#}
+{#                    <div class="user-position-list">#}
+{#                        {% with "hierarchy_position_"|addstr:node.id as field_name %}#}
+{#                            {{ form|get_form_field:field_name }}#}
+{#                        {% endwith %}#}
+{#                    </div>#}
+{#                {% endif %}#}
+
+                {% if not node.is_leaf_node %}
+                    <ul class="children">
+                        {{ children }}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endrecursetree %}
+    </ul>
+</div>

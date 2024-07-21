@@ -1,0 +1,28 @@
+{% load static %}
+
+<template id="interestGlobalFormTemplate" data-url="{% url 'product.global_interest.api' %}">
+    <form autocomplete="off">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="id_start_date">Data od</label>
+                    <input class="form-control" type="text" data-datatype="date" id="id_start_date" name="start_date"/>
+                </div>
+{#                <div class="form-group">#}
+{#                    <label for="id_interest_rate">Odsetki umowne</label>#}
+{#                    <input class="form-control text-right" type="text" data-datatype="number" data-subtype="percent"  id="id_interest_rate" name="interest_rate"/>#}
+{#                </div>#}
+                <div class="form-group">
+                    <label for="id_interest_for_delay_rate">Odsetki za opóźnienie</label>
+                    <input class="form-control text-right" type="text" data-datatype="number" data-subtype="percent" id="id_interest_for_delay_rate" name="interest_for_delay_rate"/>
+                </div>
+                <div class="form-group">
+                    <label for="id_interest_max_for_delay_rate">Odsetki maksymalne za opóźnienie</label>
+                    <input class="form-control text-right" type="text" data-datatype="number" data-subtype="percent" id="id_interest_max_for_delay_rate" name="interest_max_for_delay_rate"/>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="id"/>
+        <input type="hidden" name="document_type" value="{{ document_type.pk }}"/>
+    </form>
+</template>

@@ -1,0 +1,37 @@
+.schedule-section-warning {
+  padding: 10px;
+  background-color: #ffc55a;
+  color: #525252;
+  font-weight: 700;
+  margin: 10px 0;
+  border-radius: 5px;
+  position: absolute;
+  top: 90px;
+  width: calc(100% - 30px);
+  display: none;
+}
+
+.schedule-instalment-total {
+  font-weight: bold;
+  color: #636363;
+}
+
+[data-__meta__change_flag="1"], [data-__meta__change_flag="2"] {
+  background-color: #d5ebfd;
+}
+
+.revert-to-default-btn {
+  top: -15px;
+  right: -15px;
+  background-color: #5cb85c;
+  color: white;
+  font-size: 14px;
+  padding-top: 4px;
+}
+
+.instalment-schedule-aggregates td div {
+  text-align: right;
+  font-weight: bold;
+  padding-top: 7px;
+  background-color: #F3F3F3FF;
+}

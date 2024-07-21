@@ -1,0 +1,106 @@
+<div class="financial-type">
+    <div class="row">
+        <div class="col-lg-12 pad-t">
+            <ul class="nav nav-tabs">
+                <li class="nav-item active">
+                    <a data-toggle="tab" href="#data-tab" aria-expanded="false">Dane podstawowe</a>
+                </li>
+                <li class="nav-item">
+                    <a data-toggle="tab" href="#cashflow-tab" aria-expanded="false">Przepływy</a>
+                </li>
+                <li class="nav-item">
+                    <a data-toggle="tab" href="#rule-tab" aria-expanded="false">Reguły finansowe</a>
+                </li>
+                <li class="nav-item">
+                    <a data-toggle="tab" href="#rule-tab" aria-expanded="false">Definicja atrybutów</a>
+                </li>
+                <li class="nav-item">
+                    <a data-toggle="tab" href="#rule-tab" aria-expanded="false">Kolumny do listy</a>
+                </li>
+            </ul>
+
+            <div class="tab-content pad-t">
+                <div id="data-tab" class="tab-pane fade in active">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.category %}
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.name %}
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.code %}
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.owner_type %}
+                                    {{ form.editable.as_hidden }}
+                                    {{ form.is_schedule.as_hidden }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cashflow-tab" class="tab-pane fade in">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4 nopadding-right">
+                                    <div>Dostępne:</div>
+                                    <div>
+                                        <ul id="id_accounting_available_list" class="connected-cashflow accounting-list">
+                                            {% for i in accounting_available %}
+                                                <li data-id="{{ i.pk }}" name="accounting_available_list">{{ i.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div>Wybrane:</div>
+                                    <div>
+                                        {% include 'document/type/_partial/_accounting_choosen_list.html' with form=form acc_ord=accounting_ordered_choosen %}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div>Bez kolejności księgowania:</div>
+                                    <div>
+                                        {% include 'py3ws/forms/fields/multiCheckboxField.html' with field=form.accounting_unordered %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="rule-tab" class="tab-pane fade in">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="display: inline-block; width: 100%">
+                            <div style="float:left">Dodaj akcję</div>
+                            <div style="float: right;" title="Dodaj akcję" id="addActionBtn" class="add-rule-btn">
+                                <i class="fa fa-plus-circle" style="font-size: 16px;"></i></div>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-hover table-bordered rule-list">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th style="width:8%;">{X} Dni</th>
+                                    <th style="width:8%;">Kiedy?</th>
+                                    <th style="width:15%;">Zdarzenie</th>
+                                    <th style="width:35%;">Jeżeli</th>
+                                    <th>Akcje</th>
+                                    <th style="width:60px">...</th>
+                                </tr>
+                                </thead>
+                                <tbody id="actionRowContainer">
+                                {% for f in action_formset %}
+                                    {% include 'document/type/_partial/rule-cell-partial.html' with f=f %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

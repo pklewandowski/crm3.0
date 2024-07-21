@@ -1,0 +1,47 @@
+<template id="modal-event-data-template">
+    <div class="col-lg-6 col-sm-6">
+        <div class="form-group clearfix">
+            <label for="{{ form.type.id_for_label }}">Typ:</label>
+            <select id="{{form.type.id_for_label}}" name="{{form.type.html_name}}"
+                    class="form-control input-sm">
+                {% for i in schedule_type %}
+                <option data-location_required="{{i.location_required}}"
+                        data-title_required="{{i.title_required}}"
+                        data-default_title="{{i.default_title}}"
+                        data-single_person="{{i.single_person}}"
+                        value="{{i.id}}"
+                        >{{i.name}}
+                </option>
+
+                {% endfor %}
+            </select>
+
+        </div>
+
+        <div class="form-group clearfix">
+            <label for="{{ form.title.id_for_label }}">Tytuł:</label>
+            {{form.title}}
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group clearfix">
+                    <label for="{{ form.start_date.id_for_label }}">Początek:</label>
+                    {{form.start_date}}
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group clearfix">
+                    <label for="{{ form.end_date.id_for_label }}">Koniec:</label>
+                    {{form.end_date}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-sm-6">
+        <div class="form-group clearfix">
+            <label for="{{ form.description.id_for_label }}">Opis:</label>
+            {{form.description}}
+        </div>
+    </div>
+</template>

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+    <div style="display: flex; align-items: center; flex-direction: column; margin: auto 50px">
+        <h2><strong>Wystąpił wyjątek podczas kalkulacji produktu</strong></h2>
+        <h3>{{ errmsg }}</h3>
+    <a href="{% url 'document.edit' product.document.pk %}">Wróć do wniosku...</a>
+    </div>
+{% endblock %}

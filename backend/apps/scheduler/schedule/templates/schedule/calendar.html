@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fa fa-calendar-alt{% endblock %}
+{% block form_title %}Kalendarz{% endblock %}
+{% block form_subtitle %}{% if calendar_user %}{{ calendar_user.first_name }} {{ calendar_user.last_name }} {% else %} WSZYSCY{% endif %}{% endblock %}
+
+{% block content %}
+    {{ form.errors }}
+    <ul id="results"></ul>
+
+    <div class="col-lg-2 col-md-3 col-sm-3" id="calendar-side-view">
+        {% include 'schedule/partial/_month_calendar_view.html' %}
+        <div class="row">
+        <ul class="nav nav-tabs">
+            <li id="filterTabHeader" class="active"><a data-toggle="tab" href="#filter-tab">Filtruj</a></li>
+{#            <li><a data-toggle="tab" href="#available_dates-tab">Wyszukaj terminy</a></li>#}
+        </ul>
+        </div>
+        <div class="tab-content pad-t">
+            <div id="filter-tab" class="tab-pane fade in active">
+                {% include 'schedule/partial/_calendar_filter_form.html' %}
+            </div>
+{#            <div id="available_dates-tab" class="tab-pane fade in">#}
+{#                {% include 'schedule/partial/_first_available_event_form.html' %}#}
+{#            </div>#}
+        </div>
+    </div>
+    <div class="col-lg-10 col-md-9 col-sm-9" id="calendar-container">
+        {% include 'schedule/partial/_calendar.html' %}
+    </div>
+
+    {% include 'schedule/include/modal_include.html' %}
+    {% include 'schedule/include/template_include.html' %}
+{% endblock %}
+
+{% block site_css %}
+    {% include 'schedule/partial/css/_css_content.html' %}
+{% endblock %}
+
+{% block site_js %}
+    {% include 'schedule/partial/js/_js_content.html' %}
+{% endblock %}
+
+{% block site_any_script %}
+    {% config_var 'SCHEDULE_DEFAULT_MEETING_EVENT_ID' as schedule_default_meeting_event_id %}
+    {% include 'schedule/calendar-globals.html' %}
+
+{% endblock %}

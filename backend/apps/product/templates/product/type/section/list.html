@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+{% block content %}
+
+    <div class="col-xs-12">
+        <a href="{% url 'product.type.section.add' product_type.pk %}" class="btn btn-success btn-sm pull-right">{% trans "product.type.section.add.button.label" %}</a>
+    </div>
+
+    <div class="">
+        <table id="attribute_datatype" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+
+                <th style="width:130px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for section in sections %}
+                <tr>
+                    <td>{{ section.name }}</td>
+
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'product.type.section.edit' section.pk %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block site_script %}
+
+{% endblock %}

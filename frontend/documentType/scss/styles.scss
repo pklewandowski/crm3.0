@@ -1,0 +1,102 @@
+@import "scss/globals";
+
+.rule-list-container {
+  display: none;
+  position: absolute;
+  min-width: 700px;
+  right: 5px;
+  top: 20px;
+  width: 100%;
+  padding: 20px 15px 0 15px;
+  border: $fieldBorder;
+  border-radius: 5px;
+  background-color: white;
+  box-shadow: 0 0 5px rgb(0 0 0 / 30%);
+  margin-top: 10px;
+  z-index: 2;
+}
+
+.rule-list-container textarea {
+  //height: 35px;
+  font-size: 12px;
+}
+
+.rule-list-sort-anchor {
+  text-align: center;
+}
+
+.rule-list-sort-anchor i {
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#actionRowContainer td .form-group {
+  margin: 0;
+}
+
+#actionRowContainer td .rule-list-container .form-group {
+  margin: $fieldContainerMargin;
+}
+
+.rule-list-input-group {
+  display: inline-block;
+}
+
+.rule-list-input-group input, .rule-list-input-group select {
+  border-radius: 0;
+}
+
+.rule-list-input-group .form-group:not(first-child) {
+  margin-right: -1px !important;
+}
+
+.rule-list-input-group .form-group:first-child select,
+.rule-list-input-group .form-group:first-child input {
+  border-radius: 5px 0 0 5px;
+}
+
+.rule-list-input-group .form-group:last-child select,
+.rule-list-input-group .form-group:last-child input {
+  border-radius: 0 5px 5px 0;
+}
+
+.rule-list-condition {
+    width:100%;
+}
+
+.rule-list-condition .form-group {
+  float: left;
+}
+
+.rule-list-condition .form-group:first-child {
+  width: 60%;
+}
+
+.rule-list-condition .form-group:nth-child(2) {
+  width: 15%;
+}
+
+.rule-list-condition .form-group:first-child select {
+  padding: 0 0 0 5px;
+}
+
+.rule-list-condition .form-group:last-child {
+  width: 25%;
+}
+
+.rule-list-condition .form-group:last-child input {
+  text-align: right;
+}
+
+.rule-days {
+  text-align: right;
+}
+
+.rule-sq {
+  display: none;
+}
+
+.rule-delete-chk {
+  display: none;
+}
+

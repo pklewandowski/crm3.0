@@ -1,0 +1,59 @@
+{% load static %}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <link href="{% static 'resource/bootstrap/css/bootstrap.min.css' %}?v3.3.7" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/bootstrap/css/bootstrap-datetimepicker.min.css' %}?v3.3.8" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/sweetalert/sweetalert.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    {#    <link href="{% static 'common/css/nav.css' %}" rel="stylesheet" type="text/css">#}
+
+    {% block site_css %}{% endblock %}
+
+    <link href="{% static 'common/css/bootstrap.datepicker.override.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'common/css/style.css' %}?12132456773" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+
+    <style>
+        .body-login {
+        {#            text-align: center;#} background-image: url('{% static 'images/bkg/crm_background.png' %}');
+        {#            background-position: 50% 50%;#} background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+
+</head>
+
+<body class="body-login">
+<div id="main" class="container-fluid">
+
+    <div style="float:right; display: inline; margin-right: 20px;">
+        {% block form_title_right %}{% endblock %}
+    </div>
+
+    <div class="page-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script type="text/javascript" src="{% static 'resource/moment/min/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/moment/locale/pl.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/jquery-ui.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/sweetalert/sweetalert.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/bootstrap/js/bootstrap.min.js' %}?v3.3.7"></script>
+    <script type="text/javascript" src="{% static 'resource/bootstrap/js/bootstrap-datetimepicker.min.js' %}"></script>
+    {#    <script type="text/javascript" src="{% static 'js/nav.js' %}?v1.0.0"></script>#}
+    <script type="text/javascript" src="{% static 'common/js/script.js' %}"></script>
+
+    {% block site_js %}{% endblock %}
+
+    <script type="text/javascript">
+        {% block site_script %}{% endblock %}
+    </script>
+    {% block site_inline_js %}{% endblock %}
+
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+<div class="col-lg-12">
+    <ul class="cyclical-days">
+        {% for i in i|rjust:31 %}
+            <li data-value="{{ forloop.counter }}"><span>{{ forloop.counter }}</span></li>
+        {% endfor %}
+        <li data-value="32"><span>Ostatni</span></li>
+    </ul>
+</div>

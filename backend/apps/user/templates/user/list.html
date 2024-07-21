@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load l10n %}
+
+{% block site_inline_js %}
+    <script type="module" src="{% static 'user/js/user-list.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        var user = {active_url: '{% url 'user.active' %}', resetpassword_url: '{% url 'user.reset_password' %}'};
+        var csrf_token = '{{ csrf_token }}';
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-lg-12 col-sm-12 header-title">
+        <div style="float:left">
+            <h3>Lista użytkowników</h3>
+        </div>
+        <div>
+            <a href="{% url 'user.add' %}" class="btn btn-success btn-sm pull-right user-add-btn"><i class="fa fa-code-fork pad-r"></i>Nowy użytkownik</a>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-sm-12">
+        <hr style="margin-top:10px">
+    </div>
+
+    <div>
+        {% config_var 'MODE_EDIT' as mode_edit %}
+        <table id="user-list-table-{% if mode == mode_edit %}edit{% else %}view{% endif %}" class="table table-hover table-condensed ">
+            <thead>
+            <tr>
+                <th class="sort sort-unsorted">Login</th>
+                <th class="sort sort-unsorted">Imię i nazwisko</th>
+                <th class="sort sort-unsorted">E-mail</th>
+                {% if perms.user.viewinitialpassword_user %}
+                    <th>Hasło inicjalne</th>
+                {% endif %}
+                <th class="sort sort-unsorted">PESEL</th>
+                <th class="sort sort-unsorted">NIP</th>
+                <th class="sort sort-unsorted">KRS</th>
+                <th class="sort sort-unsorted" style="width:30px;">LDAP</th>
+                <th class="sort sort-unsorted" style="width:30px;">Aktywny</th>
+                <th style="width:120px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr data-id="{{ user.pk|unlocalize }}">
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    {#                    <td>{% dict_label user.position 'EMPLOEE_POSITIONS' %}</td>#}
+                    <td>{{ user.email }}</td>
+                    {% if perms.user.viewinitialpassword_user %}
+                        <td>{{ user.initial_password|default_if_none:'' }}</td>
+                    {% endif %}
+
+                    <td>{{ user.personal_id|default_if_none:'' }}</td>
+                    <td>{{ user.nip|default_if_none:'' }}</td>
+                    <td>{{ user.krs|default_if_none:'' }}</td>
+
+
+                    {% if user.ldap %}
+                        <td class="text-center"><a class="yes-no-bookmark ldap"><i class="fa fa-check"></i></a></td>
+                    {% else %}
+                        <td class="text-center"><a class="yes-no-bookmark ldap"><i class="fa fa-times"></i></a></td>
+                    {% endif %}
+
+                    {% if user.is_active %}
+                        <td class="text-center"><a class="yes-no-bookmark active"><i class="fa fa-check"></i></a></td>
+                    {% else %}
+                        <td class="text-center"><a class="yes-no-bookmark active"><i class="fa fa-times"></i></a></td>
+                    {% endif %}
+
+
+                    <td>
+                        <div class="btn-group">
+
+                            {% if  perms.user.change_user %}
+                                <a href="{% url 'user.edit' user.id %}" class="btn btn-default btn-sm edit">
+                                    <i class="far fa-edit" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                            {% if perms.schedule.list_all_schedule %}
+
+                                <a href="{% url 'schedule.calendar' user.pk %}"
+                                   class="btn btn-default btn-sm calendar">
+                                    <i class="fa fa-calendar-alt"></i>
+                                </a>
+                            {% elif perms.schedule.list_schedule and request.user.pk == user.pk %}
+                                <a href="{% url 'schedule.calendar' user.pk %}"
+                                   class="btn btn-default btn-sm calendar">
+                                    <i class="fa fa-calendar-alt"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if not user.ldap and perms.user.resetpassword_user %}
+                                <a class="btn btn-default btn-sm resetpassword">
+                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

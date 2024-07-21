@@ -1,0 +1,108 @@
+//---------------- GLOBALS ---------------------//
+
+$backgroundColor: #fff;
+$hrMargin: 15px;
+
+//----------------- SECTIONS----------//
+$sectionLabel-BgColor: #878787;
+$sectionLabel-BgColor_hover: #a2a2a2;
+$sectionLabel-Color: #eeeeee;
+$sectionLabel-borderRadius: 5px;
+$sectionLabel-transitionTime: .3s;
+$panelBottomOffset: 170px;
+$panelHeight: calc(100vh - #{$panelBottomOffset});
+$sectionTransition: height 0s, visibility 0s, opacity .7s ease-in-out;
+//---------------FORM FIELD CSS-----------------//
+$fieldBorderColor: #c9c9c9;
+$fieldBorder: 1px solid $fieldBorderColor;
+$fieldBorderRadius: 4px;
+$fieldColor: #3e3e3e;
+$fieldReadonlyBgColor: #F3F3F3;
+$fieldFocusColor: black;
+$fieldFocusBorderColor: #989898;
+$fieldSuccessBgColor: #6da76d;
+
+$fieldErrorBorderColor: #ff6464;
+$fieldErrorBgColor: #ffe5e5;
+
+$fieldContainerMargin: 0 0 18px 0;
+
+@import "buttons";
+//----------------- FORM FIELD LABELS ---------------------//
+$labelColor: #6b6b6b;
+$labelColorFocus: #454545;
+$labelFocusColor: #2e2e2e;
+$labelDisabledColor: #F3F3F3FF;
+
+//--------------- BOOTSTRAP TOOLTIP -------------//
+$tooltipBgColor: #373737;
+
+//-----------------------------------------------//
+//-----------------------------------------------//
+//-----------------------------------------------//
+
+input, textarea, select, option, button, div {
+  outline: none !important;
+}
+
+select option[disabled] {
+  color: #d6d6d6;
+}
+
+// sizing
+.width-25 {
+  width: 50%;
+}
+
+.width-50 {
+  width: 50%;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+//
+.uppercase {
+  text-transform: uppercase;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+// finally move to input styles
+
+
+table thead th, .nav li a {
+  color: #848484;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+//div.panel-heading {
+//  background-color: #eeeeee !important;
+//}
+
+.app-settings {
+  color: #d9d9d9;
+  font-size: 30px;
+  cursor: pointer;
+  position: relative;
+  float: right;
+  right: -10px;
+  top: 5px;
+}
+
+.modal-content {
+  width: 100%;
+}
+
+.form-group hr {
+  margin: 0;
+}
+

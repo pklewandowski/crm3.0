@@ -1,0 +1,289 @@
+@import "../../scss/globals";
+@import "_core/scss/controls/balance-control/balance-control";
+
+
+.input-readonly {
+  border: none;
+  border-bottom: $fieldBorderColor;
+  background-color: #eee;
+  color: $fieldReadonlyBgColor;
+  text-shadow: 2px 2px 2px white;
+}
+
+label {
+  //position: absolute;
+  //color: $labelColor;
+  //font-size: 11px;
+  //top: -15px;
+  //left: -4px;
+
+  position: absolute;
+  white-space: nowrap;
+  max-width: calc(100% - 10px);
+  max-width: -moz-calc(100% - 10px);
+  max-width: -webkit-calc(100% - 10px);
+  overflow: hidden;
+  color: $labelColor;
+  font-size: 12px;
+  top: -7px;
+  left: 3px;
+  opacity: 1;
+  padding: 0 5px;
+  background-color: $backgroundColor;
+  cursor: pointer;
+  transition: color .4s;
+  z-index: 4;
+  text-overflow: ellipsis;
+}
+
+label:hover {
+  color: #2e2e2e;
+  transition: color 0.4s;
+}
+
+label.read-only {
+  background-color: $fieldReadonlyBgColor;
+  margin-left: 3px;
+  border-top: 1px solid #c9c9c9;
+  border-left: 1px solid #c9c9c9;
+  border-right: 1px solid #c9c9c9;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+form label {
+  margin-top: 0;
+}
+
+.form-control::placeholder {
+  font-style: italic;
+  font-size: 11px;
+  color: #b2b2b2;
+  //text-align: right;
+}
+
+.form-control:focus {
+  color: $fieldFocusColor;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border-color: $fieldFocusBorderColor;
+  transition: color .4s;
+}
+
+//.form-control:focus:read-only {
+//  border-color: $fieldBorderColor;
+//}
+.form-control:focus {
+  border-color: #85b6e1;  // $fieldBorderColor;
+  border-width: 2px;
+}
+
+.form-control:focus + label {
+  color: $labelColorFocus;
+  transition: color .4s;
+}
+
+.form-control.important {
+  border: 2px solid $fieldBorderColor;
+  font-weight: bold;
+}
+
+
+.form-group.error input, .form-group.error select, .form-group.error textarea, .form-group.error .select2-selection, td.error, tr.error {
+  border-color: $fieldErrorBorderColor;
+  background-color: $fieldErrorBgColor !important;
+  color: $fieldErrorBorderColor;
+}
+
+.form-group.error label {
+  color: $fieldErrorBorderColor;
+  background-color: $fieldErrorBgColor;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  border-right: 1px solid;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.form-group.success input {
+  background-color: $fieldSuccessBgColor;
+  color: white;
+}
+
+.form-group.success {
+  &::after {
+    content: '\f00c';
+    font-family: "FontAwesome";
+    font-size: 18px;
+    color: green;
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    border: 2px solid green;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    background: white;
+  }
+}
+
+.error-check {
+  font-family: "FontAwesome";
+  font-size: 18px;
+  color: $fieldErrorBorderColor;
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  border: 2px solid $fieldErrorBorderColor;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  text-align: center;
+  background: white;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.form-group.show-source input, .form-group.show-source select, .form-group.show-source textarea, .form-group.show-source label {
+  color: red;
+  border-color: red;
+}
+
+.form-control:disabled label,
+.form-control:disabled + label,
+.form-control:disabled + span + label,
+.form-control:disabled + span.select2 + label,
+input:read-only:not([type="checkbox"]) + label,
+textarea:read-only + label {
+  background-color: $labelDisabledColor;
+  margin-left: 3px;
+  border-top: 1px solid $fieldBorderColor;
+  border-left: 1px solid $fieldBorderColor;
+  border-right: 1px solid $fieldBorderColor;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+input[type="checkbox"] + label {
+  top: 0;
+  left: 15px;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+  border: solid 1px $fieldBorderColor;
+  outline: 0;
+}
+
+//.select2-container--bootstrap .select2-selection,
+//.select2-container--bootstrap.select2-container--focus .select2-selection,
+//.select2-container--bootstrap.select2-container--open .select2-selection {
+//  padding-top: 6px;
+//}
+
+.form-control,
+.select2-container--bootstrap .select2-selection,
+.select2-container--bootstrap.select2-container--focus .select2-selection,
+.select2-container--bootstrap.select2-container--open .select2-selection {
+  border: $fieldBorder;
+  box-shadow: unset;
+  -webkit-box-shadow: unset;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding-bottom: 0;
+  //padding-top: 2px;
+  padding-left: 5px;
+  color: $fieldColor;
+}
+
+.form-control {
+  padding-top: 2px;
+}
+
+textarea.form-control {
+  padding-top: 6px;
+}
+
+.select2-container--bootstrap .select2-dropdown {
+  border-color: $fieldBorderColor;
+}
+
+.select2-container--bootstrap .select2-results__option {
+  color: $labelColor;
+}
+
+.select2-selection--multiple .select2-selection__rendered {
+  margin: 10px 0 !important;
+}
+
+.form-control {
+  min-height: 35px;
+  position: relative;
+}
+
+.form-control input[type="checkbox"] {
+  min-height: 15px;
+  height: 15px;
+  max-height: 15px;
+}
+
+ul li label {
+  position: relative;
+}
+
+.error-container {
+  position: absolute;
+  display: none;
+  top: 7px;
+  right: 7px;
+  font-weight: 700;
+  z-index: 5;
+  background-color: #ff7575;
+  border: 1px solid #ff6464;
+  border-radius: 5px;
+  color: #ffffff;
+  padding: 10px;
+  box-shadow: 0 0 10px #ff646499;
+  min-width: 250px;
+}
+
+tr.error .error-container {
+  right: unset;
+  left: 40px;
+}
+
+.error-container ul {
+  padding-left: 10px;
+  list-style-position: outside;
+}
+
+.error-container li::marker {
+  margin: 0;
+}
+
+.error-check i {
+  font-size: 18px;
+  padding-top: 3px;
+}
+
+.control-toolbar {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+}
+
+// form input inside table should have not surrounding margin
+table .form-group {
+  margin: 0;
+}
+
+.combo-field-item {
+  cursor: pointer;
+}
+

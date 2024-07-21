@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Nowa wartość oprocentowania dla produktu: {{ document_type.name }} {% endblock %}
+{% block form_subtitle %}Wprowadzenie nowej wartości % dla wszystkich produktów typu {% endblock %}
+{% block form_title_right %}
+    {#    <button class="btn btn-success pull-right btn-save" type="button"><i class="fas fa-check"></i></button>#}
+    <button class="btn btn-primary pull-right add-global-interest-btn" type="button"><i class="fas fa-plus"></i></button>
+{% endblock %}
+
+{% block site_inline_js %}{% endblock %}
+
+{% block content %}
+    <div class="loader-container" id="loaderContainer">
+        <div class="loader"></div>
+    </div>
+    <div class="row" style="text-align: center; margin-top: 20px;">
+        <div class="col-lg-10" style="float: unset; margin: auto; text-align: left;">
+            <div class="panel panel-default">
+                <div class="panel-heading">Globalne oprocentowanie</div>
+                <div class="panel-body" style="height: calc(100vh - 180px);">
+                    <div id="interestGlobalListContainer" style="overflow: auto;">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Obowiązuje od</th>
+{#                                <th class="text-center">Odsetki umowne</th>#}
+                                <th class="text-center">Odsetki za opóźnienie</th>
+                                <th class="text-center">Odsetki maksymalne za opóźnienie</th>
+                                <th class="text-center">Utworzył</th>
+                                <th class="text-center"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in global_interest_list %}
+                                <tr data-id="{{ i.pk }}">
+                                    <td class="text-center">{{ i.start_date|date:'Y-m-d' }}</td>
+{#                                    <td class="text-center">{{ i.interest_rate|percent|floatformat:2 }}</td>#}
+                                    <td class="text-center">{{ i.interest_for_delay_rate|percent|floatformat:2 }}</td>
+                                    <td class="text-center">{{ i.interest_max_for_delay_rate|percent|floatformat:2 }}</td>
+                                    <td class="text-center">{{ i.created_by }}</td>
+                                    <td>
+{#                                        <div style="float: left"><i class="fas fa-edit edit-interest-global-btn"></i></div>#}
+                                        <div style="float: left; cursor: pointer;">
+                                            <i class="fas fa-trash-alt delete-global-interest-btn"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'product/type/interest_global/form_modal.html' %}
+    {% include 'product/type/interest_global/form_template.html' %}
+{% endblock %}
+
+{% block site_css %}
+    <link type="text/css" rel="stylesheet" href="{% static 'dist/productInterestGlobal/productInterestGlobal-bundle.css' %}">
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'dist/productInterestGlobal/productInterestGlobal-bundle.js' %}"></script>
+{% endblock %}

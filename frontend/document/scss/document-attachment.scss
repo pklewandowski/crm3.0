@@ -1,0 +1,41 @@
+@import '../../_core/scss/core.scss';
+@import '../../attachment/scss/attachment.scss';
+.attachment-heading {
+  display: inline-block;
+  width: 100%;
+}
+
+.attachment-heading i {
+  font-size: 15px;
+  //margin-right: 5px;
+}
+
+.attachment-heading .atm-heading-btn {
+  color: #9b9b9b;
+  transition: color .4s;
+  cursor: pointer;
+}
+
+.attachment-heading .atm-heading-btn:hover {
+  color: #333;
+  transition: color .4s;
+}
+
+
+#attachmentPanel .panel-body, #attachmentDirectoryPanel .panel-body {
+  height: calc(100vh - 210px);
+  height: -moz-calc(100vh - 210px);
+  height: -webkit-calc(100vh - 210px);
+  overflow: auto;
+}
+
+.upload-progress {
+    display: block;
+    background-color: #5aa1dc;
+    height: 10px;
+    width: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+

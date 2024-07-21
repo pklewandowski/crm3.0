@@ -1,0 +1,111 @@
+.stat-choice-panel {
+    overflow: auto;
+    max-height: 150px;
+}
+
+.select2-drop li {
+    white-space: pre-line;
+}
+
+.checkbox-horizontal label, .radio-horizontal label {
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.checkbox-horizontal li, .radio-horizontal li {
+    white-space: nowrap;
+}
+
+.small-list {
+    font-size: 11px;
+    font-weight: normal;
+}
+
+#incomeData {
+    height: calc(100% - 460px);
+    overflow: auto;
+}
+
+.number-cell {
+    text-align: right;
+}
+
+.sum-cell {
+    font-size: 14px !important;
+    font-weight: bold;
+}
+
+input.toggle-all {
+    margin: 0;
+}
+
+input[type=checkbox] {
+    margin: 0;
+}
+
+.stat-filter {
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: top;
+}
+
+.stat-filter-one-width {
+    width: 100px;
+}
+
+.stat-filter-two-width {
+    width: 200px;
+}
+
+.stat-filter-three-width {
+    width: 300px;
+}
+
+.stat-filter-editable-action {
+    float: right;
+    margin-top: 4px;
+    margin-right: 5px;
+}
+
+.stat-filter-editable-action i.fa-times-circle {
+    color: #ce3639;
+}
+
+canvas {
+    /*background-color: #e2e2e2;*/
+}
+
+#incomeData {
+    overflow: auto;
+}
+
+#incomeData table thead th {
+    text-align: center;
+    background-color: #f5f5f5;
+}
+
+#incomeData table tbody td:first-child {
+    white-space: nowrap;
+}
+
+#incomeData table tbody td:not(:first-child){
+    text-align: right;
+}
+
+.data-sum {
+    color: #1686c5;
+    font-weight: bold;
+    border-top: 3px;
+}
+
+.data-sum-total {
+    border-top-width: 2px !important;
+}
+
+.data-sum-total-v {
+    border-left-width: 2px !important;
+}
+
+div#incomeData table tbody td {
+    white-space: nowrap;
+}

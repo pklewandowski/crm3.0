@@ -1,0 +1,14 @@
+{% for i in attr %}
+    {% for c in i.children %}
+        {% with formset=section_formsets|get_item:c.section.pk %}
+            {% with formset.empty_form as empty_formset_form %}
+                {% if c.section.view_type == 'BLOCK' %}
+                    {% include 'document/type/section/_template/__block_formset_template.html' with empty_formset=empty_formset_form %}
+                {% elif c.section.view_type == 'TABLE' %}
+                    {% include 'document/type/section/_template/__table_formset_header_template.html' with empty_formset=empty_formset_form %}
+                    {% include 'document/type/section/_template/__table_formset_template.html' with empty_formset=empty_formset_form %}
+                {% endif %}
+            {% endwith %}
+        {% endwith %}
+    {% endfor %}
+{% endfor %}

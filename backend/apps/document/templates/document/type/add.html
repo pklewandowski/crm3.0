@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+{% load l10n %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Typ dokumentu{% endblock %}
+{% block form_subtitle %}Dodawanie / Edycja typu dokumentu{% endblock %}
+{% block form_title_right %}
+    <a href="{% url "document.type.definition" document_type.pk %}" class="btn btn-default" type="button"><i class="fas fa-table"></i></a>
+    <button class="btn btn-success btn-submit" type="submit"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+
+    <style>
+        .checkbox-horizontal ul {
+            width: 100%;
+        }
+
+        .tab-pane .panel-default {
+            height: calc(100% - 180px);
+        }
+
+        .checkbox-horizontal ul li label {
+        {#background-color: #f7f7f7;#} padding: 5px;
+            width: 100%;
+        {#border: 1px dotted #ddd;#}
+        }
+    </style>
+
+    {% if form %}
+        {#        {% if form.errors or action_formset.errors %}#}
+        {#                        <div class="col-lg-12">#}
+        {#                            <div style="max-height:120px; overflow:auto; width:100%; background-color: #eee; border-radius:5px; margin:20px; padding:10px; border:1px solid #ddd">#}
+        {#                                <h5>Wystąpiły błędy!</h5>#}
+        {#                                {{ form.errors }}#}
+        {#                                {{ action_formset.errors }}#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#        {% endif %}#}
+
+        <form method="post" id="user-form" autocomplete="off">
+            {% csrf_token %}
+            {{ action_formset.management_form }}
+            {% include 'document/type/_partial/_form_elements.html' with form=form %}
+        </form>
+    {% endif %}
+    {% include 'document/type/template/formset/_action_formset_row_template.html' with ef=action_formset.empty_form %}
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'dist/_controls/_controls-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/documentType/documentType-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'document/type/js/utils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'document/type/js/add.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/documentType/documentType-bundle.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        _g.document = {
+            type: {
+                id: {{ document_type.pk|unlocalize }},
+                urls: {
+                    statusUrl: '{% url 'document.type.api.status' %}'
+                }
+            }
+        };
+        _g.product = {
+            type: {
+                urls: {
+                    statusUrl: '{%  url 'product.type.api.status' %}'
+                }
+            }
+        };
+    </script>
+{% endblock %}

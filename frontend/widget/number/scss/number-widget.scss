@@ -1,0 +1,17 @@
+
+.number-widget-value {
+  text-align: center;
+  font-size: calc(6vw * .30);
+  font-family: Roboto-Condensed, sans-serif;
+  font-weight: bold;
+  color: #2374c7;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.number-widget .home-info-panel-body {
+  padding: 5px 15px;
+  background: transparent;
+}

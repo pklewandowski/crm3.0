@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+
+{% block site_css %}
+    <link href="{% static 'resource/treant/Treant.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'js/raphael.js' %}"></script>
+    <script type="text/javascript" src="{% static 'resource/treant/Treant.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="addRoleFormModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form id="role-form" method="post">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Nowa rola</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-lg-6">
+
+                                {% csrf_token %}
+
+                                <div class="form-group clearfix">
+                                    <label for="{{ form.name.id_for_label }}">Nazwa:</label>
+                                    {{form.name}}
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label for="{{ form.description.id_for_label }}">Opis:</label>
+                                    {{form.description}}
+                                </div>
+                                {{form.parent.as_hidden}}
+                                <input type="hidden" name="id" id="id_id"/>
+
+
+
+                            </div>
+                            <div class="col-lg-6 priv-list">
+                                {% include "role/partial/_role_privs.html" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Dodaj...</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+<div class="col-lg-12 col-sm-12 header-title">
+    <div style="float:left">
+        <h3>Zarządzanie Rolami</h3>
+        <h4>Hierarchia struktura przedsiębiorstwa</h4>
+
+    </div>
+    <div style="float:right; margin:0 auto">
+        <i class="fa fa-users" style="font-size: 50px; color:rgb(34,34,34)"></i>
+    </div>
+</div>
+<div class="col-lg-12 col-sm-12">
+    <hr style="margin:0">
+</div>
+
+<div class="col-lg-12 col-sm-12">
+    <div class="chart" id="basic-example"></div>
+</div>
+
+<div style="display:none">
+    <form id="delete-role-form" method="post" action="{% url 'role.delete' %}">
+        {% csrf_token %}
+        <input type="hidden" name="node_id" id="node_id"/>
+    </form>
+</div>
+</div>
+
+{% include "role/template/user_list_template.html" %}
+{% include "role/modal/user_list_modal.html" %}
+
+{% endblock %}
+
+{% block site_inline_js %}
+
+<script type="text/javascript" src="{% static 'role/js/role.js' %}"></script>
+
+{% endblock %}
+
+{% block site_script %}
+
+var csrf_token =  '{{ csrf_token }}';
+var ajaxUserListUrl = '{% url 'role.user_list' %}';
+var userAddUrl = '{% url 'user.add' %}';
+
+var chart_config = {
+    chart: {
+    container: "#basic-example",
+    connectors: {
+    type: 'step'
+},
+node: {
+HTMLclass: 'nodeExample1'
+}
+},
+nodeStructure: {
+id: "{{root.id}}",
+HTMLclass: 'node-root',
+innerHTML: '<div class="node-inner-content node-root"><p class="node-name">{{root.name}}</p>' +
+    '<a data-id="{{root.id}}" class="add-role btn btn-default btn-sm"><i class="fa fa-plus"></i></a>'+
+    '</div>',
+connectors: {
+			style: {
+				"stroke": "#a8a8a8",
+                "stroke-width": 2,
+				//'arrow-end': 'oval-wide-long'
+			}
+		},
+children:[
+{% recursetree nodes %}
+{
+id: "{{ node.id }}",
+name: "{{ node.name }}",
+text: { name: "{{node.name}}"},
+connectors: {
+			style: {
+				"stroke": "#a8a8a8",
+                "stroke-width": 2,
+			}
+		},
+innerHTML: '<div data-id="{{node.id}}"  class="node-inner-content node-descendant"><p style="margin-bottom:0px" class="node-name">{{node.name}}</p>' +
+    '<p style="font-size:11px">&nbsp;{{node.description}}</p>'+
+    '<a data-id="{{node.id}}" class="add-role btn btn-default btn-sm"><i class="fa fa-plus"></i></a>' +
+    '<a data-id="{{node.id}}" data-parent="{{node.parent.id}}" data-name="{{node.name}}" data-description="{{node.description}}" class="edit-role btn btn-default btn-sm"><i class="fa fa-pencil"></i></a>' +
+    '<a data-id="{{node.id}}" class="user-list btn btn-default btn-sm"><i class="fa fa-user" aria-hidden="true"></i></a>' +
+    '<a data-id="{{node.id}}" class="add-user btn btn-default btn-sm"><i class="fa fa-user-plus"></i></a>' +
+    '<a data-id="{{node.id}}" class="delete-role btn btn-danger btn-sm"><i class="fa fa-times"></i></a>' +
+    '</div>',
+children: [{{ children }}]},
+{% endrecursetree %}
+]}};
+
+{% endblock %}
+
+
+
+

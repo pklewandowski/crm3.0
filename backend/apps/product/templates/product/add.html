@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Nowy produkt typu: {{ document_type.name }} {% endblock %}
+{% block form_subtitle %}Dodawanie nowego produktu{% endblock %}
+
+{% block form_title_right %}
+    <a class="btn btn-success btn-sm btn-submit">{% trans "product.add.button.label" %}</a>
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'document/type/js/utils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'product/js/product.js' %}"></script>
+{% endblock %}
+
+{% block site_any_script %}
+    {% include "product/_partial/_site_script.html" %}
+{% endblock %}
+
+{% block content %}
+
+    {% if form %}
+        {{ client_formset.errors }}
+        {% if form.errors or attr_form.errors %}
+            <div style="width:100%; max-height:80px; overflow-y: auto; border: 1px solid #eee; border-radius: 5px; background-color: #f9e9ea; margin-bottom: 10px;">
+                {{ form.errors }}
+                {{ attr_form.errors }}
+            </div>
+        {% endif %}
+
+        <ul class="nav nav-tabs">
+
+            <li class="active"><a data-toggle="tab" href="#product-tab">Dane</a></li>
+            <li><a data-toggle="tab" href="#feature-tab">Parametry</a></li>
+            <li><a data-toggle="tab" href="#attribute-tab">Atrybuty</a></li>
+        </ul>
+
+        <form method="post" id="product-form">
+            {% csrf_token %}
+            {{ client_formset.management_form }}
+
+            <div class="tab-content pad-t">
+
+                <div id="product-tab" class="tab-pane fade in active">
+                    <div class="col-lg-4 col-sm-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Dane</div>
+                            <div class="panel-body">
+                                {% if document_type.attributes.creditor == 1 %}
+                                    {% include "py3ws/forms/fields/p3form_field.html" with field=form.creditor %}
+                                {% endif %}
+                                {% include "py3ws/forms/fields/p3form_field.html" with field=form.agreement_no %}
+                                {% include "py3ws/forms/fields/p3form_field.html" with field=form.value %}
+                                {% include "py3ws/forms/fields/p3form_field.html" with field=form.start_date %}
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 col-sm-8">
+                        {% include 'product/_partial/_client_parital.html' with form=form %}
+                    </div>
+                </div>
+
+
+                <div id="attribute-tab" class="tab-pane fade in">
+                    <div class="col-lg-12 col-sm-12 pad-t">
+                        {% include 'document/type/_partial/_attributes.html' with attr=attr form=attr_form autocollapse=True %}
+                    </div>
+                </div>
+
+                <div id="feature-tab" class="tab-pane fade in">
+
+
+                    {% if schedule_form %}
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Harmonogram</div>
+                                <div class="panel-body">
+
+
+                                    {% for i in schedule_form %}
+                                        {% include "py3ws/forms/fields/p3form_field.html" with field=i %}
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if interest_form %}
+                        <div class="col-lg-6 col-sm-6">
+
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Odsetki</div>
+                                <div class="panel-body">
+
+                                    {% for i in interest_form %}
+                                        {% include "py3ws/forms/fields/p3form_field.html" with field=i %}
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    {% endif %}
+
+    {% include 'product/_template/_main_client_row_template.html' %}
+    {% include 'product/_template/_formset/_client_formset_row_template.html' %}
+{#    {% include 'user/_template/_user_data_table_template.html' %}#}
+
+{% endblock %}
+

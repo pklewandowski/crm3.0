@@ -1,0 +1,18 @@
+<template id="productClientFormsetTemplate">
+    <tr data-id="__ID_PRODUCT__">
+        <td>__PRODUCT_NAME__</td>
+        <td>__UNIT_PRICE__</td>
+        <td style="width: 120px;">
+            <input type="number" id="{{ formset.empty_form.quantity.id_for_label }}" class="form-control input-sm" min="0"
+                   name="{{ formset.empty_form.quantity.html_name }}" value="1"/>
+        </td>
+        <td></td>
+        <td style="width: 60px;">
+            <button type="button" class="btn btn-danger btn-sm remove-retail-product-btn"><i class="fa fa-times"></i></button>
+        </td>
+        <input type="hidden" id="{{ formset.empty_form.product.id_for_label }}"
+               name="{{ formset.empty_form.product.html_name }}" value="__ID_PRODUCT__"/>
+        <input type="hidden" id="{{ formset.empty_form.unit_price.id_for_label }}"
+               name="{{ formset.empty_form.unit_price.html_name }}" value="__UNIT_PRICE__"/>
+    </tr>
+</template>

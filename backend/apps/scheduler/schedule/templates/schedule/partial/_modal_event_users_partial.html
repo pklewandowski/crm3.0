@@ -1,0 +1,53 @@
+<div id="modal_event_users_partial">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="display: inline-block; width: 100%;">
+                    <div id="clearAllParticipants"
+                         data-toggle="tooltip" data-placement="top" title="Kliknij aby odznaczyć powiązanych uczestników"
+                         style="float: left; cursor:pointer;">
+                        Lista uczestników&nbsp;
+                    </div>
+                    <div style="float:right; max-width: 300px;">
+                        <div class="suggestion-box-wrapper suggestion-list">
+                            <div class="input-group input-group-md">
+                                <select class="form-control input-md" type="text" id="participantSearchControl"
+                                        autocomplete="off"></select>
+                                <span class="input-group-btn">
+                                    <a data-url="{% url 'user.add' %}" id="add_user_btn"
+                                       class="btn btn-success btn-md dropdown-toggle"
+                                       data-toggle="dropdown"><i class="fa fa-user-plus"></i>&nbsp;</a>
+                                    <ul class="dropdown-menu dropdown-menu-right user-func" aria-labelledby="add_user_btn">
+                                        <li data-type="EMPLOYEE"><i class="fa fa-plus-square"></i> Nowy pracownik...</li>
+                                        <li data-type="CLIENT"><i class="fa fa-plus-square"></i> Nowy klient...</li>
+                                        <li data-type="ADVISER"><i class="fa fa-plus-square"></i> Nowy doradca...</li>
+                                        <li data-type="BROKER"><i class="fa fa-plus-square"></i> Nowy pośrednik...</li>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div id="suggestion-box" class="suggestion-box"></div>
+                        </div>
+                    </div>
+                    <div style="float: right; max-width: 400px;">
+                        <span id="selectedParticipantInfo"></span>
+                    </div>
+                    {#                    <div style="float: right;">#}
+                    {#                        <a href="#" >#}
+                    {#                            <i class="fa fa-times-circle" style="font-size: 16px; color: #333333"></i>#}
+                    {#                        </a>#}
+                    {#                    </div>#}
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div id="participantListContainer">
+                                <div id="participantListControl"></div>
+                            </div>
+                        </div>
+                        <div id="participantInfo" class="col-lg-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

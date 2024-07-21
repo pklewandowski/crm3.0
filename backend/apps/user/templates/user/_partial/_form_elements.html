@@ -1,0 +1,693 @@
+{#{% load my_template_tags %}#}
+{% load i18n %}
+{% load mptt_tags %}
+{% load humanize %}
+{% load static %}
+{% config_var 'MODE_CREATE' as mode_create %}
+{% config_var 'MODE_EDIT' as mode_edit %}
+{% config_var 'MODE_VIEW' as mode_view %}
+{% config_var 'CLIENT_HAS_BROKER' as client_has_broker %}
+
+
+<form method="post" id="user-form" autocomplete="off" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ processing_agreement_formset.management_form }}
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#userdata-tab">Dane podstawowe</a></li>
+        {% if attr %}
+            <li><a data-toggle="tab" href="#attribute-tab">Dane pozostałe</a></li>
+        {% endif %}
+
+        <li><a data-toggle="tab" href="#address-tab">Adresy</a></li>
+
+        {% if mode != mode_create %}
+            <li><a data-toggle="tab" href="#attachment-tab">Załączniki</a></li>
+        {% endif %}
+
+        {% if type == 'CLIENT' %}
+            <li><a data-toggle="tab" href="#clientagreement-tab">Zgody</a></li>
+        {% endif %}
+
+        {% if hierarchy %}
+            <li><a data-toggle="tab" href="#hierarchy-tab">Stanowisko / Funkcja</a></li>
+        {% endif %}
+
+        {% if type == 'CLIENT' and  mode != mode_create %}
+            <li><a data-toggle="tab" href="#clientproduct-tab">Wszystkie Produkty</a></li>
+        {% endif %}
+
+        {% if type == 'BROKER' or type == 'ADVISER' %}
+            {% if  mode != mode_create %}
+                <li><a data-toggle="tab" href="#client-tab">Klienci</a></li>
+            {% endif %}
+        {% endif %}
+
+        {% if type == 'ADVISER' %}
+            {% if  mode != mode_create %}
+                <li><a data-toggle="tab" href="#broker-tab">Pośrednicy</a></li>
+                <li><a data-toggle="tab" href="#brokerproduct-tab">Wszystkie produkty</a></li>
+            {% endif %}
+        {% endif %}
+
+        {% if mode == mode_edit %}
+            <li><a data-toggle="tab" href="#clientevent-tab">Wszystkie wydarzenia</a></li>
+        {% endif %}
+
+        {#        <li><a data-toggle="tab" href="#attachment-tab">Załączniki</a></li>#}
+
+        {% if mode == mode_edit %}
+            {#            <li><a data-toggle="tab" href="#usernotes-tab">Notatki</a></li>#}
+        {% endif %}
+    </ul>
+
+    <div class="tab-content pad-t">
+
+        <div id="userdata-tab" class="tab-pane fade in active">
+
+            <div class="row">
+                <div class="col-sm-{% if override_base %}12{% else %}6{% endif %}">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">Dane personalne</div>
+                        <div class="panel-body" style="overflow-y: auto;overflow-x: hidden;height: calc(100vh - 200px);">
+
+                            <div class="row">
+
+                                <div class="col-sm-4 text-center" style="margin-bottom: 15px;">
+
+                                    <div class="kv-avatar">
+                                        <div class="file-loading">
+                                            {{ form.avatar }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-8">
+                                    {% include 'py3ws/forms/fields/checkboxField.html' with field=form.is_company %}
+                                    {% if mode != mode_create %}
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.username %}
+                                    {% endif %}
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.company_name %}
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.company_establish_date %}
+                                    <div class="col-lg-6 nopadding-left">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.first_name %}
+                                    </div>
+                                    <div class="col-lg-6 nopadding">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.second_name %}
+                                    </div>
+                                    <div class="col-lg-12 nopadding">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.last_name %}
+                                    </div>
+                                    <div class="col-lg-12 nopadding">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.representative %}
+                                    </div>
+                                    {% if type == 'CONTRACTOR' %}
+                                        <div class="col-lg-12 nopadding">
+                                            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.contractor_type %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-3 nopadding-right">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.personal_id %}
+                                </div>
+                                <div class="col-sm-3 nopadding-right">
+                                    {% if mode == mode_create %}
+                                        <div class="form-group">
+                                            <label>NIP:</label>
+                                            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.nip %}
+                                            <div id="getFromGusBtn"><i class="fa fa-search"></i></div>
+                                        </div>
+                                    {% else %}
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.nip %}
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-3 nopadding-right">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.krs %}
+                                </div>
+                                <div class="col-sm-3">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.regon %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-{% if type == 'CLIENT' %}8 nopadding-right{% else %}12{% endif %}">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.email %}
+                                </div>
+                                {% if type == 'CLIENT' %}
+                                    <div class="col-sm-4">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=user_func_form.source %}
+                                    </div>
+                                {% endif %}
+                                {% if type == 'LAWOFFICE' %}
+                                    <div class="col-sm-12">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=user_func_form.lawoffice_type %}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                            <div class="row">
+                                {% if type == 'CLIENT' %}
+                                    <div class="col-sm-4 nopadding-right">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.phone_one %}
+                                    </div>
+                                    <div class="col-sm-4 nopadding-right">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.phone_two %}
+                                    </div>
+                                    <div class="col-sm-4">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=user_func_form.status %}
+                                    </div>
+                                {% else %}
+                                    <div class="col-sm-6 nopadding-right">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.phone_one %}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.phone_two %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="row">
+
+                                {% if type == 'CLIENT' and client_has_broker or type == 'BROKER' %}
+                                    <div class="col-sm-6 nopadding-right">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=user_func_form.adviser %}
+                                    </div>
+                                {% endif %}
+
+                                {% if type == 'CLIENT' and client_has_broker %}
+                                    <div class="col-sm-6">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=user_func_form.broker %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if type == 'CLIENT' %}
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        {% include 'py3ws/forms/fields/p3form_field.html' with field=user_func_form.company %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if ldap_enabled %}
+                                <div class="col-sm-12">
+                                    <span class="checkbox-horizontal">{{ form.ldap }}{{ form.ldap.label_tag }}</span>
+                                </div>
+                            {% endif %}
+
+                            <div class="row">
+                                <div class="col-lg-6 nopadding-right">
+                                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.description %}
+                                </div>
+                                <div class="col-lg-6">
+                                    {{ form.tags.as_hidden }}
+                                    <div id="tagList"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6" style="padding-left:0;">
+
+                    {% if not override_base %}
+                        {% if form.mode == mode_create %}
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Lista pasujących użytkowników</div>
+                                <div class="panel-body">
+                                    <table id="user_autocomplete_table" class="table table-hover table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th>Email</th>
+                                            <th>Imię i nazwisko</th>
+                                            <th>PESEL</th>
+                                            <th>NIP</th>
+                                            <th>KRS</th>
+                                            <th style="width:40px;"></th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        {% elif mode == mode_edit %}
+
+                            {#                            <div class="panel panel-default">#}
+                            {#                                <div class="panel-heading">Aktywne produkty</div>#}
+                            {#                                <div class="panel-body">#}
+                            {#                                    {% if user_active_products %}#}
+                            {#                                        <div style="max-height: 300px; overflow: auto;">#}
+                            {##}
+                            {#                                            <table class="table table-hover table-condensed">#}
+                            {#                                                <thead>#}
+                            {#                                                <tr>#}
+                            {#                                                    <th>Typ produktu</th>#}
+                            {#                                                    <th>Nr umowy</th>#}
+                            {#                                                    <th>Kwota</th>#}
+                            {#                                                    <th>Data rozpoczęcia</th>#}
+                            {#                                                    <th>Doradca</th>#}
+                            {#                                                    <th>Pośrednik</th>#}
+                            {#                                                    <th>Status</th>#}
+                            {#                                                </tr>#}
+                            {#                                                </thead>#}
+                            {#                                                <tbody>#}
+                            {#                                                {% for i in user_active_products %}#}
+                            {#                                                    {% if i.status != 'AN' and i.status != 'CL' %}#}
+                            {#                                                        <tr>#}
+                            {#                                                            <td><a href="{% url 'document.edit' i.pk %}">{{ i.type.name }}</a></td>#}
+                            {#                                                            <td><a href="{% url 'document.edit' i.pk %}">{{ i.code }}</a></td>#}
+                            {#                                                            <td><a href="{% url 'document.edit' i.pk %}">{{ i.product.value|floatformat:2|intcomma }}</a></td>#}
+                            {#                                                            <td><a href="{% url 'document.edit' i.pk %}">{{ i.product.start_date }}</a></td>#}
+                            {##}
+                            {#                                                            {% if i.product.adviser %}#}
+                            {#                                                                <td>#}
+                            {#                                                                    <a href="{% url 'user.edit' i.product.adviser.user.pk 'ADVISER' %}">{{ i.product.adviser.user.first_name }} {{ i.product.adviser.user.last_name }}</a>#}
+                            {#                                                                </td>#}
+                            {#                                                            {% else %}#}
+                            {#                                                                <td></td>#}
+                            {#                                                            {% endif %}#}
+                            {#                                                            {% if i.product.broker %}#}
+                            {#                                                                <td>#}
+                            {#                                                                    <a href="{% url 'user.edit' i.product.broker.user.pk 'BROKER' %}">{{ i.product.broker.user.first_name }} {{ i.product.broker.user.last_name }}</a>#}
+                            {#                                                                </td>#}
+                            {#                                                            {% else %}#}
+                            {#                                                                <td></td>#}
+                            {#                                                            {% endif %}#}
+                            {#                                                            <td>{{ i.status.name }} [{{ i.status.code }}]</td>#}
+                            {#                                                        </tr>#}
+                            {#                                                    {% endif %}#}
+                            {##}
+                            {#                                                {% endfor %}#}
+                            {#                                                </tbody>#}
+                            {#                                            </table>#}
+                            {#                                        </div>#}
+                            {#                                    {% else %}#}
+                            {#                                        <h5>Brak aktywnych produktów</h5>#}
+                            {#                                    {% endif %}#}
+                            {##}
+                            {#                                </div>#}
+                            {#                            </div>#}
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Nadchodzące wydarzenia ({{ user_upcoming_events.count }})</div>
+                                <div class="panel-body">
+
+                                    <div style="max-height: 300px; overflow: auto;">
+                                        {% if user_upcoming_events %}
+
+                                            <table class="table table-hover table-condensed">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width:30px; text-align: center"></th>
+                                                    <th>Typ</th>
+                                                    <th>Tytuł</th>
+                                                    <th>Początek</th>
+                                                    <th>Koniec</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for i in user_upcoming_events %}
+                                                    <tr>
+                                                        <td>
+                                                            <div style="width:15px;height:15px; border-radius: 50%; background-color: {{ i.type.color }}"></div>
+                                                        </td>
+                                                        <td>{{ i.type.name }}</td>
+                                                        <td>{{ i.title }}</td>
+                                                        <td>{{ i.start_date }}</td>
+                                                        <td>{{ i.end_date }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+
+                                        {% else %}
+                                            <h5>Brak nadchodzących wydarzeń</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="display: inline-block; width: 100%;">
+                                    <div style="float: left;">Osoby powiązane</div>
+                                    <div id="newRelationBtn" style="float: right;"><i class="fa fa-plus-circle"></i></div>
+                                </div>
+                                <div class="panel-body" id="userRelationContainer"></div>
+                            </div>
+
+                        {% endif %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        {% if mode != mode_create %}
+
+            <div id="attachment-tab" class="tab-pane fade in">
+                <div id="attachmentContainer">
+                    <div id="attachmentDirectoryPanel" class="col-lg-2">
+                        <div class="row">
+                            <div class="col-lg-12 nopadding">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Drzewo katalogów</div>
+                                    <div class="panel-body">
+                                        <div style="overflow: auto">
+                                            <div id="atmDirectoryTree"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-10">
+                        <div class="row">
+                            <div class="col-lg-12 nopadding-right">
+                                <div id="attachmentPanel">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div id="address-tab" class="tab-pane fade in">
+            <div class="row">
+
+                <div class="col-lg-4 nopadding-right">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="display: inline-block; width: 100%">
+                            <div style="float:left;">Adres firmy</div>
+                            {% if cadr.instance.pk %}
+                                <div style="float:right;"><i data-id="{{ cadr.instance.pk }}" class="fas fa-history address-history-btn"></i></div>{% endif %}
+                        </div>
+                        <div class="panel-body">
+                            {% include 'address/_partial/_address.html' with form=cadr %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 nopadding-right">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="display: inline-block; width: 100%">
+                            <div style="float:left;">Adres zamieszkania</div>
+                            {% if hadr.instance.pk %}
+                                <div style="float:right;"><i data-id="{{ hadr.instance.pk }}" class="fas fa-history address-history-btn"></i></div>{% endif %}
+                        </div>
+                        <div class="panel-body">
+                            {% include 'address/_partial/_address.html' with form=hadr %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="display: inline-block; width: 100%">
+                            <div style="float:left;">Adres do korespondencji</div>
+                            {% if madr.instance.pk %}
+                                <div style="float:right;"><i data-id="{{ madr.instance.pk }}" class="fas fa-history address-history-btn"></i></div>{% endif %}
+                        </div>
+                        <div class="panel-body">
+                            {% include 'address/_partial/_address.html' with form=madr %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if hierarchy %}
+
+            <div id="hierarchy-tab" class="tab-pane fade in">
+
+                <div class="col-lg-6 col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Dostępne stanowiska</div>
+                        <div class="panel-body">
+                            <div class="user-hierarchy-tree">
+{#                                {% include 'hierarchy/_partial/_hierarchy_tree.html' with field=form.hierarchy hierarchy=hierarchy %}#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-sm-6 center-block">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Grupy uprawnień (role)</div>
+                                <div class="panel-body user-roles">
+                                    {% include 'user/group/_partial/_group_permissions_elements.html' with form=groups_form %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if attr %}
+
+            <div id="attribute-tab" class="tab-pane fade in">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 pad-t">
+                        {% include 'document/type/_partial/_attributes.html' with attr=attr form=attr_form autocollapse=False %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if type == 'CLIENT' and mode != mode_create %}
+
+            <div id="clientproduct-tab" class="tab-pane fade in">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 pad-t">
+
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                            <tr>
+                                <th>Typ produktu</th>
+                                <th>Nr umowy</th>
+                                <th>Kwota</th>
+                                <th>Data utworzenia</th>
+                                <th>Data rozpoczęcia</th>
+                                <th>Doradca</th>
+                                <th>Pośrednik</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in user_products %}
+                                {% if i.status != 'AN' and i.status != 'CL' %}
+                                    <tr>
+                                        <td><a href="{% url 'document.edit' i.pk %}">{{ i.type.name }}</a></td>
+                                        <td><a href="{% url 'document.edit' i.pk %}">{{ i.code }}</a></td>
+                                        <td><a href="{% url 'document.edit' i.pk %}">{{ i.product.value|floatformat:2|intcomma }}</a></td>
+                                        <td><a href="{% url 'document.edit' i.pk %}">{{ i.creation_date }}</a></td>
+                                        <td><a href="{% url 'document.edit' i.pk %}">{{ i.product.start_date }}</a></td>
+
+                                        {% if i.product.adviser %}
+                                            <td>
+                                                <a href="{% url 'user.edit' i.product.adviser.user.pk 'ADVISER' %}">{{ i.product.adviser.user.first_name }} {{ i.product.adviser.user.last_name }}</a>
+                                            </td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                        {% if i.product.broker %}
+                                            <td><a href="{% url 'user.edit' i.product.broker.user.pk 'BROKER' %}">{{ i.product.broker.user.first_name }} {{ i.product.broker.user.last_name }}</a>
+                                            </td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                        <td>{{ i.status.name }} [{{ i.status.code }}]</td>
+                                    </tr>
+                                {% endif %}
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if type == 'BROKER' or type == 'ADVISER' %}
+            {% if  mode != mode_create %}
+                <div id="client-tab" class="tab-pane fade in">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12 pad-t">
+
+                            <table class="table table-hover table-condensed">
+                                <thead>
+                                <th>Imię i nazwisko</th>
+                                <th>email</th>
+                                <th>PESEL</th>
+                                <th>NIP</th>
+                                <th style="width: 80px;">Akcje</th>
+                                </thead>
+                                <tbody>
+                                {#                            {% for i in clients %}#}
+                                {% if type == 'ADVISER' %}
+                                    {% include 'user/_partial/row/_user_list_row_partial.html' with data=form.instance.adviser_set.client_adviser.all type=type %}
+                                {% else %}
+                                    {% include 'user/_partial/row/_user_list_row_partial.html' with data=form.instance.broker.client_broker.all type=type %}
+                                {% endif %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if type == 'ADVISER' %}
+
+            <div id="broker-tab" class="tab-pane fade in">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 pad-t">
+
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                            <th>Imię i nazwisko</th>
+                            <th>Telefon</th>
+                            <th>email</th>
+
+                            </thead>
+                            <tbody>
+                            {% for i in form.instance.adviser_set.broker_set.all %}
+                                <tr>
+                                    <td><a href="{% url 'user.edit' i.user.pk 'BROKER' %}">{{ i.user.first_name }} {{ i.user.last_name }}</a></td>
+                                    <td><a href="{% url 'user.edit' i.user.pk 'BROKER' %}">{{ i.user.phone_one }}</a></td>
+                                    <td><a href="{% url 'user.edit' i.user.pk 'BROKER' %}">{{ i.user.email }}</a></td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="brokerproduct-tab" class="tab-pane fade in">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 pad-t">
+
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                            <th>Numer umowy</th>
+
+                            </thead>
+                            <tbody>
+                            {% for i in form.instance.adviser_set.broker_set.client_broker.product_set.all %}
+                                <tr>
+                                    <td><a href="{% url 'product.edit' i.pk 'BROKER' %}">{{ i.name }}</a></td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+
+
+        {% if mode == mode_edit %}
+
+            <div id="clientevent-tab" class="tab-pane fade in">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 pad-t">
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                            <th style="width:30px;"></th>
+                            <th>Tytuł</th>
+                            <th>Typ zadarzenia</th>
+                            <th>Data rozpoczęcia</th>
+                            <th>Data zakończenia</th>
+                            {#                            <th>Lista uczestników</th>#}
+                            <th>Status</th>
+                            </thead>
+                            <tbody>
+
+                            {% for i in user_all_events %}
+                                <tr>
+                                    <td>
+                                        <div style=" border-radius: 50%; width: 20px; height:20px; background-color: {{ i.type.color }}">&nbsp;</div>
+                                    </td>
+                                    <td>{{ i.title }}</td>
+                                    <td>{{ i.type }}</td>
+                                    <td>{{ i.start_date }}</td>
+                                    <td>{{ i.end_date }}</td>
+                                    {#                                    <td></td>#}
+                                    <td>{{ i.status }}</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if type == 'CLIENT' %}
+
+            <div id="clientagreement-tab" class="tab-pane fade in">
+                {% for i in processing_agreement_forms %}
+                    <table class="table">
+                        <tr {% if i.value.value == True %}
+                            style="background-color:#cbefc9"
+                        {% else %}
+                            style="background-color:#ffc1c1"
+                        {% endif %}>
+                            <td style="width: 150px;">{% include 'py3ws/forms/fields/p3form_field.html' with field=i.value nolabel=True %}</td>
+                            <td>
+                                <div><strong>{{ i.instance.name }}</strong></div>
+                                <div>{{ i.instance.text }}</div>
+                            </td>
+                            <td style="width:250px;">{% include 'py3ws/forms/fields/p3form_field.html' with field=i.source nolabel=True %}</td>
+                            {{ i.text.as_hidden }}
+
+                        </tr>
+                    </table>
+                {% endfor %}
+
+            </div>
+        {% endif %}
+
+        {#        <div id="attachment-tab" class="tab-pane fade in">#}
+        {#            {% include 'attachment/basic_attachment/_partial/_attachment_partial.html' with attachment_formset=attachment_formset %}#}
+        {#        </div>#}
+
+        {% if mode == mode_edit %}
+
+            {#            <div id="usernotes-tab" class="tab-pane fade in">#}
+            {#                <div class="row">#}
+            {#                    <div class="col-lg-12 col-sm-12 pad-t">#}
+            {#                        <div style="text-align: center">#}
+            {#                            <img src="{% static '/images/under-construction_small.png' %}">#}
+            {#                        </div>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            </div>#}
+
+        {% endif %}
+    </div>
+</form>
+

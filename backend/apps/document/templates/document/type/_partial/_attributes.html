@@ -1,0 +1,66 @@
+{% config_var 'MODE_VIEW' as mode_view %}
+{% load document_tags %}
+
+<div class="panel-group" id="accordion">
+    <div class="panel" id="accordion_panel">
+        {% for i in attr %}
+            {% if not i.section|is_section_empty:status %}
+                <div class="document-section" data-section="section_{{ i.section.pk }}">
+                    <div class="document-type-section">
+                        <div class="pull-left">
+                            <div class="a-container">
+                                <a class="collapse-trigger" data-toggle="collapse" {% if autocollapse %} data-parent="#accordion_panel" {% endif %}
+                                   href="#section_{{ i.section.pk }}">{{ i.section.name }}</a>
+                            </div>
+                        </div>
+                        {% if mode != mode_view and not form.readonly and i.children %}
+                            {% include 'document/type/section/_partial/repeat_subsection/_repeat_subsection_menu_partial.html' with attribute=i %}
+                        {% endif %}
+                    </div>
+
+                    <div id="section_{{ i.section.pk }}" class="document-section panel-collapse collapse {% if forloop.counter == 1 or allopened %}in{% endif %}">
+                        <div class="document-section-row-body">
+                            <div class="row">
+                                {% for j in i.columns %}
+                                    <div class="col-sm-{{ j.column.sm_width }} {% if forloop.counter0 > 0 %} nopadding-left{% endif %}">
+                                        <div class="panel panel-default ">
+                                            <div class="panel-heading">{{ j.column.name|default_if_none:' ' }}</div>
+                                            <div class="panel-body">
+                                                {% for at in j.attributes %}
+                                                    {% if at.is_table %}
+                                                        {% include 'document/type/attribute/_partial/_table_attribute_container.html' with at=at formset=table_formsets|get_item:at.pk %}
+                                                    {% else %}
+                                                        {% include "py3ws/forms/fields/p3form_field.html" with field=form|get_form_field:at.code %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        {% for c in i.children %}
+                            {% include 'document/type/section/_partial/repeat_subsection/_repeat_subsection_formset_partial.html' with c=c formset=section_formsets|get_item:c.section.pk %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<div class="attributePanelHorizontalContainer">
+    <div class="col-lg-2 nopadding" id="attributeTabPaneHorizontal"></div>
+    <div class="col-lg-10" id="attributeTabContentHorizontal">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="list-container" id="attributeHorizontal"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include 'document/type/section/_template/_repeat_subsection_formset_template.html' %}
+{% include 'document/type/table/_template/_table_formset_template.html' %}

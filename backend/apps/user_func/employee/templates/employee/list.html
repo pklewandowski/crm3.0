@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+
+{% block site_js %}
+{% endblock %}
+
+{% block form_icon %}fa fa-users{% endblock %}
+{% block form_title %}Lista klientów: {{ form.instance.first_name }} {{ form.instance.last_name }} {% if form.errors %} - <span class="error-header-info">wystąpiły błędy!</span>{% endif %}
+{% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <div class="btn-group">
+        <a href="{% url 'document.type.attribute.list' document_type.pk %}" class="btn btn-default btn-sm"><i class="fa fa-user pad-r"></i>Atrybuty</a>
+        <a href="{% url 'user.add' 'EMPLOYEE' %}" class="btn btn-success btn-sm"><i class="fa fa-user pad-r"></i>Nowy klient</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="">
+        <table id="user_list" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>E-mail</th>
+                <th>Imię i nazwisko</th>
+                <th>Hasło inicjalne</th>
+                <th style="width:60px">Hasło aktualne</th>
+                <th style="width:60px">Aktywny</th>
+                <th style="width:170px;">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td><a href="{% url 'user.edit'  client.user.pk %}">{{ client.user.email }}</a></td>
+                    <td>{{ client.user.first_name }} {{ client.user.last_name }}</td>
+                    <td>{{ client.user.initial_password }}</td>
+
+                    {% if client.user.password_valid %}
+                        <td class="text-center"><a class="yes-no-bookmark password-valid"><i class="fa fa-check"></i></a></td>
+                    {% else %}
+                        <td class="text-center"><a class="yes-no-bookmark password-valid"><i class="fa fa-times"></i></a></td>
+                    {% endif %}
+
+                    {% if client.user.is_active %}
+                        <td class="text-center"><a class="yes-no-bookmark client-active"><i class="fa fa-check"></i></a></td>
+                    {% else %}
+                        <td class="text-center"><a class="yes-no-bookmark client-active"><i class="fa fa-times"></i></a></td>
+                    {% endif %}
+
+                    {#                    {% if client.user.removed %}#}
+                    {#                        <td class="text-center"><a class="password-reset"><i class="fa fa-check"></i></a></td>#}
+                    {#                    {% else %}#}
+                    {#                        <td class="text-center"><a class="password-reset"><i class="fa fa-times"></i></a></td>#}
+                    {#                    {% endif %}#}
+
+                    <td>
+                        <div class="btn-group">
+
+                            <a href="{% url 'user.view' client.pk %}"
+                               class="btn btn-default btn-sm view">
+                                <i class="fa fa-search"></i>
+                            </a>
+
+                            <a href="{% url 'user.edit' client.pk %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="far fa-edit"></i>
+                            </a>
+                            <a href="{% url 'schedule.calendar' client.pk %}"
+                               class="btn btn-default btn-sm calendar">
+                                <i class="fa fa-calendar-alt"></i>
+                            </a>
+
+                            <a href="{% url 'product.add' 1 client.pk %}" class="btn btn-default btn-sm">
+                                <i class="fa fa-plus"></i>
+                            </a>
+
+                            <a href="#" class="btn btn-danger btn-sm delete">
+                                <i class="fa fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+{% endblock %}
+
+{% block site_script %}
+
+    $('#user_list a.password-reset').click(function (e) {
+
+    el = $(this).parents('tr');
+
+    swal({
+    title: 'Jesteś pewien?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: "Tak, generuj nowe hasło!",
+    cancelButtonText: "Nie",
+    closeOnConfirm: false,
+    }, function () {
+
+    });
+    });
+
+{% endblock %}

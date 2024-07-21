@@ -1,0 +1,76 @@
+//------------------- SUBIMPORTS --------------------------//
+@import '../../scss/globals.scss';
+@import '../document-attribute/scss/document-attribute.scss';
+@import './document-attachment.scss';
+@import './document-process-flow.scss';
+
+//---------------------- BODY -----------------------------//
+
+@keyframes anim-document-changed {
+  0% {
+    transform:rotate(0deg);
+  }
+  25% {
+    transform:rotate(25deg);
+  }
+  50%{
+    transform:rotate(0deg);
+  }
+  75%{
+    transform:rotate(-25deg);
+  }
+  99% {
+    transform:rotate(0deg);
+  }
+}
+
+//@keyframes anim-document-changed {
+//  0% {
+//    background-color: #5cb85c;
+//  }
+//
+//  50% {
+//    background-color: #ff5456;
+//  }
+//  100% {
+//    background-color: #5cb85c;
+//  }
+//}
+
+.document-changed:after {
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  content: "";
+  font-weight: 900;
+  font-size: 16px;
+  background-color: #ff5456;
+  color: white;
+  border: 2px solid white;
+  width: 30px;
+  height: 30px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  padding-top: 2px;
+  top: -14px;
+  left: 28px;
+  animation-name: anim-document-changed;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+//.document-changed {
+//  animation-name: anim-document-changed;
+//  animation-duration: 3s;
+//  animation-iteration-count: infinite;
+//  animation-timing-function: linear;
+//}
+
+.available-statuses-btn-container {
+  display: none;
+}
+
+#reportTab .report-action i {
+    pointer-events: none;
+}

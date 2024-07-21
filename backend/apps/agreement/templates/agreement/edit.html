@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% load static %}
+
+{% block site_css %}
+<link href="{% static 'resource/jstree/dist/themes/default/style.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_js %}
+<script type="text/javascript" src="{% static 'resource/dropzone/dropzone.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/jstree/dist/jstree.min.js' %}"></script>
+{% endblock %}
+
+{% block form_icon %}fa fa-handshake-o{% endblock %}
+{% block form_title %}Edycja umowy {% endblock %}
+{% block form_subtitle %}{{agreement.signature}}, {{agreement.client.user.first_name}} {{agreement.client.user.last_name}}, PESEL: {{agreement.client.user.personal_id}}{% endblock %}
+{% block form_title_right %}
+<button class="btn btn-success pull-right pad-t btn-submit" type="submit"><i class="fa fa-user pad-r"></i>Zapisz
+</button>
+{% endblock %}
+
+
+{% block content %}
+{{form.errors}}
+
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#agreement-tab">Umowa</a></li>
+    <li><a data-toggle="tab" href="#client-tab">Szczegóły klienta</a></li>
+    <li><a data-toggle="tab" href="#attachment-tab">Załączniki</a></li>
+</ul>
+
+<div class="tab-content">
+    <div id="agreement-tab" class="tab-pane fade in active">
+
+        <div class="col-lg-12 col-sm-12 pad-t">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dane umowy</div>
+                <div class="panel-body">
+                    {% include "agreement/_partial/_form_elements.html" with form=form mode=mode %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="client-tab" class="tab-pane fade in"></div>
+
+    <div id="attachment-tab" class="tab-pane fade in">
+        {% include "attachment/_partial/_attachment.html" %}
+
+    </div>
+</div>
+
+{% include "agreement/_template/_client_list_row_template.html" with form=form %}
+
+{% endblock %}
+
+
+{% block site_script %}
+var csrf_token =  '{{ csrf_token }}';
+var client = {ajxClientlistUrl: "{% url 'client.get_list' %}"}
+var root_name = 'ROOT'
+{% endblock %}
+
+{% block site_inline_js %}
+<script type="text/javascript" src="{% static 'attachment/js/attachment.js' %}"></script>
+{% endblock %}

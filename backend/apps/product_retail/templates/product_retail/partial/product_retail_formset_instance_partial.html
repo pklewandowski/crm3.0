@@ -1,0 +1,16 @@
+{% for form in formset %}
+<tr data-id="__ID_PRODUCT__">
+        <td>{{ form.instance.product.name }}</td>
+        <td>form.instance.unit_price</td>
+        <td style="width: 120px;">
+            <input type="number" id="{{ formset.quantity.id_for_label }}" class="form-control input-sm" min="0"
+                   name="{{ formset.quantity.html_name }}" value="{{ formset.instance.quantity.value }}"/>
+        </td>
+        <td></td>
+        <td style="width: 60px;">
+            <button type="button" class="btn btn-warning btn-sm to-remove-retail-product-btn"><i class="fa fa-times"></i></button>
+        </td>
+        {{ formset.procuct.as_hidden }}
+        {{ formset.client.as_hidden }}
+    </tr>
+{% endfor %}

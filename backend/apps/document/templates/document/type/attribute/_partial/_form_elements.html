@@ -1,0 +1,77 @@
+<div class="row">
+    <div id="user" class="col-lg-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dane Atrybutu</div>
+            <div class="panel-body">
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.name %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.code %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.attribute %}
+                {#                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.dictionary %}#}
+                {#                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.lov %}#}
+                <div class="row">
+                    <div class="col-lg-4">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=form.section_column %}
+                    </div>
+                </div>
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.description %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="display: inline-block; width: 100%;">
+                <div style="float:left;">Lista wartości</div>
+                <div style="float:right;">
+                    <div id="add_lov_entry_btn"><i class="fas fa-plus-circle" style="font-size: 15px;cursor: pointer; margin-right:5px;"></i></div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="attribute-lov-container list-container">
+                    {#                    <label><input type="checkbox" id="lov_nullvalue"/>Dopuszaczlna wartość pusta</label>#}
+                    {% include 'py3ws/forms/fields/checkboxInlineField.html' with field=form.null_value %}
+
+                    <table class="table" id="attribute_lov_table">
+                        <thead>
+                        <tr>
+                            <th style="width: 10%">Kod</th>
+                            <th style="width: 25%">Label</th>
+                            <th>Opis</th>
+                            <th style="width: 5%;">Akcje</th>
+                        </tr>
+
+                        </thead>
+                        <tbody id="lov_row_container">
+                        {% for f in lov_formset %}
+                            <tr>
+                            <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=f.lov_value nolabel=True %}</td>
+                            <td>
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=f.lov_label nolabel=True %}
+                                {{ f.new_row }}
+                            </td>
+                            <td>
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=f.lov_description nolabel=True %}
+                            </td>
+
+                            <td>
+                                {% if not f.initial|length %}
+                                    <a class="btn btn-danger btn-sm delete-lov-entry"><i class="fa fa-trash-alt"></i></a>
+                                {% else %}
+                                    {#                                    <a class="btn btn-default btn-sm hide-low-entry"><i class="fas fa-eye-slash"></i></a>#}
+
+                                   {{ f.DELETE }}
+
+                                {% endif %}
+                            </td>
+
+                        {% endfor %}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

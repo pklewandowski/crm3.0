@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+    <div class="panel-heading" style="display: inline-block; width: 100%;">
+        <div style="float:left;">Printscreeny</div>
+        <div style="float:right;">
+            <div id="add_attachment_btn"><i id="paste_screen_btn" class="fa fa-plus-circle" style="font-size: 15px;cursor: pointer;"></i></div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <div class="thumbnail-container" id="prtscn_thumbnail_container">
+            <div id="prtscn_thumbnail_film">
+
+                {% if prtscn %}
+                    {% for i in prtscn %}
+                        <div class="thumbnail prtscn-thumbnail"><img src="/media/document/scan/tmp/{{ i.attachment.file_name }}"/></div>
+                    {% endfor %}
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,30 @@
+{% load l10n %}
+<tr data-id="{{ cashflow_form.pk }}"
+    data-removable="true"
+    data-accounting_type="{{ inst.type.pk }}"
+        {% if inst.type.code == 'COST' %}
+    class="cash-flow-payment-cost"
+        {% elif inst.type.code == 'PAYMENT'%}
+    class="cash-flow-payment-in"
+        {% endif %}
+>
+    <td class="cashflow-calculable">
+        {% if inst.calculable %}
+            <i class="fa fa-check"></i>
+        {% else %}
+            <i class="fa fa-times">{% endif %}
+        </i>
+        {{ cashflow_form.calculable.as_hidden }}
+    </td>
+    <td>{{ cashflow_form.cash_flow_date|unlocalize }}{{ cashflow_form.cash_flow_date.errors }}</td>
+    <td>{{ cashflow_form.accounting_date }}{{ cashflow_form.accounting_date.errors }}</td>
+    <td>{{ cashflow_form.type }}{{ cashflow_form.type.errors }}</td>
+    <td class="decimal-field">{{ cashflow_form.value }}{{ cashflow_form.value.errors }}</td>
+    <td>{{ cashflow_form.description }}{{ cashflow_form.value.description }}</td>
+    <td>
+    </td>
+    {{ cashflow_form.product.as_hidden }}
+    {{ cashflow_form.editable.as_hidden }}
+    {{ cashflow_form.entry_source.as_hidden }}
+    {{ cashflow_form.id }}
+</tr>

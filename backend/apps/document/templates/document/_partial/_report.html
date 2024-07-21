@@ -1,0 +1,58 @@
+<div class="loader-container" id="addReportLoaderContainer">
+    <div class="loader"></div>
+</div>
+{#<div class="row">#}
+{#    <div class="col-lg-12">#}
+{#        <div class="pull-right">#}
+{#            <button id="generate_decision_btn" type="button" class="btn btn-success">Wygeneruj decyzję</button>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+<div class="row">
+    <div id="report-list" class="col-lg-12">
+
+        <div style="height: 100%; overflow: auto;">
+            {% if reports|length %}
+                <table class="table table-hover" id="reportTab">
+                    <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Rodzaj</th>
+                        <th>Data wygenerowania</th>
+                        <th>Utworzył</th>
+                        <th style="width: 80px;">Akcje</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in reports %}
+                        <tr data-id="{{ r.report.pk }}" {% if r.status == 'PRJ' %} class="report-row-first"{% endif %}>
+                            <td>{{ r.report.name }}</td>
+                            <td>{{ r.template.name }}</td>
+                            <td>{{ r.creation_date|date:'Y-m-d' }}</td>
+                            <td>{{ r.created_by.first_name }} {{ r.created_by.last_name }}</td>
+                            <td>
+                                <div class="btn-group report-action">
+                                    <a href="/media/reports/generated/{{ r.report.file_name }}" target="_blank" class="preview">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </div>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="text-center">
+                    <h5>Brak pism</h5>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-xs-12 text-center">
+
+        <div class="pagination">
+            <span class="step-links">
+
+        {% if page.has_previous %}
+            <div class="btn-group pagination-nav-arrows">
+            <a data-page="1" class="btn btn-default btn-sm page-nav" href="?page=1">&nbsp;<i class="fa fa-fast-backward"></i></a>
+{#            <a data-page="{{ page.previous_page_number }}" class="btn btn-default btn-sm page-nav" href="#"><i class="fa fa-step-backward"></i>&nbsp;</a>#}
+            </div>
+        {% endif %}
+                <div class="btn-group">
+
+                {% for _ in ''|center:page.paginator.num_pages %}
+
+                    {% if forloop.counter < page.number|add:-5 or forloop.counter > page.number|add:5 %}
+                    {% elif forloop.counter == page.number %}
+                        <div class="btn btn-primary btn-sm">{{ forloop.counter }}</div>
+                    {% else %}
+                        <a data-page="{{ forloop.counter }}" class="btn btn-default btn-sm page-nav" href="#">{{ forloop.counter }}</a>
+                    {% endif %}
+                {% endfor %}
+                </div>
+
+
+                {% if page.has_next %}
+                    <div class="btn-group pagination-nav-arrows">
+{#                    <a data-page="{{ page.next_page_number }}" class="btn btn-default btn-sm page-nav" href="#"><i class="fa fa-step-forward"></i>&nbsp;</a>#}
+                    <a data-page="{{ page.paginator.num_pages }}" class="btn btn-default btn-sm page-nav" href="#"><i class="fa fa-fast-forward"></i> ({{ page.paginator.num_pages }})</a>
+                    </div>
+                {% endif %}
+    </span>
+        </div>
+    </div>
+</div>

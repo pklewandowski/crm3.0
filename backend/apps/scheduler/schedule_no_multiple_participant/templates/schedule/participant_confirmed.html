@@ -1,0 +1,28 @@
+{% extends "user_complete.html" %}
+{% load static %}
+
+
+<h5>Dane klienta</h5>
+{% block content %}
+
+    <style>
+        .background-opacity {
+            background-color: rgba(255, 255, 255, .6);
+            padding: 10px;
+            border: solid 1px white;
+        }
+
+        .background-opacity input {
+            background-color: rgba(255, 255, 255, .7);
+            color: #000;
+        }
+    </style>
+
+    <div class="center-block text-center background-opacity panel panel-default" style="width:80%; margin-top: 60px;">
+        <h1>Dziękujemy za potwierdzenie udziału w zdarzeniu!</h1>
+        <div>
+           <h3>"{{ schedule.title }}" ({{ schedule.type.name }}) w terminie: {{ schedule.start_date|date:'Y-m-d h:i' }} - {{ schedule.end_date|date:'Y-m-d h:i' }}</h3>
+        </div>
+    </div>
+
+{% endblock %}

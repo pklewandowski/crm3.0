@@ -1,0 +1,50 @@
+{% load static %}
+<div class="modal fade" id="addFileFieldForm" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="atmFormLabel">
+                    Lista załączników
+                </h4>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 dropzone-container">
+                        <div id="dropzone_atm">
+                            <img class="attachment_img" src="{% static '/images/dropzone.png' %}" alt="" style="pointer-events:none; max-width:100%;">
+                            <input type="file" name="category_attachments" multiple style="display:none">
+                        </div>
+                        <!-- FILES TO UPLOAD -->
+                        <div class="table-responsive pad-t" id="attachmentBeforeUpload" style="max-height:300px; overflow: auto;">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Nazwa</th>
+                                    <th>Rozmiar</th>
+                                    <th>load</th>
+                                    <th style="width:53px">Akcje</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="addAttachmentFiles" class="btn btn-success btn-md" style="display:noe">Dodaj pliki</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+            </div>
+        </div>
+    </div>
+</div>

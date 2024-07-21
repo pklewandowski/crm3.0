@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Produkty {% endblock %}
+{% block form_subtitle %}Lista produktów{% endblock %}
+{% block form_title_right %}
+{% endblock %}
+
+{% block site_css %}
+    <style>
+        a, a:hover {
+            color: unset;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="col-lg-3">
+        <div id="product-stats">
+            <div class="panel panel-default home-info-panel" style="height: 100%;">
+                <div class="panel-heading">Status produktów</div>
+                <div class="panel-body" style="height: calc(100% - 20px);">
+                    <canvas style="width: 100%; height: 200px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-stats-sum"></div>
+    </div>
+
+    <div class="col-lg-9 nopadding">
+        <div style="overflow: auto; height: calc(100vh - 150px);">
+            <table id="product_list" class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Nr umowy</th>
+                    <th>Typ</th>
+                    <th style="white-space: nowrap">Wartość</th>
+                    <th>Imię i Nazwisko / Firma</th>
+                    <th>PESEL</th>
+                    <th>NIP</th>
+                    <th>Adres</th>
+                    <th>E-mail</th>
+                    <th>Data utworzenia</th>
+                    <th>Utworzył</th>
+
+                    <th style="width:130px">Akcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td><a href="{% url 'document.edit' product.document.pk %}">{{ product.agreement_no }}</a></td>
+                        <td>{{ product.document.type.name }}</td>
+                        <td style="text-align: right; white-space: nowrap"><a href="{% url 'product.edit' product.pk %}">{{ product.value }}</a></td>
+                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.first_name|default_if_none:'----' }} {{ product.client.user.last_name }}</a></td>
+                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.personal_id|default_if_none:'----' }}</a></td>
+                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.nip|default_if_none:'----' }}</a></td>
+                        <td style="white-space: nowrap"><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.mail_address|compact_address }}</a></td>
+                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.email|default_if_none:'----' }}</a></td>
+                        <td style="white-space: nowrap"><a href="{% url 'product.edit' product.pk %}">{{ product.creation_date|date:'Y-m-d' }}</a></td>
+                        {% if product.creation_user.is_superuser %}
+                            <td>{{ product.creation_user.first_name|default_if_none:'----' }} {{ product.creation_user.last_name }}</td>
+                        {% else %}
+                            <td><a href="{% url 'user.edit' product.creation_user.pk %}">{{ product.creation_user.first_name|default_if_none:'----' }} {{ product.creation_user.last_name }}</a></td>
+                        {% endif %}
+
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'product.edit' product.pk %}"
+                                   class="btn btn-default btn-sm edit">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'dist/productListAll/productListAll-bundle.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,504 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-16 13:20+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:29
+msgid "schedule.form.employee"
+msgstr "Pracownik"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:30
+msgid "schedule.form.client"
+msgstr "Klient"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:31
+#: .\scheduler\schedule_no_multiple_participant\models.py:25
+msgid "schedule.host_user"
+msgstr "Właściciel"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:32
+msgid "schedule.single_person"
+msgstr "Uczestnik"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:37
+msgid "schedule.is_cyclical"
+msgstr "Zdarzenie cykliczne"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:38
+msgid "schedule.repeat_period"
+msgstr "Powtarzaj"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:65
+#: .\scheduler\schedule_no_multiple_participant\models.py:158
+msgid "schedule.type.event_kind"
+msgstr "Rodzaj"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:121
+msgid "schedule.filter.form.employee"
+msgstr "Doradcy"
+
+# filter form
+#: .\scheduler\schedule_no_multiple_participant\forms.py:122
+msgid "schedule.filter.form.host_user"
+msgstr "Uczestnicy"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:123
+msgid "schedule.filter.form.meeting_room"
+msgstr "Sala konferencyjna"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:124
+msgid "schedule.filter.form.from_date"
+msgstr "Po terminie"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:125
+msgid "schedule.filter.form.from_hour"
+msgstr "od"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:126
+msgid "schedule.filter.form.to_hour"
+msgstr "do"
+
+#: .\scheduler\schedule_no_multiple_participant\forms.py:127
+msgid "schedule.filter.form.min_duration"
+msgstr "czas"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:28
+#, fuzzy
+#| msgid "schedule.filter.form.meeting_room"
+msgid "schedule.meeting_room"
+msgstr "Sala konferencyjna"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:30
+msgid "schedule.service"
+msgstr "Rodzaj usługi"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:32
+msgid "schedule.title"
+msgstr "Tytuł"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:34
+msgid "schedule.start_date"
+msgstr "Początek"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:35
+msgid "schedule.end_date"
+msgstr "Koniec"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:36
+#, fuzzy
+#| msgid "schedule.type.participant_confirmation"
+msgid "schedule.participant_confirmed"
+msgstr "Potwierdzenie uczestnika"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:37
+#, fuzzy
+#| msgid "schedule.type.superior_confirmation"
+msgid "schedule.superior_confirmed"
+msgstr "Potwierdzenie przełożonego"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:39
+#, fuzzy
+#| msgid "schedule.type.host_user_confirmation"
+msgid "schedule.host_user_confirmed"
+msgstr "Potwierdzenie właściciela"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:41
+#, fuzzy
+#| msgid "schedule.host_user"
+msgid "schedule.status"
+msgstr "Właściciel"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:43
+#: .\scheduler\schedule_no_multiple_participant\models.py:121
+#: .\scheduler\schedule_no_multiple_participant\models.py:193
+#, fuzzy
+#| msgid "schedule.host_user"
+msgid "schedule.history"
+msgstr "Właściciel"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:52
+#, fuzzy
+#| msgid "schedule.type_add"
+msgid "schedule.permissions.add.all"
+msgstr "Dodaj typ zdarzednia"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:53
+#, fuzzy
+#| msgid "schedule.type_add"
+msgid "schedule.permissions.add.own"
+msgstr "Dodaj typ zdarzednia"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:55
+msgid "schedule.permissions.change.all"
+msgstr ""
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:56
+#, fuzzy
+#| msgid "schedule.type.single_person"
+msgid "schedule.permissions.change.own"
+msgstr "Jednoosobowe"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:58
+#, fuzzy
+#| msgid "schedule.form.client"
+msgid "schedule.permissions.list.all"
+msgstr "Klient"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:59
+#, fuzzy
+#| msgid "schedule.type.single_person"
+msgid "schedule.permissions.list.own"
+msgstr "Jednoosobowe"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:61
+#, fuzzy
+#| msgid "schedule.service"
+msgid "schedule.permissions.view.all"
+msgstr "Rodzaj usługi"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:62
+#, fuzzy
+#| msgid "schedule.service"
+msgid "schedule.permissions.view.own"
+msgstr "Rodzaj usługi"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:64
+#, fuzzy
+#| msgid "schedule.type.color"
+msgid "schedule.permissions.close.all"
+msgstr "Kolor"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:65
+#, fuzzy
+#| msgid "schedule.form.client"
+msgid "schedule.permissions.close.own"
+msgstr "Klient"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:67
+#, fuzzy
+#| msgid "schedule.is_cyclical"
+msgid "schedule.permissions.cancel.all"
+msgstr "Zdarzenie cykliczne"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:68
+#, fuzzy
+#| msgid "schedule.type.color"
+msgid "schedule.permissions.cancel.own"
+msgstr "Kolor"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:70
+#, fuzzy
+#| msgid "schedule.form.employee"
+msgid "schedule.permissions.delete:all"
+msgstr "Pracownik"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:71
+#, fuzzy
+#| msgid "schedule.type.single_person"
+msgid "schedule.permissions.delete:own"
+msgstr "Jednoosobowe"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:73
+#, fuzzy
+#| msgid "permissions.app.schedule.add_schedule"
+msgid "permissions.app.schedule.type.add"
+msgstr "Dodawanie własnych zdarzeń "
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:75
+#, fuzzy
+#| msgid "permissions.app.schedule.list_schedule"
+msgid "permissions.app.schedule.client:add:all"
+msgstr "Lista własnych zdarzeń"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:76
+#, fuzzy
+#| msgid "permissions.app.schedule.list_schedule"
+msgid "permissions.app.schedule.client:add:own"
+msgstr "Lista własnych zdarzeń"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:82
+#, fuzzy
+#| msgid "schedule.host_user"
+msgid "schedule.cyclical.host_user"
+msgstr "Właściciel"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:85
+#, fuzzy
+#| msgid "schedule.filter.form.meeting_room"
+msgid "schedule.cyclical.meeting_room"
+msgstr "Sala konferencyjna"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:87
+#, fuzzy
+#| msgid "schedule.is_cyclical"
+msgid "schedule.cyclical.title"
+msgstr "Zdarzenie cykliczne"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:89
+#, fuzzy
+#| msgid "schedule.start_date"
+msgid "schedule.cyclical.start_time"
+msgstr "Początek"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:90
+#, fuzzy
+#| msgid "schedule.is_cyclical"
+msgid "schedule.cyclical.end_time"
+msgstr "Zdarzenie cykliczne"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:91
+#, fuzzy
+#| msgid "schedule.start_date"
+msgid "schedule.cyclical.start_date"
+msgstr "Początek"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:92
+#, fuzzy
+#| msgid "schedule.end_date"
+msgid "schedule.cyclical.end_date"
+msgstr "Koniec"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:93
+#, fuzzy
+#| msgid "schedule.is_cyclical"
+msgid "schedule.cyclical.days_of_month"
+msgstr "Zdarzenie cykliczne"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:94
+#, fuzzy
+#| msgid "schedule.is_cyclical"
+msgid "schedule.cyclical.days_of_week"
+msgstr "Zdarzenie cykliczne"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:95
+#, fuzzy
+#| msgid "schedule.repeat_period"
+msgid "schedule.cyclical.repeat_period"
+msgstr "Powtarzaj"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:97
+#, fuzzy
+#| msgid "schedule.is_cyclical"
+msgid "schedule.cyclical.status"
+msgstr "Zdarzenie cykliczne"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:98
+#, fuzzy
+#| msgid "schedule.is_cyclical"
+msgid "schedule.cyclical.history"
+msgstr "Zdarzenie cykliczne"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:133
+msgid "schedule.type.name"
+msgstr "Nazwa"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:134
+msgid "schedule.type.description"
+msgstr "Opis"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:135
+msgid "schedule.type.work_break"
+msgstr "Przerwa w pracy"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:137
+msgid "schedule.type.superior_confirmation"
+msgstr "Potwierdzenie przełożonego"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:138
+msgid "schedule.type.participant_confirmation"
+msgstr "Potwierdzenie uczestnika"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:139
+msgid "schedule.type.host_user_confirmation"
+msgstr "Potwierdzenie właściciela"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:140
+msgid "schedule.type.host_user_editable"
+msgstr "Edytowalne przez właściciela"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:142
+msgid "schedule.type.location_required"
+msgstr "Lokalizacja wymagana"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:143
+msgid "schedule.type.title_required"
+msgstr "Tytuł wymagany"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:145
+msgid "schedule.type.single_person"
+msgstr "Jednoosobowe"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:146
+msgid "schedule.type.whole_day_event"
+msgstr "Całodniowe"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:147
+#, fuzzy
+#| msgid "schedule.type.color"
+msgid "schedule.type.auto_close"
+msgstr "Kolor"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:149
+#, fuzzy
+#| msgid "schedule.type.name"
+msgid "schedule.type.min_time"
+msgstr "Nazwa"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:150
+#, fuzzy
+#| msgid "schedule.type.name"
+msgid "schedule.type.max_time"
+msgstr "Nazwa"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:154
+#, fuzzy
+#| msgid "schedule.type.work_break"
+msgid "schedule.type.min_host_break"
+msgstr "Przerwa w pracy"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:156
+#, fuzzy
+#| msgid "schedule.type.participant_confirmation"
+msgid "schedule.type.min_participant_break"
+msgstr "Potwierdzenie uczestnika"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:159
+#, fuzzy
+#| msgid "schedule.type.color"
+msgid "schedule.type.cyclic"
+msgstr "Kolor"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:160
+msgid "schedule.type.default_title"
+msgstr "Tytuł domyślny"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:161
+msgid "schedule.type.color"
+msgstr "Kolor"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:163
+#, fuzzy
+#| msgid "schedule.type.participant_confirmation"
+msgid "schedule.type.exclusive_participant_mode"
+msgstr "Potwierdzenie uczestnika"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:165
+msgid "schedule.type.send_message"
+msgstr "Wysyłaj powiadomienia"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:191
+#, fuzzy
+#| msgid "schedule.service"
+msgid "schedule.user.token"
+msgstr "Rodzaj usługi"
+
+#: .\scheduler\schedule_no_multiple_participant\models.py:192
+#, fuzzy
+#| msgid "schedule.service"
+msgid "schedule.user.token_valid"
+msgstr "Rodzaj usługi"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:16
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type_list.html:16
+msgid "schedule.type_add"
+msgstr "Dodaj typ zdarzednia"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:27
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type_list.html:28
+msgid "schedule_types.list_header.name"
+msgstr "Nazwa"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:28
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type_list.html:34
+msgid "schedule_types.list_header.default_title"
+msgstr "Tytuł domyślny"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:29
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type_list.html:32
+msgid "schedule_types.list_header.location_required"
+msgstr "Wymagana lokalizacja"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:30
+msgid "schedule_types.list_header.title_required"
+msgstr "Wymagany tytuł"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:31
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type_list.html:29
+msgid "schedule_types.list_header.work_break"
+msgstr "Przerwa w pracy"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:32
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type_list.html:30
+msgid "schedule_types.list_header.superior_confirmation"
+msgstr "Potwierdzenie przełożonego"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:33
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type_list.html:31
+msgid "schedule_types.list_header.participant_confirmation"
+msgstr "Potwierdzenie uczestnika"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:34
+msgid "schedule_types.list_header.host_user_confirmation"
+msgstr "Potwierdzenie właściciela"
+
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type\list.html:35
+#: .\scheduler\schedule_no_multiple_participant\templates\schedule\type_list.html:33
+msgid "schedule_types.list_header.single_person"
+msgstr "Zdarzenie jednoosobowe"
+
+#: .\scheduler\schedule_no_multiple_participant\views.py:102
+msgid "Zarządzanie harmonogramem."
+msgstr ""
+
+#: .\scheduler\schedule_no_multiple_participant\views.py:1086
+msgid "harmonogram dla usera."
+msgstr ""
+
+#~ msgid "permissions.app.schedule.add_all_schedule"
+#~ msgstr "Dodawanie zdarzeń dla wszystkich użytkowników"
+
+#~ msgid "permissions.app.schedule.cancel_all_schedule"
+#~ msgstr "Anulowanie wszystkich zdarzeń"
+
+#~ msgid "permissions.app.schedule.cancel_schedule"
+#~ msgstr "Anulowanie własnych zdarzeń"
+
+#~ msgid "permissions.app.schedule.change_all_schedule"
+#~ msgstr "Edycja wszystkich zdarzeń"
+
+#~ msgid "permissions.app.schedule.change_schedule"
+#~ msgstr "Edycja własnych zdarzeń"
+
+#~ msgid "permissions.app.schedule.close_all_schedule"
+#~ msgstr "Zakończenie wszystkich zdarzeń"
+
+#~ msgid "permissions.app.schedule.close_schedule"
+#~ msgstr "Zakończenie własnych zdarzeń"
+
+#~ msgid "permissions.app.schedule.delete_all_schedule"
+#~ msgstr "Usuwanie wszystkich zdarzeń"
+
+#~ msgid "permissions.app.schedule.delete_schedule"
+#~ msgstr "Usuwanie własnych zdarzeń"
+
+#~ msgid "permissions.app.schedule.list_all_schedule"
+#~ msgstr "Lista wszystich zdarzeń"
+
+#~ msgid "permissions.app.schedule.view_all_schedule"
+#~ msgstr "Przeglądanie szczegółów wszystkich zdarzeń"

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_icon %}fa fa-calendar-alt{% endblock %}
+{% block form_title %}Kalendarz{% endblock %}
+{% block form_subtitle %}{% if user %}{{ user.first_name }} {{ user.last_name }} {% else %} WSZYSCY{% endif %}{% endblock %}
+
+{% block content %}
+    {{ form.errors }}
+    <ul id="results"></ul>
+
+    <div class="col-lg-2 col-md-3 col-sm-3" id="calendar-side-view">
+        {% include 'calendar/partial/_month_calendar_view.html' %}
+        {% include 'calendar/partial/_first_available_event_form.html' %}
+    </div>
+    <div class="col-lg-10 col-md-9 col-sm-9" id="calendar-container">
+        {% include 'calendar/partial/_calendar.html' %}
+    </div>
+    {% include 'calendar/include/modal_include.html' %}
+    {% include 'calendar/include/template_include.html' %}
+{% endblock %}
+
+{% block site_css %}
+    {% include 'calendar/partial/css/_css_content.html' %}
+{% endblock %}
+
+{% block site_js %}
+    {% include 'calendar/partial/js/_js_content.html' %}
+{% endblock %}
+
+{% block site_any_script %}
+    {% config_var 'SCHEDULE_DEFAULT_MEETING_EVENT_ID' as schedule_default_meeting_event_id %}
+    {% include 'calendar/calendar-globals.html' %}
+{% endblock %}

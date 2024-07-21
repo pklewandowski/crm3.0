@@ -1,0 +1,59 @@
+@import "slider";
+
+.balance-control .form-group {
+  float: left;
+  //width: 50%;
+}
+
+.balance-control .form-group:last-child label {
+  right: 5px !important;
+  left: unset;
+}
+
+.balance-control:hover .balance-control-slider {
+  display: inherit !important;
+}
+
+.balance-control-slider {
+  position: absolute;
+  //display: none !important;
+  z-index: 3;
+  bottom: 5px;
+  width: calc(100vh - 18px) !important;
+  cursor: pointer;
+}
+
+.balance-control-percent-left, .balance-control-percent-right {
+  width: 15% !important;
+}
+
+.balance-control-percent-right {
+  margin-left: -1px;
+}
+
+.balance-control-left, .balance-control-right {
+  width: 35% !important;
+  margin-left: -1px;
+}
+
+.balance-control-percent-left input {
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.balance-control-percent-right input {
+  border-bottom-right-radius: 0 !important;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.balance-control-percent-right label, .balance-control-right label {
+  right: 6px;
+  left: unset;
+}
+
+.balance-control-left input, .balance-control-right input {
+  border-radius: 0;
+}
+

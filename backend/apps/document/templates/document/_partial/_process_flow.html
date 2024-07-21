@@ -1,0 +1,87 @@
+<ul class="nav nav-tabs">
+    <li class="nav-item active"><a data-toggle="tab" href="#document-proces-tab">Procesowanie dokumentu</a></li>
+    {% if document.product %}
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#product-proces-tab">Procesowanie produktu</a></li>
+    {% endif %}
+</ul>
+
+<div class="tab-content pad-t">
+    <div id="document-proces-tab" class="tab-pane fade in active">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div class="document-process_flow-container">
+                    <table class="document-process_flow-table">
+                        <thead>
+                        <th></th>
+                        {% for i in doc_status_flow %}
+                            <th><strong>{{ i.effective_date|date:'Y-m-d' }}</strong></th>
+                        {% endfor %}
+
+                        </thead>
+                        <tbody>
+                        {% for i in doc_statuses %}
+                            <tr>
+                                <td class="document-process_flow-status_name {% if i.is_alternate %} document-process_flow-alternate {% endif %}">{{ i.name }}</td>
+                                {% for j in doc_status_flow %}
+                                    {% if j.status.pk == i.pk %}
+                                        <td class="document-process_flow-status">
+                                            <div  {% if i.is_alternate %} class="document-process_flow-status_alternate"{% endif %} style="display:inherit">
+                                                <span class="document-process_flow-username-div">{{ j.user }}</span><br>
+                                                <span class="document-process_flow-status-name-div">{{ j.status.name }}</span><br>
+                                                <span class="document-process_flow-status-date-div">{{ j.date|date:'Y-m-d H:i:s' }}</span>
+                                            </div>
+                                        </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if document.product %}
+        <div id="product-proces-tab" class="tab-pane fade in">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="document-process_flow-container">
+                        <table class="document-process_flow-table">
+                            <thead>
+                            <th></th>
+                            {% for i in product_status_flow %}
+                                <th><strong>{{ i.effective_date|date:'Y-m-d' }}</strong></th>
+                            {% endfor %}
+
+                            </thead>
+                            <tbody>
+                            {% for i in product_statuses %}
+                                <tr>
+                                    <td class="document-process_flow-status_name {% if i.is_alternate %} document-process_flow-alternate {% endif %}">{{ i.name }}</td>
+                                    {% for j in product_status_flow %}
+                                        {% if j.status.pk == i.pk %}
+                                            <td class="document-process_flow-status">
+                                                <div  {% if i.is_alternate %} class="document-process_flow-status_alternate"{% endif %} style="display:inherit">
+                                                    <span class="document-process_flow-username-div">{{ j.user }}</span><br>
+                                                    <span class="document-process_flow-status-name-div">{{ j.status.name }}</span><br>
+                                                    <span class="document-process_flow-status-date-div">{{ j.date|date:'Y-m-d H:i:s' }}</span>
+                                                </div>
+                                            </td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

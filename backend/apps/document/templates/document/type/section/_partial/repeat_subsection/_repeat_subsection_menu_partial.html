@@ -1,0 +1,18 @@
+<div class="pull-right">
+    <div class="dropdown">
+        <a href="#" class="dropdown-toggle btn btn-sm repeat_subsection_btn" type="button" data-toggle="dropdown"
+           id="repeat_subsection_btn_{{ attribute.section.pk }}" aria-haspopup="true"
+           aria-expanded="false"><i class="fa fa-plus"></i></a>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="repeat_subsection_btn_{{ attribute.section.pk }}">
+            {% for c in attribute.children %}
+                <li><a data-name="{{ c.section.name }}"
+                       data-parent_section_id="{{ attribute.section.pk }}"
+                       data-id="{{ c.section.pk }}"
+                       data-viewtype="{{ c.section.view_type }}"
+                       data-attributes="{{ c.section.attributes|json_dumps }}"
+                       data-conditional_name_attribute="{{ c.section.conditional_name_attribute }}"
+                       class="repeat-subsection-add-btn" href="#">{{ c.section.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

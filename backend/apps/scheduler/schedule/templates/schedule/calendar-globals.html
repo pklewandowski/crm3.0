@@ -1,0 +1,74 @@
+{% load l10n %}
+<script>
+
+    {#TODO: docelowo globale przeżucić do zmiennej _g#}
+
+    var csrf_token = '{{ csrf_token }}';
+    var g_form_prefix = '{{form.prefix}}';
+    var gSaveActionBtnHtml;
+    var gCancelActionBtnHtml;
+
+    var schedule_type_id = '{{form.type.id_for_label}}';
+    var calendar_get_event_url = '{% url 'calendar.event_data' %}';
+    var calendar_move_event_url = '{% url 'calendar.move_event' %}';
+    var message_send_url = '{% url 'message.send' %}';
+    var user_edit_url = '/user/edit/';
+    var id_user = {% if calendar_user.pk %} {{calendar_user.pk|unlocalize }} {% else %} null {% endif %};
+    var id_current_user = {% if current_user.pk %} {{current_user.pk|unlocalize }} {% else %} null {% endif %};
+
+    var permissions = {'schedule_toggle_confirm_all': false, 'schedule_edit_all': true};
+
+    var calendar = {
+        events: [
+            {% for s in schedule %}
+                {
+                    id: {{s.id|unlocalize}},
+                    title: '{{s.title}}',
+                    start: '{{s.start_date|datetime_to_str}}',
+                    color: '{{s.type.color}}',
+                    editable: {% if s.editable %}true{% else %}false{% endif %},
+                    {% if s.end_date %} end: '{{s.end_date|datetime_to_str}}', {% endif %}
+                    data: {
+                        'confirmed':{% if s.confirmed %} true {% else %} false {% endif %},
+                        'id_host': {{s.host_user.pk}},
+                        'whole_day_event': {% if s.type.whole_day_event %} true {% else %} false {% endif %},
+                        'status': '{{ s.status }}'
+                    }
+                },
+            {% endfor %}
+        ],
+        ajxUserListUrl: "{% url 'schedule.user_list' %}"
+    };
+
+
+    var gCalendarControl = $("#calendar");
+
+    var gUser = {'id': {{ request.user.pk|unlocalize }}, firstName: '{{ request.user.first_name }}', lastName: '{{ request.user.last_name }}'};
+    var gDefaultEvent = JSON.parse('{{ schedule_default_event|safe }}');
+    var gMode = null;
+    var urlGetAvailableMeetingRooms = '{% url 'schedule.get_available_meeting_room' %}';
+    var gWorkingHours = {'start': '{{ working_hours.start }}', 'end': '{{ working_hours.end }}'};
+    var gUserHeadquarters = {{ user_headquarters }};
+
+    var gActionBtn = {
+        submit: '<button id="submit-btn" type="button" class="pad-l btn btn-success">Zapisz</button>',
+        delete: '<button id="delete-btn" type="button" class="btn btn-danger">Usuń</button>',
+        deleteAndSet: '<button id="delete_and_set-btn" type="button" class="btn btn-danger">Usuń i umów ponownie</button>',
+        close: '<button id="close-btn" type="button" class="btn btn-primary">Zakończ</button>',
+        activate: '<button id="activate-btn" type="button" class="pad-l btn btn-success">Aktywuj</button>',
+        cancel: '<button id="cancel-btn" type="button" class="btn btn-default">Anuluj</button>',
+        cancelAndSet: '<button id="cancel_and_set-btn" type="button" class="btn btn-default">Anuluj i umów ponownie</button>'
+    };
+
+    _g['schedule'] = {
+        url: {
+            getEmployeesForMeetingFilter: '{% url 'schedule.get_employees_for_meeting_filter'%}',
+            getClientsForMeetingFilter: '{% url 'schedule.get_clients_for_meeting_filter' %}'
+        },
+        settings: {
+            {% config_var 'SCHEDULE_OWNED_CLIENTS_ONLY' as SCHEDULE_OWNED_CLIENTS_ONLY %}
+            SCHEDULE_OWNED_CLIENTS_ONLY: {{ SCHEDULE_OWNED_CLIENTS_ONLY|yesno:"true,false" }}
+        }
+    }
+
+</script>

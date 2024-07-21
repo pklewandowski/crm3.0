@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+
+{% block form_icon %}fas fa-home{% endblock %}
+{% block form_title %}Sale konferencyjnych {% endblock %}
+{% block form_subtitle %}Lista sal konferencyjnych{% endblock %}
+  {% block form_title_right %}
+        <a href="{% url 'meeting_room.add' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></a>
+    {% endblock %}
+
+{% block content %}
+
+    <div class="">
+        <table id="user_list" class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th style="width:30px">ID</th>
+                <th>{% trans "meeting_room.name" %}</th>
+                <th>{% trans "meeting_room.seats" %}</th>
+
+                <th style="width:130px">Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for room in meeting_rooms %}
+                <tr>
+                    <td>{{ room.id }}</td>
+                    <td>{{ room.name }}</td>
+                    <td>{{ room.seats }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'meeting_room.add' room.id %}"
+                               class="btn btn-default btn-sm edit">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block site_script %}
+
+{% endblock %}

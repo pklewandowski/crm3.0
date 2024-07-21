@@ -1,0 +1,89 @@
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#data-tab">Dane</a></li>
+    <li><a data-toggle="tab" href="#text-tab">Treść</a></li>
+</ul>
+<div class="tab-content pad-t">
+
+    <div id="data-tab" class="tab-pane fade in active">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dane szablonu</div>
+                <div class="panel-body">
+                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.type %}
+                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.name %}
+                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.code %}
+                    {% include 'py3ws/forms/fields/p3form_field.html' with field=form.subject %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="text-tab" class="tab-pane fade in">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Treść</div>
+                    <div class="panel-body">
+                        <div class="col-lg-12 pad-b">
+                            <div class="pull-right">
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="common_param_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        Parametr formalny
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="common_param_dropdown">
+                                        <li><a class="common_parameter" href="#" data-code="DATE">Data</a></li>
+                                        <li><a class="common_parameter" href="#" data-code="TIME">Godzina</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {% if param_list %}
+                                <div class="pull-right">
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="param_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Dodaj parametr
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="param_dropdown">
+                                            {% for i in param_list %}
+                                                <li><a class="include_parameter" href="#" data-code="{{ i.code }}"> {{ i.name }}</a></li>
+                                            {% endfor %}
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if include_list %}
+                                <div class="pull-right">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="include_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Dodaj komponent
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="include_dropdown">
+                                            {% for i in include_list %}
+                                                <li><a class="include_component" href="#" data-code="{{ i.code }}"> {{ i.name }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="col-lg-12">
+                            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.text nolabel=True %}
+                        </div>
+
+                        <div class="col-lg-12">
+                            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.sms_text %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

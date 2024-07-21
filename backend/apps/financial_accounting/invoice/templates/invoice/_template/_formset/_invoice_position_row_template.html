@@ -1,0 +1,20 @@
+<template id="invoice_position_row_template">
+
+    <tr data-id="__ID_CLIENT__" data-removable="true">
+        <td>{{ invoice_position_formset.empty_form.name }}</td>
+        <td>{{ invoice_position_formset.empty_form.quantity }}</td>
+        <td>{{ invoice_position_formset.empty_form.unit_price }}</td>
+        <td>{{ invoice_position_formset.empty_form.unit_of_measure }}</td>
+        <td>{{ invoice_position_formset.empty_form.net_value }}</td>
+        <td>{{ invoice_position_formset.empty_form.tax_value }}</td>
+        <td>
+            <div class="btn-group">
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </div>
+        </td>
+        {{ invoice_position_formset.empty_form.id.as_hidden }}
+
+    </tr>
+</template>

@@ -1,0 +1,29 @@
+<div class="row" id="firstAvailableEvent">
+    <div style="position:relative">
+        <div id="available_date_reset_btn" class="fa fa-times-circle close-circle" style="display:none;"></div>
+    </div>
+    <div class="panel panel-default" style="padding: 10px; margin-bottom:0">
+        <div class="panel-body" style="padding:0;">
+            <div id="available_date_form">
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=filter_form.employee %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=filter_form.user %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=filter_form.meeting_room %}
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=filter_form.from_date %}
+                <div class="available-date-hours">
+                    <div class="col-lg-4 nopadding">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=filter_form.from_hour %}
+                    </div>
+                    <div class="col-lg-4 nopadding">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=filter_form.to_hour %}
+                    </div>
+                    <div class="col-lg-4 nopadding">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=filter_form.min_duration %}
+                    </div>
+                </div>
+            </div>
+            <div class="pull-right pad-t">
+                <button id="filter_form_btn" class="btn btn-success btn-sm">Szukaj terminu...</button>
+            </div>
+        </div>
+    </div>
+</div>

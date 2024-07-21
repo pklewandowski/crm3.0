@@ -1,0 +1,32 @@
+<div class="lvm-txt-container lvm-txt-control">
+    {{ field.label_tag }}
+    <div class="{% if not dtc_disabled %}input-group input-group-sm{% else %}form-group{% endif %}">
+
+        {% if not dtc_disabled %}
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    {% for choice_id, choice_label in field.field.choices %}
+                        {% if choice_id %}
+                            <li>
+                                <div class="lvm-txt-dtc-container">
+                                    <label class="">
+                                        <input class="lvm-txt-dtc" type="checkbox"
+                                               name="{{ field.html_name }}_dtc"
+                                               value="{{ choice_id }}" {% if field.field.widget.attrs.readonly %} readonly="readonly" disabled="disabled"{% endif %}>
+                                        {{ choice_label }}</label>
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <input type="text" class="form-control input-sm lvm-txt-custom"
+               name="{{ field.html_name }}_custom" {% if field.field.widget.attrs.readonly %} readonly="readonly" disabled="disabled"{% endif %}/>
+    </div>
+    {{ field.errors }}
+    <input class="lvm-txt-json" type="hidden" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default_if_none:"" }}"/>
+</div>

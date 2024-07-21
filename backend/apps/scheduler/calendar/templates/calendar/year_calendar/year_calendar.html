@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block form_icon %}fa fa-calendar-alt{% endblock %}
+{% block form_title %}Kalendarz roczny{% endblock %}
+{% block form_subtitle %}Dni wolne i święta{% endblock %}
+
+{% block content %}
+
+    <div class="col-lg-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Lista dni wolnych i świąt</div>
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div style="overflow: auto; max-height: 600px;">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'schedule/year_calendar/modal/_year_calendar_event_modal.html' %}
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+
+        function deleteEvent(event) {
+            var dataSource = $('#calendar').data('calendar').getDataSource();
+
+            for (var i in dataSource) {
+                if (dataSource[i].id == event.id) {
+                    dataSource.splice(i, 1);
+                    break;
+                }
+            }
+            $('#calendar').data('calendar').setDataSource(dataSource);
+        }
+
+        function editEvent(event) {
+            $('#event-modal input[name="event-index"]').val(event ? event.id : '');
+            $('#event-modal input[name="event-name"]').val(event ? event.name : '');
+            $('#event-modal input[name="event-location"]').val(event ? event.location : '');
+            $('#event-modal input[name="event-start-date"]').datetimepicker({date: event ? event.startDate: ''});
+            {#            $('#event-modal input[name="event-end-date"]').datepicker('update', event ? event.endDate : '');#}
+            $('#event-modal').modal();
+        }
+
+
+        function saveEvent() {
+            var dt = moment($('#event-modal input[name="event-start-date"]').val(), 'YYYY-MM-DD');
+
+            console.log(dt);
+            var event = {
+                id: $('#event-modal input[name="event-index"]').val(),
+                name: $('#event-modal input[name="event-name"]').val(),
+                location: '', // , $('#event-modal input[name="event-location"]').val(),
+                startDate: dt,
+                endDate: dt
+            }
+
+            var dataSource = $('#calendar').data('calendar').getDataSource();
+
+            console.log(event);
+
+            if (event.id) {
+                for (var i in dataSource) {
+                    if (dataSource[i].id == event.id) {
+                        dataSource[i].name = event.name;
+                        dataSource[i].location = event.location;
+                        dataSource[i].startDate = event.startDate;
+                        dataSource[i].endDate = event.endDate;
+                    }
+                }
+            }
+            else {
+                console.log('new event');
+                var newId = 0;
+                for (var i in dataSource) {
+                    if (dataSource[i].id > newId) {
+                        newId = dataSource[i].id;
+                    }
+                }
+
+                newId++;
+                event.id = newId;
+                dataSource.push(event);
+            }
+
+            $('#calendar').data('calendar').setDataSource(dataSource);
+            $('#event-modal').modal('hide');
+        }
+
+
+        $(document).ready(function () {
+            $('#calendar').calendar({
+                language: 'pl',
+                enableContextMenu: true,
+                enableRangeSelection: true,
+                contextMenuItems: [
+                    {
+                        text: 'edytuj',
+                        click: editEvent
+                    },
+                    {
+                        text: 'usuń',
+                        click: deleteEvent
+                    }
+                ],
+                dataSource: [],
+
+                mouseOnDay: function (e) {
+                    if (e.events.length > 0) {
+                        var content = '';
+
+                        for (var i in e.events) {
+                            content += '<div class="event-tooltip-content">'
+                                + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+                                + '<div class="event-location">' + e.events[i].location + '</div>'
+                                + '</div>';
+                        }
+
+                        $(e.element).popover({
+                            trigger: 'manual',
+                            container: 'body',
+                            html: true,
+                            content: content
+                        });
+
+                        $(e.element).popover('show');
+                    }
+                },
+                mouseOutDay: function (e) {
+                    if (e.events.length > 0) {
+                        $(e.element).popover('hide');
+                    }
+                },
+                dayContextMenu: function (e) {
+                    $(e.element).popover('hide');
+                },
+                selectRange: function (e) {
+                    console.log($('#calendar').data('calendar').getDataSource());
+                    editEvent({startDate: e.startDate, endDate: e.endDate});
+                },
+                {#                clickDay: function (e) {#}
+                {#                    var d = e.date;#}
+                {#                    var datestring = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);#}
+                {#                        + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);#}
+                {#                    console.log(datestring);#}
+                {#                    editEvent(e)#}
+                {#                    //saveEvent(d);#}
+                {#                }#}
+            });
+
+            $('#event_save_btn').click(function () {
+                saveEvent();
+            });
+        });
+    </script>
+{% endblock %}
+
+
+{% block site_css %}
+    <link href="{% static 'resource/bootstrap-year-calendar/css/bootstrap-year-calendar.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'resource/bootstrap-year-calendar/js/bootstrap-year-calendar.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'schedule/js/bootstrap-year-calendar.pl.js' %}"></script>
+{% endblock %}
+

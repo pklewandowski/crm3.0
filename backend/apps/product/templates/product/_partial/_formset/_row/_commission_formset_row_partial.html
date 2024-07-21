@@ -1,0 +1,26 @@
+<tr>
+    <td>{% include "py3ws/forms/fields/p3form_field.html" with field=i.name label=false nolabel=True %}</td>
+    <td>{{ i.instance.commission.type }}</td>
+    <td>{{ i.instance.commission.period }}</td>
+    <td>{{ i.instance.commission.calculation_type }}</td>
+    <td>{% include "py3ws/forms/fields/p3form_field.html" with field=i.value label=false nolabel=True %}</td>
+    <td>{% include "py3ws/forms/fields/p3form_field.html" with field=i.date_from label=false nolabel=True %}</td>
+    <td>{% include "py3ws/forms/fields/p3form_field.html" with field=i.date_to label=false nolabel=True %}</td>
+    <td>{% include "py3ws/forms/fields/p3form_field.html" with field=i.description label=false nolabel=True %}</td>
+    <td>{% include "py3ws/forms/fields/p3form_field.html" with field=i.is_active label=false nolabel=True %}</td>
+    <td>
+        <div class="btn-group">
+            {% if i.id.value %}
+                {{ i.DELETE }}
+            {% else %}
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+            {% endif %}
+        </div>
+    </td>
+
+    {{ i.product.as_hidden }}
+    {{ i.commission.as_hidden }}
+    {{ i.id.as_hidden }}
+</tr>

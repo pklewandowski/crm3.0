@@ -1,0 +1,48 @@
+.combo-container {
+  position: absolute;
+  display: block;
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #c9c9c9;
+  border-radius: 5px;
+  z-index: 10;
+  box-shadow: 0 0 15px #888888;
+}
+
+.combo-container .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.combo-container .toolbar-close-btn {
+  top: -15px;
+  right: -15px;
+}
+
+.combo-content {
+  padding-top: 9px !important;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: text;
+}
+
+.combo-content i {
+  color: #989898;
+  margin-right: 2px;
+}
+
+.combo-content span {
+  margin-right: 5px;
+  border-right: 1px solid #b7b7b7;
+  padding-right: 5px;
+}
+
+.combo-close-btn {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+}
+
+.combo-content .fa-percent {
+  font-size: 12px;
+}

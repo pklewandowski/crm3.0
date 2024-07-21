@@ -1,0 +1,6 @@
+<ul id="id_accounting_ordered_choosen_list" class="connected-cashflow accounting-list">
+    {% for i in acc_ord %}
+        <li data-id="{{ i.pk }}" name="accounting_ordered_choosen_list">{{ i.name }}</li>
+    {% endfor %}
+</ul>
+{{ form.accounting_ordered.as_hidden }}

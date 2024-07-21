@@ -1,0 +1,21 @@
+{#{% load my_template_tags %}#}
+<tr data-id="{{ i.pk }}" data-removable="true">
+    <td><i class="fa fa-arrows-v sortable-handle" aria-hidden="true"></i></td>
+    <td>{{ i.instance.accounting_type.name }}</td>
+    <td>{{ i.accounting_order }}</td>
+    <td>
+        <div class="btn-group">
+            {% if i.id.value %}
+                {{ i.DELETE }}
+            {% else %}
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+            {% endif %}
+        </div>
+    </td>
+    {{ i.accounting_type.as_hidden }}
+    {{ i.product_type.as_hidden }}
+    {{ i.obligatory.as_hidden }}
+    {{ i.id }}
+</tr>

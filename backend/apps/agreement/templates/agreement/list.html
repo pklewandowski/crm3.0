@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+
+{% block site_js %}
+    <!--<script type="text/javascript" src="{% static 'user/js/test.js' %}"></script>-->
+{% endblock %}
+
+{% block content %}
+
+<div class="col-lg-12 col-sm-12 header-title">
+    <div style="float:left">
+        <h3>Lista umów</h3>
+    </div>
+    <div style="float:right; margin:0 auto">
+        <a href="{% url 'agreement.add' %}" class="btn btn-success btn-sm pull-right"><i class="fa fa-user pad-r"></i>Dodaj nową umowę</a>
+    </div>
+</div>
+
+<div class="col-lg-12 col-sm-12">
+    <hr style="margin-top:10px">
+</div>
+
+<div class="">
+    <table id="user_list" class="table table-hover table-condensed">
+        <thead>
+        <tr>
+            <th style="width:30px">ID</th>
+            <th>Numer</th>
+            <th>Imię i nazwisko</th>
+
+            <th style="width:170px">Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for agr in agreements %}
+        <tr>
+            <td>{{agr.pk}}</td>
+            <td>{{agr.signature}}</td>
+            <td>{{agr.client.user.first_name}} {{agr.client.user.last_name}}</td>
+
+            <td>
+                <div class="btn-group">
+                    <a href="{% url 'agreement.edit' agr.id %}"
+                       class="btn btn-default btn-sm edit">
+                        <i class="far fa-edit"></i>
+                    </a>
+
+                    <a href="{% if not agr.product %}
+                    {% url 'product.add' agr.id %}
+                    {% else %}
+                    {% url 'product.edit' agr.product.pk %}
+                    {% endif %}" class="btn btn-default btn-sm">
+                        <i class="fa fa-cubes"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+</div>
+
+{% endblock %}
+
+{% block site_script %}
+
+{% endblock %}

@@ -1,0 +1,13 @@
+<thead>
+<tr>
+    {% for col in c.columns %}
+        {% for at in col.attributes %}
+
+            <th {% if c.section.attributes.col_widths %} style="width:{{ c.section.attributes.col_widths|list_item:forloop.counter0 }}%;" {% endif %}>
+                {{ at.name }}
+            </th>
+
+        {% endfor %}
+    {% endfor %}
+</tr>
+</thead>

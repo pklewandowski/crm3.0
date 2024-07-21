@@ -1,0 +1,13 @@
+<script>
+    var globals = {
+        config: {
+            mode: '{{ config.mode }}'
+        },
+        urls: {
+{#            productsForCategoryUrl: '{% url 'product_retail.get_products_for_category' %}',#}
+            productCategoryTreeUrl: '{% url 'product_retail.get_category_tree' %}',
+            addCategoryUrl: '{% url 'product_retail.category.add' %}',
+            deleteCategoryUrl: '{% url 'product_retail.category.delete' %}'
+        }
+    }
+</script>

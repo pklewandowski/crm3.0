@@ -1,0 +1,40 @@
+{#{% load my_template_tags %}#}
+{% load humanize %}
+{% load l10n %}
+{% now "Y-m-d" as todays_date %}
+
+<tr data-id="{{ schedule_form.pk }}" data-removable="true">
+    <td>{{ forloop.counter }}</td>
+    {% localize off %}
+        <td>{% include "py3ws/forms/fields/p3form_field.html" with field=schedule_form.maturity_date label=false nolabel=True %}</td>
+    {% endlocalize %}
+    <td class="day">{{ schedule_form.instance.maturity_date|date:"D"|lower }}</td>
+    <td class="decimal-field">
+        {% with pv="data-prev_val:"|addstr:schedule_form.instalment_capital.value %}
+            {% if index == length %}
+                {% include "py3ws/forms/fields/p3form_field.html" with field=schedule_form.instalment_capital|attr:pv|attr:'readonly:readonly'|attr:'data-type:baloon' label=false nolabel=True lc=True %}
+            {% else %}
+                {% include "py3ws/forms/fields/p3form_field.html" with field=schedule_form.instalment_capital|attr:pv|attr:'data-type:normal' label=false nolabel=True %}
+            {% endif %}
+        {% endwith %}
+    </td>
+    <td class="decimal-field">
+        {% with pv="data-prev_val:"|addstr:schedule_form.instalment_commission.value %}
+            {% if index == length %}
+                {% include "py3ws/forms/fields/p3form_field.html" with field=schedule_form.instalment_commission|attr:pv|attr:'readonly:readonly'|attr:'data-type:baloon' label=false nolabel=True %}
+            {% else %}
+                {% include "py3ws/forms/fields/p3form_field.html" with field=schedule_form.instalment_commission|attr:pv|attr:'data-type:normal' label=false nolabel=True %}
+            {% endif %}
+        {% endwith %}
+    </td>
+    <td class="decimal-field">
+        {% include "py3ws/forms/fields/p3form_field.html" with field=schedule_form.instalment_interest label=false nolabel=True %}
+    </td>
+    <td class="decimal-field">
+        {% include "py3ws/forms/fields/p3form_field.html" with field=schedule_form.instalment_total label=false nolabel=True %}
+    </td>
+
+    {{ schedule_form.product.as_hidden }}
+    {{ schedule_form.id }}
+</tr>
+

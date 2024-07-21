@@ -1,0 +1,139 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-16 13:20+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: .\user_func\client\models.py:18
+msgid "processing_agreement.name"
+msgstr ""
+
+#: .\user_func\client\models.py:19
+msgid "processing_agreement.code"
+msgstr ""
+
+#: .\user_func\client\models.py:20
+msgid "processing_agreement.type"
+msgstr ""
+
+#: .\user_func\client\models.py:21
+msgid "processing_agreement.text"
+msgstr ""
+
+#: .\user_func\client\models.py:22
+msgid "processing_agreement.active"
+msgstr ""
+
+#: .\user_func\client\models.py:23
+msgid "processing_agreement.required"
+msgstr ""
+
+#: .\user_func\client\models.py:27
+msgid "processing_agreement.sq"
+msgstr ""
+
+#: .\user_func\client\models.py:72
+msgid "client.user"
+msgstr ""
+
+#: .\user_func\client\models.py:74
+msgid "client.adviser"
+msgstr "Doradca"
+
+#: .\user_func\client\models.py:75
+msgid "client.broker"
+msgstr "Pośrednik"
+
+#: .\user_func\client\models.py:76
+msgid "client.company"
+msgstr "Spółka"
+
+#: .\user_func\client\models.py:78
+msgid "client.status"
+msgstr "Status"
+
+#: .\user_func\client\models.py:79
+msgid "client.source"
+msgstr "Źródło"
+
+#: .\user_func\client\models.py:94
+#, fuzzy
+#| msgid "permissions.app.client.add_client"
+msgid "permissions.app.user.client.add.all"
+msgstr "dodawanie klienta"
+
+#: .\user_func\client\models.py:95
+#, fuzzy
+#| msgid "permissions.app.client.add_client"
+msgid "permissions.app.user.client.add.department"
+msgstr "dodawanie klienta"
+
+#: .\user_func\client\models.py:96
+#, fuzzy
+#| msgid "permissions.app.client.add_client"
+msgid "permissions.app.user.client.add.own"
+msgstr "dodawanie klienta"
+
+#: .\user_func\client\models.py:98
+#, fuzzy
+#| msgid "permissions.app.client.list_all_clients"
+msgid "permissions.app.user.client.list.all"
+msgstr "lista wszystkich klientów"
+
+#: .\user_func\client\models.py:99
+#, fuzzy
+#| msgid "permissions.app.client.list_all_clients"
+msgid "permissions.app.user.client.list.department"
+msgstr "lista wszystkich klientów"
+
+#: .\user_func\client\models.py:100
+#, fuzzy
+#| msgid "permissions.app.client.list_own_clients"
+msgid "permissions.app.user.client.list.own"
+msgstr "lista własnych klientów"
+
+#: .\user_func\client\models.py:102
+#, fuzzy
+#| msgid "permissions.app.client.change_all_clients"
+msgid "permissions.app.user.client.change.all"
+msgstr "edycja wszystkich klientów"
+
+#: .\user_func\client\models.py:103
+#, fuzzy
+#| msgid "permissions.app.client.change_all_clients"
+msgid "permissions.app.user.client.change.department"
+msgstr "edycja wszystkich klientów"
+
+#: .\user_func\client\models.py:104
+#, fuzzy
+#| msgid "permissions.app.client.change_own_clients"
+msgid "permissions.app.user.client.change.own"
+msgstr "edycja wlasnych klientów"
+
+#: .\user_func\client\models.py:109
+msgid "client.function.name"
+msgstr ""
+
+#: .\user_func\client\models.py:121
+msgid "client_access_token.token"
+msgstr ""
+
+#: .\user_func\client\models.py:122
+msgid "client_access_token.valid"
+msgstr ""

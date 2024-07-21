@@ -1,0 +1,107 @@
+<template id="form_advanced_template">
+    <div id="advanced_form_container">
+        <fieldset id="main_fieldset">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default" id="event_data_panel">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#eventDataCollapse">Dane wydarzenia</a>
+                        </h4>
+                    </div>
+
+                    <div id="eventDataCollapse" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="modal-event-data-panel">
+                                {% include 'schedule/partial/_modal_event_data_partial.html' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default" id="event_location_panel">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion"
+                               href="#eventLocationCollapse">Lokalizacja</a>
+                        </h4>
+                    </div>
+                    <div id="eventLocationCollapse" class="panel-collapse collapse">
+                        <div class="panel-body location-panel">
+
+                            <div id="event-defined-location-panel" class="">
+                                <div class="row pad-b">
+                                    <div class="col-lg-12 col-sm-12">
+                                        <div style="float:right">
+                                            <a id="custom_location-btn" class="btn btn-default" style="font-size:20px;"><i class="far fa-map"></i></a>
+                                        </div>
+                                        <div id="event_defined_location_panel_body">
+                                            {% include 'schedule/partial/_modal_event_defined_location_partial.html' with form=form custom_address_form=custom_address_form %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="event-custom-location-panel" style="display:none;">
+                                <div class="row pad-b">
+                                    <div class="col-lg-12 col-sm-12">
+                                        <div style="float:left">
+                                            <label>Lokalizcja inna:</label>
+                                        </div>
+                                        <div style="float:right">
+                                            <a id="defined_location-btn" class="btn btn-default" style="font-size:20px;"><i class="fa fa-home"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-4">
+                                                {% include 'schedule/partial/_modal_event_custom_location_partial.html' with form=form custom_address_form=custom_address_form %}
+                                            </div>
+                                            <div class="col-lg-8 col-sm-8">
+                                                {% include 'schedule/partial/_modal_event_custom_location_map_partial.html' %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default" id="event_users_panel">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion"
+                               href="#eventUsersCollapse">Uczestnicy</a>
+                        </h4>
+                    </div>
+
+                    <div id="eventUsersCollapse" class="panel-collapse collapse">
+                        <div class="panel-body users-panel">
+                            <div class="modal-event-users-panel">
+                                {% include 'schedule/partial/_modal_event_users_partial.html' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default" id="message_data_panel">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#eventMessageCollapse">Notatki</a>
+                        </h4>
+                    </div>
+
+                    <div id="eventMessageCollapse" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="modal-event-message-panel">
+                                {% include 'schedule/partial/_modal_event_message_partial.html' with form=note_form notes=notes %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</template>

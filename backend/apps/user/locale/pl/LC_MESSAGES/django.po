@@ -1,0 +1,331 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-29 14:37+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: api/view.py:43
+msgid "Brak id użytkownika"
+msgstr ""
+
+#: api/view.py:92
+msgid "Brak id relacji do usunięcia"
+msgstr ""
+
+#: forms.py:16
+#, fuzzy, python-brace-format
+#| msgid "permissions.app.user.add_user"
+msgid "permissions.app.{model}.{i.codename}"
+msgstr "dodawanie użytkownika"
+
+#: forms.py:22
+msgid "Partner biznesowy"
+msgstr ""
+
+#: forms.py:23
+msgid "Kancelaria prawna"
+msgstr ""
+
+#: forms.py:24
+msgid "Kancelaria komornicza"
+msgstr ""
+
+#: forms.py:27 models.py:32
+msgid "user.username"
+msgstr "Login"
+
+#: forms.py:52
+msgid "To pole jest wymagane"
+msgstr ""
+
+#: forms.py:88
+msgid "user.form.old_password.label"
+msgstr "Dotychczasowe hasło"
+
+#: forms.py:89
+msgid "user.form.new_password.label"
+msgstr "Nowe hasło"
+
+#: forms.py:90
+msgid "user.form.confirm_password.label"
+msgstr "Potwierdź nowe hasło"
+
+#: forms.py:121
+msgid "group.name"
+msgstr "Nazwa"
+
+#: forms.py:121 models.py:15
+msgid "group.description"
+msgstr "Opis"
+
+# Group
+#: forms.py:125
+#, fuzzy
+#| msgid "user.group.form.name.label"
+msgid "user.group.form.groups.label"
+msgstr "Nazwa"
+
+#: models.py:21
+msgid "Prezes Zarządu"
+msgstr ""
+
+#: models.py:22
+msgid "Członek Zarządu"
+msgstr ""
+
+#: models.py:23
+msgid "Właściciel"
+msgstr ""
+
+#: models.py:24
+msgid "Wspólnik Spółki Osobowej"
+msgstr ""
+
+#: models.py:25
+msgid "Pełnomocnik"
+msgstr ""
+
+#: models.py:30
+#, fuzzy
+#| msgid "user.last_name"
+msgid "user.avatar_filename"
+msgstr "Nazwisko"
+
+#: models.py:31
+#, fuzzy
+#| msgid "user.last_name"
+msgid "user.avatar_base64"
+msgstr "Nazwisko"
+
+#: models.py:33
+msgid "user.first_name"
+msgstr "Imię"
+
+#: models.py:34
+msgid "user.second_name"
+msgstr "Drugie imię"
+
+#: models.py:35
+#, fuzzy
+#| msgid "user.first_name"
+msgid "user.third_name"
+msgstr "Imię"
+
+#: models.py:36
+msgid "user.last_name"
+msgstr "Nazwisko"
+
+#: models.py:38
+msgid "user.is_company"
+msgstr "Firma"
+
+#: models.py:39
+msgid "user.company_name"
+msgstr "Nazwa firmy"
+
+#: models.py:40
+#, fuzzy
+#| msgid "user.company_name"
+msgid "user.company_legal_form"
+msgstr "Nazwa firmy"
+
+#: models.py:41
+msgid "user.company_establish_date"
+msgstr "Data utworzenia firmy"
+
+#: models.py:42
+#, fuzzy
+#| msgid "user.description"
+msgid "user.company_activity_description"
+msgstr "Opis"
+
+#: models.py:43
+#, fuzzy
+#| msgid "user.company_establish_date"
+msgid "user.company_activity_status"
+msgstr "Data utworzenia firmy"
+
+#: models.py:46
+#, fuzzy
+#| msgid "user.company_name"
+msgid "user.company_shareholder_count"
+msgstr "Nazwa firmy"
+
+#: models.py:48
+msgid "user.contractor_type"
+msgstr "Rodzaj partnera"
+
+#: models.py:49
+msgid "user.www_site"
+msgstr ""
+
+#: models.py:50
+msgid "user.email"
+msgstr "E-mail"
+
+#: models.py:52
+msgid "user.personal_id"
+msgstr "PESEL"
+
+msgid "client.source"
+msgstr "Źródło"
+
+msgid "client.status"
+msgstr "Status"
+
+msgid "client.adviser"
+msgstr "Doradca"
+
+msgid "client.broker"
+msgstr "Pośrednik"
+
+msgid "client.company"
+msgstr "Spółka"
+
+#: models.py:53
+msgid "user.identity_card_no"
+msgstr ""
+
+#: models.py:54
+#, fuzzy
+#| msgid "user.last_name"
+msgid "user.passport_no"
+msgstr "Nazwisko"
+
+#: models.py:55
+msgid "user.nip"
+msgstr "NIP"
+
+#: models.py:56
+msgid "user.krs"
+msgstr "KRS"
+
+#: models.py:57
+msgid "user.regon"
+msgstr "REGON"
+
+#: models.py:58
+msgid "user.phone_one"
+msgstr "Telefon 1"
+
+#: models.py:59
+msgid "user.phone_two"
+msgstr "Telefon 2"
+
+#: models.py:60
+#, fuzzy
+#| msgid "user.form.old_password.label"
+msgid "user.initial_password"
+msgstr "Dotychczasowe hasło"
+
+#: models.py:61
+#, fuzzy
+#| msgid "user.personal_id"
+msgid "user.password_valid"
+msgstr "PESEL"
+
+#: models.py:62
+msgid "user.ldap"
+msgstr "Uwierzytelnianie LDAP"
+
+#: models.py:63
+#, fuzzy
+#| msgid "user.last_name"
+msgid "user.status"
+msgstr "Nazwisko"
+
+#: models.py:64
+msgid "user.description"
+msgstr "Opis"
+
+#: models.py:68
+msgid "user.representative"
+msgstr "Reprezentacja"
+
+#: models.py:89
+msgid "permissions.app.user.list_user"
+msgstr "lista użytkowników"
+
+#: models.py:90
+msgid "permissions.app.user.view_user"
+msgstr "przeglądanie danych użytkownika"
+
+# user
+#: models.py:91
+msgid "permissions.app.user.activate_user"
+msgstr "aktywacja użytkownika"
+
+#: models.py:92
+msgid "permissions.app.user.changepassword_user"
+msgstr "zmiana hasła użytkownika"
+
+#: models.py:93
+msgid "permissions.app.user.resetpassword_user"
+msgstr "reset hasła użytkownika"
+
+#: models.py:94
+msgid "permissions.app.user.viewinitialpassword_user"
+msgstr "widoczne hasło inicjalne użytkownika"
+
+#: models.py:95
+msgid "permissions.app.user.add_groupuser"
+msgstr "dodawanie grupy"
+
+#: models.py:96
+msgid "permissions.app.user.change_groupuser"
+msgstr "edycja grupy"
+
+#: models.py:97
+msgid "permissions.app.user.activate_groupuser"
+msgstr "aktywacja grupy"
+
+#: models.py:98
+msgid "permissions.app.user.list_groupuser"
+msgstr "lista grup"
+
+#: models.py:99
+#, fuzzy
+#| msgid "permissions.app.user.add_user"
+msgid "permissions.app.user.anonimize"
+msgstr "dodawanie użytkownika"
+
+#: models.py:149
+msgid "user.relation.type"
+msgstr "Rodzaj relacji"
+
+#: models.py:150
+msgid "user.relation.left"
+msgstr "Osoba powiązana z"
+
+#: models.py:151
+msgid "user.relation.right"
+msgstr "Osoba powiązana"
+
+#: models.py:152
+msgid "user.relation.description"
+msgstr "Opis"
+
+#: view_utils.py:31 views.py:322
+msgid "role.error.no_app_role"
+msgstr ""
+
+#, fuzzy
+#~| msgid "permissions.app.user.add_user"
+#~ msgid "permissions.app.%s.%s"
+#~ msgstr "dodawanie użytkownika"

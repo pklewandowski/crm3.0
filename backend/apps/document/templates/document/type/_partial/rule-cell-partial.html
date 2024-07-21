@@ -1,0 +1,66 @@
+<tr>
+    <td class="rule-list-sort-anchor"><i class="fas fa-arrows-alt"></i>{{ f.sq }}</td>
+    <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=f.days nolabel=True %}</td>
+    <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=f.after_before nolabel=True %}</td>
+    <td>{% include 'py3ws/forms/fields/p3form_field.html' with field=f.what nolabel=True %}</td>
+    <td>
+        <div class="rule-list-input-group rule-list-condition">
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=f.condition nolabel=True %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_conditional_operator nolabel=True %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_conditional_value nolabel=True %}
+        </div>
+    </td>
+    <td>
+        <div style="position: relative">
+            <button class="btn btn-default rule-toggle-btn width-100" type="button">
+                Wybierz jedną lub więcej akcji...
+                <span class="caret"></span>
+            </button>
+
+            <div class="rule-list-container dropdown-layer">
+                <div class="row">
+                    <div class="col-lg-6 nopadding-right">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_status_change_from %}
+                    </div>
+                    <div class="col-lg-6">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_status_change_to %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 nopadding-right">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_send_sms %}
+                    </div>
+                    <div class="col-lg-4 nopadding-right">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_send_email %}
+                    </div>
+                    <div class="col-lg-4">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_send_letter %}
+                    </div>
+                </div>
+                <hr style="margin-top: 0px;margin-bottom: 15px;"/>
+                <div class="row">
+                    <div class="col-lg-6 nopadding-right">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_generate_alert_for %}
+                    </div>
+                    <div class="col-lg-6">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_generate_alert_text %}
+                        <div class="row">
+                            <div class="col-lg-6 nopadding-right">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_send_sms_to_employees %}
+                            </div>
+                            <div class="col-lg-6">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_send_email_to_employees %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% include 'py3ws/forms/fields/p3form_field.html' with field=f.rule_run_method %}
+            </div>
+        </div>
+    <td>
+        <button type="button" class="btn btn-danger rule-delete-btn"><i class="far fa-trash-alt rule-delete-btn"></i></button>
+        <div class="rule-delete-chk">
+            {{ f.DELETE }}
+        </div>
+    </td>
+</tr>

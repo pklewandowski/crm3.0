@@ -1,0 +1,59 @@
+{% load i18n %}
+{% load static %}
+
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#data-tab">Dane</a></li>
+    <li><a data-toggle="tab" href="#attribute-tab">Atrybuty sali</a></li>
+</ul>
+
+<form method="post" id="issue-form">
+    {% csrf_token %}
+    <div class="tab-content pad-t">
+
+        <div id="data-tab" class="tab-pane fade in active">
+            <div class="row">
+                <div id="user" class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{% trans 'meeting_room.panel.label.meeting_place_data' %}</div>
+                        <div class="panel-body">
+
+                            <div class="form-group">
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.is_local %}
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.name %}
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.seats %}
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.max_seats %}
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.av_hour_from %}
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.av_hour_to %}
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.color %}
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.max_continous_events %}
+                                {% include 'py3ws/forms/fields/p3form_field.html' with field=form.min_break %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4" id="meeting-room-address-panel">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{% trans 'meeting_room.panel.label.meeting_place_address_data' %}</div>
+                        <div class="panel-body">
+                            <fieldset>
+                                {% include 'address/_partial/_address.html' with form=address_form %}
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="attribute-tab" class="tab-pane fade in">
+
+            <div class="row">
+                <div class="col-lg-6">
+                    {% include 'document/type/_partial/_attributes.html' with attr=attr form=attr_form autocollapse=False %}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

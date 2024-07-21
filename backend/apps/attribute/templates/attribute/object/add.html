@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+
+{% block form_icon %}fa fa-users{% endblock %}
+    {% block form_title %}{{ object_type.name }}{% if form.errors %} - <span class="error-header-info">wystąpiły błędy!</span>{% endif %}
+    {% endblock %}
+    {% block form_subtitle %}Dodawanie / Edycja atrybutów{% endblock %}
+    {% block form_title_right %}
+        <button class="btn btn-success btn-submit" type="submit"><i class="fa fa-user pad-r"></i>Zapisz</button>
+    {% endblock %}
+
+{% block content %}
+
+    {% if form %}
+
+        {% if form.errors %}
+            <div class="col-lg-12">
+                <div style="height:120px; overflow:auto; width:100%; background-color: #eee; border-radius:5px; margin:20px; padding:10px; border:1px solid #ddd">
+                    <h3>błędy danych</h3>
+                    {{ form.errors }}
+                </div>
+            </div>
+        {% endif %}
+
+        <form method="post" id="user-form">
+            {% csrf_token %}
+
+            <div id="user" class="col-lg-6 col-sm-6 pad-t">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Dane</div>
+                    <div class="panel-body">
+                        {% include 'attribute/object/_partial/_form_elements.html' with form=form %}
+                    </div>
+                </div>
+            </div>
+
+            <!--
+
+            <div class="col-lg-8 col-sm-8 pad-t">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Walidatory niestandardowe</div>
+
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+
+            -->
+
+        </form>
+    {% endif %}
+
+{% endblock %}
+
+{% block site_script %}{% endblock %}

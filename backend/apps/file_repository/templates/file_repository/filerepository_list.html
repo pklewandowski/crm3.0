@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load rest_framework %}
+
+{% block form_icon %}fas fa-book{% endblock %}
+{% block form_title %}Repozytorium dokumentów {% endblock %}
+{% block form_subtitle %}{% endblock %}
+{% block form_title_right %}
+    <a id="addNewReportTemplateBtn" href="#" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Lista dokumentów</div>
+                <div class="panel-body repo-list">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nazwa</th>
+                            <th>Nr. wersji</th>
+                            <th>Data utworzenia</th>
+                            <th>Utworzył</th>
+                            <th>Opis</th>
+                            <th style="width:100px;"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for report in object_list %}
+                            <tr data-id="{{ report.pk }}">
+                                <td class="get-report-file"><img src="{{ report.filename|mime_type_icon:'md' }}" alt=""/></td>
+                                <td>{{ report.name }}</td>
+                                <td>{{ report.version }}</td>
+                                <td>{{ report.creation_date }}</td>
+                                <td>{{ report.created_by }}</td>
+                                <td>{{ report.description }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default edit-report-template"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default get-report-file"><i class="fa fa-download"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "file_repository/modal/report_template_form_modal.html" %}
+
+    {% if is_paginated %}
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-lg-12 text-center">
+                {% include "py3ws/lists/_partial/simple_paginator.html" with page_obj=page_obj %}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block site_js %}
+    <script type="text/javascript" src="{% static 'dist/fileRepository/fileRepository-bundle.js' %}"></script>
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'dist/document/document-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/fileRepository/fileRepository-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_any_script %}
+    <script>
+        _g.fileRepository = {
+            urls: {
+                api: "{% url 'file.repository.api' %}",
+                getFile: "{% url 'file.repository.get_file' %}"
+            }
+        };
+    </script>
+{% endblock %}

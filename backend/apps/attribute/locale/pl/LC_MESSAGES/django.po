@@ -1,0 +1,113 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-16 13:20+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+# attribute datatype
+#: .\attribute\forms.py:10 .\attribute\models.py:13
+msgid "attribute.generic_datatype.label"
+msgstr "Typ podstawowy"
+
+#: .\attribute\models.py:7
+msgid "attribute.name.label"
+msgstr "Nazwa"
+
+#: .\attribute\models.py:8
+msgid "attribute.description.label"
+msgstr "Opis"
+
+#: .\attribute\models.py:10
+msgid "attribute.regex.label"
+msgstr "Wyrażenie regularne"
+
+#: .\attribute\models.py:11
+#, fuzzy
+#| msgid "attribute.name.label"
+msgid "attribute.mask"
+msgstr "Nazwa"
+
+#: .\attribute\models.py:12
+msgid "attribute.default_format.label"
+msgstr "Format domyślny"
+
+#: .\attribute\models.py:14
+#, fuzzy
+#| msgid "attribute.sq.label"
+msgid "attribute.subtype"
+msgstr "Kolejność"
+
+#: .\attribute\models.py:15
+msgid "attribute.min_length.label"
+msgstr "Min. długość danych"
+
+#: .\attribute\models.py:16
+msgid "attribute.max_length.label"
+msgstr "Max. długość danych"
+
+#: .\attribute\models.py:17
+msgid "attribute.min_value.label"
+msgstr "Wartość min."
+
+#: .\attribute\models.py:18
+msgid "attribute.max_value.label"
+msgstr "Wartość max."
+
+#: .\attribute\models.py:19
+msgid "attribute.decimal_places.label"
+msgstr "L. miejsc po przecinku"
+
+#: .\attribute\models.py:20
+msgid "attribute.dictionary.label"
+msgstr "Słownik"
+
+#: .\attribute\models.py:32
+#, fuzzy
+#| msgid "attribute.name.label"
+msgid "attribute.validator.name.label"
+msgstr "Nazwa"
+
+#: .\attribute\models.py:33
+#, fuzzy
+#| msgid "attribute.data_type.label"
+msgid "attribute.validator.code.label"
+msgstr "Typ danych"
+
+#: .\attribute\models.py:34
+#, fuzzy
+#| msgid "attribute.description.label"
+msgid "attribute.validator.description.label"
+msgstr "Opis"
+
+#: .\attribute\templates\attribute\list.html:7
+msgid "attribute.add.button.label"
+msgstr "Nowy atrybut"
+
+#: .\attribute\templates\attribute\object\list.html:13
+msgid "attribute.object.add.button.label"
+msgstr "Dodaj atrybut"
+
+#~ msgid "attribute.is_required.label"
+#~ msgstr "Wymagalny"
+
+#~ msgid "attribute.length.label"
+#~ msgstr "Długość"
+
+#~ msgid "attribute.format.label"
+#~ msgstr "Format"

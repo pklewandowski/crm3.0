@@ -1,0 +1,22 @@
+<template id="schedule-formset-row-template">
+
+    <tr data-id="__PRODUCT_ID__" data-removable="true" data-status="new">
+        <td></td>
+        <td>{{ ef.maturity_date }}</td>
+        <td></td>
+        <td>{{ ef.instalment|attr:'data-type:normal' }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+            <div class="btn-group">
+                <a class="btn btn-danger btn-sm delete">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+            </div>
+        </td>
+        <input type="hidden" name="{{ef.product.html_name}}" value="__PRODUCT_ID__"/>
+        {{ef.id.as_hidden}}
+    </tr>
+</template>

@@ -1,0 +1,2 @@
+from crm.settings import *
+

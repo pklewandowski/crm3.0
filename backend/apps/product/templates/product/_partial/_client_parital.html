@@ -1,0 +1,74 @@
+{% config_var 'MODE_EDIT' as mode_edit %}
+<div class="panel panel-default">
+    <div class="panel-heading">Główny beneficjent - Osoba do kontaku</div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="main-user">
+                    <div class="suggestion-box-wrapper suggestion-list">
+                        <input class="form-control input-md search-box" type="text" id="search-box"
+                               placeholder="Wyszukaj reprezentanta" autocomplete="off"/>
+                        <div id="suggestion-box" class="suggestion-box"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <table id="main_client_table" class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Imię i nazwisko / Firma</th>
+                        <th>Email</th>
+                        <th>Pesel</th>
+                        <th>Nip</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ form.instance.client.user.first_name|default_if_none:'' }} {{ form.instance.client.user.last_name|default_if_none:'' }}</td>
+                        <td>{{ form.instance.client.user.email|default_if_none:'' }}</td>
+                        <td>{{ form.instance.client.user.personal_id|default_if_none:'' }}</td>
+                        <td>{{ form.instance.client.user.nip|default_if_none:'' }}</td>
+
+                    </tr>
+
+                    </tbody>
+                </table>
+                {{ form.client }}
+            </div>
+        </div>
+    </div>
+</div>
+{% if mode == mode_edit %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Pozostali beneficjenci</div>
+        <div class="panel-body">
+
+            <div class="col-lg-12 col-sm-12" style="padding-left: 0" id="product-client-formset-container">
+                <div class="participant-users">
+                    <div class="suggestion-box-wrapper suggestion-list">
+                        <input class="form-control input-md search-box" type="text" id="search-box"
+                               placeholder="Wyszukaj klienta" autocomplete="off"/>
+                        <div id="suggestion-box" class="suggestion-box"></div>
+                    </div>
+                </div>
+            </div>
+            <table id="client_formset_table" class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Imię i nazwisko</th>
+                    <th>Email</th>
+                    <th>Pesel</th>
+                    <th>Nip</th>
+                    <th>Funkcja</th>
+                    <th>Usuń</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in client_formset %}
+                    {% include 'product/_partial/_formset/_row/_client_formset_row_partial.html' with i=i index=forloop.counter0 %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}

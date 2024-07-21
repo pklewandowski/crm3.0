@@ -1,0 +1,29 @@
+<div class="lv-txt-container lv-txt-control">
+    {{ field.label_tag }}
+    <div class="input-group input-group-sm" data-toggle="buttons">
+        <div class="input-group-btn" data-toggle="buttons">
+            <label class="btn btn-sm btn-default">
+                <input data-type="dtc" class="lv-txt-dtc lv-txt-dtc-radio-option" type="radio" name="{{ field.name }}_dtc"/><i class="fa fa-bars"></i>
+            </label>
+            <label class="btn btn-default">
+                <input data-type="dtc-custom" class="lv-txt-dtc lv-txt-dtc-radio-custom"
+                       type="radio" name="{{ field.name }}_dtc"
+                       value="__CUSTOM__"/>
+                <i class="fa fa-font"></i>
+            </label>
+        </div>
+
+        <select class="form-control input-sm lv-txt-dtc-option" {% if field.field.widget.attrs.readonly %} readonly="readonly" disabled="disabled"{% endif %}>
+            {% for choice_id, choice_label in field.field.choices %}
+                <option data-type="dtc" class="lv-txt-dtc" value="{{ choice_id|default_if_none:'' }}">{{ choice_label }}</option>
+            {% endfor %}
+        </select>
+
+        <input style="display:none;" data-type='custom' class="form-control input-sm lv-txt-custom"
+               type="text"
+               name="{{ field.name }}_custom" {% if field.field.widget.attrs.readonly %}data-readonly="true" readonly="readonly" disabled="disabled"{% endif %}/>
+
+    </div>
+    {{ field.errors }}
+    <input class="lv-txt-json" type="hidden" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default_if_none:"" }}"/>
+</div>

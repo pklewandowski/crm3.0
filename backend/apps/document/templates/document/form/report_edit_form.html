@@ -1,0 +1,22 @@
+{% extends 'app/modal_base_template.html' %}
+
+
+{% block modal_classes %}{% endblock %}
+{% block id_modal %}reportEditModal{% endblock %}
+{% block modal_title %}Edycja pisma{% endblock %}
+{% block id_container %}reportEditContainer{% endblock %}
+
+{% block modal_content %}
+    <form id="reportEditForm" autocomplete="off" data-url="{% url 'report.api' %}">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="name" id="id_name"/>
+                    <label for="id_name">Nazwa</label>
+                </div>
+
+            </div>
+        </div>
+        <input type="hidden" name="id" id="id_id"/>
+    </form>
+{% endblock %}

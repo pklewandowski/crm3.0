@@ -1,0 +1,14 @@
+
+    <div class="row">
+        <div class="col-lg-3">
+            {% include 'product_retail/partial/_product_category_partial.html' %}
+        </div>
+        <div class="col-lg-6">
+
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.category_name %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.name %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.unit_price %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.description %}
+            {% include 'py3ws/forms/fields/p3form_field.html' with field=form.category.as_hidden %}
+        </div>
+    </div>

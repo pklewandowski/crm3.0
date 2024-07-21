@@ -1,0 +1,200 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="sortable" style="width: 100%; white-space: nowrap; overflow: auto; margin-bottom: 10px;">
+            <div class="stat-filter stat-filter-two-width">
+                <div class="panel panel-default">
+                    <div class="panel-heading sortable-handle">Data rejestracji</div>
+                    <div class="panel-body filter-panel">
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=income.form.date_from %}
+                        {% include 'py3ws/forms/fields/p3form_field.html' with field=income.form.date_to %}
+                    </div>
+                </div>
+            </div>
+            <div class="stat-filter stat-filter-two-width">
+                <div class="panel panel-default filter-panel">
+                    <div class="panel-heading panel-heading-with-controls sortable-handle">
+                        <div class="float-left">Doradcy</div>
+                        <div class="float-right">
+                            <input class="toggle-all" type="checkbox" id="toggleAllIncomeAdviserBtn"/>
+                        </div>
+                    </div>
+
+                    <div class="panel-body ">
+                        <div class="toggle-chk" style="overflow: auto;max-height: 100px;">
+                            <span class="checkbox-horizontal small-list">
+                                {{ income.form.adviser }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-filter stat-filter-two-width">
+                <div class="panel panel-default filter-panel">
+                    <div class="panel-heading panel-heading-with-controls sortable-handle">
+                        <div class="float-left">DRS</div>
+                        <div class="float-left">
+                            <a href="{% url 'stat.add_group_adviser' %}">
+                                <i class="fa fa-plus-circle" style="font-size: 15px;cursor: pointer; margin-left: 5px;"></i>
+                            </a>
+                        </div>
+                        <div class="float-right">
+                            <input class="toggle-all" type="checkbox" id="toggleAllIncomeDrsBtn"/>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="toggle-chk" style="overflow: auto;max-height: 100px;">
+                            <span class="checkbox-horizontal small-list">
+                                <ul style="width: 100%;">
+                                    {% for i in income.form.drs %}
+                                        <li>
+                                            <div class="stat-filter-group-item" style="width: 100%; display: inline-block;">
+                                                <div style="float: left;">
+                                                    {{ i }}
+                                                </div>
+                                                <div style="float: right;">
+
+                                                    <div class="stat-filter-editable-action ">
+                                                        <a href="{% url 'stat.edit_group_adviser' i.data.value %}"><i class="fa fa-edit"></i></a>
+                                                        <a href="#">
+                                                            <i data-id="{{ i.data.value }}"
+                                                               class="fa fa-times-circle" data-url="{% url 'stat.delete_group_adviser' %}"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-filter stat-filter-one-width">
+                <div class="panel panel-default filter-panel">
+                    <div class="panel-heading sortable-handle">B2B/B2C</div>
+                    <div class="panel-body">
+                        <span class="checkbox-horizontal">
+                            {{ income.form.business_type }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-filter stat-filter-two-width">
+                <div class="panel panel-default filter-panel">
+                    <div class="panel-heading panel-heading-with-controls sortable-handle">
+                        <div class="float-left">Typ umowy</div>
+                        <div class="float-right">
+                            <input class="toggle-all" type="checkbox" id="toggleAllIncomeAgreementTypeBtn"/>
+                        </div>
+                    </div>
+
+                    <div class="panel-body ">
+                        <div class="toggle-chk" style="overflow: auto;max-height: 100px;">
+                            <span class="checkbox-horizontal small-list">
+                                {{ income.form.agreement_type }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-filter stat-filter-two-width">
+                <div class="panel panel-default filter-panel">
+                    <div class="panel-heading panel-heading-with-controls sortable-handle">
+                        <div class="float-left">Grupy statusów</div>
+                        <div class="float-left">
+                            <a href="{% url 'stat.add_group_loan_status' %}">
+                                <i class="fa fa-plus-circle" style="font-size: 15px;cursor: pointer; margin-left: 5px;"></i>
+                            </a>
+                        </div>
+                        <div class="float-right">
+                            <input class="toggle-all" type="checkbox" id="toggleAllIncomeGroupStatusBtn"/>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="toggle-chk" style="overflow: auto;max-height: 100px;">
+                            <span class="checkbox-horizontal small-list">
+                                <ul style="width: 100%;">
+                                    {% for i in income.form.group_status %}
+                                        <li>
+                                            <div class="stat-filter-group-item" style="width: 100%; display: inline-block;">
+                                                <div style="float: left;">
+                                                    {{ i }}
+                                                </div>
+                                                <div class="stat-filter-editable-action">
+                                                    <a href="{% url 'stat.edit_group_loan_status' i.data.value %}"><i class="fa fa-edit"></i></a>
+                                                    <a href="#">
+                                                        <i data-id="{{ i.data.value }}"
+                                                           class="fa fa-times-circle" data-url="{% url 'stat.delete_group_loan_status' %}"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="stat-filter stat-filter-three-width">
+                <div class="panel panel-default filter-panel">
+                    <div class="panel-heading panel-heading-with-controls sortable-handle">
+                        <div class="float-left">Status</div>
+                        <div class="float-right">
+                            <input class="toggle-all" type="checkbox" id="toggleAllIncomeStatusBtn"/>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="toggle-chk" style="overflow: auto;max-height: 100px;">
+                            <span class="checkbox-horizontal small-list">
+                                {{ income.form.status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-filter stat-filter-two-width">
+                <div class="panel panel-default filter-panel">
+                    <div class="panel-heading panel-heading-with-controls sortable-handle">
+
+                        <div class="float-left">Dane pośrednika</div>
+                        <div class="float-right">
+                            <input class="toggle-all" type="checkbox" id="toggleAllIncomeBrokerBtn"/>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="toggle-chk" style="overflow: auto;max-height: 100px;">
+                            <span class="checkbox-horizontal small-list">
+                                {{ income.form.broker }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dane</div>
+            <div class="panel-body">
+                <div class="incomeContainer">
+                    <div id="incomeMcTabs"></div>
+                    <div class="tab-content pad-t" id="incomeData"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

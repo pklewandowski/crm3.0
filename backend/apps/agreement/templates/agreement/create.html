@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block site_css %}
+{% endblock %}
+
+{% block form_icon %}fa fa-handshake-o{% endblock %}
+{% block form_title %}Nowa Umowa {% endblock %}
+{% block form_subtitle %}Tworzenie umowy produktu finansowego dla klienta{% endblock %}
+{% block form_title_right %}
+<button class="btn btn-success pull-right pad-t btn-submit" type="submit"><i class="fa fa-user pad-r"></i>Zapisz</button>
+{% endblock %}
+
+
+{% block content %}
+{{form.errors}}
+<div class="col-lg-12 col-sm-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">Dane umowy</div>
+        <div class="panel-body">
+            {% include "agreement/_partial/_form_elements.html" with form=form mode=mode %}
+        </div>
+    </div>
+</div>
+
+{% include "agreement/_template/_client_list_row_template.html" with form=form %}
+
+{% endblock %}
+
+{% block site_js %}
+
+{% endblock %}
+
+{% block site_script %}
+var csrf_token =  '{{ csrf_token }}';
+var client = {ajxClientlistUrl: "{% url 'client.get_list' %}"}
+{% endblock %}
+
+{% block site_inline_js %}
+<script type="text/javascript" src="{% static 'agreement/js/agreement.js' %}"></script>
+{% endblock %}

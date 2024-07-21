@@ -1,0 +1,22 @@
+{% extends 'iframe.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h3>
+                Użytkownik został pomyśłnie utworzony.
+            </h3>
+            <button id="add_user_to_list" class="btn btn-success btn-sm">Dodaj użytkownika do listy</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block site_inline_js %}
+    <script>
+        $(document).ready(function () {
+            $("#add_user_to_list").click(function () {
+                parent.getUserFromIframe();
+            });
+        });
+    </script>
+{% endblock %}

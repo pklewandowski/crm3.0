@@ -1,0 +1,49 @@
+{% load attachment_tags %}
+{% load static %}
+
+
+<div class="thumbnail-container" id="file_thumbnail_container">
+    <div id="file_thumbnail_film">
+        {% if attachment_formset|length %}
+            {% for i in attachment_formset %}
+                <div class="thumbnail thumbnail-image-container unselectable" tabindex="-1" data-id="{{ i.instance.pk }}">
+                    <div class="thumbnail-btn thumbnail-close-btn"><i class="fa fa-times"></i></div>
+                    <div class="thumbnail-btn thumbnail-restore-btn"><i class="fa fa-redo"></i></div>
+
+                    {% get_file_icon_image i.instance as file_icon_url %}
+                    <div class="thumbnail-image" data-id="{{ i.instance.pk }}"
+                         data-file_name="{{ i.instance.file_name }}"
+                         data-mime_type="{{ i.instance.file_mime_type }}">
+                        <img data-type="prtscn" class="desaturate" src="{{ file_icon_url }}" draggable="true"/>
+
+                        {% if i.file_mime_type.value == 'audio/mpeg' %}
+                            <div style="position: relative; top: 0; right: 0;" class="atm-play-music"><i class="far fa-play-circle"></i></div>
+                        {% endif %}
+                    </div>
+
+                    <div class="scroll-box" data-toggle="tooltip" title="{{ i.instance.file_original_name }}">
+                        <div class="scroll-text">{{ i.instance.file_original_name }}</div>
+                    </div>
+                    {{ i.file_name }}
+                    {{ i.file_original_name }}
+                    {{ i.file_mime_type }}
+                    {{ i.file_ext }}
+                    {{ i.file_path }}
+                    {{ i.type }}
+                    {{ i.id }}
+                    {{ i.DELETE }}
+                    <div class="attachment-description">
+                        {{ i.description }}
+                    </div>
+                    {% if i.file_mime_type.value == 'audio/mpeg' %}
+                        <audio
+                                {#                                        crossOrigin="anonymous" media-player="audioPlayer"#}
+                                class="audio" src="/media/document/attachments/{{ document_id }}/{{ i.file_name.value }}"></audio>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{% include 'attachment/_template/_file_thumbnail_template.html' %}

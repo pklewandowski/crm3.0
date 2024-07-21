@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    {% config_var 'COMPANY_CODE' as company_code %}
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="dashboard-clients"></div>
+        </div>
+        <div class="col-lg-2 nopadding-left">
+            <div class="dashboard-balance-sum"></div>
+        </div>
+        <div class="col-lg-2 nopadding-left">
+            <div class="dashboard-all-loan-sum"></div>
+        </div>
+        <div class="col-lg-2 nopadding-left">
+            <div class="dashboard-instalment-income"></div>
+        </div>
+        <div class="col-lg-2 nopadding-left">
+            <div class="dashboard-average-loan-value"></div>
+        </div>
+        <div class="col-lg-2 nopadding-left">
+            <div class="dashboard-median-loan-value"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="incoming-events-container"></div>
+            <div class="current-contacts-container"></div>
+        </div>
+
+
+        <div class="col-lg-4 nopadding-left">
+
+            {% if company_code != 'OPENCASH' %}
+                {#            todo: DRUT JAK HUJ !!!!!!! #}
+                <div class="dashboard-document-status-chart">
+                    <div class="panel panel-default home-info-panel" style="height: 100%;">
+                        <div class="panel-heading">Wnioski pożyczkowe</div>
+                        <div class="panel-body" style="height: calc(100% - 20px);">
+                            <canvas style="width: 100%; height: 200px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-document-by-adviser-chart">
+                    <div class="panel panel-default home-info-panel" style="height: 100%;">
+                        <div class="panel-heading">Wnioski doradców - top 10</div>
+                        <div class="panel-body" style="height: calc(100% - 20px);">
+                            <canvas style="width: 100%; height: 200px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-5 nopadding-left" style="height: calc(100vh - 225px);">
+            <div class="panel panel-default home-info-panel" style="height: 100%;">
+                <div class="panel-heading">Mój kalendarz</div>
+                <div class="panel-body" style="height: calc(100% - 20px);">
+                    <div class="calendar-container" id="calendarContainer" style="height: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block site_css %}
+    <link href="{% static 'dist/home/home-bundle.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_any_script %}
+    {% include 'home/_js.html' %}
+{% endblock %}

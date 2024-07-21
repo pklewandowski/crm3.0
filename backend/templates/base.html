@@ -1,0 +1,286 @@
+{% load static %}
+{% load l10n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <title>{{ request.session.company_name }}</title>
+
+    {#    <link href="{% static 'fonts/font-awesome-5.0.13/css/fontawesome-all.css' %}" rel="stylesheet" type="text/css">#}
+    <link href="{% static 'fonts/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    {#    <link href="{% static 'resource/bootstrap-4.1.3/dist/css/bootstrap.css' %}" rel="stylesheet" type="text/css">#}
+    {#    <link href="{% static 'resource/jquery-ui/themes/base/jquery-ui.min.css' %}" rel="stylesheet" type="text/css">#}
+    {#    <link href="{% static 'resource/jquery-ui/themes/ui-darkness/jquery-ui.min.css' %}" rel="stylesheet" type="text/css">#}
+    <link href="{% static 'resource/bootstrap/css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/eonasdan-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/bootstrap-timepicker/css/bootstrap-timepicker.min.css' %}" rel="stylesheet" type="text/css">
+
+    <link href="{% static 'resource/select2/dist/css/select2.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/select2-bootstrap-theme/dist/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/bootstrap-multiselect/css/bootstrap-multiselect.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'resource/lobibox/css/lobibox.min.css' %}" rel="stylesheet" type="text/css">
+
+    <link href="{% static 'common/css/nav.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'common/css/bootstrap.datepicker.override.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'common/resource/sticky-notes/css/sticky-notes.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'common/css/list.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'common/css/style.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/main/main-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/_controls/_controls-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/side-menu.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'custom_css/layout-config.css' %}" rel="stylesheet" type="text/css">
+
+    {% block site_css %}
+    {% endblock %}
+
+    {% include "base/script.html" %}
+</head>
+
+<body>
+<div id="main" class="container-fluid {% if side_menu_state == 'open' %}main-open{% endif %}">
+    <!-- Navbar -->
+    <div style="z-index:10;" class="navbar navbar-inverse" role="navigation">
+        <div style="margin:auto; width: 100%; display:flex; max-height: 70px; height: 70px;">
+            <div style="display: flex">
+                <div class="navbar-header" style="display: flex">
+                    <a href="{% url 'home.index' %}" class="navbar-brand"><img src="{% static 'images/logo/logo.png' %}" style="max-height:50px;"></a>
+                </div>
+
+                <div style="display: flex;border-left: 1px solid #737373; width: 1px; height:60px; margin: 5px; padding-top: 10px;"></div>
+
+                {# INFORMACJA O FORMULARZU ---------------------------#}
+                <div style="display: flex; align-items: center;">
+                    <div style="overflow: hidden; white-space: nowrap;">
+                        <div style="color: #c7c7c7;">
+                            <div style="float:left; margin-right:10px; display: inline;margin-left: 20px;">
+                                <i class="{% block form_icon %}{% endblock %}" style="font-size: 40px;"></i>
+                            </div>
+                            <div style="float:left; display: inline;padding-left: 10px;">
+                                <div style="display:block; font-size:18px;"> {% block form_title %}{% endblock %}</div>
+                                <div style="display:block; font-size:14px;">{% block form_subtitle %}{% endblock %}</div>
+                            </div>
+                        </div>
+
+                        <div class="action-button-container">
+                            {% if messages %}
+                                <button class="btn btn-info" type="button"><i class="fas fa-info"></i></button>
+                            {% endif %}
+                            {% if errors %}
+                                <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#errorsModal"><i class="fas fa-exclamation"></i></button>
+
+                            {% endif %}
+                            {% block form_title_right %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; margin-left: auto; padding-right: 20px;">
+                <div class="smart-button-menu-container">
+                    <div class="smart-button-menu quick-menu-btn">
+                        <div><i class="fas fa-ellipsis-v"></i></div>
+                    </div>
+                </div>
+                <div style="color: #c7c7c7;">
+                    <div class="dropdown">
+                        <div class="avatar-image-big"
+                             class="dropdown-toggle"
+                             data-toggle="dropdown"
+                             aria-haspopup="true"
+                             aria-expanded="true"
+                             id="logged_user_data">
+                            {% if request.user.avatar_filename %}
+                                <img src="{{ MEDIA_URL }}avatar/{{ request.user.avatar_filename }}">
+                            {% else %}
+                                <div class="name-letter"><i class="fas fa-user"></i></div>
+                            {% endif %}
+                        </div>
+                        <div class="dropdown-menu dropdown-menu-right avatar-menu" aria-labelledby="logged_user_data">
+                            <div class="logged-user-dropdown-panel">
+                                <div class="logged-user-name">
+                                    <div>{{ request.user.first_name }} {{ request.user.last_name }}</div>
+                                    <div>({{ request.user.username }})</div>
+                                    {% config_var 'DATABASES' as db %}
+                                    <div style="padding: 0 10px; font-size: 10px;">
+                                        <span>db:&nbsp;{{ db.default.NAME }}</span>
+                                        <span>v.:&nbsp;{% config_var 'VERSION' %} debug: {% config_var 'DEBUG' %}</span>
+                                    </div>
+
+                                </div>
+                                <ul class="">
+                                    <li><a href="#"><i class="far fa-comments"></i>Chat...</a></li>
+                                    <li><a href="#"><i class="fas fa-envelope"></i>Wiadomości...</a></li>
+                                    <li><a href="#"><i class="fas fa-sticky-note"></i>Sticky notes</a></li>
+                                    <ul>
+                                        <li><a href="#" id="mnu_sticky_note_add"><i class="far fa-plus-square"></i>dodaj</a></li>
+                                        <li><a href="#" id="mnu_sticky_note_toggle"><i class="far fa-eye"></i>pokaż/ukryj</a></li>
+                                    </ul>
+                                    <li><a href="{% url 'user.changepassword' %}"><i class="fas fa-key"></i></i>Zmień hasło...</a></li>
+                                    <hr style="margin: 5px;"/>
+                                    <li><a href="#"><i class="fas fa-cog"></i>Ustawienia...</a></li>
+                                    <hr style="margin: 5px;"/>
+                                    <li><a href="{% url 'login.logout' %}"><i class="fas fa-sign-out-alt"></i>Wyloguj</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            {% if notifications %}
+
+                <div class="dropdown notification-dropdown" id="id_notifications"
+                     style="right:-10px; top: 25px; display: inline-block; float: right;">
+
+                    <div class="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="notification_data">
+                        <i class="fas fa-bell notifications-btn alert-bell" style="font-size: 30px; cursor: pointer;"></i>
+                        <div class="notification-count">{{ notifications|length }}</div>
+                    </div>
+
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notification_data">
+                        <div class="notifications-container">
+                            <table class="table table-hover notification-table">
+                                {% for i in notifications %}
+                                    <tr data-id="{{ i.pk|unlocalize }}">
+                                        <td>{{ i.effective_date|date:'Y-m-d' }}</td>
+                                        <td>{{ i.text }}</td>
+                                        <td><a href="#" class="close-notification-btn"><i class="fa fa-times" style="cursor:pointer;"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+        {# END INFORMACJA O FORMULARZU ------------------------------#}
+
+
+    </div>
+    <!-- /navbar -->
+
+    <div id="mySidenav" class="sidenav {% if side_menu_state == 'open' %}sidenav-open{% endif %}">
+        <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
+        {#        <div class="col-lg-12 pad-b">#}
+        {#            <div class="input-group">#}
+        {#                <input type="text" class="form-control input-sm" placeholder="Szukaj..."#}
+        {#                       style="background:#555; color:white;">#}
+        {#                <span class="input-group-btn">#}
+        {#            <button class="btn btn-secondary input-sm" type="button" style="background:#777; color:white;"><i class="fa fa-search"></i></button>#}
+        {#          </span>#}
+        {#            </div>#}
+        {#        </div>#}
+        <div class="toggle-side-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="pad-t">
+            {% include "base/_partial/side_menu.html" %}
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="form-action-messages">
+            <ul class="messages">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+
+    <div id="page_content" class="page-content">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+{% include 'base/modal/errors_modal.html' %}
+
+{#<script type="text/javascript" src="{% static 'fonts/fontawesome-free/js/all.min.js' %}"></script>#}
+
+<script type="text/javascript" src="{% static 'resource/moment/min/moment.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/moment/locale/pl.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/jquery-ui.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/js-cookie/js.cookie.js' %}"></script>
+{#<script type="text/javascript" src="{% static 'resource/bootstrap-4.1.3/dist/js/bootstrap.bundle.min.js' %}"></script>#}
+<script type="text/javascript" src="{% static 'resource/bootstrap/js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/eonasdan-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'resource/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/select2/dist/js/select2.full.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/select2/dist/js/i18n/pl.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/bootstrap-multiselect/js/bootstrap-multiselect.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/wNumb.js' %}"></script>
+<script type="text/javascript" src="{% static 'resource/lobibox/js/lobibox.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'js/nav.js' %}"></script>
+<script type="text/javascript" src="{% static 'common/resource/sticky-notes/js/sticky-notes.js' %}"></script>
+<script type="text/javascript" src="{% static 'common/js/controls.js' %}"></script>
+<script type="text/javascript" src="{% static 'common/js/numbers.js' %}"></script>
+<script type="text/javascript" src="{% static 'common/js/keyboard.js' %}"></script>
+<script type="text/javascript" src="{% static 'common/js/script.js' %}"></script>
+<script type="text/javascript" src="{% static 'dist/main/main-bundle.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+
+{% block site_js %}{% endblock %}
+
+
+<script type="text/javascript">
+    {% block site_script %}
+    {% endblock %}
+</script>
+
+{% block site_inline_js %}{% endblock %}
+
+{% block site_any_script %}
+
+{% endblock %}
+
+<div class="sticky-notes-container" style="display:none;"></div>
+
+<script>
+    let _errors = "{{ errors|default_if_none:''|safe }}";
+    let _messages = '{{ messages|default_if_none:'' }}';
+    if (_errors.length) {
+        Lobibox.notify('error', {
+            delay: 0,
+            title: 'Wystąpiły błędy',
+            msg: 'Podczas walidacji danych wystąpiły błędy. Kliknij w ikonę wykrzyknika w celu przejrzenia szczegółów',
+            position: 'top center' //AVAILABLE OPTIONS: 'top left', 'bottom right', 'bottom left', 'bottom right'
+
+        });
+    }
+
+    $('.notification-dropdown').on({
+        "shown.bs.dropdown": function () {
+            this.closable = false;
+        },
+        "click": function (event) {
+            console.log($(event.target).hasClass('notifications-btn'));
+            if ($(event.target).hasClass('notifications-btn')) {
+                $(this).data('closable', true);
+                this.closable = true;
+                console.log($(this).data('closable'));
+            } else {
+                $(this).data('closable', false);
+                this.closable = false;
+            }
+        },
+        "hide.bs.dropdown": function () {
+            return this.closable;
+        }
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends 'table_report/_base_template.html' %}
+
+{% block table_report_head %}
+    <tr>
+        <th>Nr wniosku</th>
+        <th>Data utworzenia</th>
+        <th>Klient</th>
+        <th>Status</th>
+    </tr>
+{% endblock %}
+
+{% block table_report_body %}
+    {% for item in object_list %}
+        <tr>
+            <td>{{ item.code }}</td>
+            <td>{{ item.creation_date|date:'Y-m-d H:i' }}</td>
+            <td>{{ item.owner }}</td>
+            <td>{{ item.status }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}

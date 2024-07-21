@@ -1,0 +1,52 @@
+{% load l10n %}
+
+<tr data-id="{{ cashflow_form.pk }}" {% if cashflow_form.DELETE.value == True %} style="display: none" {% endif %}
+    data-removable="true"
+    data-accounting_type="{{ inst.type.pk }}"
+        {% if inst.type.code == 'COST' %}
+    class="cash-flow-payment-cost"
+        {% elif inst.type.code == 'PAYMENT' %}
+    class="cash-flow-payment-payment"
+        {% elif inst.type.code == 'REM' %}
+    class="cash-flow-payment-rem"
+        {% endif %}
+>
+    {% localize off %}
+        <td class="cashflow-date">{{ cashflow_form.cash_flow_date|unlocalize }}{{ cashflow_form.cash_flow_date.errors }}</td>
+    {% endlocalize %}
+
+    <td class="cashflow-accounting-type-id">
+        {% if inst.type.code == 'COST' %}
+            {{ cashflow_form.accounting_date|unlocalize }}{{ cashflow_form.accounting_date.errors }}
+        {% else %}
+            <span>{{ cashflow_form.accounting_date.as_hidden }}</span>
+        {% endif %}
+    </td>
+
+    <td style="text-align: center;">{{ inst.type.name }}{{ cashflow_form.type.as_hidden }}</td>
+    <td style="text-align: center;">
+        {% if inst.type.subtypes %}
+            <select class="form-control input-md" name="{{ cashflow_form.subtype.html_name }}">
+                {% for i in inst.type.subtypes %}
+                    <option value="{{ i.items|dict_first_key }}"{% if i.items|dict_first_key == inst.subtype %} selected{% endif %}>{{ i.items|dict_first_value }}</option>
+                {% endfor %}
+            </select>
+        {% else %}&nbsp;{% endif %}</td>
+    <td class="decimal-field cashflow-value">{{ cashflow_form.value }}{{ cashflow_form.value.errors }}</td>
+    <td class="cashflow-description">{{ cashflow_form.description }}{{ cashflow_form.value.description }}</td>
+    <td class="cashflow-action">
+        <div>
+            {% if  inst.entry_source == 'FILE' %}&nbsp;{% else %}
+                <a href="#" class="btn btn-danger delete">
+                    <i class="far fa-trash-alt"></i>
+                </a>
+            {% endif %}
+            {{ cashflow_form.DELETE.as_hidden }}
+        </div>
+
+    </td>
+    {{ cashflow_form.product.as_hidden }}
+    {{ cashflow_form.editable.as_hidden }}
+    {{ cashflow_form.entry_source.as_hidden }}
+    {{ cashflow_form.id.as_hidden }}
+</tr>

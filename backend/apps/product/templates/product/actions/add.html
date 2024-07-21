@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_title %}Nowa akcja dla produktu: {{ product.agreement_no }} {% endblock %}
+{% block form_subtitle %}Dodawanie nowej akcji dla produktu{% endblock %}
+
+{% block form_title_right %}
+    <a class="btn btn-success btn-sm btn-submit">{% trans "product.action.add.button.label" %}</a>
+{% endblock %}
+
+{% block site_inline_js %}
+{% endblock %}
+
+{% block site_script %}
+    var csrf_token =  '{{ csrf_token }}';
+    {% include "product/actions/_partial/_site_script._js" %}
+{% endblock %}
+
+{% block content %}
+
+    {% if form %}
+        <form method="post" id="product-form">
+
+            <div class="col-lg-6 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Dane</div>
+                    <div class="panel-body">
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Opis</div>
+                    <div class="panel-body">
+                         {% include "py3ws/forms/fields/p3form_field.html" with field=form.description %}
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    {% endif %}
+{% endblock %}
+

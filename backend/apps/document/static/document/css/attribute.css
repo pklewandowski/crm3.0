@@ -1,0 +1,14 @@
+.attribute-feature-checkbox {
+    float: left;
+    text-align: center;
+}
+
+.attribute-feature-section {
+    font-weight:700;
+    font-size: 12px;
+    background-color: #ddd;
+}
+
+#attribute_feature_table td {
+    width: 100px;
+}

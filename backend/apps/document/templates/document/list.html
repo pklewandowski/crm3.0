@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+
+
+{% block form_icon %}far fa-file-alt{% endblock %}
+{% block form_title %}Wnioski typu: {{ document_type.name }} {% endblock %}
+{% block form_subtitle %}Lista wniosków{% endblock %}
+{% block form_title_right %}
+    <a href="{% url 'document.add' document_type.pk %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+{% endblock %}
+
+{% block site_css %}
+    <style>
+        a, a:hover {
+            color: unset;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+{#    {% if document %}#}
+        {% include 'py3ws/lists/_partial/_list_filter.html' with filter_form=filter_form %}
+{#    {% endif %}#}
+
+
+    <div class="panel panel-default">
+        {% if  page|length %}
+            <div class="panel-body list-panel">
+                <div class="list-container">
+                    <table id="document_list" class="table table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th data-name="code" class="sort sort-{% if sort_field == 'custom_code' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Numer</th>
+                                <th data-name="code" class="sort sort-{% if sort_field == 'code' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Numer systemowy</th>
+                                <th data-name="annex" class="sort sort-{% if sort_field == 'annex' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Aneks dla</th>
+                                <th data-name="owner__first_name"
+                                    class="sort sort-{% if sort_field == 'owner__first_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Imię
+                                </th>
+                                <th data-name="owner__last_name"
+                                    class="sort sort-{% if sort_field == 'owner__last_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Nazwisko
+                                </th>
+                                <th data-name="owner__company_name"
+                                    class="sort sort-{% if sort_field == 'owner__company_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Firma
+                                </th>
+                                <th data-name="owner__personal_id"
+                                    class="sort sort-{% if sort_field == 'owner__personal_id' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">PESEL
+                                </th>
+                                <th data-name="owner__nip" class="sort sort-{% if sort_field == 'owner__nip' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">NIP
+                                </th>
+                                <th>Adres</th>
+                                <th data-name="owner__email" class="sort sort-{% if sort_field == 'owner__email' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">
+                                    E-mail
+                                </th>
+                                <th data-name="status" class="sort sort-{% if sort_field == 'status' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Status</th>
+                                <th>Wartość</th>
+                                <th data-name="creation_date"
+                                    class="sort sort-{% if sort_field == 'creation_date' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Data utworzenia
+                                </th>
+                                <th data-name="created_by__last_name"
+                                    class="sort sort-{% if sort_field == 'created_by__last_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Utworzył
+                                </th>
+
+                                <th style="width:130px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in page %}
+                                <tr>
+                                    <td><a href="{% url 'document.edit' document.pk %}">{{ document.custom_code|default_if_none:'-' }}</a></td>
+                                    <td><a href="{% url 'document.edit' document.pk %}">{{ document.code }}</a></td>
+                                    <td><a href="{% if document.annex %} {% url 'document.edit' document.annex.pk %} {% endif %}">{{ document.annex.code }}</a></td>
+                                    {% if document.owner %}
+                                        <td><a href="{% url 'user.edit' document.owner.pk 'CLIENT' %}">{{ document.owner.first_name|default_if_none:'-' }}</a></td>
+                                        <td><a href="{% url 'user.edit' document.owner.pk 'CLIENT' %}">{{ document.owner.last_name|default_if_none:'-' }}</a></td>
+                                        <td><a href="{% url 'user.edit' document.owner.pk 'CLIENT' %}">{{ document.owner.company_name|default_if_none:'-' }}</a></td>
+                                        <td><a href="{% url 'user.edit' document.owner.pk 'CLIENT' %}">{{ document.owner.personal_id|default_if_none:'-' }}</a></td>
+                                        <td><a href="{% url 'user.edit' document.owner.pk 'CLIENT' %}">{{ document.owner.nip|default_if_none:'-' }}</a></td>
+                                        <td><a href="{% url 'user.edit' document.owner.pk 'CLIENT' %}">{{ document.owner.mail_address|compact_address }}</a></td>
+                                        <td><a href="{% url 'user.edit' document.owner.pk 'CLIENT' %}">{{ document.owner.email|default_if_none:'-' }}</a></td>
+                                    {% else %}
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    {% endif %}
+
+                                    <td><a href="{% url 'document.edit' document.pk %}">{% if document.product %}{{ document.product.status }}{% else %}{{ document.status }}{% endif %}</a></td>
+                                    {% if document.product %}
+                                        <td class="number-value-cell">{{ document.product.value }}</td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                    <td><a href="{% url 'document.edit' document.pk %}">{{ document.creation_date|date:'Y-m-d H:i:s' }}</a></td>
+                                    {% if document.created_by.is_superuser %}
+                                        <td>{{ document.created_by.first_name|default_if_none:'----' }} {{ document.created_by.last_name }}</td>
+                                    {% else %}
+                                        <td><a href="{% url 'user.edit' document.created_by.pk %}">{{ document.created_by.first_name|default_if_none:'----' }} {{ document.created_by.last_name }}</a>
+                                        </td>
+                                    {% endif %}
+
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{% url 'document.edit' document.pk %}"
+                                               class="btn btn-default btn-sm edit">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="panel-body text-center">
+                <h5>Brak danych</h5>
+            </div>
+        {% endif %}
+    </div>
+    {% if page|length %}
+        {% include 'py3ws/lists/_partial/_pagination_current_form.html' %}
+    {% endif %}
+
+
+{% endblock %}
+
+{% block site_any_script %}
+
+
+{% endblock %}

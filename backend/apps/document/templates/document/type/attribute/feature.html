@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block form_icon %}fa fa-file-alt{% endblock %}
+{% block form_title %}Właściwości atrybutów dokumentu: {{ form.document_type.name }}{% endblock %}
+{% block form_subtitle %}Właściwości atrybutów dokumentu dla jego statusów {% endblock %}
+{% block form_title_right %}
+    <button class="btn btn-success pull-right btn-submit" type="submit"><i class="fas fa-check"></i></button>
+{% endblock %}
+
+{% block content %}
+    <div class="loader-container" id="loaderContainer">
+        <div class="loader"></div>
+    </div>
+    <form method="post">
+    {% csrf_token %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Dostępność atrybutów</div>
+
+        <div class="panel-body">
+            <div style="height: calc(100% - 195px); overflow:auto;">
+                <table id="attribute_feature_table" class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        {% for i in form.statuses %}
+                            <th style="min-width: 80px;">{{ i.name }} [{{ i.code }}]</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for s in sections %}
+                        <tr>
+                            <td colspan="100" class="attribute-feature-section">{{ s.name }}</td>
+                        </tr>
+
+                        <tr style="border-bottom: 3px solid #ddd;">
+                            <td style="min-width: 200px;"></td>
+                            {% for i in form.statuses %}
+                                <td>
+                                    {% for k in form.feature %}
+                                        <div class="attribute-feature-checkbox">
+                                            <label><i class="fa {{ feature_icon_mapping|get_key:k }}"></i></label><br>
+                                            {% with s.pk|addstr:"_"|addstr:i.code|addstr:"_"|addstr:k as field_name %}
+                                                {{ form|get_form_field:field_name }}
+                                            {% endwith %}
+                                        </div>
+                                    {% endfor %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+
+                        {% with forloop.counter0 as cnt %}
+                            {% for i in attributes|list_item:cnt %}
+                                <tr>
+                                    <td>{{ i.name }}</td>
+
+                                    {% for j in form.statuses %}
+                                        <td style="white-space: nowrap;">
+                                            {% for k in form.feature %}
+                                                <div style="float: left;">
+                                                    {% with i.pk|addstr:"_"|addstr:s.pk|addstr:"_"|addstr:j.code|addstr:"_"|addstr:k as field_name %}
+                                                        {{ form|get_form_field:field_name }}
+                                                    {% endwith %}
+                                                </div>
+                                            {% endfor %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        {% endwith %}
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</form>
+
+{% block site_css %}
+    <link href="{% static 'document/css/attribute.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block site_inline_js %}
+    <script type="text/javascript" src="{% static 'document/js/attribute_feature.js' %}"></script>
+{% endblock %}

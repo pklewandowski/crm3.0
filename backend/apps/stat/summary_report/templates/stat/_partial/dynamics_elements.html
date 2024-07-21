@@ -1,0 +1,92 @@
+<div id="dynamicsContainer">
+    <div class="row">
+        <div class="col-lg-2">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading sortable-handle">Data umowy</div>
+                        <div class="panel-body filter-panel">
+                            {% include 'py3ws/forms/fields/p3form_field.html' with field=dynamics.form.date_1 %}
+                            {% include 'py3ws/forms/fields/p3form_field.html' with field=dynamics.form.date_2 %}
+                            {% include 'py3ws/forms/fields/p3form_field.html' with field=dynamics.form.date_3 %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default filter-panel">
+                        <div class="panel-heading panel-heading-with-controls sortable-handle">
+                            <div class="float-left">Grupy statusów</div>
+                            <div class="float-left">
+                                <a href="{% url 'stat.add_group_loan_status' %}">
+                                    <i class="fa fa-plus-circle" style="font-size: 15px;cursor: pointer; margin-left: 5px;"></i>
+                                </a>
+                            </div>
+                            <div class="float-right">
+                                <input class="toggle-all" type="checkbox" id="toggleAllDynamicsGroupStatusBtn"/>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="toggle-chk" style="overflow: auto;max-height: 100px;">
+                                <span class="checkbox-horizontal small-list">
+                                    <ul style="width: 100%;">
+                                        {% for i in dynamics.form.group_status %}
+                                            <li>
+                                                <div class="stat-filter-group-item" style="width: 100%; display: inline-block;">
+                                                    <div style="float: left;">
+                                                        {{ i }}
+                                                    </div>
+                                                    <div class="stat-filter-editable-action">
+                                                        <a href="{% url 'stat.edit_group_loan_status' i.data.value %}"><i class="fa fa-edit"></i></a>
+                                                        <a href="#">
+                                                            <i data-id="{{ i.data.value }}"
+                                                               class="fa fa-times-circle" data-url="{% url 'stat.delete_group_loan_status' %}"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-10">
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#dynamics-income-count-tab">Liczba</a></li>
+                <li><a data-toggle="tab" href="#dynamics-income-amount-req-tab">Kwota wnioskowana</a></li>
+                <li><a data-toggle="tab" href="#dynamics-income-amount-grt-tab">Kwota przyznana</a></li>
+            </ul>
+
+            <div class="tab-content pad-t">
+
+                <div class="tab-pane fade in active" id="dynamics-income-count-tab">
+                    <div id="dynamicsCountData">
+                        <canvas id="cumulativeIncomeCountChartContainer"></canvas>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade in" id="dynamics-income-amount-req-tab">
+                    <div id="dynamicsAmountRequestedData">
+                        <canvas id="cumulativeIncomeAmountRequestedChartContainer"></canvas>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade in" id="dynamics-income-amount-grt-tab">
+                    <div id="dynamicsAmountGrantedData">
+                        <canvas id="cumulativeIncomeAmountGrantedChartContainer"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

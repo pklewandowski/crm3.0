@@ -1,0 +1,26 @@
+{% load humanize %}
+
+{% load i18n %}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="header-name">
+            {% if form.instance.client.user.avatar_filename %}
+                <div class="avatar-image-big pull-left">
+                    <img src="{{ MEDIA_URL }}avatar/{{ form.instance.client.user.avatar_filename }}">
+                </div>
+            {% else %}
+                <div class="avatar-image-big pull-left">
+                    <div class="name-letter-big"><i class="fa fa-user"></i></div>
+                </div>
+            {% endif %}
+            <div>{{ form.instance.client.user.first_name|default_if_none:'' }} {{ form.instance.client.user.last_name }}
+                {{ form.instance.client.user.company_name|default_if_none:'' }}
+            </div>
+            <div><span style="font-size: 20px;">Wartość produktu: {{ form.instance.value|float_or_dash }} </span></div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+
+    </div>
+</div>

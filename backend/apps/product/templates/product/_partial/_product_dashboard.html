@@ -1,0 +1,65 @@
+{% load i18n %}
+{% load l10n %}
+{% load static %}
+{% load humanize %}
+{% load product_tags %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">Produkt stan na dzień {{ calc_max_date|date:"Y-m-d" }}</div>
+    <div class="panel-body">
+        <div class="product-dashboard">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="row">
+
+                        <div class="col-lg-3">
+                                <div class="product-dashboard-container">
+                                    {% with balance|split_decimal as balance_split %}
+                                        <div class="product-dashboard-title">Saldo</div>
+                                        <div>
+                                            <span class="product-dashboard-decimal-integer product-dashboard-font-stretched">{{ balance_split.0|floatformat }},</span>
+                                            <span class="product-dashboard-decimal-fractional product-dashboard-font-stretched ">{{ balance_split.1 }}</span>
+                                        </div>
+                                    {% endwith %}
+                                </div>
+                            </div>
+
+                        <div class="col-lg-3">
+                            <div class="product-dashboard-container product-dashboard-interest-for-delay-container">
+                                <div class="product-dashboard-title">Odsetki za opóźnienie</div>
+                                <div>
+                                    <span class="product-dashboard-decimal-integer product-dashboard-font-stretched">{{ 40167|floatformat }},</span>
+                                    <span class="product-dashboard-decimal-fractional product-dashboard-font-stretched ">34</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="product-dashboard-container product-dashboard-cost-container">
+                                <div class="product-dashboard-title">Koszty</div>
+                                <div>
+                                    <span class="product-dashboard-decimal-integer product-dashboard-font-stretched">{{ 40167|floatformat }},</span>
+                                    <span class="product-dashboard-decimal-fractional product-dashboard-font-stretched ">34</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="product-dashboard-container product-dashboard-payment-container">
+                                <div class="product-dashboard-title">Wpłaty</div>
+                                <div>
+                                    <span class="product-dashboard-decimal-integer product-dashboard-font-stretched">{{ 40167|floatformat }},</span>
+                                    <span class="product-dashboard-decimal-fractional product-dashboard-font-stretched ">34</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr/>
+
+        </div>
+    </div>
+</div>
