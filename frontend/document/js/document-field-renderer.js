@@ -129,6 +129,10 @@ class FieldRenderer {
             // todo: if an item or item being modified by action is not editable, raise error that it cannot be modified
             // todo: to do this set onchange raising error on read only item. Wrap then action function to revert changes
             if (at.feature.actions) {
+                // listener action
+                if (at.feature.actions.listener) {
+                    eval(at.feature.actions.listener.fn);
+                }
                 // change action
                 if (at.feature.actions.change) {
                     if (at.feature.autocomplete_url) {
@@ -474,7 +478,7 @@ class FieldRenderer {
 
                     let handle = ToolbarUtils.handleBtn(TOOLBAR_BTN.sm);
 
-                    cnt.appendChild(hr);
+                    cnt.appendChild(jsUtils.Utils.domElement('hr', ''));
                     cnt.appendChild(handle);
 
                     return {fieldContainer: cnt};

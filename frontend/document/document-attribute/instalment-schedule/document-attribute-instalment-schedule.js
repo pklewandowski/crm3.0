@@ -55,13 +55,13 @@ class DocumentAttributeInstalmentSchedule extends InstalmentSchedule {
     }
 
     _getScheduleItemsIds() {
-        let at = DocumentAttributeModel.findAttributeBySelectorClass(INSTALMENT_MATURITY_DATE_SELECTOR.substr(1), this.section.at);
+        let at = DocumentAttributeModel.findAttributeBySelectorClass(INSTALMENT_MATURITY_DATE_SELECTOR.substring(1), this.section.at);
         this.mappingIds['instalment-maturity-date'] = {code: at ? at.id : null, htmlId: at ? `${at.id}__{prefix}__` : null};
 
-        at = DocumentAttributeModel.findAttributeBySelectorClass(INSTALMENT_CAPITAL_SELECTOR.substr(1), this.section.at);
+        at = DocumentAttributeModel.findAttributeBySelectorClass(INSTALMENT_CAPITAL_SELECTOR.substring(1), this.section.at);
         this.mappingIds['instalment-capital'] = {code: at ? at.id : null, htmlId: at ? `${at.id}__{prefix}__` : null};
 
-        at = DocumentAttributeModel.findAttributeBySelectorClass(INSTALMENT_COMMISSION_SELECTOR.substr(1), this.section.at);
+        at = DocumentAttributeModel.findAttributeBySelectorClass(INSTALMENT_COMMISSION_SELECTOR.substring(1), this.section.at);
         this.mappingIds['instalment-commission'] = {code: at ? at.id : null, htmlId: at ? `${at.id}__{prefix}__` : null};
 
         at = DocumentAttributeModel.findAttributeBySelectorClass(INSTALMENT_INTEREST_SELECTOR.substring(1), this.section.at);

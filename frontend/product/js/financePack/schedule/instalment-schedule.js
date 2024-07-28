@@ -579,7 +579,7 @@ class InstalmentSchedule {
         }
 
         let idx = this.getRowIdx(e);
-        let lastIdx = this.rowContainer.rows ? this.rowContainer.rows.length - 1 : 0;
+        let lastIdx = this.rowContainer.querySelectorAll("tr:not(.instalment-schedule-aggregates)").length - 1; // this.rowContainer.rows ? this.rowContainer.rows.length - 1 : 0;
 
         //check if schedule date has changed
         if (e.classList.contains(INSTALMENT_MATURITY_DATE_SELECTOR.substring(1)) || e.classList.contains('vanilla-date-field')) {

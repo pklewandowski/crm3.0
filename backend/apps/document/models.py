@@ -283,7 +283,7 @@ class Document(models.Model):
     status = models.ForeignKey('DocumentTypeStatus', db_column='id_status', verbose_name=_('document.status'), blank=True, on_delete=models.CASCADE)
     code = models.CharField(verbose_name=_('document.code'), max_length=50, null=True, blank=True)
     # document number given by the user
-    custom_code = models.CharField(verbose_name=_('document.code'), max_length=50, null=True, blank=True)
+    custom_code = models.CharField(verbose_name=_('document.custom_code'), max_length=50, null=True, blank=True)
     creation_date = models.DateTimeField(verbose_name=_('document.creation_date'), auto_now_add=True)
     created_by = models.ForeignKey(User, verbose_name=_('document.created_by'), db_column='id_created_by', related_name='document_created_by', on_delete=models.PROTECT)
     description = models.TextField(verbose_name=_('document.description'), null=True, blank=True)
@@ -298,7 +298,7 @@ class Document(models.Model):
         db_table = 'document'
         constraints = [
             models.UniqueConstraint(fields=['type', 'code'], name='document_type_code_uq'),
-            models.UniqueConstraint(fields=['type', 'custom_code'], name='document_type_code_uq_1')
+            # models.UniqueConstraint(fields=['type', 'custom_code'], name='document_type_code_uq_1')
         ]
         default_permissions = ()
         verbose_name = _('Dokument')

@@ -29,7 +29,8 @@ INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT = 'G'
 
 class ProductAccounting(models.Model):
     product = models.ForeignKey('Product', db_column='id_product', on_delete=models.CASCADE)
-    accounting_type = models.ForeignKey(DocumentTypeAccountingType, db_column='id_accounting_type', on_delete=models.CASCADE)
+    accounting_type = models.ForeignKey(DocumentTypeAccountingType, db_column='id_accounting_type',
+                                        on_delete=models.CASCADE)
     sq = models.IntegerField()
 
     class Meta:
@@ -54,7 +55,8 @@ class Product(models.Model):
                                     on_delete=models.CASCADE)  # TODO: Docelowo ustawić wymagalność po usunięciu produktów z bazy
     type = models.ForeignKey(DocumentType, db_column='id_type', on_delete=models.CASCADE)  # TODO: docelowo usunąć
 
-    creditor = models.ForeignKey(Hierarchy, db_column='id_creditor', null=True, blank=True, related_name='creditor', on_delete=models.CASCADE)
+    creditor = models.ForeignKey(Hierarchy, db_column='id_creditor', null=True, blank=True, related_name='creditor',
+                                 on_delete=models.CASCADE)
     client = models.ForeignKey(Client, db_column='id_client', on_delete=models.CASCADE, related_name='product_set')
     adviser = models.ForeignKey(Adviser, db_column='id_adviser', null=True, blank=True, on_delete=models.CASCADE)
     broker = models.ForeignKey(Broker, db_column='id_broker', null=True, blank=True, on_delete=models.CASCADE)
@@ -69,9 +71,11 @@ class Product(models.Model):
     capitalization_date = models.DateField(verbose_name=_('product.capitalization_date'), null=True, blank=True)
     creation_date = models.DateTimeField(verbose_name=_('product.creation_date'))
 
-    creation_user = models.ForeignKey(User, verbose_name=_('product.creation_user'), related_name='creation_user', on_delete=models.CASCADE)
+    creation_user = models.ForeignKey(User, verbose_name=_('product.creation_user'), related_name='creation_user',
+                                      on_delete=models.CASCADE)
 
-    status = models.ForeignKey('ProductTypeStatus', db_column='id_status', related_name='status_set', on_delete=models.CASCADE)
+    status = models.ForeignKey('ProductTypeStatus', db_column='id_status', related_name='status_set',
+                               on_delete=models.CASCADE)
     recount_required_date = models.DateField(verbose_name=_('product.recount_required_date'), null=True, blank=True)
     # recount_required_date_creation_marker: marker where the recount required date was set. It's when recount is done the date is set to null.
     # If during the recount process some other process set the value, the marker changes and thus recount proces would know
@@ -79,22 +83,30 @@ class Product(models.Model):
     recount_required_date_creation_marker = models.DateTimeField(null=True, blank=True)
     attachments = models.ManyToManyField(Attachment, through=ProductAttachment)
     # accounting data
-    creditor_bank_account = models.CharField(verbose_name=_('product.creditor_bank_account'), max_length=28, null=True, blank=True)
-    debtor_bank_account = models.CharField(verbose_name=_('product.debtor_bank_account'), max_length=28, null=True, blank=True)
+    creditor_bank_account = models.CharField(verbose_name=_('product.creditor_bank_account'), max_length=28, null=True,
+                                             blank=True)
+    debtor_bank_account = models.CharField(verbose_name=_('product.debtor_bank_account'), max_length=28, null=True,
+                                           blank=True)
 
     value = models.DecimalField(verbose_name=_('product.value'), max_digits=10, decimal_places=2)
     balance = models.DecimalField(verbose_name=_('product.value'), max_digits=10, decimal_places=2, default=Decimal(-1))
     capital_net = models.DecimalField(verbose_name=_('product.capital_net'), max_digits=10, decimal_places=2, default=0)
     commission = models.DecimalField(verbose_name=_('product.commision'), max_digits=10, decimal_places=2, default=0)
-    instalment_capital = models.DecimalField(verbose_name=_('product.instalment_capital'), max_digits=10, decimal_places=2, default=0)
-    instalment_commission = models.DecimalField(verbose_name=_('product.instalment_commission'), max_digits=10, decimal_places=2, default=0)
-    instalment_interest_rate = models.DecimalField(verbose_name=_('product.instalment_interest'), max_digits=10, decimal_places=4, default=0)
+    instalment_capital = models.DecimalField(verbose_name=_('product.instalment_capital'), max_digits=10,
+                                             decimal_places=2, default=0)
+    instalment_commission = models.DecimalField(verbose_name=_('product.instalment_commission'), max_digits=10,
+                                                decimal_places=2, default=0)
+    instalment_interest_rate = models.DecimalField(verbose_name=_('product.instalment_interest'), max_digits=10,
+                                                   decimal_places=4, default=0)
     # count of days where interest for delay won't be calculated
     grace_period = models.IntegerField(verbose_name=_('product.grace_period'), default=0)
     debt_collection_fee_period = models.IntegerField(verbose_name=_('product.debt_collection_fee_period'), default=0)
-    debt_collection_fee = models.DecimalField(verbose_name=_('product.debt_collection_fee'), max_digits=10, decimal_places=2, default=0)
+    debt_collection_fee = models.DecimalField(verbose_name=_('product.debt_collection_fee'), max_digits=10,
+                                              decimal_places=2, default=0)
     # interest type used in product daily calculation
-    interest_for_delay_rate_use = models.CharField(verbose_name=_('product.interest_for_delay_rate_use'), max_length=10, default=INTEREST_FOR_DELAY_RATE_USE_DEFAULT)
+    interest_for_delay_rate_use = models.CharField(verbose_name=_('product.interest_for_delay_rate_use'), max_length=10,
+                                                   default=INTEREST_FOR_DELAY_RATE_USE_DEFAULT)
+    interest_for_delay_type = models.SmallIntegerField(null=True, blank=True)
 
     # Interest for delay can ge calculated not always basing on capital required (although mostly). There are some specific loans where
     # the base for interest for delay calculation is greater than capital_required + nvl(commission_required, 0). the difference is constant.
@@ -103,10 +115,12 @@ class Product(models.Model):
     # total product value = 200 000,00
     # the difference is then 100 000,00
     # self.interest_for_delay_calculation_base is changing the same way as capital_required (CAP_REQ)
-    interest_for_delay_calculation_add_value = models.DecimalField(verbose_name=_('product.interest_for_delay_calculation_add_value'), max_digits=10, decimal_places=2, default=0)
+    interest_for_delay_calculation_add_value = models.DecimalField(
+        verbose_name=_('product.interest_for_delay_calculation_add_value'), max_digits=10, decimal_places=2, default=0)
 
     # indicates if take either capital net or gross as initial CAP_NOT_REQ
-    capital_type_calc_source = models.CharField(verbose_name=_('product.capital_type_calc_source'), max_length=10, default=INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT)
+    capital_type_calc_source = models.CharField(verbose_name=_('product.capital_type_calc_source'), max_length=10,
+                                                default=INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT)
 
     def __str__(self):
         return str(f'{self.pk}: {self.document}')
@@ -132,7 +146,8 @@ class Product(models.Model):
 class ProductClient(models.Model):
     product = models.ForeignKey(Product, db_column='id_product', related_name='client_set', on_delete=models.CASCADE)
     client = models.ForeignKey(Client, db_column='id_client', on_delete=models.CASCADE)
-    function = models.ForeignKey(ClientFunction, verbose_name=_('product.client.function'), db_column='id_function', on_delete=models.CASCADE)
+    function = models.ForeignKey(ClientFunction, verbose_name=_('product.client.function'), db_column='id_function',
+                                 on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'product_client'
@@ -140,7 +155,8 @@ class ProductClient(models.Model):
 
 
 class ProductSchedule(models.Model):
-    product = models.ForeignKey('Product', db_column='id_product', related_name='schedule_set', on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', db_column='id_product', related_name='schedule_set',
+                                on_delete=models.CASCADE)
     maturity_date = models.DateField()
     instalment_capital = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     instalment_interest = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
@@ -188,7 +204,8 @@ class ProductActionAttachment(models.Model):
 
 
 class ProductActionDefinition(models.Model):
-    document_type = models.ForeignKey(DocumentType, db_column='id_document_type', null=True, blank=True, on_delete=models.CASCADE)
+    document_type = models.ForeignKey(DocumentType, db_column='id_document_type', null=True, blank=True,
+                                      on_delete=models.CASCADE)
     report = models.ForeignKey(ReportTemplate, db_column='id_report', null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=300, verbose_name=_('product.action.definition.name'))
     sq = models.IntegerField()
@@ -209,11 +226,13 @@ class ProductTypeAction(models.Model):
 
 class ProductAction(models.Model):
     product = models.ForeignKey(Product, db_column='id_product', related_name='action_set', on_delete=models.CASCADE)
-    action = models.ForeignKey(ProductActionDefinition, db_column='id_action', null=True, blank=True, on_delete=models.CASCADE)
+    action = models.ForeignKey(ProductActionDefinition, db_column='id_action', null=True, blank=True,
+                               on_delete=models.CASCADE)
     report = models.ForeignKey(Report, db_column='id_report', null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=300, verbose_name=_('product.action.name'))
     description = models.CharField(verbose_name=_('product.action.description'), max_length=500, null=True, blank=True)
-    cost = models.DecimalField(max_digits=15, decimal_places=2, verbose_name=_('product.action.cost'), blank=True, null=True)
+    cost = models.DecimalField(max_digits=15, decimal_places=2, verbose_name=_('product.action.cost'), blank=True,
+                               null=True)
     send_date = models.DateField(verbose_name=_('product.action.send_date'), blank=True, null=True)
     receive_date = models.DateField(verbose_name=_('product.action.receive_date'), blank=True, null=True)
     action_date = models.DateTimeField(verbose_name=_('product.action.action_date'))
@@ -254,11 +273,14 @@ class ProductInterestType(models.Model):
 
 class ProductInterest(models.Model):
     product = models.ForeignKey(Product, db_column='id_product', related_name='interest_set', on_delete=models.CASCADE)
-    type = models.ForeignKey(ProductInterestType, verbose_name=_('product.interest.type'), db_column='id_type', related_name='type', on_delete=models.CASCADE)
+    type = models.ForeignKey(ProductInterestType, verbose_name=_('product.interest.type'), db_column='id_type',
+                             related_name='type', on_delete=models.CASCADE)
     start_date = models.DateField(verbose_name=_('product.interest.start_date'))
     delay_rate = models.DecimalField(verbose_name=_('product.interest.delay_rate'), max_digits=10, decimal_places=4)
-    delay_max_rate = models.DecimalField(verbose_name=_('product.interest.delay_max_rate'), max_digits=10, decimal_places=4)
-    statutory_rate = models.DecimalField(verbose_name=_('product.interest.statutory_rate'), max_digits=10, decimal_places=4)
+    delay_max_rate = models.DecimalField(verbose_name=_('product.interest.delay_max_rate'), max_digits=10,
+                                         decimal_places=4)
+    statutory_rate = models.DecimalField(verbose_name=_('product.interest.statutory_rate'), max_digits=10,
+                                         decimal_places=4)
     is_set_globally = models.BooleanField(verbose_name=_('product.interest.is_set_globally'), default=False)
     history = HistoricalRecords(table_name='h_product_interest')
 
@@ -269,6 +291,7 @@ class ProductInterest(models.Model):
 
 class ProductInterestGlobal(models.Model):
     interest_list = None
+
     document_type = models.ForeignKey(DocumentType,
                                       verbose_name=_('product.interest.global.document_type'),
                                       db_column='id_document_type',
@@ -276,19 +299,18 @@ class ProductInterestGlobal(models.Model):
     start_date = models.DateField(verbose_name=_('product.interest.global.start_date'), unique=True)
     interest_for_delay_rate = models.DecimalField(verbose_name=_('product.interest.global.interest_for_delay_rate'),
                                                   max_digits=10, decimal_places=4)
-    interest_max_for_delay_rate = models.DecimalField(verbose_name=_('product.interest.global.interest_max_for_delay_rate'),
-                                                      max_digits=10, decimal_places=4)
+    interest_max_for_delay_rate = models.DecimalField(
+        verbose_name=_('product.interest.global.interest_max_for_delay_rate'),
+        max_digits=10, decimal_places=4)
     creation_date = models.DateTimeField(verbose_name=_('product.interest.global.creation_date'), auto_now_add=True)
-    created_by = models.ForeignKey(User, verbose_name=_('product.interest.global.created_by'), db_column='id_created_by',
+    created_by = models.ForeignKey(User, verbose_name=_('product.interest.global.created_by'),
+                                   db_column='id_created_by',
                                    related_name='interest_global_created_by',
                                    on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'product_interest_global'
         default_permissions = ()
-        # constraints = [
-        #     models.UniqueConstraint(fields=['type', 'code'], name='document_type_code_uq')
-        # ]
 
     @classmethod
     def get_list(cls):
@@ -299,7 +321,7 @@ class ProductInterestGlobal(models.Model):
         if cls.interest_list is None:
             cls.interest_list = cls.get_list()
 
-        if cls.interest_list is None:
+        if cls.interest_list is None or len(cls.interest_list) == 0:
             return 0.0, 0.0
 
         interest = cls.interest_list[0]
@@ -314,7 +336,7 @@ class ProductInterestGlobal(models.Model):
             if i.start_date > date:
                 return interest.interest_for_delay_rate, interest.interest_max_for_delay_rate
             if i.start_date == date:
-                return i.interst_for_delay_rate, i.interst_max_for_delay_rate
+                return i.interest_for_delay_rate, i.interest_max_for_delay_rate
             interest = i
 
         return interest.interest_for_delay_rate, interest.interest_max_for_delay_rate
@@ -325,67 +347,107 @@ class ProductCalculation(models.Model):
     product = models.ForeignKey(Product, db_column='id_product', related_name='calculation', on_delete=models.CASCADE)
     # snapshot of the document status valid for calculation day. Needed for recalcultion. When recalculating,
     # document status is initially rolled back to that which was day the recalculation starts on
-    product_status = models.ForeignKey('ProductTypeStatus', db_column='id_product_type_status', on_delete=models.CASCADE)
+    product_status = models.ForeignKey('ProductTypeStatus', db_column='id_product_type_status',
+                                       on_delete=models.CASCADE)
     calc_date = models.DateField(verbose_name='product.calculation.calc_date')
 
     # Saldo
-    balance = models.DecimalField(verbose_name='product.calculation.capital_per_day', max_digits=15, decimal_places=2, default=0)
+    balance = models.DecimalField(verbose_name='product.calculation.capital_per_day', max_digits=15, decimal_places=2,
+                                  default=0)
 
     # kapitał
-    capital_per_day = models.DecimalField(verbose_name='product.calculation.capital_per_day', max_digits=15, decimal_places=2, default=0)
-    capital_not_required = models.DecimalField(verbose_name='product.calculation.capital_not_required', max_digits=15, decimal_places=2, default=0)
-    capital_required = models.DecimalField(verbose_name='product.calculation.capital_required', max_digits=15, decimal_places=2, default=0)
-    capital_required_from_schedule = models.DecimalField(verbose_name='product.calculation.capital_required_from_schedule', max_digits=15, decimal_places=2)
+    capital_per_day = models.DecimalField(verbose_name='product.calculation.capital_per_day', max_digits=15,
+                                          decimal_places=2, default=0)
+    capital_not_required = models.DecimalField(verbose_name='product.calculation.capital_not_required', max_digits=15,
+                                               decimal_places=2, default=0)
+    capital_required = models.DecimalField(verbose_name='product.calculation.capital_required', max_digits=15,
+                                           decimal_places=2, default=0)
+    capital_required_from_schedule = models.DecimalField(
+        verbose_name='product.calculation.capital_required_from_schedule', max_digits=15, decimal_places=2)
 
     #  rata odsetkowa
-    interest_daily = models.DecimalField(verbose_name='product.calculation.interest_daily', max_digits=15, decimal_places=2, default=0)
-    interest_per_day = models.DecimalField(verbose_name='product.calculation.interest_per_day', max_digits=15, decimal_places=2, default=0)
+    interest_daily = models.DecimalField(verbose_name='product.calculation.interest_daily', max_digits=15,
+                                         decimal_places=2, default=0)
+    interest_per_day = models.DecimalField(verbose_name='product.calculation.interest_per_day', max_digits=15,
+                                           decimal_places=2, default=0)
     interest_cumulated_per_day = models.DecimalField(
         verbose_name='product.calculation.interest_cumulated_per_day', max_digits=15, decimal_places=2, default=0
     )
-    interest_required = models.DecimalField(verbose_name='product.calculation.interest_required', max_digits=15, decimal_places=2, default=0)
-    interest_required_from_schedule = models.DecimalField(verbose_name='product.calculation.interest_required_from_schedule', max_digits=15, decimal_places=2, default=0)
-    interest_rate = models.DecimalField(verbose_name='product.calculation.interest_rate', max_digits=10, decimal_places=2, null=True, default=0)
+    interest_required = models.DecimalField(verbose_name='product.calculation.interest_required', max_digits=15,
+                                            decimal_places=2, default=0)
+    interest_required_from_schedule = models.DecimalField(
+        verbose_name='product.calculation.interest_required_from_schedule', max_digits=15, decimal_places=2, default=0)
+    interest_rate = models.DecimalField(verbose_name='product.calculation.interest_rate', max_digits=10,
+                                        decimal_places=2, null=True, default=0)
 
     # odsetki za opóźnienie
-    interest_for_delay_calculation_base = models.DecimalField(verbose_name='product.calculation.interest_for_delay_calculation_base', max_digits=15, decimal_places=2, default=0)
-    interest_for_delay_total = models.DecimalField(verbose_name='product.calculation.interest_for_delay_total', max_digits=15, decimal_places=2, default=0)
-    interest_for_delay_rate = models.DecimalField(verbose_name='product.calculation.interest_for_delay_rate', max_digits=10, decimal_places=2, null=True, default=0)
-    interest_for_delay_required = models.DecimalField(verbose_name='product.calculation.interest_for_delay_required', max_digits=15, decimal_places=2, default=0)
-    interest_for_delay_required_daily = models.DecimalField(verbose_name='product.calculation.interest_for_delay_required_daily', max_digits=15, decimal_places=2, default=0)
+    interest_for_delay_calculation_base = models.DecimalField(
+        verbose_name='product.calculation.interest_for_delay_calculation_base', max_digits=15, decimal_places=2,
+        default=0)
+    interest_for_delay_total = models.DecimalField(verbose_name='product.calculation.interest_for_delay_total',
+                                                   max_digits=15, decimal_places=2, default=0)
+    interest_for_delay_rate = models.DecimalField(verbose_name='product.calculation.interest_for_delay_rate',
+                                                  max_digits=10, decimal_places=2, null=True, default=0)
+    interest_for_delay_required = models.DecimalField(verbose_name='product.calculation.interest_for_delay_required',
+                                                      max_digits=15, decimal_places=2, default=0)
+    interest_for_delay_required_daily = models.DecimalField(
+        verbose_name='product.calculation.interest_for_delay_required_daily', max_digits=15, decimal_places=2,
+        default=0)
 
     # prowizja
-    commission_per_day = models.DecimalField(verbose_name='product.calculation.commission_per_day', max_digits=15, decimal_places=2, default=0)
-    commission_required = models.DecimalField(verbose_name='product.calculation.commission_required', max_digits=15, decimal_places=2, default=0)
-    commission_not_required = models.DecimalField(verbose_name='product.calculation.commission_total', max_digits=15, decimal_places=2, default=0)
-    commission_required_from_schedule = models.DecimalField(verbose_name='product.calculation.commission_required_from_schedule', max_digits=15, decimal_places=2, default=0)
+    commission_per_day = models.DecimalField(verbose_name='product.calculation.commission_per_day', max_digits=15,
+                                             decimal_places=2, default=0)
+    commission_required = models.DecimalField(verbose_name='product.calculation.commission_required', max_digits=15,
+                                              decimal_places=2, default=0)
+    commission_not_required = models.DecimalField(verbose_name='product.calculation.commission_total', max_digits=15,
+                                                  decimal_places=2, default=0)
+    commission_required_from_schedule = models.DecimalField(
+        verbose_name='product.calculation.commission_required_from_schedule', max_digits=15, decimal_places=2,
+        default=0)
 
     # suma zobowiązań capital_required + interest_required + commission_required
-    required_liabilities_sum = models.DecimalField(verbose_name='product.calculation.required_liabilities_sum', max_digits=15, decimal_places=2, default=0)
-    required_liabilities_sum_from_schedule = models.DecimalField(verbose_name='product.calculation.required_liabilities_sum_from_schedule', max_digits=15, decimal_places=2, default=0)
+    required_liabilities_sum = models.DecimalField(verbose_name='product.calculation.required_liabilities_sum',
+                                                   max_digits=15, decimal_places=2, default=0)
+    required_liabilities_sum_from_schedule = models.DecimalField(
+        verbose_name='product.calculation.required_liabilities_sum_from_schedule', max_digits=15, decimal_places=2,
+        default=0)
 
     # koszt wystąpienie w danym dniu
-    cost_occurrence = models.DecimalField(verbose_name='product.calculation.cost_occurence', max_digits=15, decimal_places=2, default=0)
+    cost_occurrence = models.DecimalField(verbose_name='product.calculation.cost_occurence', max_digits=15,
+                                          decimal_places=2, default=0)
 
     # koszt - stan na dzień
-    cost = models.DecimalField(verbose_name='product.calculation.interest_required_daily', max_digits=15, decimal_places=2, default=0)
+    cost = models.DecimalField(verbose_name='product.calculation.interest_required_daily', max_digits=15,
+                               decimal_places=2, default=0)
 
     # kosz suma
-    cost_total = models.DecimalField(verbose_name='product.calculation.cost_total', max_digits=15, decimal_places=2, default=0)
+    cost_total = models.DecimalField(verbose_name='product.calculation.cost_total', max_digits=15, decimal_places=2,
+                                     default=0)
 
     #  wpłata
-    instalment = models.DecimalField(verbose_name='product.calculation.instalment', max_digits=15, decimal_places=2, default=0)
-    instalment_total = models.DecimalField(verbose_name='product.calculation.instalment_total', max_digits=15, decimal_places=2, default=0)
-    instalment_overpaid = models.DecimalField(verbose_name='product.calculation.instalment_overpaid', max_digits=15, decimal_places=2, default=0)
+    instalment = models.DecimalField(verbose_name='product.calculation.instalment', max_digits=15, decimal_places=2,
+                                     default=0)
+    instalment_total = models.DecimalField(verbose_name='product.calculation.instalment_total', max_digits=15,
+                                           decimal_places=2, default=0)
+    instalment_overpaid = models.DecimalField(verbose_name='product.calculation.instalment_overpaid', max_digits=15,
+                                              decimal_places=2, default=0)
 
     # rozksięgowanie raty na poszczególne składniki
-    instalment_accounting_capital_required = models.DecimalField(verbose_name='product.calculation.instalment_capital_required', max_digits=15, decimal_places=2, default=0)
-    instalment_accounting_capital_not_required = models.DecimalField(verbose_name='product.calculation.instalment_capital_not_required', max_digits=15, decimal_places=2, default=0)
-    instalment_accounting_commission_required = models.DecimalField(verbose_name='product.calculation.instalment_commission_required', max_digits=15, decimal_places=2, default=0)
-    instalment_accounting_commission_not_required = models.DecimalField(verbose_name='product.calculation.instalment_commission_not_required', max_digits=15, decimal_places=2, default=0)
-    instalment_accounting_interest_required = models.DecimalField(verbose_name='product.calculation.instalment_interest_required', max_digits=15, decimal_places=2, default=0)
-    instalment_accounting_interest_for_delay = models.DecimalField(verbose_name='product.calculation.instalment_instalment_interest', max_digits=15, decimal_places=2, default=0)
-    instalment_accounting_cost = models.DecimalField(verbose_name='product.calculation.instalment_cost', max_digits=15, decimal_places=2)
+    instalment_accounting_capital_required = models.DecimalField(
+        verbose_name='product.calculation.instalment_capital_required', max_digits=15, decimal_places=2, default=0)
+    instalment_accounting_capital_not_required = models.DecimalField(
+        verbose_name='product.calculation.instalment_capital_not_required', max_digits=15, decimal_places=2, default=0)
+    instalment_accounting_commission_required = models.DecimalField(
+        verbose_name='product.calculation.instalment_commission_required', max_digits=15, decimal_places=2, default=0)
+    instalment_accounting_commission_not_required = models.DecimalField(
+        verbose_name='product.calculation.instalment_commission_not_required', max_digits=15, decimal_places=2,
+        default=0)
+    instalment_accounting_interest_required = models.DecimalField(
+        verbose_name='product.calculation.instalment_interest_required', max_digits=15, decimal_places=2, default=0)
+    instalment_accounting_interest_for_delay = models.DecimalField(
+        verbose_name='product.calculation.instalment_instalment_interest', max_digits=15, decimal_places=2, default=0)
+    instalment_accounting_cost = models.DecimalField(verbose_name='product.calculation.instalment_cost', max_digits=15,
+                                                     decimal_places=2)
 
     # liczba kolejnych przeterminowanych
     instalment_overdue_count = models.IntegerField(default=0)
@@ -393,11 +455,16 @@ class ProductCalculation(models.Model):
     instalment_overdue_occurrence = models.IntegerField(default=0)
 
     # Umorzenia
-    remission_capital = models.DecimalField(verbose_name='product.calculation.remission_capital', max_digits=15, decimal_places=2, default=0)
-    remission_commission = models.DecimalField(verbose_name='product.calculation.remission_commission', max_digits=15, decimal_places=2, default=0)
-    remission_interest = models.DecimalField(verbose_name='product.calculation.remission_interest', max_digits=15, decimal_places=2, default=0)
-    remission_interest_for_delay = models.DecimalField(verbose_name='product.calculation.remission_interest_for_delay', max_digits=15, decimal_places=2, default=0)
-    remission_cost = models.DecimalField(verbose_name='product.calculation.remission_cost', max_digits=15, decimal_places=2, default=0)
+    remission_capital = models.DecimalField(verbose_name='product.calculation.remission_capital', max_digits=15,
+                                            decimal_places=2, default=0)
+    remission_commission = models.DecimalField(verbose_name='product.calculation.remission_commission', max_digits=15,
+                                               decimal_places=2, default=0)
+    remission_interest = models.DecimalField(verbose_name='product.calculation.remission_interest', max_digits=15,
+                                             decimal_places=2, default=0)
+    remission_interest_for_delay = models.DecimalField(verbose_name='product.calculation.remission_interest_for_delay',
+                                                       max_digits=15, decimal_places=2, default=0)
+    remission_cost = models.DecimalField(verbose_name='product.calculation.remission_cost', max_digits=15,
+                                         decimal_places=2, default=0)
 
     @staticmethod
     def get_max_calculation_date(product):
@@ -410,7 +477,8 @@ class ProductCalculation(models.Model):
 
 
 class ProductTypeCommission(models.Model):
-    document_type = models.ForeignKey(to=DocumentType, db_column='id_document_type', on_delete=models.CASCADE, related_name='commission_set')
+    document_type = models.ForeignKey(to=DocumentType, db_column='id_document_type', on_delete=models.CASCADE,
+                                      related_name='commission_set')
     name = models.CharField(verbose_name=_('product.type.commission.name'), max_length=200)
     # procentowa lub kwotowa [PRC, CSH]
     type = models.CharField(verbose_name=_('product.type.commission.type'), max_length=3)
@@ -440,8 +508,10 @@ class ProductTypeCommission(models.Model):
 
 
 class ProductCommission(models.Model):
-    product = models.ForeignKey(to=Product, db_column='id_product', on_delete=models.CASCADE, related_name='commission_set')
-    commission = models.ForeignKey(to=ProductTypeCommission, db_column='id_commission', on_delete=models.CASCADE, related_name='product_set')
+    product = models.ForeignKey(to=Product, db_column='id_product', on_delete=models.CASCADE,
+                                related_name='commission_set')
+    commission = models.ForeignKey(to=ProductTypeCommission, db_column='id_commission', on_delete=models.CASCADE,
+                                   related_name='product_set')
     value = models.DecimalField(verbose_name=_('product.commission.value'), max_digits=15, decimal_places=2)
     name = models.CharField(verbose_name=_('product.commission.name'), max_length=200, null=True, blank=True)
     description = models.TextField(verbose_name=_('product.commission.name'), null=True, blank=True)
@@ -457,7 +527,8 @@ class ProductCommission(models.Model):
 
 
 class ProductTypeStatus(models.Model):
-    type = models.ForeignKey(DocumentType, db_column='id_type', related_name='product_status_set', on_delete=models.CASCADE)
+    type = models.ForeignKey(DocumentType, db_column='id_type', related_name='product_status_set',
+                             on_delete=models.CASCADE)
     name = models.CharField(verbose_name=_('product.type.status.name'), max_length=100)
     code = models.CharField(verbose_name=_('product.type.status.code'), max_length=10)
     is_initial = models.BooleanField(verbose_name=_('product.type.status.is_initial'))
@@ -477,8 +548,10 @@ class ProductTypeStatus(models.Model):
 
 
 class ProductTypeProcessFlow(models.Model):
-    status = models.ForeignKey(ProductTypeStatus, db_column='id_current_status', related_name='status', on_delete=models.CASCADE)
-    available_status = models.ForeignKey(ProductTypeStatus, db_column='id_available_status', null=True, blank=True, related_name='available_status', on_delete=models.CASCADE)
+    status = models.ForeignKey(ProductTypeStatus, db_column='id_current_status', related_name='status',
+                               on_delete=models.CASCADE)
+    available_status = models.ForeignKey(ProductTypeStatus, db_column='id_available_status', null=True, blank=True,
+                                         related_name='available_status', on_delete=models.CASCADE)
     is_default = models.BooleanField(default=False)
     sq = models.IntegerField()
 
@@ -491,7 +564,8 @@ class ProductStatusTrack(models.Model):
     DocumentStatusTrack
     track all the status changes of given document with chance to descripbe reason of change
     """
-    product = models.ForeignKey(Product, db_column='id_product', db_index=True, related_name='status_track_set', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, db_column='id_product', db_index=True, related_name='status_track_set',
+                                on_delete=models.CASCADE)
     status = models.ForeignKey(ProductTypeStatus, db_column='id_status', db_index=True, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, db_column='id_created_by', on_delete=models.CASCADE)
     effective_date = models.DateTimeField(default=timezone.now)
@@ -504,7 +578,8 @@ class ProductStatusTrack(models.Model):
 
 
 class CompanyBankTransactionFile(models.Model):
-    company = models.OneToOneField(Hierarchy, primary_key=True, db_column='id_company', related_name='bank_transaction_file', on_delete=models.CASCADE)
+    company = models.OneToOneField(Hierarchy, primary_key=True, db_column='id_company',
+                                   related_name='bank_transaction_file', on_delete=models.CASCADE)
     base_dir = models.CharField(max_length=200, default='')
     subdir = models.CharField(max_length=200, default='')
 

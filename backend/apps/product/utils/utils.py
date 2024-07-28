@@ -36,7 +36,8 @@ class ProductUtils:
             product_status = ProductTypeStatus.objects.get(pk=status)
 
         else:
-            raise TypeError('[DocumentApi.change_status]: status parameter of incorrect type. Can be either [DocumentTypeStatus], or [int] or [str]')
+            raise TypeError(
+                '[DocumentApi.change_status]: status parameter of incorrect type. Can be either [DocumentTypeStatus], or [int] or [str]')
 
         ProductStatusTrack.objects.create(
             product=product,
@@ -54,8 +55,8 @@ class ProductUtils:
     @staticmethod
     def calculate_balance(data):
         return data['capital_not_required'] + data['commission_not_required'] + data['interest_for_delay_required'] + \
-               data['required_liabilities_sum'] + data['cost'] - \
-               data['instalment_overpaid']
+            data['required_liabilities_sum'] + data['cost'] - \
+            data['instalment_overpaid']
 
     @staticmethod
     def get_available_statuses(status):
@@ -84,8 +85,12 @@ class LoanUtils:
 
     @staticmethod
     def get_document_owner(document):
-        row_sq = DocumentAttribute.objects.filter(document_id=document.pk, value='1', attribute=DocumentTypeAttribute.objects.filter(pk=393)).aggregate(Min('row_sq'))
-        u = DocumentAttribute.objects.get(document_id=document.pk, attribute=DocumentTypeAttribute.objects.filter(pk=251), row_sq=row_sq['row_sq__min'])
+        row_sq = DocumentAttribute.objects.filter(document_id=document.pk, value='1',
+                                                  attribute=DocumentTypeAttribute.objects.filter(pk=393)).aggregate(
+            Min('row_sq'))
+        u = DocumentAttribute.objects.get(document_id=document.pk,
+                                          attribute=DocumentTypeAttribute.objects.filter(pk=251),
+                                          row_sq=row_sq['row_sq__min'])
         if u:
             try:
                 return Client.objects.get(pk=int(u.value))
@@ -124,7 +129,8 @@ class LoanUtils:
 
         product.value = decimal.Decimal(mapping['VALUE']["value"])
         product.capital_net = decimal.Decimal(mapping['CAPITAL_NET']["value"] or 0)
-        product.commission = decimal.Decimal(mapping['COMMISSION']["value"] or 0) if 'COMMISSION' in mapping else decimal.Decimal(0.0)
+        product.commission = decimal.Decimal(
+            mapping['COMMISSION']["value"] or 0) if 'COMMISSION' in mapping else decimal.Decimal(0.0)
         product.instalment_capital = decimal.Decimal(mapping['INSTALMENT_CAPITAL']["value"] or 0) \
             if 'INSTALMENT_CAPITAL' in mapping else decimal.Decimal(0.0)
         product.instalment_commission = decimal.Decimal(mapping['INSTALMENT_COMMISSION']["value"] or 0) \
@@ -138,11 +144,15 @@ class LoanUtils:
         product.debtor_bank_account = mapping['DEBTOR_BANK_ACCOUNT']["value"]
 
         # liczba dni karencji do rozpoczęcia naliczania odsetek za opóźnienie
-        product.grace_period = decimal.Decimal(mapping['GRACE_PERIOD']["value"] or 0) if 'GRACE_PERIOD' in mapping else decimal.Decimal(0.0)
-        product.debt_collection_fee_period = decimal.Decimal(mapping['DEBT_COLLECTION_FEE_PERIOD']['value']) if 'DEBT_COLLECTION_FEE_PERIOD' in mapping else decimal.Decimal(0.0)
+        product.grace_period = decimal.Decimal(
+            mapping['GRACE_PERIOD']["value"] or 0) if 'GRACE_PERIOD' in mapping else decimal.Decimal(0.0)
+        product.debt_collection_fee_period = decimal.Decimal(mapping['DEBT_COLLECTION_FEE_PERIOD'][
+                                                                 'value']) if 'DEBT_COLLECTION_FEE_PERIOD' in mapping else decimal.Decimal(
+            0.0)
         product.status = ProductTypeStatus.objects.get(is_initial=True)
         product.capital_type_calc_source = \
-            mapping['INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE']['value'] if 'INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE' in mapping else INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT
+            mapping['INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE'][
+                'value'] if 'INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE' in mapping else INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT
 
         interest_for_delay_type_use_list = ['BOTH', 'MIN', 'MAX', 'BOTH']
 
@@ -154,7 +164,11 @@ class LoanUtils:
             interest_for_delay_type_use |= 2
         product.interest_for_delay_rate_use = interest_for_delay_type_use_list[interest_for_delay_type_use]
         product.interest_for_delay_calculation_add_value = \
-            decimal.Decimal((mapping['INTEREST_FOR_DELAY_CALCULATION_ADD_VALUE']['value'] or 0)) if 'INTEREST_FOR_DELAY_CALCULATION_ADD_VALUE' in mapping else decimal.Decimal(0.0)
+            decimal.Decimal((mapping['INTEREST_FOR_DELAY_CALCULATION_ADD_VALUE'][
+                                 'value'] or 0)) if 'INTEREST_FOR_DELAY_CALCULATION_ADD_VALUE' in mapping else decimal.Decimal(
+                0.0)
+
+        product.interest_for_delay_type = int(mapping['INTEREST_FOR_DELAY_TYPE']['value'])
 
         return product
 
@@ -186,10 +200,14 @@ class LoanUtils:
     def _create_interest(product, mapping):
         ProductInterest.objects.create(product=product,
                                        start_date=product.start_date,
-                                       delay_rate=decimal.Decimal(mapping['INTEREST_FOR_DELAY_RATE']["value"] or 0 if 'INTEREST_FOR_DELAY_RATE' in mapping else 0),
-                                       delay_max_rate=decimal.Decimal(mapping['INTEREST_FOR_DELAY_RATE_MAX']["value"] or 0 if 'INTEREST_FOR_DELAY_RATE_MAX' in mapping else 0),
-                                       statutory_rate=decimal.Decimal(mapping['INSTALMENT_INTEREST_RATE']["value"] or 0 if 'INSTALMENT_INTEREST_RATE' in mapping else 0),
-                                       type=ProductInterestType.objects.get(pk=mapping['INTEREST_FOR_DELAY_TYPE']["value"] or 1 if 'INSTALMENT_INTEREST_RATE' in mapping else 1)
+                                       delay_rate=decimal.Decimal(mapping['INTEREST_FOR_DELAY_RATE'][
+                                                                      "value"] or 0 if 'INTEREST_FOR_DELAY_RATE' in mapping else 0),
+                                       delay_max_rate=decimal.Decimal(mapping['INTEREST_FOR_DELAY_RATE_MAX'][
+                                                                          "value"] or 0 if 'INTEREST_FOR_DELAY_RATE_MAX' in mapping else 0),
+                                       statutory_rate=decimal.Decimal(mapping['INSTALMENT_INTEREST_RATE'][
+                                                                          "value"] or 0 if 'INSTALMENT_INTEREST_RATE' in mapping else 0),
+                                       type=ProductInterestType.objects.get(pk=mapping['INTEREST_FOR_DELAY_TYPE'][
+                                                                                   "value"] or 1 if 'INSTALMENT_INTEREST_RATE' in mapping else 1)
                                        if 'INTEREST_FOR_DELAY_TYPE' in mapping else ProductInterestType.get_default())
 
     @staticmethod
@@ -197,15 +215,19 @@ class LoanUtils:
         ProductScheduleUtils.generate_schedule(
             product=product,
             schedule_section=mapping['SCHEDULE_SECTION']["id"] if 'SCHEDULE_SECTION' in mapping else None,
-            instalment_capital=decimal.Decimal(mapping['INSTALMENT_CAPITAL']["value"] or 0 if 'INSTALMENT_CAPITAL' in mapping else 0),
-            instalment_interest=decimal.Decimal(mapping['INSTALMENT_INTEREST']["value"] or 0 if 'INSTALMENT_INTEREST' in mapping else 0),
-            instalment_commission=decimal.Decimal(mapping['INSTALMENT_COMMISSION']["value"] or 0 if 'INSTALMENT_COMMISSION' in mapping else 0),
+            instalment_capital=decimal.Decimal(
+                mapping['INSTALMENT_CAPITAL']["value"] or 0 if 'INSTALMENT_CAPITAL' in mapping else 0),
+            instalment_interest=decimal.Decimal(
+                mapping['INSTALMENT_INTEREST']["value"] or 0 if 'INSTALMENT_INTEREST' in mapping else 0),
+            instalment_commission=decimal.Decimal(
+                mapping['INSTALMENT_COMMISSION']["value"] or 0 if 'INSTALMENT_COMMISSION' in mapping else 0),
             instalment_number=int(mapping['INSTALMENT_NUMBER']["value"])
         )
 
     @staticmethod
     def _create_accounting(product):
-        for idx, i in enumerate(DocumentTypeAccounting.objects.filter(document_type=product.document.type).order_by('sq')):
+        for idx, i in enumerate(
+                DocumentTypeAccounting.objects.filter(document_type=product.document.type).order_by('sq')):
             ProductAccounting.objects.create(product=product, accounting_type=i.accounting_type, sq=idx + 1)
 
     @staticmethod
@@ -270,7 +292,8 @@ class LoanUtils:
             return
 
         LoanUtils._generate_action(user=user, id_product=product.pk, id_action=12)  # Wniosek o klauzulę
-        Notification(user_list=User.objects.filter(groups__name__in=['WDK_TEREN', 'WDK_SPECJALISTA', 'WDK_PRAWNIK', 'WDK_OPIEKUN_POSP']).distinct(),
+        Notification(user_list=User.objects.filter(
+            groups__name__in=['WDK_TEREN', 'WDK_SPECJALISTA', 'WDK_PRAWNIK', 'WDK_OPIEKUN_POSP']).distinct(),
                      template_code='PRODUCT_ACTION',
                      params={"CRM_ID": product.document.code,
                              "DATE": '{:%Y-%m-%d}'.format(datetime.date.today()),
@@ -292,7 +315,8 @@ class LoanUtils:
             return
 
         LoanUtils._generate_action(user=user, id_product=product.pk, id_action=9)  # Komornik - wniosek o kwotę
-        Notification(user_list=User.objects.filter(groups__name__in=['WDK_TEREN', 'WDK_SPECJALISTA', 'WDK_PRAWNIK', 'WDK_OPIEKUN_POSP']).distinct(),
+        Notification(user_list=User.objects.filter(
+            groups__name__in=['WDK_TEREN', 'WDK_SPECJALISTA', 'WDK_PRAWNIK', 'WDK_OPIEKUN_POSP']).distinct(),
                      template_code='PRODUCT_ACTION',
                      params={"CRM_ID": product.document.code,
                              "DATE": '{:%Y-%m-%d}'.format(datetime.date.today()),

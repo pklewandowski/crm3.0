@@ -5,8 +5,7 @@ import pytest
 from apps.product.models import ProductInterestGlobal
 
 
-@pytest.fixture(name="global_interest_list")
-@pytest.mark.django_db
+@pytest.fixture
 def global_interest_list(user, document_type):
     ProductInterestGlobal.objects.create(
         start_date=datetime.date(2024, 1, 20),
@@ -43,15 +42,34 @@ def global_interest_list(user, document_type):
 
 @pytest.mark.django_db
 class TestProductInterestGlobal:
-    def test_product_interest_for_inrange_date(self, global_interest_list):
+    def test_empty_global_interest_list(self):
+        ProductInterestGlobal.interest_list = None
         interest = ProductInterestGlobal.get_for(datetime.date(2024, 5, 10))
+
+        assert len(ProductInterestGlobal.interest_list) == 0
+        assert interest[0] == 0
+        assert interest[1] == 0
+
+    def test_product_interest_for_out_older_date(self, global_interest_list):
+        ProductInterestGlobal.interest_list = None
+        interest = ProductInterestGlobal.get_for(datetime.date(2023, 1, 1))
+
+        assert len(ProductInterestGlobal.interest_list) == 4
+        assert interest[0] == 0
+        assert interest[1] == 0
+
+    def test_product_interest_for_inrange_date(self, global_interest_list):
+        ProductInterestGlobal.interest_list = None
+        interest = ProductInterestGlobal.get_for(datetime.date(2024, 5, 10))
+
+        assert len(ProductInterestGlobal.interest_list) == 4
         assert interest[0] == 11
+        assert interest[1] == 16
 
     def test_product_interest_for_out_greater_date(self, global_interest_list):
+        ProductInterestGlobal.interest_list = None
         interest = ProductInterestGlobal.get_for(datetime.date(2024, 11, 10))
+
+        assert len(ProductInterestGlobal.interest_list) == 4
         assert interest[0] == 13
-
-    def test_product_interest_for_out_lower_date(self, global_interest_list):
-        interest = ProductInterestGlobal.get_for(datetime.date(2023, 1, 1))
-        assert interest[0] == 0
-
+        assert interest[1] == 18

@@ -68,6 +68,4 @@ class ViewUtils:
         except ObjectDoesNotExist:
             return None
 
-        products.order_by("-start_date")
-
         return products

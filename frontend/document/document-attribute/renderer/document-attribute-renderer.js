@@ -66,7 +66,6 @@ class DocumentAttributeRenderer {
             document.dispatchEvent(this.events.afterGetModelData);
             this.render();
 
-
             // some attributes need to get its values by ajax calls. When it's needed, the ajaxCall Promise will be added to global
             // window.documentAttributePromises array (see input.js: Input.setValue() method)
             // The following code guaranties that

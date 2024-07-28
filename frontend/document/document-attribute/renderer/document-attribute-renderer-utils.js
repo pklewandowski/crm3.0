@@ -23,7 +23,7 @@ class DocumentAttributeRendererUtils {
     }
 
     static _getRepeatableSectionClass(at, f, level, ver) {
-        return at.selector_class === 'schedule' ?
+        return at.selector_class == 'instalment-schedule' ?
             new DocumentAttributeInstalmentScheduleRepeatableSection(at, DocumentAttributeRendererUtils.fTable, level, ver) :
             at.is_table ?
                 new RepeatableTableSection(at, DocumentAttributeRendererUtils.fTable, level, ver) :

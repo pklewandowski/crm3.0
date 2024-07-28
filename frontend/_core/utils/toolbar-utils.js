@@ -1,4 +1,5 @@
 import {SystemException} from "../exception";
+import "./scss/toolbar-utils.scss";
 
 const TOOLBAR_BTN = {sm: 'toolbar-sm-btn'};
 const className = 'ToolbarUtils';

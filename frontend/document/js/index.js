@@ -68,31 +68,6 @@ function saveData(e) {
     );
 }
 
-// function setAttributeDependencyVisibility(el) {
-//     "use strict";
-//     let id = parseInt(el.data('id'));
-//     let val = el.val();
-//     $.each(el.closest('.document-section-row-body').find('[data-dependency]'), function (i, e) {
-//         let d = $(this).data("dependency");
-//         let dependency = {};
-//         if (typeof d === 'string') {
-//             dependency = JSON.parse(d.replace(/'/g, '"'));
-//         }
-//
-//         if (dependency[id]) {
-//             if (el.data('attribute_disabled') || dependency[id].indexOf(val) === -1) {
-//                 $(this).closest('.form-group').hide();
-//                 $(this).val(null);
-//                 $(this).data('attribute_disabled', true);
-//                 setAttributeDependencyVisibility($(this));
-//             } else {
-//                 $(this).closest('.form-group').show();
-//                 $(this).data('attribute_disabled', false);
-//                 setAttributeDependencyVisibility($(this));
-//             }
-//         }
-//     });
-// }
 
 function setSubsectionName(lovElement) {
     "use strict";
@@ -117,7 +92,7 @@ window.documentAttributeDataPromises = [];
 window.dateUtils = DateUtils;
 
 $(document).ready(() => {
-    let doc = new Document();
+    // let doc = new Document();
     //Initiate product instalment schedules container
     //todo: finally it should be the part of product financial pack plugin activated by plugin loader mechanism
     window.schedule = {
@@ -221,38 +196,6 @@ $(document).ready(() => {
         let documentAnnex = new DocumentAnnex();
         documentAnnex.setAnnex();
         FormValidation.addErrors(errorList);
-
-        // todo: DRUT JAK CHUJ
-        // if (document.getElementById('3370')) {
-        //     ClassicEditor
-        //         .create(document.getElementById('3370'),
-        //             {
-        //                 language: 'pl',
-        //                 // toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'undo', 'redo'],
-        //                 toolbar: ['bold', 'italic', 'link', 'bulletedList', 'numberedList', 'undo', 'redo'],
-        //                 // heading: {
-        //                 //     options: [
-        //                 //         {model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph'},
-        //                 //         {model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1'},
-        //                 //         {model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2'},
-        //                 //         {model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3'}
-        //                 //     ]
-        //                 // }
-        //             })
-        //         .then(editor => {
-        //             editor.model.document.on('change', (e) => {
-        //                 document.dispatchEvent(new Event('change'));
-        //             });
-        //             if (_g.document.editors) {
-        //                 _g.document.editors['3370'] = editor;
-        //             } else {
-        //                 _g.document.editors = {'3370': editor}
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error(error);
-        //         });
-        // }
     });
 
     let notes = new DocumentNotes(document.getElementById('notesContainer'), _g.document.id);
@@ -276,23 +219,6 @@ $(document).ready(() => {
             }
         });
     }
-
-    // TODO: DRUT!!!!!!!!!!!!
-    document.addEventListener('scheduleSectionEvt:created', evt => {
-        let aggregates = evt.detail.instalmentSchedule.aggregates;
-        let interest_aggregate = 0.0;
-        if (!aggregates) {
-            return;
-        }
-
-        interest_aggregate = aggregates.instalment_interest_aggregate;
-
-        let commissionValue = parseFloat(Input.getValue(Input.getByCode('3658'), 0));
-        Input.setValue(Input.getByCode('3662'), commissionValue + interest_aggregate);
-
-        console.log('evt instalment schedule created', evt.detail.instalmentSchedule);
-
-    });
 
     document.getElementById('reportTab')?.addEventListener('click', (evt) => {
         let el = evt.target;

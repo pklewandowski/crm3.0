@@ -33,7 +33,7 @@ from crm import settings
 def create_schema(sender, **kwargs) -> None:
     with connection.cursor() as cursor:
         cursor.execute("CREATE SCHEMA IF NOT EXISTS crm;")
-        cursor.execute("CREATE SCHEMA IF NOT EXISTS auth;")
+
 
 @pytest.fixture(autouse=True)
 def db_data():
@@ -45,7 +45,7 @@ def db_data():
     )
 
     document_type = DocumentType.objects.create(
-        name='Loan',
+        name='TEST_LOAN',
         category=document_category,
         is_process_flow=True,
         is_product=True,
@@ -55,10 +55,12 @@ def db_data():
         is_code_editable=False
     )
 
+
 @pytest.fixture(autouse=True)
 def user():
-    return User.objects.get(pk=1)
+    return User.objects.get(username='admin')
+
 
 @pytest.fixture(autouse=True)
 def document_type():
-    return DocumentType.objects.get(pk=1)
+    return DocumentType.objects.get(name='TEST_LOAN')

@@ -213,7 +213,8 @@ def edit(request, id, iframe=0):
 
             # TODO: do zrobienia accounting na poziomie produktu
             if has_changed:
-                py3ws_utils.get_class(product.type.calculation_class)(product.pk, request.user).calculate(start_date=min_change_date)
+                # py3ws_utils.get_class(product.type.calculation_class)(product.pk, request.user).calculate(start_date=min_change_date)
+                py3ws_utils.get_class(product.type.calculation_class)(product.pk, request.user).calculate()
                 messages.append('Pomyślnie zapisano zmiany')
             else:
                 messages.append('Brak zmian do zapisania')

@@ -10,7 +10,7 @@ class DocumentAttributeInstalmentScheduleRepeatableSection extends RepeatableTab
         if (_g?.document?.mode !== 'DEFINITION' || !window.documentDefinitionMode) {
             this.schedule = new DocumentAttributeInstalmentSchedule(this, _g.document.id, at?.feature?.mapping);
 
-            this.panel.toolbar.addButton(`section_${this.at.id}_schedule`,
+            this.panel.toolbar.addButton(`section_${this.at.id}_instalment_schedule`,
                 '',
                 'fa fa-redo',
                 'Generuj harmonogram',

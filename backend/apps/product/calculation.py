@@ -145,8 +145,8 @@ class Calculation(CalculationBase):
                 'code': i.type.code,
             } for i in ProductInterest.objects.filter(product=self.product).order_by('start_date')}
 
-        self.interest_for_delay_rate_nominal = self.interest_list[str(self.product.start_date)]['delay_rate']
-        self.interest_for_delay_rate_max = self.interest_list[str(self.product.start_date)]['delay_max_rate']
+        # self.interest_for_delay_rate_nominal = self.interest_list[str(self.product.start_date)]['delay_rate']
+        # self.interest_for_delay_rate_max = self.interest_list[str(self.product.start_date)]['delay_max_rate']
 
     def set_commission_list(self):
         self.commission_list = self.product.commission_set.all()
