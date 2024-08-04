@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, BaseModelFormSet
 from django.utils.translation import gettext_lazy as _
 
 from apps.document.models import DocumentType, DocumentTypeSection, DocumentTypeAttribute
@@ -8,7 +8,7 @@ from py3ws.forms.percentage_field import PercentageField
 from .api.instalment_schedule import INSTALMENT_MATURITY_DATE_SELECTOR, INSTALMENT_CAPITAL_SELECTOR, \
     INSTALMENT_COMMISSION_SELECTOR, INSTALMENT_INTEREST_SELECTOR, INSTALMENT_TOTAL_SELECTOR
 from .models import Product, ProductSchedule, ProductCashFlow, ProductInterest, ProductAction, ProductClient, \
-    ProductCommission, ProductTypeCommission, ProductInterestGlobal
+    ProductCommission, ProductTypeCommission, ProductInterestGlobal, ProductTranche
 
 
 class ProductTypeForm(p3form.ModelForm):
@@ -35,7 +35,8 @@ class ProductScheduleForm(p3form.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['instalment_total'].initial = self.instance.instalment_capital + self.instance.instalment_commission + self.instance.instalment_interest
+        self.fields[
+            'instalment_total'].initial = self.instance.instalment_capital + self.instance.instalment_commission + self.instance.instalment_interest
         self.fields['instalment_interest'].widget.attrs['readonly'] = 'readonly'
         self.fields['instalment_capital'].widget.attrs['readonly'] = 'readonly'
         self.fields['instalment_interest'].widget.attrs['readonly'] = 'readonly'
@@ -43,7 +44,8 @@ class ProductScheduleForm(p3form.ModelForm):
         # self.fields['instalment_total'].widget.attrs['readonly'] = 'readonly'
 
         # todo: bypass until date-calendar will be unified in whole project to vanillajs-calendar-3ws control
-        self.fields['maturity_date'].widget.attrs['class'] = self.fields['maturity_date'].widget.attrs['class'].replace('date-field', 'vanilla-date-field')
+        self.fields['maturity_date'].widget.attrs['class'] = self.fields['maturity_date'].widget.attrs['class'].replace(
+            'date-field', 'vanilla-date-field')
 
         self.fields['maturity_date'].widget.attrs['class'] += f' {INSTALMENT_MATURITY_DATE_SELECTOR}'
         self.fields['instalment_capital'].widget.attrs['class'] += f' {INSTALMENT_CAPITAL_SELECTOR}'
@@ -79,10 +81,14 @@ class ProductForm(p3form.ModelForm):
         self.fields['start_date'].localize = False
 
         # todo: bypass until date-calendar will be unified in whole project to vanillajs-calendar-3ws control
-        self.fields['start_date'].widget.attrs['class'] = self.fields['start_date'].widget.attrs['class'].replace('date-field', 'vanilla-date-field')
-        self.fields['end_date'].widget.attrs['class'] = self.fields['end_date'].widget.attrs['class'].replace('date-field', 'vanilla-date-field')
-        self.fields['capitalization_date'].widget.attrs['class'] = self.fields['capitalization_date'].widget.attrs['class'].replace('date-field', 'vanilla-date-field')
-        self.fields['termination_date'].widget.attrs['class'] = self.fields['capitalization_date'].widget.attrs['class'].replace('date-field', 'vanilla-date-field')
+        self.fields['start_date'].widget.attrs['class'] = self.fields['start_date'].widget.attrs['class'].replace(
+            'date-field', 'vanilla-date-field')
+        self.fields['end_date'].widget.attrs['class'] = self.fields['end_date'].widget.attrs['class'].replace(
+            'date-field', 'vanilla-date-field')
+        self.fields['capitalization_date'].widget.attrs['class'] = self.fields['capitalization_date'].widget.attrs[
+            'class'].replace('date-field', 'vanilla-date-field')
+        self.fields['termination_date'].widget.attrs['class'] = self.fields['capitalization_date'].widget.attrs[
+            'class'].replace('date-field', 'vanilla-date-field')
 
     class Meta:
         model = Product
@@ -131,7 +137,8 @@ class ProductAttributeForm(p3form.Form):
                 elif i.data_type.generic_datatype == 'text':
                     self.fields[i.name] = forms.CharField(required=i.is_required, widget=forms.Textarea())
                 elif i.data_type.generic_datatype == 'decimal':
-                    self.fields[i.name] = forms.DecimalField(max_digits=i.data_type.max_length, decimal_places=i.data_type.decimal_places,
+                    self.fields[i.name] = forms.DecimalField(max_digits=i.data_type.max_length,
+                                                             decimal_places=i.data_type.decimal_places,
                                                              required=i.is_required, widget=forms.TextInput)
                 elif i.data_type.generic_datatype == 'date':
                     self.fields[i.name] = forms.DateField(required=i.is_required)
@@ -157,9 +164,14 @@ class ProductCashFlowForm(p3form.ModelForm):
                 self.fields[i].widget.attrs['readonly'] = True
 
         # todo: bypass until date-calendar will be unified in whole project to vanillajs-datepicker-3ws control
-        self.fields['cash_flow_date'].widget.attrs['class'] = self.fields['cash_flow_date'].widget.attrs['class'].replace('date-field', 'vanilla-date-field')
+        self.fields['cash_flow_date'].widget.attrs['class'] = self.fields['cash_flow_date'].widget.attrs[
+            'class'].replace('date-field', 'vanilla-date-field')
+
         self.fields['cash_flow_date'].localize = False
-        self.fields['accounting_date'].widget.attrs['class'] = self.fields['accounting_date'].widget.attrs['class'].replace('date-field', 'vanilla-date-field')
+
+        self.fields['accounting_date'].widget.attrs['class'] = self.fields['accounting_date'].widget.attrs[
+            'class'].replace('date-field', 'vanilla-date-field')
+
         self.fields['accounting_date'].localize = False
 
     def clean(self):
@@ -170,8 +182,11 @@ class ProductCashFlowForm(p3form.ModelForm):
             del cd['cash_flow_date']
 
         elif cd.get('cash_flow_date') is None and cd.get('accounting_date') is None:
-            self._errors['cash_flow_date'] = self.error_class(['Jedna z dat (data rozliczenia lub data księgowania) jest wymagana.'])
-            self._errors['accounting_date'] = self.error_class(['Jedna z dat (data rozliczenia lub data księgowania) jest wymagana.'])
+            self._errors['cash_flow_date'] = self.error_class(
+                ['Jedna z dat (data rozliczenia lub data księgowania) jest wymagana.'])
+
+            self._errors['accounting_date'] = self.error_class(
+                ['Jedna z dat (data rozliczenia lub data księgowania) jest wymagana.'])
 
             del cd['cash_flow_date']
             del cd['accounting_date']
@@ -200,39 +215,42 @@ class ProductCashFlowForm(p3form.ModelForm):
         }
 
 
-class ProductInterestForm(p3form.ModelForm):
-    statutory_rate = PercentageField()
-    delay_rate = PercentageField()
-    delay_max_rate = PercentageField()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if self.instance.is_set_globally:
-            for i in self.fields:
-                self.fields[i].widget.attrs['readonly'] = True
-            self.fields['type'].choices = [(self.instance.type.pk, self.instance.type.name)]
-
-        # todo: bypass until date-calendar will be unified in whole project to vanillajs-datepicker-3ws control
-        self.fields['start_date'].widget.attrs['class'] = self.fields['start_date'].widget.attrs['class'].replace('date-field', 'vanilla-date-field')
-        #
-        self.fields['start_date'].widget.attrs['data-code'] = "interest_start_date"
-        self.fields['statutory_rate'].widget.attrs['data-code'] = "interest_statutory_rate"
-
-    class Meta:
-        model = ProductInterest
-        exclude = ('is_set_globally',)
-        localized_fields = ('statutory_rate', 'delay_rate', 'delay_max_rate')
-        widgets = {
-            # 'value': forms.TextInput,
-            'statutory_rate': forms.TextInput,
-            'start_date': forms.TextInput,
-        }
+# class ProductInterestForm(p3form.ModelForm):
+#     statutory_rate = PercentageField()
+#     delay_rate = PercentageField()
+#     delay_max_rate = PercentageField()
+#
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#
+#         if self.instance.is_set_globally:
+#             for i in self.fields:
+#                 self.fields[i].widget.attrs['readonly'] = True
+#             self.fields['type'].choices = [(self.instance.type.pk, self.instance.type.name)]
+#
+#         # todo: bypass until date-calendar will be unified in whole project to vanillajs-datepicker-3ws control
+#         self.fields['start_date'].widget.attrs['class'] = self.fields['start_date'].widget.attrs['class'].replace('date-field', 'vanilla-date-field')
+#         #
+#         self.fields['start_date'].widget.attrs['data-code'] = "interest_start_date"
+#         self.fields['statutory_rate'].widget.attrs['data-code'] = "interest_statutory_rate"
+#
+#     class Meta:
+#         model = ProductInterest
+#         exclude = ('is_set_globally',)
+#         localized_fields = ('statutory_rate', 'delay_rate', 'delay_max_rate')
+#         widgets = {
+#             # 'value': forms.TextInput,
+#             'statutory_rate': forms.TextInput,
+#             'start_date': forms.TextInput,
+#         }
 
 
 class ProductScheduleFeatureForm(p3form.Form):
-    nominal_instalment_value = forms.DecimalField(max_digits=10, decimal_places=2, required=True, widget=forms.TextInput, label=_('product.schedule.feature.nominal_instalment_value'))
-    nominal_instalment_number = forms.IntegerField(required=True, widget=forms.TextInput, label=_('product.schedule.feature.nominal_instalment_number'))
+    nominal_instalment_value = forms.DecimalField(max_digits=10, decimal_places=2, required=True,
+                                                  widget=forms.TextInput,
+                                                  label=_('product.schedule.feature.nominal_instalment_value'))
+    nominal_instalment_number = forms.IntegerField(required=True, widget=forms.TextInput,
+                                                   label=_('product.schedule.feature.nominal_instalment_number'))
 
     def __init__(self, *args, **kwargs):
         super(ProductScheduleFeatureForm, self).__init__(*args, **kwargs)
@@ -243,7 +261,8 @@ class ProductScheduleFeatureForm(p3form.Form):
 
 
 class ProductInterestFeatureForm(p3form.Form):
-    interest_percentage = forms.DecimalField(max_digits=10, decimal_places=2, widget=forms.TextInput, required=True, label=_('product.interest.feature.interest_percentage'))
+    interest_percentage = forms.DecimalField(max_digits=10, decimal_places=2, widget=forms.TextInput, required=True,
+                                             label=_('product.interest.feature.interest_percentage'))
     interest_type = forms.ChoiceField(required=True, label=_('product.interest.feature.interest_type'))
 
     def __init__(self, *args, **kwargs):
@@ -297,7 +316,8 @@ class ProductTypeCommissionForm(p3form.ModelForm):
 
     type = forms.ChoiceField(choices=commission_type_choices, label=_('product.type.commission.type'))
     period = forms.ChoiceField(choices=commission_period_choices, label=_('product.type.commission.period'))
-    calculation_type = forms.ChoiceField(choices=commission_calculation_type_choices, label=_('product.type.commission.calculation_type'))
+    calculation_type = forms.ChoiceField(choices=commission_calculation_type_choices,
+                                         label=_('product.type.commission.calculation_type'))
 
     class Meta:
         model = ProductTypeCommission
@@ -318,8 +338,48 @@ class ProductInterestGlobalForm(p3form.ModelForm):
         widgets = {'value': forms.TextInput, 'value_overdue': forms.TextInput}
 
 
+class ProductTrancheForm(p3form.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProductTrancheForm, self).__init__(*args, **kwargs)
+        self.fields['launch_date'].widget.attrs['class'] = self.fields['launch_date'].widget.attrs[
+            'class'].replace('date-field', 'vanilla-date-field')
+        self.fields['launch_date'].localize = False
+
+    class Meta:
+        model = ProductTranche
+        fields = 'launch_date',
+        widgets = {
+            'launch_date': forms.TextInput,
+        }
+
+
+class ProductTrancheBaseFormset(BaseModelFormSet):
+    def clean(self):
+        super().clean()
+
+        dt = self.forms[0].cleaned_data['launch_date']
+
+        if not dt:
+            raise forms.ValidationError("First tranche has to have launch data filled")
+
+        for form in self.forms[1:]:
+            if form.cleaned_data['launch_date'] and form.cleaned_data['launch_date'] < dt:
+                form.add_error('launch_date', 'Tranche date cannot be older the first tranche')
+                raise forms.ValidationError('Tranche date cannot be older the first tranche')
+
+        return self.cleaned_data
+
+
 ClientFormset = modelformset_factory(ProductClientForm.Meta.model, form=ProductClientForm, extra=0, can_delete=True)
-ScheduleFormset = modelformset_factory(ProductScheduleForm.Meta.model, form=ProductScheduleForm, extra=0, can_delete=True)
-CashFlowFormset = modelformset_factory(ProductCashFlowForm.Meta.model, form=ProductCashFlowForm, extra=0, can_delete=True)
-InterestFormset = modelformset_factory(ProductInterestForm.Meta.model, form=ProductInterestForm, extra=0, can_delete=True)
-CommissionFormset = modelformset_factory(ProductCommissionForm.Meta.model, form=ProductCommissionForm, extra=0, can_delete=True)
+ScheduleFormset = modelformset_factory(ProductScheduleForm.Meta.model, form=ProductScheduleForm, extra=0,
+                                       can_delete=True)
+CashFlowFormset = modelformset_factory(ProductCashFlowForm.Meta.model, form=ProductCashFlowForm, extra=0,
+                                       can_delete=True)
+CommissionFormset = modelformset_factory(ProductCommissionForm.Meta.model, form=ProductCommissionForm, extra=0,
+                                         can_delete=True)
+ProductTrancheFormset = modelformset_factory(ProductTrancheForm.Meta.model,
+                                             form=ProductTrancheForm,
+                                             formset=ProductTrancheBaseFormset,
+                                             extra=0,
+                                             can_delete=False)

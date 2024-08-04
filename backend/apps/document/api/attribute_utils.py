@@ -9,8 +9,8 @@ from apps.document.models import DocumentTypeAttribute, DocumentTypeAttributeFea
 
 class AttributeUtils:
     def render_calc_func(self, f):
-        sources = re.findall('_(\d+)', f)
-        body = re.sub('_(\d+)', 'document.getElementById(\'\g<1>\')', f)
+        sources = re.findall(r'_(\d+)', f)
+        body = re.sub(r'_(\d+)', 'document.getElementById(\'\g<1>\')', f)
         body = body.replace('#V', 'Input.getValue')
         return {'sources': sources, 'body': body}
 

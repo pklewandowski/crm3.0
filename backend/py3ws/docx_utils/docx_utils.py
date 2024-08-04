@@ -15,3 +15,5 @@ class DocxUtils:
                         text = inline[i].text.replace(search_str, replace_str)
                         inline[i].text = text
 
+        return self.document
+

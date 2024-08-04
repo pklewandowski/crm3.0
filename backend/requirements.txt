@@ -61,3 +61,5 @@ sqlparse
 tzdata
 urllib3
 zeep
+
+python-docx

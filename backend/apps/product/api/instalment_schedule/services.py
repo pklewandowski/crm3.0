@@ -3,6 +3,7 @@ import json
 from decimal import Decimal
 
 import crm_settings
+from apps.document.models import Document
 from apps.product.utils.schedule_utils import ProductScheduleUtils
 from apps.product.utils.utils import LoanUtils
 from py3ws.utils import date_utils as py3ws_date_utils, string_utils
@@ -56,7 +57,8 @@ def instalment_interest_rates_to_dict(instalment_interest_rates: list) -> dict:
 
     for rate in instalment_interest_rates:
         _instalment_interest_rates[
-            datetime.datetime.strptime(rate['start_date'], "%Y-%m-%d") if rate['start_date'] else crm_settings.INFINITY_DATE
+            datetime.datetime.strptime(rate['start_date'], "%Y-%m-%d") if rate[
+                'start_date'] else crm_settings.INFINITY_DATE
         ] = Decimal(rate['value'] or 0)
 
     return _instalment_interest_rates
@@ -92,7 +94,8 @@ def recalculate(opts):
         capital_gross=Decimal(opts.get('value', 0) if opts.get('value', 0) else 0),
         commission=Decimal(opts.get('commission', 0) if opts.get('commission', 0) else 0),
         instalment_capital=Decimal(opts.get('instalmentCapital', 0) if opts.get('instalmentCapital', 0) else 0),
-        instalment_commission=Decimal(opts.get('instalmentCommission', 0) if opts.get('instalmentCommission', 0) else 0),
+        instalment_commission=Decimal(
+            opts.get('instalmentCommission', 0) if opts.get('instalmentCommission', 0) else 0),
         instalment_total=Decimal(opts.get('instalmentTotal', 0) if opts.get('instalmentTotal', 0) else 0),
         instalment_interest_rates=instalment_interest_rates,
         instalment_interest_capital_type_calc_source=opts.get('instalmentInterestCapitalTypeCalcSource', 'N')
@@ -104,6 +107,24 @@ def recalculate(opts):
     )
 
 
-def get_mapping(document):
+def get_mapping(document: Document) -> dict:
     mapping = LoanUtils._get_mapping(document, True)
-    return {string_utils.camel_case(k): {'id': v['id'], 'value': v['value'] if not v['id'] else None} for k, v in mapping.items()}
+    attr_dict = {}
+    for k, v in mapping.items():
+        if isinstance(v, list):
+            attr_list = []
+            for i in v:
+                attr_list.append(
+                    {
+                        'id': i['id'],
+                        'value': i['value']
+                    }
+                )
+            attr_dict[string_utils.camel_case(k)] = attr_list
+        else:
+            attr_dict[string_utils.camel_case(k)] = {
+                'id': v['id'],
+                'value': v['value']
+            }
+
+    return attr_dict

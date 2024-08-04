@@ -1,7 +1,6 @@
 ﻿import datetime
 import os
 
-
 from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -24,6 +23,7 @@ INTERNAL_IPS = ['localhost', '127.0.0.']
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -421,3 +421,5 @@ LOGGING = {
         'propagate': True,
     }
 }
+
+CRONJOBS = []

@@ -8,15 +8,19 @@
 {% block form_icon %}fa fa-code-fork{% endblock %}
 {% block form_title %}Edycja produktu:
     {% if  form.instance.client.user.company_name %}
-        {{ form.instance.client.user.company_name }} ({{ form.instance.client.user.first_name|default_if_none:'' }} {{ form.instance.client.user.last_name }})
+        {{ form.instance.client.user.company_name }} ({{ form.instance.client.user.first_name|default_if_none:'' }}
+        {{ form.instance.client.user.last_name }})
     {% else %}
-        {{ form.instance.client.user.first_name|default_if_none:'' }} {{ form.instance.client.user.last_name|default_if_none:'' }}
+        {{ form.instance.client.user.first_name|default_if_none:'' }}
+        {{ form.instance.client.user.last_name|default_if_none:'' }}
     {% endif %}
 {% endblock %}
-{% block form_subtitle %}{{ form.instance.type.name }} | Nr Umowy: {{ form.instance.agreement_no }}, utworzył: {{ form.instance.creation_user.first_name }}
+{% block form_subtitle %}{{ form.instance.type.name }} | Nr Umowy: {{ form.instance.agreement_no }}, utworzył:
+    {{ form.instance.creation_user.first_name }}
     {{ form.instance.creation_user.last_name }}{% endblock %}
 {% block form_title_right %}
-    <a id="showDocBtn" href="{% url 'document.edit' form.instance.document.pk %}" class="btn btn-default btn-sm btn-show-doc"><i class="far fa-file-alt"></i></a>
+    <a id="showDocBtn" href="{% url 'document.edit' form.instance.document.pk %}"
+       class="btn btn-default btn-sm btn-show-doc"><i class="far fa-file-alt"></i></a>
     <a href="#" id="removeProductBtn" class="btn btn-danger btn-sm btn-remove-product"><i class="fa fa-times"></i></a>
     <button class="btn btn-success btn-sm btn-save" type="button"><i class="fas fa-check"></i></button>
 
@@ -46,10 +50,10 @@
         <div class="loader"></div>
     </div>
 
-{#        form:{{ form.errors }}#}
-{#        schedule: {{ schedule_formset.errors }}#}
-{#        cashflow: {{ cashflow_formset.errors }}#}
-{#        interest: {{ interest_formset.errors }}#}
+    {#        form:{{ form.errors }}#}
+    {#        schedule: {{ schedule_formset.errors }}#}
+    {#        cashflow: {{ cashflow_formset.errors }}#}
+    {#        interest: {{ interest_formset.errors }}#}
 
     {% config_var 'MODE_VIEW' as mode_view %}
 
@@ -68,10 +72,12 @@
             {{ cashflow_formset.management_form }}
             {{ interest_formset.management_form }}
             {{ commission_formset.management_form }}
+            {{ tranche_formset.management_form }}
 
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#detail-tab">Parametry</a></li>
-                <li><a data-toggle="tab" href="#schedule-tab">Harmonogram i oprocentowanie</a></li>
+                <li><a data-toggle="tab" href="#schedule-tab">Harmonogram</a></li>
+                <li><a data-toggle="tab" href="#tranche-tab">Transze</a></li>
                 {#                <li><a data-toggle="tab" href="#daystate-tab">Stan na dzień</a></li>#}
                 <li><a id="calcTab" data-toggle="tab" href="#calc-tab">Kalkulacja</a></li>
                 <li><a id="cashFlowTab" data-toggle="tab" href="#cashflow-tab">Przepływy</a></li>
@@ -116,7 +122,7 @@
 
                 <div id="schedule-tab" class="tab-pane fade in">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div id="product-schedule-formset-container">
                                 <div class="panel panel-default">
                                     <div style="width: 100%; display: inline-block" class="panel-heading">
@@ -128,7 +134,8 @@
                                         {% if form.instance.type.is_schedule %}
                                             <div style="overflow: auto; height: 100%;">
 
-                                                <table id="product-schedule-formset-table" class="table table-hover table-condensed table-striped">
+                                                <table id="product-schedule-formset-table"
+                                                       class="table table-hover table-condensed table-striped">
                                                     <thead>
                                                     <tr>
                                                         <th>lp</th>
@@ -136,8 +143,10 @@
                                                         <th>Dzień</th>
                                                         <th class="text-right">Rata kapitałowa</th>
                                                         <th class="text-right">Rata prowizyjna</th>
-{#                                                        <th class="text-right">Rata odsetkowa</th>#}
-{#                                                        <th style="min-width: 100px;" class="text-right">Rata całkowita</th>#}
+                                                        {#                                                        <th class="text-right">Rata odsetkowa</th>#}
+                                                        <th style="min-width: 100px;" class="text-right">Rata
+                                                            całkowita
+                                                        </th>
                                                     </tr>
                                                     </thead>
                                                     <tbody id="instalment-schedule-row-container">
@@ -155,6 +164,7 @@
                             </div>
                         </div>
 
+                        {% comment %}
                         <div class="col-lg-6 nopadding-left">
                             <div id="product-interest-formset-container">
                                 <div class="panel panel-default">
@@ -191,15 +201,46 @@
                                 </div>
                             </div>
                         </div>
+                        {% endcomment %}
+                    </div>
+                </div>
+                <div id="tranche-tab" class="tab-pane fade in">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="product-tranche-formset-container">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" style="width: 100%">Transze</div>
+                                    <div class="panel-body">
 
+                                        <div style="height: 100%; overflow-y: auto;">
+                                            <table id="product-tranche-formset-table"
+                                                   class="table table-hover table-condensed table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width:10%">Data uruchomienia</th>
+                                                    <th style="width:25%">Tytuł</th>
+                                                    <th>Pożyczkodawca / Wierzyciel</th>
+                                                    <th>Wartość</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for tranche_form in tranche_formset %}
+                                                    {% include 'product/_partial/_formset/_row/_tranche_formset_row_partial.html' with tranche_form=tranche_form index=forloop.counter0 %}
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-
                 <div id="commission-tab" class="tab-pane fade in">
-
-                    <div class="dropdown  pad-t">
-                        <a href="#" class="dropdown-toggle btn btn-default btn-sm" type="button" data-toggle="dropdown" id="commission_dropdown_btn" aria-haspopup="true"
+                    <div class="dropdown pad-t">
+                        <a href="#" class="dropdown-toggle btn btn-default btn-sm" type="button" data-toggle="dropdown"
+                           id="commission_dropdown_btn" aria-haspopup="true"
                            aria-expanded="false"><i class="fa fa-plus"></i></a>
                         <ul class="dropdown-menu" aria-labelledby="commission_dropdown_btn">
                             {% for c in form.instance.type.commission_set.all %}
@@ -214,7 +255,8 @@
                     </div>
 
                     <div class="col-lg-12 pad-t">
-                        <table id="product-commission-formset-table" data-id="{{ form.instance.pk }}" class="table table-hover table-condensed">
+                        <table id="product-commission-formset-table" data-id="{{ form.instance.pk }}"
+                               class="table table-hover table-condensed">
                             <thead>
                             <th>Nazwa</th>
                             <th>typ</th>
@@ -239,7 +281,9 @@
 
                 <div id="daystate-tab" class="tab-pane fade in">
                     <div class="col-sm-12 pad-b">
-                        <button id="datepicker_btn" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Dodaj stan na dzień</button>
+                        <button id="datepicker_btn" class="btn btn-default btn-sm dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Dodaj stan na dzień
+                        </button>
                         <ul class="dropdown-menu" aria-labelledby="datepicker_btn">
                             <li>
                                 <div id="datepicker11" class="center-text"></div>

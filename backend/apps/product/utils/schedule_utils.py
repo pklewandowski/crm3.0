@@ -319,7 +319,7 @@ class ProductScheduleUtils:
         nominal_dt = py3ws_utils.add_month(product.start_date, 1)
         dt = py3ws_date_utils.set_schedule_work_day(py3ws_utils.add_month(product.start_date, 1))
 
-        with transaction.atomic():
+        with (transaction.atomic()):
             ProductSchedule.objects.filter(product=product).delete()
 
             # get schedule section table data
@@ -334,7 +334,9 @@ class ProductScheduleUtils:
 
                 # transform data into schedule
                 schedule_table = {}
-                for i in DocumentAttribute.objects.filter(document_id=product.document.pk, attribute__pk__in=[i['id'] for i in attributes]):
+                for i in DocumentAttribute.objects.filter(
+                        document_id=product.document.pk, attribute__pk__in=[i['id'] for i in attributes]
+                ):
                     if i.row_sq not in schedule_table:
                         schedule_table[i.row_sq] = {i.attribute.id: i.value}
                         continue
@@ -354,7 +356,8 @@ class ProductScheduleUtils:
                                    INSTALMENT_MATURITY_DATE_SELECTOR] in val else dt,
                             instalment_capital=val[product_schedule_attributes_map[INSTALMENT_CAPITAL_SELECTOR]] if INSTALMENT_CAPITAL_SELECTOR in product_schedule_attributes_map else 0,
                             instalment_commission=val[product_schedule_attributes_map[INSTALMENT_COMMISSION_SELECTOR]] if INSTALMENT_COMMISSION_SELECTOR in product_schedule_attributes_map else 0,
-                            instalment_interest=val[product_schedule_attributes_map[INSTALMENT_INTEREST_SELECTOR]] if INSTALMENT_INTEREST_SELECTOR in product_schedule_attributes_map else 0
+                            instalment_interest=val[product_schedule_attributes_map[INSTALMENT_INTEREST_SELECTOR]] if INSTALMENT_INTEREST_SELECTOR in product_schedule_attributes_map else 0,
+                            instalment_total=val[product_schedule_attributes_map[INSTALMENT_TOTAL_SELECTOR]] if INSTALMENT_TOTAL_SELECTOR in product_schedule_attributes_map else 0,
                         )
                     )
                     nominal_dt = py3ws_utils.add_month(nominal_dt, 1)

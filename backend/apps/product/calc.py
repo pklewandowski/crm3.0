@@ -11,7 +11,6 @@ from apps.product.models import ProductCalculation, ProductAction, ProductAction
 from apps.product.rules import Rules
 from apps.product.utils.utils import ProductUtils
 from apps.product.view.views import ProductActionManager
-from py3ws.utils import utils as py3ws_utils
 
 
 class CalculateLoan(Calculation):
@@ -38,8 +37,13 @@ class CalculateLoan(Calculation):
 
         # capital required and not required
         self.accounting['CAP_REQ'] = decimal.Decimal(0.0)
-        self.accounting[
-            'CAP_NOT_REQ'] = self.product.capital_net if self.product.capital_type_calc_source == 'N' else self.product.value
+
+        # if tranche so load first tranche
+        if self.tranche_list:
+            self.accounting['CAP_NOT_REQ'] = list(self.tranche_list.items())[0][1]
+        else:
+            self.accounting['CAP_NOT_REQ'] = self.product.capital_net \
+                if self.product.capital_type_calc_source == 'N' else self.product.value
 
         # payments
         self.accounting['PAYMENT'] = decimal.Decimal(0.0)
@@ -86,7 +90,8 @@ class CalculateLoan(Calculation):
 
         self._interest_for_delay_daily = decimal.Decimal(0.0)
 
-        # Flag indicating if instalment was paid before grace_period and then need to undo interest for delay for <current_schedule_date; payment_day> range
+        # _undo_interest_for_delay flag indicating if instalment was paid before grace_period and then need to undo interest for delay
+        # for <current_schedule_date; payment_day> range
         # interest for delay undo is set as correction in today value
         self._undo_interest_for_delay = False
         self._current_payment = decimal.Decimal(0.0)
@@ -96,7 +101,6 @@ class CalculateLoan(Calculation):
         self._remission_interest = decimal.Decimal(0.0)
         self._remission_interest_for_delay = decimal.Decimal(0.0)
         self._remission_cost = decimal.Decimal(0.0)
-        # ----------------------------------------------------
 
         self.schedule_current_date = datetime.datetime.strptime(list(self.schedule_list.keys())[0], '%Y-%m-%d')
         self.schedule_maturity_due_date = self.schedule_current_date + datetime.timedelta(
@@ -326,7 +330,7 @@ class CalculateLoan(Calculation):
                         'required_liabilities_sum': (
                                 self.accounting['CAP_REQ'] +
                                 self.accounting['COMM_REQ'] +
-                                self.accounting['INTEREST_VALUE']
+                                self._interest_per_day
                         ),
                         'cost': self.accounting['COST'],
                         'instalment_overpaid': self.accounting['PAYMENT']
@@ -345,7 +349,7 @@ class CalculateLoan(Calculation):
                 interest_daily=self._interest_daily,
                 interest_per_day=self._interest_per_day,
                 interest_cumulated_per_day=self._interest_cumulated_per_day,
-                interest_required=self.accounting['INTEREST_REQUIRED'],
+                interest_required=self._interest_per_day,  # self.accounting['INTEREST_REQUIRED'],
                 interest_required_from_schedule=self._interest_required_from_schedule,
                 interest_rate=self.interest_rate * 100,
 
@@ -355,8 +359,10 @@ class CalculateLoan(Calculation):
                 interest_for_delay_required_daily=self._interest_for_delay_daily,
                 interest_for_delay_rate=self.interest_for_delay_rate * 100,
 
-                required_liabilities_sum=self.accounting['CAP_REQ'] + self.accounting['COMM_REQ'] + self.accounting[
-                    'INTEREST_REQUIRED'],
+                required_liabilities_sum=self.accounting['CAP_REQ'] +
+                                         self.accounting['COMM_REQ'] +
+                                         self.accounting['INTEREST_REQUIRED'],
+
                 required_liabilities_sum_from_schedule=(self._capital_required_from_schedule +
                                                         self._commission_required_from_schedule +
                                                         self._interest_required_from_schedule),
@@ -453,6 +459,15 @@ class CalculateLoan(Calculation):
         :param dt_str:
         :return:
         """
+
+        # if there is a tranche to be added, add it to the capital not required
+        if (
+                self.tranche_list
+                and dt_str != datetime.datetime.strftime(self.product.start_date, '%Y-%m-%d')
+                and dt_str in self.tranche_list
+        ):
+            self.accounting['CAP_NOT_REQ'] += self.tranche_list[dt_str]
+
         # if there is payment on the list
         if dt_str in self.accounting_list['PAYMENT']:
             val = self.accounting_list['PAYMENT'][dt_str]
@@ -482,11 +497,22 @@ class CalculateLoan(Calculation):
                 self.schedule_next_date = None
 
             # prowizja wymagalna z harmonogramu -  kwota raty prowizyjnej z harmonogramu
-            self._capital_required_from_schedule = min(val['instalment_capital'], self.accounting['CAP_NOT_REQ'])
-            self._commission_required_from_schedule = min(val['instalment_commission'], self.accounting['COMM_NOT_REQ'])
-            self._interest_required_from_schedule = val['instalment_interest']
 
-            self.accounting['INTEREST_REQUIRED'] += self._interest_required_from_schedule
+            # TODO: do zmiany - jeżeli rata stała to CAP_REQ = min(0, INSTALMENT_TOTAL - INTEREST_PER_DAY - COMMISION_PER_DAY)
+            #    jeżeli zmienna, to CAP_REQ = CAP_NOT_REQ * % jaki ma być rata, np. 100 000 * 1,2% = 1200,00
+            #    instalment_total - dodać to pole do tabeli product_schedule
+
+            # self._capital_required_from_schedule = min(val['instalment_capital'], self.accounting['CAP_NOT_REQ'])
+            # self._commission_required_from_schedule = min(val['instalment_commission'], self.accounting['COMM_NOT_REQ'])
+            # self._interest_required_from_schedule = val['instalment_interest']
+
+            # TODO: TYLKO do testów - to jest DRUT dla raty stałej
+            cap_req = val['instalment_total'] - self._commission_per_day - self._interest_per_day
+            self._capital_required_from_schedule = min(cap_req, self.accounting['CAP_NOT_REQ'])
+            self._commission_required_from_schedule = min(self._commission_per_day, self.accounting['COMM_NOT_REQ'])
+            self._interest_required_from_schedule = self._interest_per_day
+
+            self.accounting['INTEREST_REQUIRED'] += self._interest_per_day  # self._interest_required_from_schedule
 
             # Swich-ujemy kapitał /prow niewymagalny (czyli przerzucamy na kapitał/prow wymagalny z kapitału niewymagalnego: (CAP_REQ += val), (CAP_NOT_REQ -= val))
             oper = min(self.accounting['COMM_NOT_REQ'], self._commission_required_from_schedule)
@@ -677,19 +703,23 @@ class CalculateLoan(Calculation):
 
             if dt < self.product.start_date:
                 raise CalculationException(
-                    f'Edycja produktu {self.product.document.code} ({str(self.product.document.owner)}) '
+                    f'Kalkulacja produktu {self.product.document.code} ({str(self.product.document.owner)}) '
                     f'będzie możliwa dopiero po osiągnięciu daty startu: {self.product.start_date}')
 
-            # get the real possible start date of the calculation and set the calculation initial state for one day before start_date
+            # get the real possible start date of the calculation and set the calculation initial state
+            # for one day before start_date
             dt = self.set_calculation_initial_state(dt)
+
             if dt is None:
                 dt = self.product.start_date
             if dt > datetime.date.today():
                 return
 
-            self.start_date, self.end_date = dt, min(end_date or datetime.date.today(), datetime.date.today(),
+            self.start_date, self.end_date = dt, min(end_date or datetime.date.today(),
+                                                     datetime.date.today(),
                                                      self.product.end_date or datetime.date.today())
 
+            # const days in year regardless of year days count
             self.days_in_year = 365  # py3ws_utils.days_in_year(dt.year)
 
             # --------------------------------- MAIN LOOP -------------------------------------

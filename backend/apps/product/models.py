@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
+from application.models import AppModel
 from apps.attachment.models import Attachment
 from apps.attribute.models import Attribute
 from apps.config.models import HoldingCompany
@@ -143,6 +144,20 @@ class Product(models.Model):
         )
 
 
+class ProductTranche(AppModel):
+    product = models.ForeignKey(Product, db_column='id_product', related_name='tranches', on_delete=models.CASCADE)
+    title = models.CharField(verbose_name=_('title'), max_length=255)
+    lender = models.ForeignKey(Hierarchy, db_column='id_lender', related_name='tranche_lender',
+                               on_delete=models.CASCADE)
+    condition = models.TextField(verbose_name=_('condition'), null=True, blank=True)
+    value = models.DecimalField(verbose_name=_('value'), max_digits=10, decimal_places=2)
+    launch_date = models.DateField(null=True, blank=True)
+    sq = models.SmallIntegerField(verbose_name=_('sq'))
+
+    class Meta:
+        db_table = 'product_tranche'
+
+
 class ProductClient(models.Model):
     product = models.ForeignKey(Product, db_column='id_product', related_name='client_set', on_delete=models.CASCADE)
     client = models.ForeignKey(Client, db_column='id_client', on_delete=models.CASCADE)
@@ -161,6 +176,7 @@ class ProductSchedule(models.Model):
     instalment_capital = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     instalment_interest = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     instalment_commission = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
+    instalment_total = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
 
     def __str__(self):
         return str(self.pk)
