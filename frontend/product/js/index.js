@@ -365,17 +365,17 @@ $(document).ready(() => {
         opts
     );
 
-    let interestTable = document.getElementById('product-interest-formset-table');
-    if (!interestTable) {
-        throw new SystemException('Brak tabeli oprocentowania!');
-    }
-
-
-    interestTable.addEventListener('change', (e) => {
-        if (e.target.dataset['code'] === 'interest_statutory_rate') {
-            productInstalmentSchedule.generate();
-        }
-    });
+    // let interestTable = document.getElementById('product-interest-formset-table');
+    // if (!interestTable) {
+    //     throw new SystemException('Brak tabeli oprocentowania!');
+    // }
+    //
+    //
+    // interestTable.addEventListener('change', (e) => {
+    //     if (e.target.dataset['code'] === 'interest_statutory_rate') {
+    //         productInstalmentSchedule.generate();
+    //     }
+    // });
 
 // todo: bypass until date-calendar will be unified in whole project to vanillajs-calendar-3ws control
     for (let el of Array.from(document.querySelectorAll('.vanilla-date-field'))) {
@@ -396,9 +396,9 @@ $(document).ready(() => {
     }
 
 // set the first row of start date as readonly
-    let firstStartDate = interestTable.querySelector('tbody tr [data-code="interest_start_date"]')
-    firstStartDate.setAttribute('readonly', "readonly");
-    firstStartDate.datepicker.destroy();
+//     let firstStartDate = interestTable.querySelector('tbody tr [data-code="interest_start_date"]')
+//     firstStartDate.setAttribute('readonly', "readonly");
+//     firstStartDate.datepicker.destroy();
 
     let product = new Product(_g.product.id);
     let productDashboard;

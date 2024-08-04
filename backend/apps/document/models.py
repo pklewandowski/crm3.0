@@ -347,7 +347,7 @@ class DocumentStatusCourse(models.Model):
     in DocumentStatusCourse there will be only A(2020-01-01)->B(2020-01-06) entry.
     Another words it doesn't track changes, but deletes entry when user back status
     """
-    document = models.ForeignKey(Document, db_column='id_document', db_index=True, on_delete=models.CASCADE)
+    document = models.ForeignKey(Document, db_column='id_document', db_index=True, related_name='status_course', on_delete=models.CASCADE)
     status = models.ForeignKey('DocumentTypeStatus', db_column='id_status', db_index=True, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, db_column='id_user', on_delete=models.CASCADE)
     effective_date = models.DateTimeField(default=timezone.now)

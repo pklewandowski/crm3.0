@@ -1,9 +1,11 @@
 import datetime
 import decimal
+from collections import OrderedDict
 
 from django.db import transaction
 from django.db.models import Min
 
+import py3ws.utils.utils
 from apps.document.models import Document, DocumentAttribute, DocumentTypeAttribute, \
     DocumentTypeAccounting, DocumentTypeStatus, DocumentTypeAttributeMapping
 from apps.document.view_base import DocumentException
@@ -13,9 +15,10 @@ from apps.product import ANNEX_STATUS
 from apps.product.base import ProductActionManager
 from apps.product.models import Product, ProductInterest, ProductInterestType, ProductAccounting, \
     ProductAction, ProductStatusTrack, ProductTypeStatus, ProductTypeProcessFlow, \
-    INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT
+    INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT, ProductTranche
 from apps.product.utils.schedule_utils import ProductScheduleUtils
 from apps.user.models import User
+from apps.user_func.broker.models import Broker
 from apps.user_func.client.models import Client
 
 
@@ -67,19 +70,48 @@ class ProductUtils:
 
 class LoanUtils:
     @staticmethod
-    def get_mapped_attributes(document):
+    def get_mapped_attributes(document: Document, with_value_only=False, required_only=False) -> dict:
         mapping = {}
 
         for i in DocumentTypeAttributeMapping.objects.filter(type=document.type):
-            try:
-                value = DocumentAttribute.objects.get(document_id=document.pk, attribute=i.attribute).value
-            except DocumentAttribute.DoesNotExist:
-                value = i.default_value
-            mapping[i.mapped_name] = {
-                'id': i.attribute.pk if i.attribute else None,
-                'value': value,
-                'required': i.is_required
-            }
+            if required_only and not i.is_required:
+                continue
+
+            if not i.attribute:
+                if with_value_only and (not i.default_value or i.default_value is None):
+                    continue
+
+                mapping[i.mapped_name] = {
+                    'id': None,
+                    'value': i.default_value,
+                    'required': i.is_required
+                }
+                continue
+
+            document_attribute = DocumentAttribute.objects.filter(document_id=document.pk,
+                                                                  attribute=i.attribute).order_by('row_sq')
+
+            if with_value_only and (
+                    not document_attribute or not document_attribute[0].value or document_attribute[0].value is None):
+                continue
+
+            if not document_attribute or len(document_attribute) == 1:
+                mapping[i.mapped_name] = {
+                    'id': i.attribute.pk if i.attribute else None,
+                    'value': document_attribute[0].value if document_attribute else None,
+                    'required': i.is_required
+                }
+            else:
+                value_list = []
+                for j in document_attribute:
+                    value_list.append(
+                        {
+                            'id': i.attribute.pk if i.attribute else None,
+                            'value': j.value,
+                            'required': i.is_required
+                        }
+                    )
+                mapping[i.mapped_name] = value_list
 
         return mapping
 
@@ -100,17 +132,123 @@ class LoanUtils:
             return None
 
     @staticmethod
-    def _get_mapping(document, empty=False):
-        mapping = LoanUtils.get_mapped_attributes(document)
+    def _get_mapping(document: Document, empty=False, with_value_only=False, required_only=False) -> dict:
+        """
+        Gets the document attribute mapping dict and performs basic validations.
+        :param document: Document object
+        :param empty: boolean, default False
+        :return: dict  - attribute mapping dict
+         """
+        mapping = LoanUtils.get_mapped_attributes(
+            document=document,
+            with_value_only=with_value_only,
+            required_only=required_only
+        )
 
-        for i in mapping.values():
-            if not empty and i["required"] and not i["value"]:
-                raise ProductException(
-                    'Brak wymaganych danych do utworzenia pożyczki %s' %
-                    str([k for k in mapping.keys() if (mapping[k]["required"] and not mapping[k]["value"])])
-                )
+        for k, v in mapping.items():
+            if isinstance(v, list):
+                if not len(v):
+                    continue
+                required, value = v[0]['required'], v[0]['value']
+            else:
+                required, value = v['required'], v['value']
+
+            # checks
+            if not empty and required and not value:
+                raise ProductException(f'Brak wymaganych danych do utworzenia pożyczki: {k}')
 
         return mapping
+
+    @staticmethod
+    def collect_tranches(product: Product, mapping: dict) -> dict:
+        tranche_nord_map = {
+            mapping['TRANCHE_NORD_TITLE'][0]['id']: 'title',
+            mapping['TRANCHE_NORD_LENDER'][0]['id']: 'lender',
+            mapping['TRANCHE_NORD_VALUE'][0]['id']: 'value'
+        } if 'TRANCHE_NORD_TITLE' in mapping else {}
+        tranche_client_map = {
+            mapping['TRANCHE_CLIENT_TITLE'][0]['id']: 'title',
+            mapping['TRANCHE_CLIENT_LENDER'][0]['id']: 'lender',
+            mapping['TRANCHE_CLIENT_VALUE'][0]['id']: 'value'
+        } if 'TRANCHE_CLIENT_VALUE' in mapping else {}
+
+        if not tranche_nord_map and not tranche_client_map:
+            return {}
+
+        tranche_map = py3ws.utils.utils.merge_two_dicts(tranche_nord_map, tranche_client_map)
+
+        tranche_nord_data = DocumentAttribute.objects.filter(
+            document_id=product.document.pk,
+            attribute__in=list(tranche_nord_map.keys()),
+        ).order_by('row_sq')
+
+        tranche_client_data = DocumentAttribute.objects.filter(
+            document_id=product.document.pk,
+            attribute__in=list(tranche_client_map.keys()),
+        ).order_by('row_sq')
+
+        if tranche_nord_data:
+            row_sq = max([i.row_sq for i in tranche_nord_data]) + 1
+
+            for i in tranche_client_data:
+                i.row_sq = i.row_sq + row_sq
+
+        tranche_data_dict = OrderedDict()
+
+        for t in tranche_nord_data:
+            if t.row_sq not in tranche_data_dict:
+                tranche_data_dict[t.row_sq] = {f'{tranche_map[t.attribute.pk]}': t.value}
+            else:
+                tranche_data_dict[t.row_sq][tranche_map[t.attribute.pk]] = t.value
+
+        for t in tranche_client_data:
+            if t.row_sq not in tranche_data_dict:
+                tranche_data_dict[t.row_sq] = {f'{tranche_map[t.attribute.pk]}': t.value}
+            else:
+                tranche_data_dict[t.row_sq][tranche_map[t.attribute.pk]] = t.value
+
+        tranche_data_dict[0]['launch_date'] = product.start_date
+
+        return tranche_data_dict
+
+    @staticmethod
+    def _create_tranches(product: Product, mapping: dict, collect_tranches: callable) -> [ProductTranche]:
+
+        if (
+                (
+                        'TRANCHE_NORD_TITLE' not in mapping
+                        or not isinstance(mapping['TRANCHE_NORD_TITLE'], list)
+                        or not len(mapping['TRANCHE_NORD_TITLE'])
+                )
+                and
+                (
+                        'TRANCHE_CLIENT_TITLE' not in mapping
+                        or not isinstance(mapping['TRANCHE_CLIENT_TITLE'], list)
+                        or not len(mapping['TRANCHE_CLIENT_TITLE'])
+                )
+        ):
+            return []
+
+        tranche_data_dict = collect_tranches(product=product, mapping=mapping)
+
+        tranches = []
+        idx = 1
+
+        for k, v in tranche_data_dict.items():
+            tranches.append(
+                ProductTranche(
+                    product=product,
+                    title=v['title'],
+                    lender=Hierarchy.objects.get(pk=v['lender']),
+                    value=v['value'],
+                    launch_date=v['launch_date'] if k == 0 else None,
+                    sq=idx
+                )
+            )
+
+            idx += 1
+
+        return tranches
 
     @staticmethod
     def _create_product(user, document, mapping):
@@ -139,6 +277,7 @@ class LoanUtils:
             if 'INSTALMENT_INTEREST_RATE' in mapping else decimal.Decimal(0.0)
 
         product.client = Client.objects.get(user=document.owner)
+        product.broker = Broker.objects.get(user=mapping['BROKER']["value"]) if 'BROKER' in mapping else None
 
         # product.creditor_bank_account = mapping['CREDITOR_BANK_ACCOUNT']
         product.debtor_bank_account = mapping['DEBTOR_BANK_ACCOUNT']["value"]
@@ -146,9 +285,10 @@ class LoanUtils:
         # liczba dni karencji do rozpoczęcia naliczania odsetek za opóźnienie
         product.grace_period = decimal.Decimal(
             mapping['GRACE_PERIOD']["value"] or 0) if 'GRACE_PERIOD' in mapping else decimal.Decimal(0.0)
-        product.debt_collection_fee_period = decimal.Decimal(mapping['DEBT_COLLECTION_FEE_PERIOD'][
-                                                                 'value']) if 'DEBT_COLLECTION_FEE_PERIOD' in mapping else decimal.Decimal(
-            0.0)
+        product.debt_collection_fee_period = (
+            decimal.Decimal(mapping['DEBT_COLLECTION_FEE_PERIOD'][
+                                'value'] or 0) if 'DEBT_COLLECTION_FEE_PERIOD' in mapping else decimal.Decimal(0.0)
+        )
         product.status = ProductTypeStatus.objects.get(is_initial=True)
         product.capital_type_calc_source = \
             mapping['INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE'][
@@ -169,6 +309,16 @@ class LoanUtils:
                 0.0)
 
         product.interest_for_delay_type = int(mapping['INTEREST_FOR_DELAY_TYPE']['value'])
+
+        tranches = LoanUtils._create_tranches(
+            product=product,
+            mapping=mapping,
+            collect_tranches=LoanUtils.collect_tranches
+        )
+
+        product.save()
+        for tranche in tranches:
+            tranche.save()
 
         return product
 
@@ -241,13 +391,12 @@ class LoanUtils:
         except Product.DoesNotExist:
             pass
 
-        mapping = LoanUtils._get_mapping(document=document)
+        mapping = LoanUtils._get_mapping(document=document, with_value_only=True)
 
         if document.annex:
             LoanUtils._process_annex(user=user, document=document, mapping=mapping)
 
         product = LoanUtils._create_product(user=user, document=document, mapping=mapping)
-        product.save()
 
         LoanUtils._set_product_initial_status(product=product)
         LoanUtils._create_schedule(product=product, mapping=mapping)
