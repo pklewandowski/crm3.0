@@ -7,7 +7,8 @@ from django.db import transaction
 from django.db.models import F, Sum, Max
 
 from apps.document.models import DocumentTypeAccounting
-from apps.product.models import ProductSchedule, ProductInterest, ProductCashFlow, Product, ProductCalculation
+from apps.product.models import ProductSchedule, ProductInterest, ProductCashFlow, Product, ProductCalculation, \
+    ProductTranche
 from apps.user.models import User
 
 
@@ -37,6 +38,8 @@ class CalculationBase:
         self.instalment_overdue_count = 0
         self.instalment_overdue_occurrence = 0
         self.instalment_daily = {}
+
+        self.tranche_list = {}
 
         self.schedule_list = None
         self.schedule_list_keys = None
@@ -92,6 +95,7 @@ class Calculation(CalculationBase):
 
         # initial settings
         self.set_end_date()
+        self.set_tranche_list()
         self.set_schedule_list()
         self.set_interest_list()
         self.set_commission_list()
@@ -107,23 +111,37 @@ class Calculation(CalculationBase):
     def calculate_instalment_interest_required(self):
         return (self.accounting['CAP_NOT_REQ'] + self.accounting['CAP_REQ']) * self.interest_rate / 12
 
+    def set_tranche_list(self):
+        self.tranche_list = collections.OrderedDict(
+            {
+                datetime.datetime.strftime(i['launch_date'], '%Y-%m-%d'): i['value']
+                for i in
+                self.product.tranches.filter(launch_date__isnull=False).values('launch_date').annotate(
+                    value=Sum('value')).order_by('launch_date')
+            }
+        )
+
     def set_schedule_list(self):
         self.schedule_list = collections.OrderedDict({i['maturity_date'].strftime("%Y-%m-%d"):
             {
                 'value': decimal.Decimal(i['value']),
                 'instalment_capital': decimal.Decimal(i['instalment_capital']),
                 'instalment_interest': decimal.Decimal(i['instalment_interest']),
-                'instalment_commission': decimal.Decimal(i['instalment_commission'])
+                'instalment_commission': decimal.Decimal(i['instalment_commission']),
+                'instalment_total': decimal.Decimal(i['instalment_total'])
             } for i in ProductSchedule.objects.filter(
             product=self.product).values('maturity_date').annotate(
             value=Sum(F('instalment_capital') + F('instalment_interest') + F('instalment_commission')),
             instalment_capital=Sum(F('instalment_capital')),
             instalment_interest=Sum(F('instalment_interest')),
-            instalment_commission=Sum(F('instalment_commission'))).order_by('maturity_date')
+            instalment_commission=Sum(F('instalment_commission')),
+            instalment_total=Sum(F('instalment_total')),
+        ).order_by('maturity_date')
         })
 
         self.schedule_list_keys = list(self.schedule_list.keys())
-        self.schedule_next_date = datetime.datetime.strptime(self.schedule_list_keys[0], '%Y-%m-%d').date() if self.schedule_list_keys[0] else None
+        self.schedule_next_date = datetime.datetime.strptime(self.schedule_list_keys[0], '%Y-%m-%d').date() if \
+            self.schedule_list_keys[0] else None
 
         dt = self.product.start_date
 
@@ -152,7 +170,10 @@ class Calculation(CalculationBase):
         self.commission_list = self.product.commission_set.all()
 
     def set_schedule_end_date(self):
-        self.schedule_end_date = ProductSchedule.objects.filter(product=self.product).values('maturity_date').aggregate(Max('maturity_date'))['maturity_date__max']
+        self.schedule_end_date = \
+            ProductSchedule.objects.filter(product=self.product).values('maturity_date').aggregate(
+                Max('maturity_date'))[
+                'maturity_date__max']
 
     def set_end_date(self):
         self.end_date = min(self.product.end_date or datetime.date.today(), datetime.date.today())

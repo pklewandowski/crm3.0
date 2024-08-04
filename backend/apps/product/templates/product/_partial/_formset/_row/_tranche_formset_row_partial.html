@@ -1,0 +1,15 @@
+{% load l10n %}
+<tr data-id="{{ tranche_form.pk }}" data-removable="false">
+    {% if index == 0 %}
+        <td>{{ tranche_form.instance.launch_date|date:'Y-m-d' }}{{ tranche_form.launch_date.as_hidden }}</td>
+    {% else %}
+        {% localize off %}
+            <td>{{ tranche_form.launch_date|unlocalize }}{{ tranche_form.launch_date.errors }}</td>
+        {% endlocalize %}
+    {% endif %}
+    <td>{{ tranche_form.instance.title }}</td>
+    <td>{{ tranche_form.instance.lender.name }}</td>
+    <td class="decimal-field">{{ tranche_form.instance.value }}</td>
+    {{ tranche_form.product.as_hidden|unlocalize }}
+    {{ tranche_form.id|unlocalize }}
+</tr>

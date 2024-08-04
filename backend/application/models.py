@@ -7,8 +7,14 @@ from py3ws.utils.validators import regon_validator
 from utils.validators import nip_validator, krs_validator
 
 
+class AppModel(models.Model):
+    class Meta:
+        abstract = True
+
+
 class AuditMixin(models.Model):
-    created_by = models.ForeignKey('user.User', db_column='id_creation_user', related_name="+", on_delete=models.CASCADE)
+    created_by = models.ForeignKey('user.User', db_column='id_creation_user', related_name="+",
+                                   on_delete=models.CASCADE)
     updated_by = models.ForeignKey('user.User', db_column='id_update_user', related_name="+", on_delete=models.CASCADE)
     creation_date = models.DateTimeField(auto_now=True)
     update_date = models.DateTimeField(auto_now=True, null=True)
@@ -47,9 +53,12 @@ class AddressMixin:
 
 
 class CompanyDataMixin:
-    nip = models.CharField(verbose_name=_('nip'), max_length=20, null=True, blank=True, unique=True, validators=[nip_validator])
-    krs = models.CharField(verbose_name=_('krs'), max_length=20, null=True, blank=True, unique=True, validators=[krs_validator])
-    regon = models.CharField(verbose_name=_('regon'), max_length=20, null=True, blank=True, unique=True, validators=[regon_validator])
+    nip = models.CharField(verbose_name=_('nip'), max_length=20, null=True, blank=True, unique=True,
+                           validators=[nip_validator])
+    krs = models.CharField(verbose_name=_('krs'), max_length=20, null=True, blank=True, unique=True,
+                           validators=[krs_validator])
+    regon = models.CharField(verbose_name=_('regon'), max_length=20, null=True, blank=True, unique=True,
+                             validators=[regon_validator])
 
     class Meta:
         abstract = True

@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 import os
 import uuid
 
@@ -7,19 +8,19 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.db import transaction
-from django.db.models import Q, Max
+from django.db.models import Max, F
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
-import crm_settings
 from apps.attachment import utils as atm_utils
 from apps.document.models import DocumentTypeAttribute, DocumentType, DocumentTypeSection, DocumentTypeAccountingType
 from apps.product.base import ProductActionManager
 from apps.product.calculation import CalculationException
-from apps.product.forms import ProductTypeAttributeForm, ProductForm, ProductActionForm, TestCopyPasteForm, ScheduleFormset, CashFlowFormset, InterestFormset, ProductInterestGlobalForm
-from apps.product.models import Product, ProductAccounting, ProductInterest, \
-    ProductCalculation, ProductAction, ProductActionDefinition, ProductInterestGlobal
+from apps.product.forms import ProductTypeAttributeForm, ProductForm, ProductActionForm, TestCopyPasteForm, \
+    CashFlowFormset, ProductInterestGlobalForm, ProductTrancheFormset
+from apps.product.models import Product, ProductAccounting, ProductCalculation, ProductAction, ProductActionDefinition, \
+    ProductInterestGlobal
 from apps.product.utils.utils import ProductUtils
 from apps.report.datasource_utils import ReportDatasourceUtils
 from apps.report.forms import ReportDatasourceForm
@@ -28,6 +29,7 @@ from py3ws.auth.decorators.decorators import p3permission_required
 from py3ws.report.jasper.server import report_server
 from py3ws.utils import utils as py3ws_utils
 
+logger = logging.getLogger(__name__)
 
 class InterestNotFoundException(Exception):
     pass
@@ -43,6 +45,7 @@ def list_product(request, id):
 
     context = {'products': products, 'product_type': product_type}
     return render(request, 'product/list.html', context)
+
 
 def list_all_products(request):
     products = Product.objects.all().order_by('document__type__name', '-creation_date')
@@ -134,7 +137,12 @@ def edit(request, id, iframe=0):
     calc_max_date = None
 
     if product.type.is_schedule:
+        # schedule = product.schedule_set.all().annotate(
+        #     instalment_total=F('instalment_capital') + F('instalment_interest')
+        # ).order_by('maturity_date')
+
         schedule = product.schedule_set.all().order_by('maturity_date')
+
         end_date = product.end_date or datetime.date.today()
 
     # TODO: docelowo kalkulacja jest aktulana, bo liczona przez proces cron-owy codziennie.
@@ -144,15 +152,18 @@ def edit(request, id, iframe=0):
     if request.method != 'POST' and product.type.calculation_class:
         try:
             ProductCalculation.objects.get(product=product, calc_date=end_date - datetime.timedelta(days=1))
-            print('Calculation exists!')
+            logger.debug('Calculation exists!')
         except ProductCalculation.DoesNotExist:
-            print('Calculation does not exist')
+            logger.debug('Calculation does not exist')
             if not product.status.is_closing_process:
                 # calculating
                 try:
-                    py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate(start_date=datetime.date.today())
+                    # TODO: poprawić, żeby działało dla startu od danego dnia
+                    # py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate(
+                    #     start_date=datetime.date.today())
+                    py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
                 except CalculationException as ex:
-                    return render(request, 'product/calculation_error.html', {"errmsg": str(ex), "product":product})
+                    return render(request, 'product/calculation_error.html', {"errmsg": str(ex), "product": product})
 
             else:
                 print('Product is in closing process status')
@@ -168,10 +179,18 @@ def edit(request, id, iframe=0):
     # if schedule:
     #     schedule_formset = ScheduleFormset(data=request.POST or None, queryset=schedule, prefix='product-schedule')
 
-    cashflow_formset = CashFlowFormset(data=request.POST or None, queryset=product.cashflow_set.all().order_by('cash_flow_date', 'accounting_date'), prefix='product-cashflow')
+    cashflow_formset = CashFlowFormset(data=request.POST or None,
+                                       queryset=product.cashflow_set.all().order_by('cash_flow_date',
+                                                                                    'accounting_date'),
+                                       prefix='product-cashflow')
 
-    interest_queryset = product.interest_set.all().order_by('start_date')
-    interest_formset = InterestFormset(data=request.POST or None, queryset=interest_queryset, prefix='product-interest')
+    tranche_formset = ProductTrancheFormset(data=request.POST or None,
+                                            queryset=product.tranches.all().order_by('launch_date'),
+                                            prefix='product-tranche'
+                                            )
+
+    # interest_queryset = product.interest_set.all().order_by('start_date')
+    # interest_formset = InterestFormset(data=request.POST or None, queryset=interest_queryset, prefix='product-interest')
 
     if request.method == 'POST':
         min_change_date = settings.INFINITY_DATE
@@ -183,7 +202,8 @@ def edit(request, id, iframe=0):
         if valid and all([
             not form.has_changed() or form.is_valid(),
             not cashflow_formset.has_changed() or cashflow_formset.is_valid(),
-            not interest_formset.has_changed() or interest_formset.is_valid()
+            not tranche_formset.has_changed() or tranche_formset.is_valid()
+            # not interest_formset.has_changed() or interest_formset.is_valid()
         ]):
             has_changed = False
 
@@ -198,17 +218,27 @@ def edit(request, id, iframe=0):
             #     schedule_formset.save()
             #     has_changed = True
 
-            if interest_formset.has_changed():
-                min_change_date = min(min_change_date,
-                                      min([min(k.initial.get('start_date') or settings.INFINITY_DATE, k.cleaned_data.get('start_date') or settings.INFINITY_DATE)
-                                           for k in interest_formset if k.changed_data] or settings.INFINITY_DATE))
-                interest_formset.save()
+            # if interest_formset.has_changed():
+            #     min_change_date = min(min_change_date,
+            #                           min([min(k.initial.get('start_date') or settings.INFINITY_DATE,
+            #                                    k.cleaned_data.get('start_date') or settings.INFINITY_DATE)
+            #                                for k in interest_formset if k.changed_data] or settings.INFINITY_DATE))
+            #     interest_formset.save()
 
             if cashflow_formset.has_changed():
                 min_change_date = min(min_change_date,
-                                      min([min(k.initial.get('cash_flow_date') or settings.INFINITY_DATE, k.cleaned_data.get('cash_flow_date') or settings.INFINITY_DATE)
+                                      min([min(k.initial.get('cash_flow_date') or settings.INFINITY_DATE,
+                                               k.cleaned_data.get('cash_flow_date') or settings.INFINITY_DATE)
                                            for k in cashflow_formset if k.changed_data] or settings.INFINITY_DATE))
                 cashflow_formset.save()
+                has_changed = True
+
+            if tranche_formset.has_changed():
+                min_change_date = min(min_change_date,
+                                      min([min(k.initial.get('launch_date') or settings.INFINITY_DATE,
+                                               k.cleaned_data.get('launch_date') or settings.INFINITY_DATE)
+                                           for k in tranche_formset if k.changed_data] or settings.INFINITY_DATE))
+                tranche_formset.save()
                 has_changed = True
 
             # TODO: do zrobienia accounting na poziomie produktu
@@ -224,16 +254,23 @@ def edit(request, id, iframe=0):
         else:
             errors = True
 
-    accounting_ordered = [i.accounting_type for i in ProductAccounting.objects.filter(product=product, accounting_type__is_accounting_order=True).order_by('sq')]
+    accounting_ordered = [
+        i.accounting_type for i in ProductAccounting.objects.filter(product=product,
+                                                                    accounting_type__is_accounting_order=True).order_by(
+            'sq')
+    ]
 
-    product_action_definition = ProductActionDefinition.objects.filter(document_type=product.document.type).order_by('sq')
+    product_action_definition = ProductActionDefinition.objects.filter(document_type=product.document.type).order_by(
+        'sq')
 
     context = {'form': form,
-               'cashflow_type': {i.code.lower(): {"id": i.pk, 'name': i.name, 'subtypes': i.subtypes} for i in DocumentTypeAccountingType.objects.filter(is_editable=True)},
+               'cashflow_type': {i.code.lower(): {"id": i.pk, 'name': i.name, 'subtypes': i.subtypes} for i in
+                                 DocumentTypeAccountingType.objects.filter(is_editable=True)},
                'cashflow_formset': cashflow_formset,
                'schedule': schedule,
                'schedule_formset': schedule_formset,
-               'interest_formset': interest_formset,
+               'tranche_formset': tranche_formset,
+               # 'interest_formset': interest_formset,
                'atm_classname': 'apps.product.models.ProductAttachment',
                'atm_owner_classname': 'apps.product.models.Product',
                'atm_root_name': atm_root_name,
@@ -345,7 +382,8 @@ def action_report_preview(request):
                 data = report_server.set_xml_datasource(action.report, product.document, request.user, rd_form)
                 output_file_name = str(uuid.uuid4())
                 output_file_path = os.path.join(settings.MEDIA_ROOT, "reports/tmp/") + output_file_name
-                report_server.render(data_file=data['data_file_path'], report_file=action.report.template_name, output_file=output_file_path)
+                report_server.render(data_file=data['data_file_path'], report_file=action.report.template_name,
+                                     output_file=output_file_path)
 
                 response_data['output_file_name'] = output_file_name
         else:
@@ -386,7 +424,8 @@ def action_add(request, id_product, id_action=None):
                 data = report_server.set_xml_datasource(report_template, product.document, request.user, rd_form)
                 output_file_name = str(uuid.uuid4())
                 output_file_path = os.path.join(settings.MEDIA_ROOT, "reports/output/") + output_file_name
-                report_server.render(data_file=data['data_file_path'], report_file=action.report.template_name, output_file=output_file_path)
+                report_server.render(data_file=data['data_file_path'], report_file=action.report.template_name,
+                                     output_file=output_file_path)
                 rep = Report.objects.create(document=product.document,
                                             template=report_template,
                                             created_by=request.user,
@@ -441,7 +480,8 @@ def action_delete(request):
 def temp_copy_paste(request):
     form = TestCopyPasteForm(request.POST or None)
     if form.is_valid():
-        atm_utils.handle_printscreen_image(data=form.cleaned_data['image_data'], file_name='temp_copy.jpg', path='screens')
+        atm_utils.handle_printscreen_image(data=form.cleaned_data['image_data'], file_name='temp_copy.jpg',
+                                           path='screens')
 
     context = {'form': form}
     return render(request, 'product/temp_copy_paste.html', context)

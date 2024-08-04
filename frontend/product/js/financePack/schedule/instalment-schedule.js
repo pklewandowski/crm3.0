@@ -500,8 +500,8 @@ class InstalmentSchedule {
             this.getMapping().then(() => {
                     this.validator = new InstalmentScheduleValidator(
                         this.rowContainer,
-                        this.mapping.capitalNet.item,
-                        this.mapping.commission ? this.mapping.commission.item : this.mapping.commission.item,
+                        this.mapping?.capitalNet?.item,
+                        this.mapping.commission ? this.mapping.commission.item : null,
                         this.mapping.startDate ? this.mapping.startDate.item : null
                     );
 
@@ -516,13 +516,13 @@ class InstalmentSchedule {
                     // If any of below fields change, run instalment schedule generation
                     for (let i of [
                         //this.mapping.capitalNet.item,
-                        this.mapping.value.item,
-                        this.mapping.instalmentNumber.item,
+                        this.mapping?.value?.item,
+                        this.mapping?.instalmentNumber?.item,
                         this.mapping.instalmentCapital.item,
-                        this.mapping.instalmentCommission.item,
-                        this.mapping.instalmentTotal?.item,
+                        this.mapping?.instalmentCommission?.item,
+                        this.mapping?.instalmentTotal?.item,
                         this.mapping.instalmentInterestRate.item,
-                        this.mapping.constantInstalment.item,
+                        this.mapping?.constantInstalment?.item,
                     ]) {
                         if (i) {
                             i.addEventListener('change', (e) => {
