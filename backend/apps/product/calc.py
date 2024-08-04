@@ -38,8 +38,12 @@ class CalculateLoan(Calculation):
 
         # capital required and not required
         self.accounting['CAP_REQ'] = decimal.Decimal(0.0)
-        self.accounting[
-            'CAP_NOT_REQ'] = self.product.capital_net if self.product.capital_type_calc_source == 'N' else self.product.value
+        # if tranche so load first tranche
+        if self.tranche_list:
+            self.accounting['CAP_NOT_REQ'] = list(self.tranche_list.items())[0][1].value
+        else:
+            self.accounting['CAP_NOT_REQ'] = self.product.capital_net \
+                if self.product.capital_type_calc_source == 'N' else self.product.value
 
         # payments
         self.accounting['PAYMENT'] = decimal.Decimal(0.0)
@@ -453,6 +457,15 @@ class CalculateLoan(Calculation):
         :param dt_str:
         :return:
         """
+
+        # if there is a tranche to be added, add it to the capital not required
+        if (
+                self.tranche_list
+                and dt_str != datetime.datetime.strftime(self.product.start_date, '%Y-%m-%d')
+                and dt_str in self.tranche_list
+        ):
+            self.accounting['CAP_NOT_REQ'] += self.tranche_list[dt_str].value
+
         # if there is payment on the list
         if dt_str in self.accounting_list['PAYMENT']:
             val = self.accounting_list['PAYMENT'][dt_str]

@@ -56,7 +56,9 @@ class ListView(generic_view.ListView):
 
     def set_query(self):
 
-        products_no_annex = Product.objects.filter(client__broker__pk=OuterRef(name='pk'), document__annex__isnull=True)
+        products_no_annex = Product.objects.filter(
+            broker__pk=OuterRef(name='pk'),
+            document__annex__isnull=True).annotate(total=Sum('value')).values('total')
 
         self.query = Broker.objects.filter(self.where). \
             annotate(first_name=F('user__first_name'),
@@ -66,7 +68,8 @@ class ListView(generic_view.ListView):
                      date_joined=F('user__date_joined'),
                      total_value=Sum('client_broker__product_set__value'),
                      # total_value=SubQuerySum(name='value', queryset=products),
-                     total_value_no_annex=SubQuerySum(name='value', queryset=products_no_annex)
+                     #total_value_no_annex=SubQuerySum(name='value', queryset=products_no_annex)
+                     total_value_no_annex=Subquery(products_no_annex)
                      ).select_related('user').order_by('%s%s' % (self.sort_dir, self.sort_field))
         print(self.query.query)
 
