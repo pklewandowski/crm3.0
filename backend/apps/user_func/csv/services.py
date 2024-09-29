@@ -1,10 +1,10 @@
 import os
 
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponse
 
-import crm_settings
 from apps.address.models import Address
 from apps.document.models import DocumentType
 from apps.user.models import UserBatchUploadBuffer, User, UserBatchUploadLog
@@ -216,7 +216,7 @@ class CsvBatchUpload:
 def download():
     template_name = 'client_csv_import.xls'
 
-    output_file_path = os.path.join(crm_settings.MEDIA_ROOT, f'files/templates/')
+    output_file_path = os.path.join(settings.MEDIA_ROOT, f'files/templates/')
     os.makedirs(output_file_path, exist_ok=True)
 
     output_file_path = os.path.join(output_file_path, template_name)

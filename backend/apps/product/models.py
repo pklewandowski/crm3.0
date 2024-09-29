@@ -126,6 +126,9 @@ class Product(models.Model):
     def __str__(self):
         return str(f'{self.pk}: {self.document}')
 
+    def in_default(self):
+        return self.status.code in ('WDK', 'WDK_EXEC')
+
     class Meta:
         db_table = 'product'
         default_permissions = ()

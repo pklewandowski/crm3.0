@@ -3,6 +3,9 @@ import os
 
 from django.utils.translation import gettext_lazy as _
 
+# If you have to load any .env files do it here:
+# load_dotenv()
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 VERSION = '3.0.0'
@@ -142,12 +145,12 @@ DATABASES = {
         'OPTIONS': {
             'options': '-c search_path=crm'
         },
-        'NAME': os.environ.get('DBNAME'),
-        'USER': os.environ.get('DBUSER'),
-        'PASSWORD': os.environ.get('DBPASSWORD'),
+        'NAME': os.getenv('DBNAME'),
+        'USER': os.getenv('DBUSER'),
+        'PASSWORD': os.getenv('DBPASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '5432',
-        'DATABASE_SCHEMA': 'crm',
+        'DATABASE_SCHEMA': os.getenv('DBSCHEMA'),
         'TEST':
             {
                 'ENGINE': 'django.db.backends.postgresql',
@@ -163,23 +166,12 @@ DATABASES = {
             }
         # 'ATOMIC_REQUESTS': True, # automatyczne założenie transakcji przed uruchomieniem porcedury obsługi requestu (viewsa - czyli inaczej kontrolera)
     },
-    # 'test_crm': {
-    #     'ENGINE': 'django.db.backends.postgresql',  # 'django.db.backends.sqlite3',
-    #     'OPTIONS': {
-    #         'options': '-c search_path=crm'
-    #     },
-    #     'NAME': 'test_crm',
-    #     'USER': 'crm_test',
-    #     'PASSWORD': 'crm_test',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '5432',
-    #     'DATABASE_SCHEMA': 'crm',
-    # }
 }
+
+DATABASE_SCHEMA = 'crm'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-# DATABASE_SCHEMA = 'crm'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

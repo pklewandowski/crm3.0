@@ -10,7 +10,7 @@ from apps.product.api.instalment_schedule import services
 class ProductInstalmentScheduleView(APIView):
     @rest_api_wrapper
     def get(self, request):
-        return services.recalculate(opts=json.loads(request.query_params.get('opts')))
+        return services.recalculate(user=request.user, opts=json.loads(request.query_params.get('opts')))
 
 
 class ProductInstalmentScheduleMappingView(APIView):

@@ -205,7 +205,7 @@ class ProductCashFlowForm(p3form.ModelForm):
             'entry_source',
             'editable'
         )
-        localized_fields = ('value',)
+        # localized_fields = ('value',)
         widgets = {
             'cash_flow_date': forms.TextInput,  # todo: this line made date unlocalized. Find out why
             'accounting_date': forms.TextInput,  # todo: this line made date unlocalized. Find out why

@@ -23,7 +23,7 @@ class Command(BaseCommand):
     #     )
 
     def handle(self, *args, **options):
-        user = User.objects.get(pk=0)
+        user = User.objects.get(username="__systemprocess")
 
         logger.info(f'Start calculating required loan')
 

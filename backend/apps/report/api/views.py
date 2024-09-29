@@ -14,7 +14,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-import crm_settings
 from application.wrapper import rest_api_wrapper
 from apps.document.models import Document, DocumentAttribute, DocumentTypeAttribute, DocumentReport
 from apps.hierarchy.models import Hierarchy
@@ -65,7 +64,7 @@ class ReportApi(APIView):
             header = ''
             if header_template:
                 header = header_template.render({
-                    "logo": crm_settings.LOGO_BASE64,
+                    "logo": settings.LOGO_BASE64,
                     "doc_creation_date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
                     "hierarchy": hierarchy
                 })
@@ -106,12 +105,12 @@ class ReportApi(APIView):
             os.makedirs(_path, exist_ok=True)
             path = os.path.join(_path, report_name, )
 
-            config = pdfkit.configuration(wkhtmltopdf=crm_settings.WKHTMLTOPDF_PATH)
+            config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_PATH)
 
             if header:
-                header_path = os.path.join(crm_settings.MEDIA_ROOT, 'temp/%s.html' % str(uuid.uuid4()))
+                header_path = os.path.join(settings.MEDIA_ROOT, 'temp/%s.html' % str(uuid.uuid4()))
             if footer:
-                footer_path = os.path.join(crm_settings.MEDIA_ROOT, 'temp/%s.html' % str(uuid.uuid4()))
+                footer_path = os.path.join(settings.MEDIA_ROOT, 'temp/%s.html' % str(uuid.uuid4()))
 
             if header_path:
                 with open(header_path, 'w', encoding='utf-8') as f:
