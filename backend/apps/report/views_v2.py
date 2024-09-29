@@ -1,11 +1,13 @@
 import os
 from datetime import datetime
+
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render
 
 from apps.document.models import Document
 from apps.report.models import ReportTemplate, Report
-import crm_settings
+
 from apps.report.utils.params import Params
 from apps.report.utils.render import render_html_template
 from py3ws.utils.utils import merge_two_dicts
@@ -33,7 +35,7 @@ def download(request, id):
 
     if not report.file_name:
         raise Exception('Brak nazwy pliku raportu')
-    output_file_path = os.path.join(crm_settings.MEDIA_ROOT, "reports/generated/") + report.file_name
+    output_file_path = os.path.join(settings.MEDIA_ROOT, "reports/generated/") + report.file_name
 
     with open(output_file_path, 'r+b') as f:
         generation_date_suffix = datetime.strftime(datetime.now(), '%Y-%m-%d_%H%M%S')

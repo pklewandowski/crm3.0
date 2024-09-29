@@ -1,15 +1,15 @@
 from pprint import pprint
 
+from django.conf import settings
 from django.shortcuts import render
 from litex.regon import REGONAPI
 from gusregon import GUS
 
-import crm_settings
 
 
 class GusApi:
     service_url = 'https://wyszukiwarkaregon.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc'  # TODO: get from config file/variable
-    default_user_key = crm_settings.GUSAPI_KEY  # 'a36a67dd1fcb46599458'
+    default_user_key = settings.GUSAPI_KEY  # 'a36a67dd1fcb46599458'
 
     def __init__(self, user_key=None):
         self.user_key = user_key or self.default_user_key

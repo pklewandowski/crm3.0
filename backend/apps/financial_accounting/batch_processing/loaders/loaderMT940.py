@@ -3,10 +3,10 @@ import os
 import re
 from decimal import Decimal
 
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 
-import crm_settings
 from apps.document.models import DocumentTypeAccountingType
 from apps.financial_accounting.transaction.models import Transaction
 from apps.product.models import Product, ProductCashFlow, CompanyBankTransactionFile
@@ -29,7 +29,7 @@ class LoaderMT940(LoaderAbstract):
         super().__init__()
 
         self.type = 'MT940'
-        self.path = path if path else os.path.join(crm_settings.BATCH_TRANSACTION_FILES_ROOT, self.type, '_incoming/')
+        self.path = path if path else os.path.join(settings.BATCH_TRANSACTION_FILES_ROOT, self.type, '_incoming/')
 
         for k, v in self.SUBSIDIARY_COMPANIES.items():
             print(f'subsidiary company {k} code: {v}')

@@ -2,8 +2,10 @@ import datetime
 import json
 from decimal import Decimal
 
-import crm_settings
+from django.conf import settings
+
 from apps.document.models import Document
+from apps.product.instalment_schedule.instalment_schedule import InstalmentSchedule
 from apps.product.utils.schedule_utils import ProductScheduleUtils
 from apps.product.utils.utils import LoanUtils
 from py3ws.utils import date_utils as py3ws_date_utils, string_utils
@@ -51,14 +53,14 @@ def instalment_interest_rates_to_dict(instalment_interest_rates: list) -> dict:
     if not instalment_interest_rates:
         return {}
 
-    _instalment_interest_rates = {crm_settings.MINUS_INFINITY_DATE: Decimal(instalment_interest_rates[0]['value'])}
+    _instalment_interest_rates = {settings.MINUS_INFINITY_DATE: Decimal(instalment_interest_rates[0]['value'])}
 
     del instalment_interest_rates[0]
 
     for rate in instalment_interest_rates:
         _instalment_interest_rates[
             datetime.datetime.strptime(rate['start_date'], "%Y-%m-%d") if rate[
-                'start_date'] else crm_settings.INFINITY_DATE
+                'start_date'] else settings.INFINITY_DATE
         ] = Decimal(rate['value'] or 0)
 
     return _instalment_interest_rates
@@ -68,7 +70,7 @@ def _validate_schedule(opts, raise_exception=True):
     return True
 
 
-def recalculate(opts):
+def recalculate(user, opts):
     # mapping = get_mapping(Document.objects.get(pk=opts.get('documentId')))
 
     _validate_schedule(opts)
@@ -83,28 +85,41 @@ def recalculate(opts):
     In that case there should be only one entry in instalment_interest_rates parameter
     As an initial interest rate the MINUS_INFINITY_DATE is taken
     """
-    instalment_interest_rates = {
-        datetime.datetime.strptime(k, '%Y-%m-%d').date(): round(Decimal(v or 0), 4)
-        for k, v in opts.get('instalmentInterestRate', {}).items()
-    }
+    # instalment_interest_rates = {
+    #     datetime.datetime.strptime(k, '%Y-%m-%d').date(): round(Decimal(v or 0), 4)
+    #     for k, v in opts.get('instalmentInterestRate', {}).items()
+    # }
 
-    return ProductScheduleUtils.generate_schedule_table(
-        start_date=opts.get('startDate', None),
-        capital_net=Decimal(opts.get('capitalNet', 0) if opts.get('capitalNet', 0) else 0),
-        capital_gross=Decimal(opts.get('value', 0) if opts.get('value', 0) else 0),
-        commission=Decimal(opts.get('commission', 0) if opts.get('commission', 0) else 0),
-        instalment_capital=Decimal(opts.get('instalmentCapital', 0) if opts.get('instalmentCapital', 0) else 0),
-        instalment_commission=Decimal(
-            opts.get('instalmentCommission', 0) if opts.get('instalmentCommission', 0) else 0),
-        instalment_total=Decimal(opts.get('instalmentTotal', 0) if opts.get('instalmentTotal', 0) else 0),
-        instalment_interest_rates=instalment_interest_rates,
-        instalment_interest_capital_type_calc_source=opts.get('instalmentInterestCapitalTypeCalcSource', 'N')
-        if 'instalmentInterestCapitalTypeCalcSource' in opts else 'G',
-        instalment_number=instalment_number,
-        constant_instalment=opts.get('constantInstalment', 'X') == 'T',
-        arbitrary_instalment=opts.get('arbitraryInstalment', 'X') == 'T',
-        schedule_table_data=opts.get('scheduleTableData', [])
+    instalment_schedule = InstalmentSchedule(user=user).calculate(
+        balance_value=float(opts['value']) if opts['instalmentInterestCapitalTypeCalcSource'] == 'G' else float(
+            opts['capitalNet']),
+        interest_rate=float(list(opts['instalmentInterestRate'].items())[0][1]),
+        instalment_rate=None,
+        instalment_constant_value=float(opts['instalmentTotal']) if opts['constantInstalment'] == 'T' else None,
+        instalment_schedule=opts['scheduleTableData'],
+        instalment_number=int(opts['instalmentNumber']),
+        start_date=datetime.datetime.strptime(opts['startDate'], '%Y-%m-%d').date() if opts['startDate'] else None,
     )
+
+    return instalment_schedule
+
+    # return ProductScheduleUtils.generate_schedule_table(
+    #     start_date=opts.get('startDate', None),
+    #     capital_net=Decimal(opts.get('capitalNet', 0) if opts.get('capitalNet', 0) else 0),
+    #     capital_gross=Decimal(opts.get('value', 0) if opts.get('value', 0) else 0),
+    #     commission=Decimal(opts.get('commission', 0) if opts.get('commission', 0) else 0),
+    #     instalment_capital=Decimal(opts.get('instalmentCapital', 0) if opts.get('instalmentCapital', 0) else 0),
+    #     instalment_commission=Decimal(
+    #         opts.get('instalmentCommission', 0) if opts.get('instalmentCommission', 0) else 0),
+    #     instalment_total=Decimal(opts.get('instalmentTotal', 0) if opts.get('instalmentTotal', 0) else 0),
+    #     instalment_interest_rates=instalment_interest_rates,
+    #     instalment_interest_capital_type_calc_source=opts.get('instalmentInterestCapitalTypeCalcSource', 'N')
+    #     if 'instalmentInterestCapitalTypeCalcSource' in opts else 'G',
+    #     instalment_number=instalment_number,
+    #     constant_instalment=opts.get('constantInstalment', 'X') == 'T',
+    #     arbitrary_instalment=opts.get('arbitraryInstalment', 'X') == 'T',
+    #     schedule_table_data=opts.get('scheduleTableData', [])
+    # )
 
 
 def get_mapping(document: Document) -> dict:

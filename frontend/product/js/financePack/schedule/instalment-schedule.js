@@ -305,7 +305,7 @@ class InstalmentSchedule {
     }
 
     _getScheduleTable() {
-        return Array.from(this.rowContainer.querySelectorAll('tr')).map(i => {
+        return Array.from(this.rowContainer.querySelectorAll('tr:not(.instalment-schedule-aggregates)')).map(i => {
             let instalmentMaturityDate = i.querySelector('.instalment-maturity-date');
             let instalmentCapital = i.querySelector('.instalment-capital');
             let instalmentCommission = i.querySelector('.instalment-commission');
