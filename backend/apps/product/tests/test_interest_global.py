@@ -6,13 +6,13 @@ from apps.product.models import ProductInterestGlobal
 
 
 @pytest.fixture
-def global_interest_list(user, document_type):
+def global_interest_list(user, fix_document_type):
     ProductInterestGlobal.objects.create(
         start_date=datetime.date(2024, 1, 20),
         interest_for_delay_rate=10.0,
         interest_max_for_delay_rate=15.0,
         created_by=user,
-        document_type=document_type
+        document_type=fix_document_type
     )
 
     ProductInterestGlobal.objects.create(
@@ -20,7 +20,7 @@ def global_interest_list(user, document_type):
         interest_for_delay_rate=11.0,
         interest_max_for_delay_rate=16.0,
         created_by=user,
-        document_type=document_type
+        document_type=fix_document_type
     )
 
     ProductInterestGlobal.objects.create(
@@ -28,7 +28,7 @@ def global_interest_list(user, document_type):
         interest_for_delay_rate=12.0,
         interest_max_for_delay_rate=17.0,
         created_by=user,
-        document_type=document_type
+        document_type=fix_document_type
     )
 
     ProductInterestGlobal.objects.create(
@@ -36,7 +36,7 @@ def global_interest_list(user, document_type):
         interest_for_delay_rate=13.0,
         interest_max_for_delay_rate=18.0,
         created_by=user,
-        document_type=document_type
+        document_type=fix_document_type
     )
 
 
