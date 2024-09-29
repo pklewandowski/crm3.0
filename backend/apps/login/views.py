@@ -1,12 +1,12 @@
 import os
 from datetime import datetime
 
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.sessions.models import Session
 from django.db.models import Q
 from django.shortcuts import render, redirect
 
-import crm_settings
 from apps.hierarchy.models import Hierarchy
 from apps.user.models import User
 from .forms import LoginForm
@@ -56,7 +56,7 @@ def log_in(request):
             if user is not None:
                 login(request, user)
                 request.session['user_headquarters'] = [{'id': i.id, 'name': i.name} for i in set_user_headquarters(user)]
-                request.session['company_name'] = crm_settings.COMPANY_NAME
+                request.session['company_name'] = settings.COMPANY_NAME
                 return redirect('home.index')
             else:
                 msg = msg or 'Niepoprawny login lub hasło'

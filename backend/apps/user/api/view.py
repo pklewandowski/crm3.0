@@ -2,6 +2,7 @@ import os
 import traceback
 import uuid
 
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
@@ -12,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 import apps.user.utils as user_utils
-import crm_settings
+
 from application.wrapper import rest_api_wrapper
 from apps.attachment import utils as atm_utils
 from apps.attachment.models import Attachment
@@ -162,7 +163,7 @@ class AttachmentApi(APIView):
                 # DocumentAttachment.objects.get(attachment=attachment, document=document).delete()
                 attachment.delete()
 
-                path = os.path.join(crm_settings.MEDIA_ROOT, 'user', str(user.pk), attachment.file_name)
+                path = os.path.join(settings.MEDIA_ROOT, 'user', str(user.pk), attachment.file_name)
                 if os.path.exists(path):
                     os.remove(path)
 

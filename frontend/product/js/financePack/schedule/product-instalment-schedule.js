@@ -8,8 +8,10 @@ const className = 'ProductInstalmentSchedule';
 class ProductInstalmentSchedule extends InstalmentSchedule {
     constructor(rowContainer, idDocument, customMapping = null, opts = null) {
         super(rowContainer, idDocument, customMapping, opts);
+
         this.instalmentScheduleUrl = "/product/api/instalment-schedule/";
         this.toolbar = new Toolbar(this.rowContainer.closest('.panel').querySelector('.panel-heading'));
+        this.errorContainer = document.getElementById('productInstalmentScheduleErrorContainer');
 
         this.toolbar.addButton(null,
             '',
@@ -48,9 +50,17 @@ class ProductInstalmentSchedule extends InstalmentSchedule {
         );
     }
 
+    // displayErrors(errMsg, reset = true) {
+    //     Alert.error('Błąd', errMsg);
+    //     //    todo: revert changes
+    // }
+
     displayErrors(errMsg, reset = true) {
-        Alert.error('Błąd', errMsg);
-        //    todo: revert changes
+        if (reset) {
+            this.reset();
+        }
+        this.errorContainer.innerText = errMsg;
+        this.errorContainer.style.display = 'block';
     }
 
     cleanErrors() {
@@ -64,6 +74,14 @@ class ProductInstalmentSchedule extends InstalmentSchedule {
     }
 
     addRow(data) {
+        let row = <tr>
+            <td>1</td>
+            <td className='instalment-maturity-date'>{data.maturity_date.value}</td>
+            <td className='instalment-maturity-date'>{data.instalment_capital.value}</td>
+            <td className='instalment-maturity-date'>{data.instalment_interest.value}</td>
+            <td className='instalment-maturity-date'>{data.instalment_total.value}</td>
+        </tr>
+        this.rowContainer.appendChild(row);
     }
 
     updateRow(idx, data) {
@@ -83,11 +101,26 @@ class ProductInstalmentSchedule extends InstalmentSchedule {
     }
 
     _getScheduleItemsIds() {
-        this.mappingIds['instalment-maturity-date'] = {code: 'maturity_date', htmlId: 'id_product-schedule-{prefix}-maturity_date'};
-        this.mappingIds['instalment-capital'] = {code: 'instalment_capital', htmlId: 'id_product-schedule-{prefix}-instalment_capital'};
-        this.mappingIds['instalment-commission'] = {code: 'instalment_commission', htmlId: 'id_product-schedule-{prefix}-instalment_commission'};
-        this.mappingIds['instalment-interest'] = {code: 'instalment_interest', htmlId: 'id_product-schedule-{prefix}-instalment_interest'};
-        this.mappingIds['instalment-total'] = {code: 'instalment_total', htmlId: 'id_product-schedule-{prefix}-instalment_total'};
+        this.mappingIds['instalment-maturity-date'] = {
+            code: 'maturity_date',
+            htmlId: 'id_product-schedule-{prefix}-maturity_date'
+        };
+        this.mappingIds['instalment-capital'] = {
+            code: 'instalment_capital',
+            htmlId: 'id_product-schedule-{prefix}-instalment_capital'
+        };
+        this.mappingIds['instalment-commission'] = {
+            code: 'instalment_commission',
+            htmlId: 'id_product-schedule-{prefix}-instalment_commission'
+        };
+        this.mappingIds['instalment-interest'] = {
+            code: 'instalment_interest',
+            htmlId: 'id_product-schedule-{prefix}-instalment_interest'
+        };
+        this.mappingIds['instalment-total'] = {
+            code: 'instalment_total',
+            htmlId: 'id_product-schedule-{prefix}-instalment_total'
+        };
     }
 
     init() {

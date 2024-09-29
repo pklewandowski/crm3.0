@@ -31,6 +31,7 @@ from py3ws.utils import utils as py3ws_utils
 
 logger = logging.getLogger(__name__)
 
+
 class InterestNotFoundException(Exception):
     pass
 
@@ -161,7 +162,7 @@ def edit(request, id, iframe=0):
                     # TODO: poprawić, żeby działało dla startu od danego dnia
                     # py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate(
                     #     start_date=datetime.date.today())
-                    py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
+                    py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate
                 except CalculationException as ex:
                     return render(request, 'product/calculation_error.html', {"errmsg": str(ex), "product": product})
 
@@ -244,7 +245,7 @@ def edit(request, id, iframe=0):
             # TODO: do zrobienia accounting na poziomie produktu
             if has_changed:
                 # py3ws_utils.get_class(product.type.calculation_class)(product.pk, request.user).calculate(start_date=min_change_date)
-                py3ws_utils.get_class(product.type.calculation_class)(product.pk, request.user).calculate()
+                py3ws_utils.get_class(product.type.calculation_class)(product.pk, request.user).calculate
                 messages.append('Pomyślnie zapisano zmiany')
             else:
                 messages.append('Brak zmian do zapisania')
@@ -255,20 +256,20 @@ def edit(request, id, iframe=0):
             errors = True
 
     accounting_ordered = [
-        i.accounting_type for i in ProductAccounting.objects.filter(product=product,
-                                                                    accounting_type__is_accounting_order=True).order_by(
-            'sq')
+        i.accounting_type for i in ProductAccounting.objects.filter(
+            product=product,
+            accounting_type__is_accounting_order=True).order_by('sq')
     ]
 
-    product_action_definition = ProductActionDefinition.objects.filter(document_type=product.document.type).order_by(
-        'sq')
+    product_action_definition = ProductActionDefinition.objects.filter(
+        document_type=product.document.type).order_by('sq')
 
     context = {'form': form,
                'cashflow_type': {i.code.lower(): {"id": i.pk, 'name': i.name, 'subtypes': i.subtypes} for i in
                                  DocumentTypeAccountingType.objects.filter(is_editable=True)},
                'cashflow_formset': cashflow_formset,
                'schedule': schedule,
-               'schedule_formset': schedule_formset,
+               # 'schedule_formset': schedule_formset,
                'tranche_formset': tranche_formset,
                # 'interest_formset': interest_formset,
                'atm_classname': 'apps.product.models.ProductAttachment',

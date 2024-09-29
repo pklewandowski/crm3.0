@@ -3,7 +3,12 @@ import ajaxCall from "../../_core/ajax";
 import {TabulatorTableUtils} from "./financePack/tabulatorTable/tabulator-table-utils";
 import {ProductInstalmentSchedule} from "./financePack/schedule/product-instalment-schedule";
 import CashFlow from "./financePack/cashFlow/cash-flow";
-import {INSTALMENT_CAPITAL_SELECTOR, INSTALMENT_COMMISSION_SELECTOR, INSTALMENT_MATURITY_DATE_SELECTOR, INSTALMENT_TOTAL_SELECTOR} from "./financePack/schedule/instalment-schedule";
+import {
+    INSTALMENT_CAPITAL_SELECTOR,
+    INSTALMENT_COMMISSION_SELECTOR,
+    INSTALMENT_MATURITY_DATE_SELECTOR,
+    INSTALMENT_TOTAL_SELECTOR
+} from "./financePack/schedule/instalment-schedule";
 
 import {Datepicker} from "../../_core/controls/vanillajs-datepicker-3ws";
 import pl from "../../_core/controls/vanillajs-datepicker-3ws/js/i18n/locales/pl";
@@ -11,7 +16,6 @@ import "../../_core/controls/vanillajs-datepicker-3ws/dist/css/datepicker-bulma.
 import {ProductDashboard} from "./financePack/dashboard/js/product-dashboard";
 import {Product} from "./product";
 import {calculateProductAggregates} from "./financePack/calculation/calculation";
-import {SystemException} from "../../_core/exception";
 
 pl.pl.daysMin = ["Nd", "Pn", "Wt", "Śr", "Cz", "Pt", "So"];
 Object.assign(Datepicker.locales, pl);
@@ -346,36 +350,24 @@ $(document).ready(() => {
         }
     });
 
-    let opts = {
-        startDate: _g.product.startDate,
-        capitalNet: _g.product.capitalNet,
-        value: _g.product.value,
-        commission: _g.product.commission,
-        instalmentNumber: _g.product.instalmentNumber,
-        instalmentCapital: _g.product.instalmentCapital,
-        instalmentCommission: _g.product.instalmentCommission,
-        instalmentInterestRate: null,
-        instalmentInterestCapitalTypeCalcSource: _g.product.instalmentInterestCapitalTypeCalcSource
-    };
-
-    let productInstalmentSchedule = new ProductInstalmentSchedule(
-        document.getElementById('instalment-schedule-row-container'),
-        _g.product.document.id,
-        null,
-        opts
-    );
-
-    // let interestTable = document.getElementById('product-interest-formset-table');
-    // if (!interestTable) {
-    //     throw new SystemException('Brak tabeli oprocentowania!');
-    // }
+    // let opts = {
+    //     startDate: _g.product.startDate,
+    //     capitalNet: _g.product.capitalNet,
+    //     value: _g.product.value,
+    //     commission: _g.product.commission,
+    //     instalmentNumber: _g.product.instalmentNumber,
+    //     instalmentCapital: _g.product.instalmentCapital,
+    //     instalmentCommission: _g.product.instalmentCommission,
+    //     instalmentInterestRate: null,
+    //     instalmentInterestCapitalTypeCalcSource: _g.product.instalmentInterestCapitalTypeCalcSource
+    // };
     //
-    //
-    // interestTable.addEventListener('change', (e) => {
-    //     if (e.target.dataset['code'] === 'interest_statutory_rate') {
-    //         productInstalmentSchedule.generate();
-    //     }
-    // });
+    // let productInstalmentSchedule = new ProductInstalmentSchedule(
+    //     document.getElementById('instalment-schedule-row-container'),
+    //     _g.product.document.id,
+    //     null,
+    //     opts
+    // );
 
 // todo: bypass until date-calendar will be unified in whole project to vanillajs-calendar-3ws control
     for (let el of Array.from(document.querySelectorAll('.vanilla-date-field'))) {
@@ -395,11 +387,6 @@ $(document).ready(() => {
         });
     }
 
-// set the first row of start date as readonly
-//     let firstStartDate = interestTable.querySelector('tbody tr [data-code="interest_start_date"]')
-//     firstStartDate.setAttribute('readonly', "readonly");
-//     firstStartDate.datepicker.destroy();
-
     let product = new Product(_g.product.id);
     let productDashboard;
 
@@ -416,4 +403,21 @@ $(document).ready(() => {
             productDashboard.bindData();
         }
     });
+
+    new ProductInstalmentSchedule(
+        document.getElementById('productInstalmentScheduleContainer'),
+        _g.product.document.id,
+        null,
+        {
+            'idProduct': _g.product.id,
+            'value': _g.product.value,
+            'capitalNet': _g.product.capitalNet,
+            'instalmentInterestRate': _g.product.instalmentInterestRate,
+            'instalmentInterestCapitalTypeCalcSource': _g.product.instalmentInterestCapitalTypeCalcSource,
+            // 'instalmentTotal': 90000, //_g.product.total,
+            'constantInstalment': 'T',
+            'instalmentNumber': _g.product.instalmentNumber,
+            // 'startDate': _g.product.startDate
+        }
+    ).generate();
 });
