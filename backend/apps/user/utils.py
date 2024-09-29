@@ -2,13 +2,14 @@ import random
 import re
 import string
 
-import crm_settings
+from django.conf import settings
+
 from apps.user.models import User
 from py3ws.utils import utils as py3ws_utils
 
 
 def generate_password(symbols=False):
-    length = crm_settings.INITIAL_PASSWORD_LENGTH if getattr(crm_settings, 'INITIAL_PASSWORD_LENGTH', None) else 30
+    length = settings.INITIAL_PASSWORD_LENGTH if getattr(settings, 'INITIAL_PASSWORD_LENGTH', None) else 30
     lower = string.ascii_lowercase
     upper = string.ascii_uppercase
     num = string.digits

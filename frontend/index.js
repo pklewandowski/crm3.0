@@ -143,4 +143,8 @@ document.addEventListener("DOMContentLoaded", (evt) => {
             sessionStorage.setItem('qmDisplay', 'block');
         }
     });
+
+    // for (let el of Array.from(document.querySelectorAll('.input-format-currency'))) {
+    //     Input.setMask(el, 'currency');
+    // }
 });

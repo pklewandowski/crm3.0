@@ -394,3 +394,11 @@ input.schedule-changed {
   font-size: 14px;
   padding-top: 4px;
 }
+
+#product-schedule-table div, #product-schedule-table span {
+  text-align: right;
+}
+
+tr.instalment-schedule-aggregates div, tr.instalment-schedule-aggregates span {
+  font-weight: bold;
+}

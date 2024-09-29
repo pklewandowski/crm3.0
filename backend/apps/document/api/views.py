@@ -3,6 +3,7 @@ import json
 import os
 import traceback
 
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q, Prefetch
 from django.shortcuts import render
@@ -11,7 +12,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-import crm_settings as settings
 from application.wrapper import rest_api_wrapper
 from apps.attachment import utils as atm_utils
 from apps.attachment.models import Attachment
