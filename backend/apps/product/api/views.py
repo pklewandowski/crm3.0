@@ -29,7 +29,7 @@ class ProductApi(APIView):
             product = Product.objects.get(pk=request.query_params.get('productId'))
             response_data = {
                 'product': ProductSerializer(product).data,
-                'schedule': ProductScheduleSerializer(product.schedule_set.all().order_by('maturity_date'), many=True).data,
+                # 'schedule': ProductScheduleSerializer(product.schedule_set.all().order_by('maturity_date'), many=True).data,
                 'cashflow': ProductCashFlowSerializer(product.cashflow_set.all().order_by('cash_flow_date'), many=True).data,
                 'calculation_last': ProductCalculationSerializer(product.calculation.all().order_by('calc_date').last()).data,
                 'interest': ProductInterestSerializer(product.interest_set.all().order_by('start_date'), many=True).data

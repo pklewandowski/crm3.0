@@ -3,6 +3,7 @@ import Alert from "../../../../_core/alert";
 import {SystemException} from "../../../../_core/exception";
 import {InstalmentScheduleValidator} from "./instalment-schedule-validator";
 import {ToolbarUtils} from "../../../../_core/utils/toolbar-utils";
+import {Format} from "../../../../_core/format/format";
 
 const className = 'InstalmentSchedule';
 const SCHEDULE_MAPPING_URL = '/product/api/instalment-schedule/mapping';
@@ -126,6 +127,7 @@ class InstalmentSchedule {
 
     _setLastRowReadOnly(el) {
         Input.setAttribute(el.querySelector(INSTALMENT_CAPITAL_SELECTOR), {name: 'readOnly', value: 'readonly'});
+        Input.setAttribute(el.querySelector(INSTALMENT_INTEREST_SELECTOR), {name: 'readOnly', value: 'readonly'});
         Input.setAttribute(el.querySelector(INSTALMENT_COMMISSION_SELECTOR), {name: 'readOnly', value: 'readonly'});
         Input.setAttribute(el.querySelector(INSTALMENT_TOTAL_SELECTOR), {name: 'readOnly', value: 'readonly'});
     }
@@ -152,12 +154,6 @@ class InstalmentSchedule {
 
             valueWithInterest += rowData['instalment-total'];
             interestTotal += rowData['instalment-interest'];
-
-            // this._setReadOnly(row);
-            //
-            // Input.setAttribute(row.querySelector(INSTALMENT_CAPITAL_SELECTOR), {readOnly: false});
-            // Input.setAttribute(row.querySelector(INSTALMENT_COMMISSION_SELECTOR), {readOnly: false});
-            // Input.setAttribute(row.querySelector(INSTALMENT_TOTAL_SELECTOR), {readOnly: false});
 
             if (this.opts?.startDate || this.mapping?.startDate?.item) {
                 let startDate = this.opts?.startDate ? this.opts.startDate : this._getMappingValue('startDate');
@@ -210,15 +206,21 @@ class InstalmentSchedule {
             <tr className="instalment-schedule-aggregates">
                 <td></td>
                 <td></td>
-                <td>
-                    <div className="form-control">{aggregates.instalment_capital_aggregate}</div>
+                <td className="instalment-capital-aggregate">
+                    <div className="form-control input-format-currency">{aggregates.instalment_capital_aggregate}</div>
                 </td>
-                <td>
-                    <div className="form-control">{aggregates.instalment_interest_aggregate}</div>
+                <td className="instalment-interest-aggregate">
+                    <div className="form-control input-format-currency">{aggregates.instalment_interest_aggregate}</div>
                 </td>
-                <td></td>
+                <td className="instalment-total-aggregate">
+                    <div className="form-control input-format-currency">{aggregates.instalment_total_aggregate}</div>
+                </td>
             </tr>
         );
+
+        for (let el of Array.from(this.rowContainer.querySelectorAll('.instalment-schedule-aggregates div.input-format-currency'))) {
+            el.innerHTML = Format.formatCurrency(el.innerHTML);
+        }
     }
 
     _validateParams(params, err) {
@@ -305,7 +307,7 @@ class InstalmentSchedule {
     }
 
     _getScheduleTable() {
-        return Array.from(this.rowContainer.querySelectorAll('tr')).map(i => {
+        return Array.from(this.rowContainer.querySelectorAll('tr:not(.instalment-schedule-aggregates)')).map(i => {
             let instalmentMaturityDate = i.querySelector('.instalment-maturity-date');
             let instalmentCapital = i.querySelector('.instalment-capital');
             let instalmentCommission = i.querySelector('.instalment-commission');
@@ -384,7 +386,7 @@ class InstalmentSchedule {
             });
     }
 
-    generate(ask = false, reset = false) {
+    generate(ask = false, reset = true) {
         let params;
 
         if (!this.opts) {
@@ -474,7 +476,7 @@ class InstalmentSchedule {
     }
 
     _initSchedule() {
-        if(!this.rowContainer){
+        if (!this.rowContainer) {
             return;
         }
         // set revert button when custom change entered to set item's default behaviour (if isn't disabled)
@@ -636,6 +638,25 @@ class InstalmentSchedule {
         }
     };
 
+    _calculateAggregatesInitial() {
+        let capital = 0;
+        let interest = 0;
+        let total  = 0;
+        for(let i of Array.from(this.rowContainer.querySelectorAll('tbody tr'))) {
+            capital += parseFloat(Input.getValue(i.querySelector('.instalment-capital')));
+            interest += parseFloat(Input.getValue(i.querySelector('.instalment-interest')));
+            total += parseFloat(Input.getValue(i.querySelector('.instalment-total')));
+        }
+
+        this._renderAggregates(
+            {
+                'instalment_capital_aggregate': capital,
+                'instalment_interest_aggregate': interest,
+                'instalment_total_aggregate': total
+            }
+        )
+    }
+
     init() {
         if (_g?.document?.mode === 'DEFINITION') {
             return;
@@ -643,6 +664,7 @@ class InstalmentSchedule {
 
         document.addEventListener('documentAttributeEvt:afterAttributesRender', () => {
             this._initSchedule();
+            this._calculateAggregatesInitial();
         });
 
         // handling internal changes (schedule row items change)

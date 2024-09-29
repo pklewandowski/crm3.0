@@ -4,7 +4,6 @@ import decimal
 from django.conf import settings
 from django.db import transaction
 
-import crm_settings
 from apps.document.api.attribute_utils import AttributeUtils
 from apps.document.models import DocumentTypeAttribute, DocumentAttribute
 from apps.product.api.instalment_schedule import \
@@ -45,8 +44,8 @@ class ProductScheduleUtils:
             return 0
 
         if current_rate is None:
-            current_rate = round(instalment_interest_rates[crm_settings.MINUS_INFINITY_DATE] or 0, 4) \
-                if crm_settings.MINUS_INFINITY_DATE in instalment_interest_rates else 0
+            current_rate = round(instalment_interest_rates[settings.MINUS_INFINITY_DATE] or 0, 4) \
+                if settings.MINUS_INFINITY_DATE in instalment_interest_rates else 0
 
         if not start_date or start_date == settings.INFINITY_DATE:
             return round((capital * current_rate) / 12, 4), current_rate
@@ -196,7 +195,7 @@ class ProductScheduleUtils:
         else:
             dt = None
 
-        current_rate = instalment_interest_rates[crm_settings.MINUS_INFINITY_DATE]
+        current_rate = instalment_interest_rates[settings.MINUS_INFINITY_DATE]
 
         nominal_instalment_interest, current_rate = ProductScheduleUtils._calculate_instalment_interest(
             capital=capital_oper,

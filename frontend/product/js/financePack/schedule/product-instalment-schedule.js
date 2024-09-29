@@ -2,14 +2,17 @@ import {InstalmentSchedule} from "./instalment-schedule";
 import {Toolbar} from "../../../../_core/containers/toolbar";
 import {isSaved} from "../../../../_core/core";
 import ajaxCall from "../../../../_core/ajax";
+import {Format} from "../../../../_core/format/format";
 
 const className = 'ProductInstalmentSchedule';
 
 class ProductInstalmentSchedule extends InstalmentSchedule {
     constructor(rowContainer, idDocument, customMapping = null, opts = null) {
         super(rowContainer, idDocument, customMapping, opts);
+
         this.instalmentScheduleUrl = "/product/api/instalment-schedule/";
         this.toolbar = new Toolbar(this.rowContainer.closest('.panel').querySelector('.panel-heading'));
+        this.errorContainer = document.getElementById('productInstalmentScheduleErrorContainer');
 
         this.toolbar.addButton(null,
             '',
@@ -48,15 +51,24 @@ class ProductInstalmentSchedule extends InstalmentSchedule {
         );
     }
 
+    // displayErrors(errMsg, reset = true) {
+    //     Alert.error('Błąd', errMsg);
+    //     //    todo: revert changes
+    // }
+
     displayErrors(errMsg, reset = true) {
-        Alert.error('Błąd', errMsg);
-        //    todo: revert changes
+        if (reset) {
+            this.reset();
+        }
+        this.errorContainer.innerText = errMsg;
+        this.errorContainer.style.display = 'block';
     }
 
     cleanErrors() {
     }
 
     reset(rows = 0, callback = null) {
+        this.rowContainer.innerHTML = null;
     }
 
     getRow(idx) {
@@ -64,6 +76,15 @@ class ProductInstalmentSchedule extends InstalmentSchedule {
     }
 
     addRow(data) {
+        let rowNumber = this.rowContainer.querySelectorAll('tr').length + 1;
+        let row = <tr>
+            <td>{rowNumber}</td>
+            <td><span className="form-control">{data.maturity_date.value}</span></td>
+            <td><span className="form-control">{Format.formatCurrency(data.instalment_capital.value)}</span></td>
+            <td><span className="form-control">{Format.formatCurrency(data.instalment_interest.value)}</span></td>
+            <td><span className="form-control">{Format.formatCurrency(data.instalment_total.value)}</span></td>
+        </tr>
+        this.rowContainer.appendChild(row);
     }
 
     updateRow(idx, data) {
@@ -83,11 +104,26 @@ class ProductInstalmentSchedule extends InstalmentSchedule {
     }
 
     _getScheduleItemsIds() {
-        this.mappingIds['instalment-maturity-date'] = {code: 'maturity_date', htmlId: 'id_product-schedule-{prefix}-maturity_date'};
-        this.mappingIds['instalment-capital'] = {code: 'instalment_capital', htmlId: 'id_product-schedule-{prefix}-instalment_capital'};
-        this.mappingIds['instalment-commission'] = {code: 'instalment_commission', htmlId: 'id_product-schedule-{prefix}-instalment_commission'};
-        this.mappingIds['instalment-interest'] = {code: 'instalment_interest', htmlId: 'id_product-schedule-{prefix}-instalment_interest'};
-        this.mappingIds['instalment-total'] = {code: 'instalment_total', htmlId: 'id_product-schedule-{prefix}-instalment_total'};
+        this.mappingIds['instalment-maturity-date'] = {
+            code: 'maturity_date',
+            htmlId: 'id_product-schedule-{prefix}-maturity_date'
+        };
+        this.mappingIds['instalment-capital'] = {
+            code: 'instalment_capital',
+            htmlId: 'id_product-schedule-{prefix}-instalment_capital'
+        };
+        this.mappingIds['instalment-commission'] = {
+            code: 'instalment_commission',
+            htmlId: 'id_product-schedule-{prefix}-instalment_commission'
+        };
+        this.mappingIds['instalment-interest'] = {
+            code: 'instalment_interest',
+            htmlId: 'id_product-schedule-{prefix}-instalment_interest'
+        };
+        this.mappingIds['instalment-total'] = {
+            code: 'instalment_total',
+            htmlId: 'id_product-schedule-{prefix}-instalment_total'
+        };
     }
 
     init() {

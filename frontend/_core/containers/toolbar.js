@@ -30,6 +30,7 @@ class Toolbar {
         }
 
         this.buttonContainer.appendChild(phb);
+        return phb;
     }
 
     _getToolbar() {
