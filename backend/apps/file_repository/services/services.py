@@ -2,11 +2,11 @@ import datetime
 import os.path
 import uuid
 
+from django.conf import settings
 from django.db import transaction
 from rest_framework import status
 
 from apps.file_repository import REPORT_REPO_DIR
-import crm_settings
 from apps.attachment.utils import get_mime_type
 from apps.file_repository.api.serializers import FileRepositorySerializer
 from apps.file_repository.models import FileRepository
@@ -27,7 +27,7 @@ def _save_file(file):
     file_internal_name = uuid.uuid4()
     file_ext = file_original_name[file_original_name.rfind(".") + 1:] if file_original_name.rfind(".") != -1 else None
     file_internal_full_name = f'{file_internal_name}.{file_ext}' if file_ext else file_internal_name
-    path = os.path.join(crm_settings.MEDIA_ROOT, REPORT_REPO_DIR)
+    path = os.path.join(settings.MEDIA_ROOT, REPORT_REPO_DIR)
 
     os.makedirs(path, exist_ok=True)
 

@@ -1,10 +1,10 @@
 import os
 import traceback
 
+from django.conf import settings
 from django.db import transaction
 from rest_framework import status
 
-import crm_settings
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -125,7 +125,7 @@ class TreeApi(APIView):
                     f(i)
                 else:
                     i.attachment.delete()
-                    path = os.path.join(crm_settings.MEDIA_ROOT, i.attachment.file_path, i.attachment.file_name)
+                    path = os.path.join(settings.MEDIA_ROOT, i.attachment.file_path, i.attachment.file_name)
                     if os.path.exists(path):
                         os.remove(path)
                     response_data['deleted_files'].append(i.pk)

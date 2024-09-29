@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from apps.attachment import utils as atm_utils
 from apps.document.models import DocumentTypeAttribute, DocumentType, DocumentTypeSection, DocumentTypeAccountingType
+from apps.product import FORCE_CALCULATION
 from apps.product.base import ProductActionManager
 from apps.product.calculation import CalculationException
 from apps.product.forms import ProductTypeAttributeForm, ProductForm, ProductActionForm, TestCopyPasteForm, \
@@ -30,6 +31,7 @@ from py3ws.report.jasper.server import report_server
 from py3ws.utils import utils as py3ws_utils
 
 logger = logging.getLogger(__name__)
+
 
 class InterestNotFoundException(Exception):
     pass
@@ -150,23 +152,26 @@ def edit(request, id, iframe=0):
     # TODO: Do tego czasu trzeba każdorazowo przeliczać, żeby stan był aktualny
 
     if request.method != 'POST' and product.type.calculation_class:
-        try:
-            ProductCalculation.objects.get(product=product, calc_date=end_date - datetime.timedelta(days=1))
-            logger.debug('Calculation exists!')
-        except ProductCalculation.DoesNotExist:
-            logger.debug('Calculation does not exist')
-            if not product.status.is_closing_process:
-                # calculating
-                try:
-                    # TODO: poprawić, żeby działało dla startu od danego dnia
-                    # py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate(
-                    #     start_date=datetime.date.today())
-                    py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
-                except CalculationException as ex:
-                    return render(request, 'product/calculation_error.html', {"errmsg": str(ex), "product": product})
+        if FORCE_CALCULATION:
+            py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
+        else:
+            try:
+                ProductCalculation.objects.get(product=product, calc_date=end_date - datetime.timedelta(days=1))
+                logger.debug('Calculation exists!')
+            except ProductCalculation.DoesNotExist:
+                logger.debug('Calculation does not exist')
+                if not product.status.is_closing_process:
+                    # calculating
+                    try:
+                        # TODO: poprawić, żeby działało dla startu od danego dnia
+                        # py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate(
+                        #     start_date=datetime.date.today())
+                        py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
+                    except CalculationException as ex:
+                        return render(request, 'product/calculation_error.html', {"errmsg": str(ex), "product": product})
 
-            else:
-                print('Product is in closing process status')
+                else:
+                    print('Product is in closing process status')
 
     try:
         cb = _count_balance(product=product)
@@ -255,20 +260,20 @@ def edit(request, id, iframe=0):
             errors = True
 
     accounting_ordered = [
-        i.accounting_type for i in ProductAccounting.objects.filter(product=product,
-                                                                    accounting_type__is_accounting_order=True).order_by(
-            'sq')
+        i.accounting_type for i in ProductAccounting.objects.filter(
+            product=product,
+            accounting_type__is_accounting_order=True).order_by('sq')
     ]
 
-    product_action_definition = ProductActionDefinition.objects.filter(document_type=product.document.type).order_by(
-        'sq')
+    product_action_definition = ProductActionDefinition.objects.filter(
+        document_type=product.document.type).order_by('sq')
 
     context = {'form': form,
                'cashflow_type': {i.code.lower(): {"id": i.pk, 'name': i.name, 'subtypes': i.subtypes} for i in
                                  DocumentTypeAccountingType.objects.filter(is_editable=True)},
                'cashflow_formset': cashflow_formset,
                'schedule': schedule,
-               'schedule_formset': schedule_formset,
+               # 'schedule_formset': schedule_formset,
                'tranche_formset': tranche_formset,
                # 'interest_formset': interest_formset,
                'atm_classname': 'apps.product.models.ProductAttachment',

@@ -1,3 +1,4 @@
+import copy
 import datetime
 import decimal
 import logging
@@ -5,12 +6,16 @@ import logging
 from django.db import transaction
 from django.db.models import Max
 
+from apps.product.calc_utils import calculate_interest_daily
 from apps.product.calculation import Calculation, CalculationException
 from apps.product.models import ProductCalculation, ProductAction, ProductActionDefinition, ProductStatusTrack, \
     ProductInterestGlobal
 from apps.product.rules import Rules
 from apps.product.utils.utils import ProductUtils
 from apps.product.view.views import ProductActionManager
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 
 class CalculateLoan(Calculation):
@@ -71,6 +76,8 @@ class CalculateLoan(Calculation):
         self._instalment_accounting_interest_for_delay = decimal.Decimal(0.0)
         self._instalment_accounting_cost = decimal.Decimal(0.0)
 
+        self._instalment_payment_overdue = False
+
         self._cost_total = decimal.Decimal(0.0)
 
         self._interest_for_delay_total = decimal.Decimal(0.0)
@@ -102,14 +109,15 @@ class CalculateLoan(Calculation):
         self._remission_interest_for_delay = decimal.Decimal(0.0)
         self._remission_cost = decimal.Decimal(0.0)
 
-        self.schedule_current_date = datetime.datetime.strptime(list(self.schedule_list.keys())[0], '%Y-%m-%d')
-        self.schedule_maturity_due_date = self.schedule_current_date + datetime.timedelta(
-            days=self.product.grace_period or 0)
+        self.schedule_current_date_str = list(self.schedule_list.keys())[0]
+        self.schedule_current_date = datetime.datetime.strptime(self.schedule_current_date_str, '%Y-%m-%d').date()
 
         self._delay = False
 
         self._calculation_list = []
         self._action_list = []
+
+        self._payment_in_grace_period = False
 
     def __enter__(self):
         self.recount_required_date_creation_marker = self.product.recount_required_date_creation_marker
@@ -128,7 +136,6 @@ class CalculateLoan(Calculation):
         return decimal.Decimal(self.product.capital_net * self.interest_rate / self.days_in_year)
 
     def calculate_daily_interest_for_delay(self, dt):
-        # due_date = self.schedule_current_date + datetime.timedelta(days=self.product.grace_period) if self.schedule_current_date is not None else None
         due_date = self.schedule_current_date
 
         commission = self.accounting['COMM_NOT_REQ'] + self.accounting['COMM_REQ']
@@ -138,44 +145,45 @@ class CalculateLoan(Calculation):
 
         self.interest_for_delay_calculation_base = decimal.Decimal(0)
 
-        if due_date and dt >= due_date and self.accounting['COMM_REQ'] + self.accounting['CAP_REQ'] > 0:
-            self._delay = True
+        if self._instalment_payment_overdue:
+            self._delay = True and not self._undo_interest_for_delay
 
-            if dt >= due_date + datetime.timedelta(days=self.product.grace_period + 1):
-                self.delay_total = True
+            if dt >= due_date + datetime.timedelta(days=self.product.grace_period):
+                self.delay_total = self.delay_total or not self._undo_interest_for_delay
+
+        if self._undo_interest_for_delay:
+            return decimal.Decimal(0.0)
 
         daily_interest = 0.0
 
-        if not self._undo_interest_for_delay:
+        if self.interest_code == '1' \
+                and self._delay \
+                and (self.accounting['INTEREST_FOR_DELAY_VALUE'] != 0 or
+                     ((self.accounting['COMM_REQ'] > 0 or self.accounting[
+                         'CAP_REQ'] > 0) and due_date is not None and dt >= due_date)):
 
-            if self.interest_code == '1' \
-                    and self._delay \
-                    and (self.accounting['INTEREST_FOR_DELAY_VALUE'] != 0 or
-                         ((self.accounting['COMM_REQ'] > 0 or self.accounting[
-                             'CAP_REQ'] > 0) and due_date is not None and dt >= due_date)):
+            self.interest_for_delay_calculation_base = self.accounting['COMM_REQ'] + self.accounting[
+                'CAP_REQ'] + self.interest_for_delay_calculation_add_value
+            daily_interest = (
+                                     self.interest_for_delay_calculation_base * self.interest_for_delay_rate) / self.days_in_year
 
-                self.interest_for_delay_calculation_base = self.accounting['COMM_REQ'] + self.accounting[
-                    'CAP_REQ'] + self.interest_for_delay_calculation_add_value
-                daily_interest = (
-                                         self.interest_for_delay_calculation_base * self.interest_for_delay_rate) / self.days_in_year
+        elif self.interest_code == '2' \
+                and self._delay \
+                and (self.accounting['INTEREST_FOR_DELAY_VALUE'] != 0 or
+                     ((self.accounting['COMM_REQ'] > 0 or self.accounting[
+                         'CAP_REQ'] > 0) and due_date is not None and dt >= due_date)):
 
-            elif self.interest_code == '2' \
-                    and self._delay \
-                    and (self.accounting['INTEREST_FOR_DELAY_VALUE'] != 0 or
-                         ((self.accounting['COMM_REQ'] > 0 or self.accounting[
-                             'CAP_REQ'] > 0) and due_date is not None and dt >= due_date)):
+            self.interest_for_delay_calculation_base = commission + capital + self.interest_for_delay_calculation_add_value
+            daily_interest = self.interest_for_delay_calculation_base * self.interest_for_delay_rate / self.days_in_year
 
-                self.interest_for_delay_calculation_base = commission + capital + self.interest_for_delay_calculation_add_value
-                daily_interest = self.interest_for_delay_calculation_base * self.interest_for_delay_rate / self.days_in_year
-
-            elif self.interest_code == '3' and (self._delay or self.delay_total) and (
-                    # jeśli są już odsetki naliczone lub jest co najmniej grace_period dni po dacie wymagalności
-                    # jeśli są odsetki to nie czekamy jednego dnia z ich naliczeniem, tylko od razu naliczamy
-                    self.accounting['INTEREST_FOR_DELAY_VALUE'] != 0 or (due_date is not None and dt >= due_date)
-            ):
-                self.interest_for_delay_calculation_base = commission + capital + self.interest_for_delay_calculation_add_value
-                daily_interest = (
-                                         self.interest_for_delay_calculation_base * self.interest_for_delay_rate) / self.days_in_year
+        elif self.interest_code == '3' and (self._delay or self.delay_total) and (
+                # jeśli są już odsetki naliczone lub jest co najmniej grace_period dni po dacie wymagalności
+                # jeśli są odsetki to nie czekamy jednego dnia z ich naliczeniem, tylko od razu naliczamy
+                self.accounting['INTEREST_FOR_DELAY_VALUE'] != 0 or (due_date is not None and dt >= due_date)
+        ):
+            self.interest_for_delay_calculation_base = commission + capital + self.interest_for_delay_calculation_add_value
+            daily_interest = (
+                                     self.interest_for_delay_calculation_base * self.interest_for_delay_rate) / self.days_in_year
 
         return decimal.Decimal(daily_interest)
 
@@ -260,11 +268,21 @@ class CalculateLoan(Calculation):
             self.accounting['COST'] -= val
             self._remission_cost = val
 
-    def book_payment_with_accounting_order(self, dt_str):
+    def book_payment_with_accounting_order(self, dt_str: str, ignore_due_day=False):
+        if dt_str == self.schedule_current_date_str \
+                and self.schedule_list[self.schedule_current_date_str]['instalment_total'] > self.accounting['PAYMENT']:
+            self._instalment_payment_overdue = True and not self._undo_interest_for_delay
+
+        if self.accounting['PAYMENT'] == 0:
+            # there is nothing to account
+            return
+
         for i in self.accounting_order:
             # book only on due date
-            if dt_str not in self.schedule_list and i.accounting_type.due_day_accounting_only:
-                continue
+            if dt_str not in self.schedule_list and not ignore_due_day:
+                if i.accounting_type.due_day_accounting_only:
+                    continue
+
             # ustalenie maksymalnej możliwej kwoty na rozksięgowanie dla danego typu
             # zaokrąglenie, żeby poprawne były obliczenia (nie uciekał 1 grosz)
             val = round(min(self.accounting[i.accounting_type.code], self.accounting['PAYMENT']), 3)
@@ -439,11 +457,11 @@ class CalculateLoan(Calculation):
         self.accounting['INTEREST_FOR_DELAY_VALUE'] += self._interest_for_delay_daily
         self._interest_for_delay_total += self._interest_for_delay_daily
 
-        # Calculate daily interest if there is no delay. Otherwise interest_for_delay is valid
-        self._interest_daily = round(
-            (self.accounting['CAP_REQ'] + self.accounting['CAP_NOT_REQ']) *
-            self.interest_rate / self.days_in_year
-            , 4) if not self._delay and dt > self.product.start_date else decimal.Decimal(0)
+        self._interest_daily = calculate_interest_daily(
+            capital_total=self.accounting['CAP_REQ'] + self.accounting['CAP_NOT_REQ'],
+            interest_rate=self.interest_rate,
+            days_in_year=self.days_in_year
+        ) if not self._delay and dt > self.product.start_date else decimal.Decimal(0)
 
         # update per-day values of capital, commission and interest
         self._capital_per_day += self._capital_daily
@@ -486,9 +504,8 @@ class CalculateLoan(Calculation):
             val = self.schedule_list[dt_str]
 
             # set the current and next maturity date for handle rules
+            self.schedule_current_date_str = dt_str
             self.schedule_current_date = datetime.datetime.strptime(dt_str, '%Y-%m-%d').date()
-            self.schedule_maturity_due_date = self.schedule_current_date + datetime.timedelta(
-                days=self.product.grace_period or 0)
 
             try:
                 self.schedule_next_date = datetime.datetime.strptime(
@@ -496,23 +513,13 @@ class CalculateLoan(Calculation):
             except IndexError:
                 self.schedule_next_date = None
 
-            # prowizja wymagalna z harmonogramu -  kwota raty prowizyjnej z harmonogramu
-
-            # TODO: do zmiany - jeżeli rata stała to CAP_REQ = min(0, INSTALMENT_TOTAL - INTEREST_PER_DAY - COMMISION_PER_DAY)
-            #    jeżeli zmienna, to CAP_REQ = CAP_NOT_REQ * % jaki ma być rata, np. 100 000 * 1,2% = 1200,00
-            #    instalment_total - dodać to pole do tabeli product_schedule
-
-            # self._capital_required_from_schedule = min(val['instalment_capital'], self.accounting['CAP_NOT_REQ'])
-            # self._commission_required_from_schedule = min(val['instalment_commission'], self.accounting['COMM_NOT_REQ'])
-            # self._interest_required_from_schedule = val['instalment_interest']
-
             # TODO: TYLKO do testów - to jest DRUT dla raty stałej
-            cap_req = val['instalment_total'] - self._commission_per_day - self._interest_per_day
+            cap_req = max(0, val['instalment_total'] - self._commission_per_day - self._interest_per_day)
             self._capital_required_from_schedule = min(cap_req, self.accounting['CAP_NOT_REQ'])
             self._commission_required_from_schedule = min(self._commission_per_day, self.accounting['COMM_NOT_REQ'])
             self._interest_required_from_schedule = self._interest_per_day
 
-            self.accounting['INTEREST_REQUIRED'] += self._interest_per_day  # self._interest_required_from_schedule
+            self.accounting['INTEREST_REQUIRED'] = self._interest_per_day
 
             # Swich-ujemy kapitał /prow niewymagalny (czyli przerzucamy na kapitał/prow wymagalny z kapitału niewymagalnego: (CAP_REQ += val), (CAP_NOT_REQ -= val))
             oper = min(self.accounting['COMM_NOT_REQ'], self._commission_required_from_schedule)
@@ -527,6 +534,17 @@ class CalculateLoan(Calculation):
             # Sprawdzenie zaległości we wpłatach rat. Add overdues to eventually diminish it in accounting
             self.instalment_overdue_count += 1
             self.instalment_overdue_occurrence += 1
+
+        # if constant instalment, then calculate CAP_REQ <-> INTEREST_REQUIRED balance
+
+        if self.accounting['CAP_REQ'] and dt > self.schedule_current_date:
+            oper = min(self.accounting['CAP_REQ'], self._interest_daily)
+            self.accounting['CAP_REQ'] -= oper
+            self.accounting['CAP_NOT_REQ'] += oper
+
+            if self.accounting['INTEREST_REQUIRED']:
+                self.accounting['INTEREST_REQUIRED'] += self._interest_daily
+
 
         if dt_str in self.accounting_list['COST']:
             val = self.accounting_list['COST'][dt_str]
@@ -654,9 +672,12 @@ class CalculateLoan(Calculation):
             map(lambda x: datetime.datetime.strptime(x, '%Y-%m-%d').date(), self.schedule_list)))
 
         try:
-            self.schedule_current_date = max(filter_schedule_list)
+            self.schedule_current_date = max(list(filter_schedule_list))
+            self.schedule_current_date_str = datetime.datetime.strftime(self.schedule_current_date, '%Y-%m-%d')
+
         except ValueError:
-            self.schedule_current_date = None
+            # schedule_current_date should stay as initial
+            pass
 
         self._set_calculation_state(calc)
 
@@ -672,8 +693,7 @@ class CalculateLoan(Calculation):
                 return {"idx": idx, "entry": i}
         return None
 
-    def recount_grace_period(self, dt):
-
+    def _get_grace_period_payment(self, dt):
         calculation_due_day = self._get_calculation_entry(self.schedule_current_date)
         if not calculation_due_day:
             raise Exception('calc.recount_grace_period: no calculation_due_day')
@@ -687,15 +707,70 @@ class CalculateLoan(Calculation):
         # get sum of payments during grace period. As a start value get possible instalment_overpaid value for starting day
         payment = start_calculation.instalment_overpaid
 
-        for idx in range(calculation_due_day['idx'], calculation_dt['idx']):
+        for idx in range(calculation_due_day['idx'], calculation_dt['idx'] + 1):
             payment += self._calculation_list[idx].instalment
 
-        instalment_required = self.schedule_list[datetime.date.strftime(self.schedule_current_date, '%Y-%m-%d')][
-            'value']
+        instalment_required = self.schedule_list[self.schedule_current_date_str]['instalment_total']
 
-        return {'result': payment >= instalment_required, 'calculation_due_day': calculation_due_day}
+        return {'payment': payment, 'result': payment >= instalment_required,
+                'calculation_due_day': calculation_due_day}
+
+    def _undo_instalment_overdue(self, dt, payment_value):
+        start, end = (
+            self._get_calculation_entry(self.schedule_current_date),
+            self._get_calculation_entry(dt)
+        )
+
+        total_instalment = (
+                start['entry'].capital_required_from_schedule + start['entry'].interest_required_from_schedule
+        )
+
+        capital_total = start['entry'].capital_required + start['entry'].capital_not_required - total_instalment
+
+        interest_daily = calculate_interest_daily(
+            capital_total=capital_total,
+            interest_rate=start['entry'].interest_rate / 100,
+            days_in_year=self.days_in_year
+        )
+
+        interest_cumulated_per_day = start['entry'].interest_cumulated_per_day
+
+        for e_idx, idx in enumerate(range(start['idx'], end['idx'] + 1)):
+            start_entry = copy.copy(start['entry'])
+            start_entry.id = self._calculation_list[idx].id
+            self._calculation_list[idx] = start_entry
+
+            # re-set interest for delay values
+            self._calculation_list[idx].interest_for_delay_required = decimal.Decimal(0)
+            self._calculation_list[idx].interest_for_delay_required_daily = decimal.Decimal(0)
+            self._calculation_list[idx].interest_for_delay_total = start['entry'].interest_for_delay_total
+            self._calculation_list[idx].interest_for_delay_calculation_base = decimal.Decimal(0)
+
+            # re-set interest values
+            self._calculation_list[idx].interest_required = start['entry'].interest_required
+            self._calculation_list[idx].interest_daily = interest_daily
+            self._calculation_list[idx].interest_per_day = interest_daily * e_idx
+            self._calculation_list[idx].interest_cumulated_per_day = interest_cumulated_per_day + interest_daily * e_idx
+
+        # accounting
+        # self._calculation_list[end['idx']].pay
+        self.book_payment_with_accounting_order(
+            dt_str=datetime.datetime.strftime(self._calculation_list[end['idx']].calc_date, '%Y-%m-%d'),
+            ignore_due_day=True
+        )
+
+        # --
+        # update operational variables
+        self._interest_per_day = self._calculation_list[end['idx']].interest_per_day
+        self._interest_for_delay_daily = decimal.Decimal(0)
+        self._interest_for_delay_total = start['entry'].interest_for_delay_total
+        self._delay = False
+
+        self.accounting['INTEREST_FOR_DELAY_VALUE'] = decimal.Decimal(0)
 
     def calculate(self, start_date=None, end_date=None, simulation=False):
+        logger.debug('Calculation started')
+
         with transaction.atomic():
             # ---------------------------------- INIT ------------------------------------------
             # getting nominal start date
@@ -719,12 +794,11 @@ class CalculateLoan(Calculation):
                                                      datetime.date.today(),
                                                      self.product.end_date or datetime.date.today())
 
-            # const days in year regardless of year days count
-            self.days_in_year = 365  # py3ws_utils.days_in_year(dt.year)
+            # const days in year regardless of year days count if CONSTANT_DAYS_IN_YEAR == True
+            self.days_in_year = 365  # if CONSTANT_DAYS_IN_YEAR == True else py3ws_utils.days_in_year(dt.year)
 
             # --------------------------------- MAIN LOOP -------------------------------------
             while dt < self.end_date:
-
                 # set days in year if new year incoming
                 # if dt.month == 1 and dt.day == 1:
                 # self.days_in_year = 365  # py3ws_utils.days_in_year(dt.year)
@@ -743,7 +817,7 @@ class CalculateLoan(Calculation):
                 self.update_state(dt, dt_str)
 
                 # book payment following the accounting order on maturity day incoming
-                self.book_payment_with_accounting_order(dt_str=dt_str)
+                self.book_payment_with_accounting_order(dt_str=dt_str, ignore_due_day=self._undo_interest_for_delay)
 
                 # termination
                 if dt == self.product.termination_date:
@@ -767,21 +841,27 @@ class CalculateLoan(Calculation):
                 self.fill_calculation_table(dt)
 
                 # set undo_interest_for_delay to false if grace_period reached and instalment fully paid
-                if self.schedule_current_date and (
-                        dt - self.schedule_current_date).days == self.product.grace_period > 0:
-                    if self.delay_total or self._undo_interest_for_delay:
+                if dt > self.schedule_current_date:
+                    if (dt - self.schedule_current_date).days < self.product.grace_period:
+                        if not self.delay_total and not self._undo_interest_for_delay:
+                            recount = self._get_grace_period_payment(dt)
+
+                            if recount['result']:
+                                # self._instalment_payment_overdue = False
+                                # self._undo_instalment_overdue(dt, recount['payment'])
+
+                                self._calculation_list = self._calculation_list[:recount['calculation_due_day']['idx']] \
+                                    if recount['calculation_due_day']['idx'] > 0 else [self._calculation_list[0]]
+
+                                dt = self._calculation_list[-1].calc_date
+
+                                self._set_calculation_state(self._calculation_list[-1])
+
+                                self._undo_interest_for_delay = True
+                                self._instalment_payment_overdue = False
+
+                    else:
                         self._undo_interest_for_delay = False
-
-                    # fires only when there is payment delay
-                    elif self._delay:
-                        recount = self.recount_grace_period(dt)
-
-                        if recount['result']:
-                            self._calculation_list = self._calculation_list[:recount['calculation_due_day']['idx']] \
-                                if recount['calculation_due_day']['idx'] > 0 else [self._calculation_list[0]]
-                            dt = self._calculation_list[-1].calc_date
-                            self._set_calculation_state(self._calculation_list[-1])
-                            self._undo_interest_for_delay = True
 
                 dt += datetime.timedelta(days=1)
 
