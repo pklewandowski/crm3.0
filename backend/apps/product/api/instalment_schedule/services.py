@@ -2,7 +2,8 @@ import datetime
 import json
 from decimal import Decimal
 
-import crm_settings
+from django.conf import settings
+
 from apps.document.models import Document
 from apps.product.utils.schedule_utils import ProductScheduleUtils
 from apps.product.utils.utils import LoanUtils
@@ -51,14 +52,14 @@ def instalment_interest_rates_to_dict(instalment_interest_rates: list) -> dict:
     if not instalment_interest_rates:
         return {}
 
-    _instalment_interest_rates = {crm_settings.MINUS_INFINITY_DATE: Decimal(instalment_interest_rates[0]['value'])}
+    _instalment_interest_rates = {settings.MINUS_INFINITY_DATE: Decimal(instalment_interest_rates[0]['value'])}
 
     del instalment_interest_rates[0]
 
     for rate in instalment_interest_rates:
         _instalment_interest_rates[
             datetime.datetime.strptime(rate['start_date'], "%Y-%m-%d") if rate[
-                'start_date'] else crm_settings.INFINITY_DATE
+                'start_date'] else settings.INFINITY_DATE
         ] = Decimal(rate['value'] or 0)
 
     return _instalment_interest_rates

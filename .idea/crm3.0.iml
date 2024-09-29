@@ -16,7 +16,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/backend" isTestSource="false" />
     </content>
-    <content url="file://$MODULE_DIR$/../../../nordfinance/prj/nordFinancePrj" />
+    <content url="file://$MODULE_DIR$/../../../nordfinance/prj/nordFinancePrj3.0" />
     <orderEntry type="jdk" jdkName="Python 3.12 (venv3.0)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
@@ -29,6 +29,7 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/backend/_temp/templates" />
+        <option value="$MODULE_DIR$/backend/templates" />
       </list>
     </option>
   </component>

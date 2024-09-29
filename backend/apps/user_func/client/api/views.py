@@ -1,14 +1,11 @@
 import json
-import os
 import traceback
 import uuid
 
-from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-import crm_settings
 from apps.user_func.csv import services
 from py3ws.csvutl import csvutl
 from py3ws.csvutl.validator import CsvValidatorException
@@ -41,11 +38,13 @@ class ClientCsv(APIView):
             # print('file encoding after', encoding)
             # file = file.decode(encoding if encoding else 'UTF-8-SIG')
 
-            csv_process_result = csvutl.process_csv(data=file, source_header=csv_header, validators=csvutl.build_validators(csv_schema=services.HEADER))
+            csv_process_result = csvutl.process_csv(data=file, source_header=csv_header,
+                                                    validators=csvutl.build_validators(csv_schema=services.HEADER))
             if csv_process_result['errors']:
                 valid = False
 
-            client_batch_upload = services.CsvBatchUpload(process_id=request.session['csv_process_id'], user=request.user)
+            client_batch_upload = services.CsvBatchUpload(process_id=request.session['csv_process_id'],
+                                                          user=request.user)
 
             valid &= client_batch_upload.load_users_into_buffer_table(data=csv_process_result['data'])
 

@@ -2,12 +2,15 @@
 import os
 
 from django.utils.translation import gettext_lazy as _
+from dotenv import load_dotenv
+
+# load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 VERSION = '3.0.0'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ.get('CRM_DEBUG') else False
+DEBUG = True # if os.environ.get('CRM_DEBUG') else False
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -142,12 +145,12 @@ DATABASES = {
         'OPTIONS': {
             'options': '-c search_path=crm'
         },
-        'NAME': os.environ.get('DBNAME'),
-        'USER': os.environ.get('DBUSER'),
-        'PASSWORD': os.environ.get('DBPASSWORD'),
+        'NAME': os.getenv('DBNAME'),
+        'USER': os.getenv('DBUSER'),
+        'PASSWORD': os.getenv('DBPASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '5432',
-        'DATABASE_SCHEMA': 'crm',
+        'DATABASE_SCHEMA': os.getenv('DBSCHEMA'),
         'TEST':
             {
                 'ENGINE': 'django.db.backends.postgresql',

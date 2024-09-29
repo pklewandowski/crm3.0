@@ -1,0 +1,8 @@
+INSTALMENT_MATURITY_DATE_SELECTOR = 'instalment-maturity-date'
+INSTALMENT_CAPITAL_SELECTOR = 'instalment-capital'
+INSTALMENT_COMMISSION_SELECTOR = 'instalment-commission'
+INSTALMENT_INTEREST_SELECTOR = 'instalment-interest'
+INSTALMENT_TOTAL_SELECTOR = 'instalment-total'
+INSTALMENT_ARBITRARY_CHANGED = 'instalment-arbitrary-changed'
+
+INSTALMENT_CONSTANT_DAYS_INTERVAL = 30
