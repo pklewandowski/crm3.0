@@ -17,7 +17,7 @@
       <sourceFolder url="file://$MODULE_DIR$/backend" isTestSource="false" />
     </content>
     <content url="file://$MODULE_DIR$/../../../nordfinance/prj/nordFinancePrj3.0" />
-    <orderEntry type="jdk" jdkName="Python 3.12 virtualenv at /webapps/crm/venv3.12" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.13 virtualenv at /webapps/crm/venv3.13" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
