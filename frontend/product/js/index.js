@@ -37,6 +37,8 @@ let calcTable = null;
 let calcHeader = null;
 let calcData = null;
 
+let isInterestForDelayColumn = null;
+
 function deleteFormsetRow(e, msg, callback = null) {
     let that = e;
     Alert.questionWarning(
@@ -115,6 +117,28 @@ function setPreviousValue() {
     }
 }
 
+function rowFormatter(row) {
+    let interestColumns = [
+        'interest_required',
+        'interest_rate',
+        'interest_daily',
+        'interest_per_day',
+        'interest_cumulated_per_day',
+        //'is_interest_for_delay'
+    ]
+    let data = row.getData(); //get data object for row
+    if (data.commission_required_from_schedule !== "0.00" || data.capital_required_from_schedule !== "0.00") {
+        row.getElement().classList.add('calc-table-due-date');
+    }
+
+    if (data.is_interest_for_delay === true) {
+        for (let column of interestColumns) {
+            row.getCell(row.getTable().getColumn(column)).getElement().classList.add('calc-table-interest-delay')
+        }
+    }
+}
+
+
 $(document).ready(() => {
     setPreviousValue();
 
@@ -136,7 +160,9 @@ $(document).ready(() => {
                     calcHeader = resp.header;
                     calcData = resp.data;
                     calcHeader[0].headerMenu = TabulatorTableUtils.headerMenu;
-                    calcTable = TabulatorTableUtils.setTabulatorTable("#calculation-table", calcHeader, calcData);
+                    calcTable = TabulatorTableUtils.setTabulatorTable(
+                        "#calculation-table", calcHeader, calcData, rowFormatter
+                    );
 
                 },
                 (resp) => {
@@ -152,6 +178,7 @@ $(document).ready(() => {
             calcTable.redraw(true);
         }
     });
+
 
     function setCashFlowSubtype(subtype) {
         let options = typeof subtype === 'string' ? JSON.parse(subtype.replace(/'/g, '"')) : [{XX: 'ogólne'}];
@@ -425,7 +452,7 @@ $(document).ready(() => {
         }
     )
 
-    let btn=productInstalmentSchedule.toolbar.addButton(null,
+    let btn = productInstalmentSchedule.toolbar.addButton(null,
         '',
         'fa fa-redo',
         'Generuj harmonogram',
@@ -434,6 +461,6 @@ $(document).ready(() => {
         },
         null);
 
-    btn.style="margin-right: 5px; float: right; cursor: pointer;"
+    btn.style = "margin-right: 5px; float: right; cursor: pointer;"
 
 });

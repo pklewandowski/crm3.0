@@ -3,6 +3,7 @@ import collections
 import datetime
 import decimal
 
+from django.conf import settings
 from django.db import transaction
 from django.db.models import F, Sum, Max
 
@@ -104,7 +105,7 @@ class Calculation(CalculationBase):
         self.set_schedule_end_date()
 
         if self.schedule_list:
-            self.schedule_end_date = datetime.datetime.strptime(next(reversed(self.schedule_list)), '%Y-%m-%d').date()
+            self.schedule_end_date = datetime.datetime.strptime(next(reversed(self.schedule_list)), settings.DATE_FORMAT).date()
         else:
             raise Exception('Calculation: No schedule list')
 
@@ -114,7 +115,7 @@ class Calculation(CalculationBase):
     def set_tranche_list(self):
         self.tranche_list = collections.OrderedDict(
             {
-                datetime.datetime.strftime(i['launch_date'], '%Y-%m-%d'): i['value']
+                datetime.datetime.strftime(i['launch_date'], settings.DATE_FORMAT): i['value']
                 for i in
                 self.product.tranches.filter(launch_date__isnull=False).values('launch_date').annotate(
                     value=Sum('value')).order_by('launch_date')
@@ -140,7 +141,7 @@ class Calculation(CalculationBase):
         })
 
         self.schedule_list_keys = list(self.schedule_list.keys())
-        self.schedule_next_date = datetime.datetime.strptime(self.schedule_list_keys[0], '%Y-%m-%d').date() if \
+        self.schedule_next_date = datetime.datetime.strptime(self.schedule_list_keys[0], settings.DATE_FORMAT).date() if \
             self.schedule_list_keys[0] else None
 
         dt = self.product.start_date
@@ -213,7 +214,7 @@ class Calculation(CalculationBase):
             i.save()
 
     @abc.abstractmethod
-    def calculate(self, start_date=None, end_date=None, simulate=False):
+    def calculate(self, start_date=None, end_date=None, simulate=False, emulate_payment=False):
         pass
 
     @abc.abstractmethod

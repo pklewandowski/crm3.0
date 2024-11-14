@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="PY-243.21565.199">
+    <data-source name="nordfinance@localhost" uuid="dc0f9e05-a656-45e9-8950-57aea45f9450">
+      <database-info product="PostgreSQL" version="13.1 (Debian 13.1-1.pgdg100+1)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="13.1" exact-driver-version="42.7">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>nordfinance</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="nordfinance">
+            <node kind="schema" qname="crm" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+    <data-source name="nordfinance@3ws.pl" uuid="d3398532-9c8c-4c18-a676-9b64c3aeaeac">
+      <database-info product="PostgreSQL" version="13.8 (Ubuntu 13.8-1.pgdg18.04+1)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="13.8" exact-driver-version="42.7">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>nordfinance</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="nordfinance">
+            <node kind="schema" qname="crm" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <ssh-config-id>02cc0968-dd78-46cf-bbe1-3366dc07e458</ssh-config-id>
+      </ssh-properties>
+    </data-source>
+  </component>
+</project>

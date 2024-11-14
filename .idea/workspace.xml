@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bb7884e4-6050-4e0f-8771-12522040e81b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/apps/product/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/product/utils/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/crm/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/crm/settings.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseLocalColorSettings">
+    <colors>
+      <entry key="d3398532-9c8c-4c18-a676-9b64c3aeaeac" value="Rose" />
+      <entry key="dc0f9e05-a656-45e9-8950-57aea45f9450" value="Blue" />
+    </colors>
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="JsbtTreeLayoutManager">
+    <layout place="tools.popupGrunt">
+      <scroll-view-position x="0" y="0" />
+    </layout>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2pRFNtpzO4uSE9XPZyk8U6kJjcO" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Django Server.crm3.0.executor": "Run",
+    "Python tests.pytest for test_calculation.TestCalculation.test_product_calculation_simulation.executor": "Debug",
+    "Python tests.pytest for test_calculation.TestCalculation.test_product_calculation_simulation_no_emulate.executor": "Debug",
+    "Python tests.pytest for test_interest_global.TestProductInterestGlobal.test_empty_global_interest_list.executor": "Debug",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feature/combine-to-only-one-instalment-type",
+    "last_opened_file_path": "/mnt/ntfs/webapps/crm/prj/crm3.0",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "/home/piotrek/.config/JetBrains/PyCharm2024.3/node/versions/22.12.0/bin/node",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "inlay.hints",
+    "ts.external.directory.path": "/mnt/ntfs/webapps/crm/prj/crm3.0/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/apps/product/templates/product/_modal" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Django Server.crm3.0">
+    <configuration name="crm3.0" type="Python.DjangoServer" factoryName="Django server">
+      <module name="crm3.0" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="crm_settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="localhost" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_calculation.TestCalculation.test_product_calculation_simulation" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="crm3.0" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/backend/apps/product/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_calculation.TestCalculation.test_product_calculation_simulation&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_calculation.TestCalculation.test_product_calculation_simulation_no_emulate" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="crm3.0" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/backend/apps/product/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_calculation.TestCalculation.test_product_calculation_simulation_no_emulate&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_interest_global.TestProductInterestGlobal.test_empty_global_interest_list" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="crm3.0" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/backend/apps/product/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_interest_global.TestProductInterestGlobal.test_empty_global_interest_list&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Django Server.crm3.0" />
+      <item itemvalue="Python tests.pytest for test_calculation.TestCalculation.test_product_calculation_simulation" />
+      <item itemvalue="Python tests.pytest for test_calculation.TestCalculation.test_product_calculation_simulation_no_emulate" />
+      <item itemvalue="Python tests.pytest for test_interest_global.TestProductInterestGlobal.test_empty_global_interest_list" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.pytest for test_calculation.TestCalculation.test_product_calculation_simulation_no_emulate" />
+        <item itemvalue="Python tests.pytest for test_calculation.TestCalculation.test_product_calculation_simulation" />
+        <item itemvalue="Python tests.pytest for test_interest_global.TestProductInterestGlobal.test_empty_global_interest_list" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-PY-243.21565.199" />
+        <option value="bundled-python-sdk-cab1f2013843-4ae2d6a61b08-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.21565.199" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bb7884e4-6050-4e0f-8771-12522040e81b" name="Changes" comment="" />
+      <created>1732720945006</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1732720945006</updated>
+      <workItem from="1732720946088" duration="636000" />
+      <workItem from="1732721986070" duration="488000" />
+      <workItem from="1732722481153" duration="4583000" />
+      <workItem from="1732772424372" duration="26937000" />
+      <workItem from="1732873933693" duration="12000" />
+      <workItem from="1733250685034" duration="1681000" />
+      <workItem from="1733258311595" duration="227000" />
+      <workItem from="1733258542842" duration="3000" />
+      <workItem from="1733258747895" duration="1656000" />
+      <workItem from="1733260434344" duration="2000" />
+      <workItem from="1733261614604" duration="947000" />
+      <workItem from="1733306581127" duration="3970000" />
+      <workItem from="1733310780140" duration="1973000" />
+      <workItem from="1733314988688" duration="5617000" />
+      <workItem from="1733380779900" duration="6866000" />
+      <workItem from="1733486268306" duration="5720000" />
+      <workItem from="1733502298251" duration="3172000" />
+      <workItem from="1733564889631" duration="5539000" />
+      <workItem from="1733741255591" duration="11297000" />
+      <workItem from="1733813318194" duration="7990000" />
+      <workItem from="1733896573358" duration="7306000" />
+      <workItem from="1733991406821" duration="12092000" />
+      <workItem from="1734074296127" duration="1685000" />
+      <workItem from="1734948922730" duration="1283000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TerminalProjectNonSharedOptionsProvider">
+    <envs>
+      <env key="DBNAME" value="nordfinance_cnd" />
+      <env key="DBPASSWORD" value="nordfinance" />
+      <env key="DBUSER" value="nordfinance" />
+    </envs>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/apps/product/tests/test_interest_global.py</url>
+          <line>10</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/apps/product/tests/test_calculation.py</url>
+          <line>61</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/apps/product/tests/test_calculation.py</url>
+          <line>70</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/apps/product/tests/test_calculation.py</url>
+          <line>51</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/apps/product/api/views.py</url>
+          <line>277</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/apps/product/calc.py</url>
+          <line>432</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/apps/product/utils/utils.py</url>
+          <line>393</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/apps/product/utils/utils.py</url>
+          <line>297</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/apps/product/utils/utils.py</url>
+          <line>235</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/frontend/product/js/financePack/schedule/instalment-schedule.js</url>
+          <line>616</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/frontend/product/js/financePack/schedule/instalment-schedule.js</url>
+          <line>590</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/crm3_0$pytest_for_test_calculation_TestCalculation_test_product_calculation_simulation_no_emulate.coverage" NAME="pytest for test_calculation.TestCalculation.test_product_calculation_simulation_no_emulate Coverage Results" MODIFIED="1732774961386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/apps/product/tests" />
+    <SUITE FILE_PATH="coverage/crm3_0$pytest_for_test_calculation_TestCalculation_test_product_calculation_simulation.coverage" NAME="pytest for test_calculation.TestCalculation.test_product_calculation_simulation Coverage Results" MODIFIED="1732774356427" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/apps/product/tests" />
+    <SUITE FILE_PATH="coverage/crm3_0$pytest_for_test_interest_global_TestProductInterestGlobal_test_empty_global_interest_list.coverage" NAME="pytest for test_interest_global.TestProductInterestGlobal.test_empty_global_interest_list Coverage Results" MODIFIED="1732721510776" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/apps/product/tests" />
+  </component>
+</project>

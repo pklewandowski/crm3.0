@@ -57,7 +57,7 @@ class ProductUtils:
 
     @staticmethod
     def calculate_balance(data):
-        return data['capital_not_required'] + data['commission_not_required'] + data['interest_for_delay_required'] + \
+        return data['capital_not_required'] + data['commission_not_required'] + \
             data['required_liabilities_sum'] + data['cost'] - \
             data['instalment_overpaid']
 
@@ -149,28 +149,110 @@ class LoanUtils:
             if isinstance(v, list):
                 if not len(v):
                     continue
-                required, value = v[0]['required'], v[0]['value']
+                for i in v:
+                    required, value = i['required'], i['value']
+
+                    if not empty and required and not value:
+                        raise ProductException(f'Brak wymaganych danych do utworzenia pożyczki: {k}')
             else:
                 required, value = v['required'], v['value']
 
-            # checks
-            if not empty and required and not value:
-                raise ProductException(f'Brak wymaganych danych do utworzenia pożyczki: {k}')
+                if not empty and required and not value:
+                    raise ProductException(f'Brak wymaganych danych do utworzenia pożyczki: {k}')
 
         return mapping
 
     @staticmethod
+    def empty(value):
+        return not value or value == ''
+
+    @staticmethod
     def collect_tranches(product: Product, mapping: dict) -> dict:
-        tranche_nord_map = {
-            mapping['TRANCHE_NORD_TITLE'][0]['id']: 'title',
-            mapping['TRANCHE_NORD_LENDER'][0]['id']: 'lender',
-            mapping['TRANCHE_NORD_VALUE'][0]['id']: 'value'
-        } if 'TRANCHE_NORD_TITLE' in mapping else {}
-        tranche_client_map = {
-            mapping['TRANCHE_CLIENT_TITLE'][0]['id']: 'title',
-            mapping['TRANCHE_CLIENT_LENDER'][0]['id']: 'lender',
-            mapping['TRANCHE_CLIENT_VALUE'][0]['id']: 'value'
-        } if 'TRANCHE_CLIENT_VALUE' in mapping else {}
+        # Nord
+        tranche_nord_test = [
+            'TRANCHE_NORD_TITLE' in mapping,
+            'TRANCHE_NORD_LENDER' in mapping,
+            'TRANCHE_NORD_VALUE' in mapping
+        ]
+
+        if any(tranche_nord_test) and not all(tranche_nord_test):
+            raise Exception('Nie wszystkie pola dla transz NORD wypełnione')
+
+        # client
+        tranche_client_test = [
+            'TRANCHE_CLIENT_TITLE' in mapping,
+            'TRANCHE_CLIENT_LENDER' in mapping,
+            'TRANCHE_CLIENT_VALUE' in mapping
+        ]
+
+        if any(tranche_client_test) and not all(tranche_client_test):
+            raise Exception('Nie wszystkie pola dla transz klienta wypełnione')
+
+        if all(tranche_nord_test):
+            if isinstance(mapping['TRANCHE_NORD_TITLE'], dict):
+                mapping['TRANCHE_NORD_TITLE'] = [mapping['TRANCHE_NORD_TITLE']]
+                mapping['TRANCHE_NORD_LENDER'] = [mapping['TRANCHE_NORD_LENDER']]
+                mapping['TRANCHE_NORD_VALUE'] = [mapping['TRANCHE_NORD_VALUE']]
+
+        if all(tranche_client_test):
+            if isinstance(mapping['TRANCHE_CLIENT_TITLE'], dict):
+                mapping['TRANCHE_CLIENT_TITLE'] = [mapping['TRANCHE_CLIENT_TITLE']]
+                mapping['TRANCHE_CLIENT_LENDER'] = [mapping['TRANCHE_CLIENT_LENDER']]
+                mapping['TRANCHE_CLIENT_VALUE'] = [mapping['TRANCHE_CLIENT_VALUE']]
+
+        # Nord
+        if all(tranche_nord_test):
+            if not isinstance(mapping['TRANCHE_NORD_TITLE'], list):
+                raise Exception(f'Incorrect Nord tranche instance: {type(mapping['TRANCHE_NORD_TITLE'])}')
+
+            for i in range (len(mapping['TRANCHE_NORD_TITLE'])):
+                if not all(
+                    [
+                        not LoanUtils.empty(mapping['TRANCHE_NORD_TITLE'][i]['id']),
+                        not LoanUtils.empty(mapping['TRANCHE_NORD_TITLE'][i]['value']),
+                        not LoanUtils.empty(mapping['TRANCHE_NORD_LENDER'][i]['id']),
+                        not LoanUtils.empty(mapping['TRANCHE_NORD_LENDER'][i]['value']),
+                        not LoanUtils.empty(mapping['TRANCHE_NORD_VALUE'][i]['id']),
+                        not LoanUtils.empty(mapping['TRANCHE_NORD_VALUE'][i]['value'])
+                    ]
+                ):
+                    raise Exception('Nie wszystkie pola transz NORD posiadają wartości')
+
+            tranche_nord_map = {
+                mapping['TRANCHE_NORD_TITLE'][0]['id']: 'title',
+                mapping['TRANCHE_NORD_LENDER'][0]['id']: 'lender',
+                mapping['TRANCHE_NORD_VALUE'][0]['id']: 'value'
+            }
+
+        else:
+            tranche_nord_map = {}
+
+        # client
+        if all(tranche_client_test):
+            if not isinstance(mapping['TRANCHE_CLIENT_TITLE'], list):
+                raise Exception(f'Incorrect client tranche instance: {type(mapping['TRANCHE_CLIENT_TITLE'])}')
+
+            for i in range(len(mapping['TRANCHE_CLIENT_TITLE'])):
+                if not all(
+                    [
+                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_TITLE'][i]['id']),
+                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_TITLE'][i]['value']),
+                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_LENDER'][i]['id']),
+                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_LENDER'][i]['value']),
+                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_VALUE'][i]['id']),
+                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_VALUE'][i]['value']),
+                    ]
+                ):
+                    raise Exception('Nie wszystkie pola transz klienta posiadają wartości')
+
+            tranche_client_map = {
+                mapping['TRANCHE_CLIENT_TITLE'][0]['id']: 'title',
+                mapping['TRANCHE_CLIENT_LENDER'][0]['id']: 'lender',
+                mapping['TRANCHE_CLIENT_VALUE'][0]['id']: 'value'
+            }
+
+        else:
+            tranche_client_map = {}
 
         if not tranche_nord_map and not tranche_client_map:
             return {}
@@ -213,7 +295,6 @@ class LoanUtils:
 
     @staticmethod
     def _create_tranches(product: Product, mapping: dict, collect_tranches: callable) -> [ProductTranche]:
-
         if (
                 (
                         'TRANCHE_NORD_TITLE' not in mapping

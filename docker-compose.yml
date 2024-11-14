@@ -1,13 +1,14 @@
-version: "3"
+# version: "3"
 services:
   postgresql_db_131:
+    container_name: crm_postgres
     image: postgres:13.1
     volumes:
-      #      Cannot do like this due to error (it occures only for windows): [data directory "/var/lib/postgresql/data" has wrong ownership]
-      #      - D:/3WS/PROJEKTY/CRM_RESTFull/dbdata/postgres9.6:/var/lib/postgresql/data
-      #      Have to create docker volume like following and then expose it
+#      Cannot do like this due to error (it occures only for windows): [data directory "/var/lib/postgresql/data" has wrong ownership]
+#      - D:/3WS/PROJEKTY/CRM_RESTFull/dbdata/postgres9.6:/var/lib/postgresql/data
+#      Have to create docker volume like following and then expose it
       - crmrest-pg131-data:/var/lib/postgresql/data
-      - D:/3WS/PROJEKTY/CRM_V2/DB/_docker_dump:/webapps/crm/dbdump
+      - /webapps/crm/dbdump:/webapps/crm/dbdump
     environment:
       - POSTGRES_PASSWORD=postgres
     ports:

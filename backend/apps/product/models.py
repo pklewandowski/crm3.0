@@ -399,19 +399,20 @@ class ProductCalculation(models.Model):
     interest_rate = models.DecimalField(verbose_name='product.calculation.interest_rate', max_digits=10,
                                         decimal_places=2, null=True, default=0)
 
+    is_interest_for_delay = models.BooleanField(verbose_name='product.calculation.is_interest_for_delay', default=False)
     # odsetki za opóźnienie
-    interest_for_delay_calculation_base = models.DecimalField(
-        verbose_name='product.calculation.interest_for_delay_calculation_base', max_digits=15, decimal_places=2,
-        default=0)
-    interest_for_delay_total = models.DecimalField(verbose_name='product.calculation.interest_for_delay_total',
-                                                   max_digits=15, decimal_places=2, default=0)
-    interest_for_delay_rate = models.DecimalField(verbose_name='product.calculation.interest_for_delay_rate',
-                                                  max_digits=10, decimal_places=2, null=True, default=0)
-    interest_for_delay_required = models.DecimalField(verbose_name='product.calculation.interest_for_delay_required',
-                                                      max_digits=15, decimal_places=2, default=0)
-    interest_for_delay_required_daily = models.DecimalField(
-        verbose_name='product.calculation.interest_for_delay_required_daily', max_digits=15, decimal_places=2,
-        default=0)
+    # interest_for_delay_calculation_base = models.DecimalField(
+    #     verbose_name='product.calculation.interest_for_delay_calculation_base', max_digits=15, decimal_places=2,
+    #     default=0)
+    # interest_for_delay_total = models.DecimalField(verbose_name='product.calculation.interest_for_delay_total',
+    #                                                max_digits=15, decimal_places=2, default=0)
+    # interest_for_delay_rate = models.DecimalField(verbose_name='product.calculation.interest_for_delay_rate',
+    #                                               max_digits=10, decimal_places=2, null=True, default=0)
+    # interest_for_delay_required = models.DecimalField(verbose_name='product.calculation.interest_for_delay_required',
+    #                                                   max_digits=15, decimal_places=2, default=0)
+    # interest_for_delay_required_daily = models.DecimalField(
+    #     verbose_name='product.calculation.interest_for_delay_required_daily', max_digits=15, decimal_places=2,
+    #     default=0)
 
     # prowizja
     commission_per_day = models.DecimalField(verbose_name='product.calculation.commission_per_day', max_digits=15,

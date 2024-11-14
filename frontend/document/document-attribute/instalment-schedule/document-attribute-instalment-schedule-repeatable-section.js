@@ -20,9 +20,6 @@ class DocumentAttributeInstalmentScheduleRepeatableSection extends RepeatableTab
                 null);
         }
     }
-
-
-
 }
 
 export {DocumentAttributeInstalmentScheduleRepeatableSection}

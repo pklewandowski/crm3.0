@@ -2,7 +2,7 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="ddcf77d2-893c-4683-8680-72863405be56" name="nordfinance3.0Deploy" url="http://localhost">
+      <webServer id="43065245-00ba-46e4-b360-11ea8fd66741" name="nordFinance3.0" url="http://localhost">
         <fileTransfer mountedRoot="$PROJECT_DIR$/../../../nordfinance/prj/_deploy3.0" accessType="MOUNT" port="0" />
       </webServer>
     </option>

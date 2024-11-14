@@ -79,7 +79,7 @@ class TabulatorTableUtils {
         });
     }
 
-    static setTabulatorTable(id, columns, data = []) {
+    static setTabulatorTable(id, columns, data = [], rowFormatter) {
         return new Tabulator(id, {
             height: "100%", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
             data: data, //assign data to table
@@ -88,12 +88,7 @@ class TabulatorTableUtils {
             movableColumns: true,
             columns: columns,
             tooltipsHeader: true,
-            rowFormatter: function (row) {
-                let data = row.getData(); //get data object for row
-                if (data.commission_required_from_schedule !== "0.00" || data.capital_required_from_schedule !== "0.00") {
-                    row.getElement().classList.add('calc-table-due-date');
-                }
-            },
+            rowFormatter: rowFormatter,
             rowClick: function (e, row) { //trigger an alert message when the row is clicked
                 // let data = row.getData(); //get data object for row
                 let table = document.createElement('table');
