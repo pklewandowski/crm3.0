@@ -37,12 +37,17 @@ class DocumentTypeAccountingType(models.Model):
     due_day_accounting_only = models.BooleanField(verbose_name=_('document.type.accounting.type.due_day_accounting_only'), default=False)
     min_value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     subtypes = JSONField(default=dict)
+    parent = models.ForeignKey('self', db_column='id_parent', null=True, blank=True, on_delete=models.CASCADE)
     sq = models.IntegerField(default=0)
 
     # TODO : powiązać typ przepływu z typem atrybutu
 
     def __str__(self):
         return str(self.name)
+
+    @staticmethod
+    def get_accounting_types():
+        pass
 
     class Meta:
         db_table = 'document_type_accounting_type'

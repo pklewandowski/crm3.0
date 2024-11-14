@@ -81,7 +81,6 @@ def fix_product_calculation(fix_product):
         "commission_not_required": 0.00,
         "instalment_overdue_count": 7,
         "commission_required": 0.00,
-        "instalment_accounting_interest_for_delay": 0.00,
         "commission_required_from_schedule": 0.00,
         "instalment_accounting_commission_not_required": 0.00,
         "instalment_accounting_commission_required": 0.00,
