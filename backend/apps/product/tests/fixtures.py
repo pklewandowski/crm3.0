@@ -1,5 +1,8 @@
+import datetime
+
 import pytest
 
+from apps.document.models import DocumentTypeAccountingType, DocumentTypeAccounting
 from apps.product.models import ProductSchedule, ProductTypeStatus, Product, ProductInterest, ProductInterestType, \
     ProductStatusTrack, ProductInterestGlobal
 
@@ -19,7 +22,7 @@ def _product_status_track(user, product, status):
 def _product_schedule(product):
     schedule_data = [
         {
-            "maturity_date": "2024-01-19",
+            "maturity_date": datetime.datetime.strptime("2024-01-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3847.91,
             "instalment_capital": 652.09,
@@ -27,7 +30,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-02-19",
+            "maturity_date": datetime.datetime.strptime("2024-02-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3842.92,
             "instalment_capital": 657.08,
@@ -35,7 +38,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-03-19",
+            "maturity_date": datetime.datetime.strptime("2024-03-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3590.29,
             "instalment_capital": 909.71,
@@ -43,7 +46,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-04-19",
+            "maturity_date": datetime.datetime.strptime("2024-04-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3830.95,
             "instalment_capital": 669.05,
@@ -51,7 +54,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-05-20",
+            "maturity_date": datetime.datetime.strptime("2024-05-20", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3825.83,
             "instalment_capital": 674.17,
@@ -59,7 +62,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-06-19",
+            "maturity_date": datetime.datetime.strptime("2024-06-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3697.43,
             "instalment_capital": 802.57,
@@ -67,7 +70,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-07-19",
+            "maturity_date": datetime.datetime.strptime("2024-07-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3691.49,
             "instalment_capital": 808.51,
@@ -75,7 +78,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-08-19",
+            "maturity_date": datetime.datetime.strptime("2024-08-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3808.36,
             "instalment_capital": 691.64,
@@ -83,7 +86,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-09-19",
+            "maturity_date": datetime.datetime.strptime("2024-09-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3803.08,
             "instalment_capital": 696.92,
@@ -91,7 +94,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-10-21",
+            "maturity_date": datetime.datetime.strptime("2024-10-21", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3920.26,
             "instalment_capital": 579.74,
@@ -99,7 +102,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-11-19",
+            "maturity_date": datetime.datetime.strptime("2024-11-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3548.59,
             "instalment_capital": 951.41,
@@ -107,7 +110,7 @@ def _product_schedule(product):
             "instalment_total": 4500.00
         },
         {
-            "maturity_date": "2024-12-19",
+            "maturity_date": datetime.datetime.strptime("2024-12-19", '%Y-%m-%d').date(),
             "product": product,
             "instalment_interest": 3663.92,
             "instalment_capital": 495307.11,
@@ -291,10 +294,274 @@ def fix_product_interest_type():
 
 
 @pytest.fixture
+def fix_document_type_accounting_type(fix_document_type):
+    accounting_type = [
+        {
+            "pk": 1,
+            "name": "Koszty",
+            "code": "COST",
+            "description": "Koszty",
+            "direction": 1,
+            "is_editable": True,
+            "is_accounting_order": True,
+            "due_day_accounting_only": False,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 2
+        },
+        {
+            "pk": 2,
+            "name": "Wpłata środków",
+            "code": "PAYMENT",
+            "description": "Wpłata środków",
+            "direction": -1,
+            "is_editable": True,
+            "is_accounting_order": False,
+            "due_day_accounting_only": False,
+            "min_value": None,
+            "subtypes": {},
+            "sq": 1
+
+        },
+        {
+            "pk": 3,
+            "name": "Kapitał wymagalny",
+            "code": "CAP_REQ",
+            "description": "Kapitał wymagalny",
+            "direction": 1,
+            "is_editable": False,
+            "is_accounting_order": True,
+            "due_day_accounting_only": False,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 0
+
+        },
+        {
+            "pk": 4,
+            "name": "Kapitał niewymagalny",
+            "code": "CAP_NOT_REQ",
+            "description": "Kapitał niewymagalny",
+            "direction": 1,
+            "is_editable": False,
+            "is_accounting_order": True,
+            "due_day_accounting_only": True,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 0
+
+        },
+        {
+            "pk": 7,
+            "name": "Wypłata środków",
+            "code": "PAYOFF",
+            "description": "Wypłata środków",
+            "direction": 1,
+            "is_editable": False,
+            "is_accounting_order": False,
+            "due_day_accounting_only": False,
+            "min_value": None,
+            "subtypes": {},
+            "sq": 0
+
+        },
+        {
+            "pk": 9,
+            "name": "Odsetki",
+            "code": "INTEREST_REQUIRED",
+            "description": "Rata odsetkowa",
+            "direction": 1,
+            "is_editable": False,
+            "is_accounting_order": True,
+            "due_day_accounting_only": False,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 0
+
+        },
+        {
+            "pk": 10,
+            "name": "Prowizja niewymagalna",
+            "code": "COMM_NOT_REQ",
+            "description": "Prowizja niewymagalna",
+            "direction": 1,
+            "is_editable": False,
+            "is_accounting_order": True,
+            "due_day_accounting_only": True,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 0
+
+        },
+        {
+            "pk": 11,
+            "name": "Prowizja wymagalna",
+            "code": "COMM_REQ",
+            "description": "Prowizja wymagalna",
+            "direction": 1,
+            "is_editable": False,
+            "is_accounting_order": True,
+            "due_day_accounting_only": False,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 0
+
+        },
+        {
+            "pk": 16,
+            "name": "Umorzenie kapitału",
+            "code": "REM_CAP",
+            "description": "Umorzenie kapitału",
+            "direction": -1,
+            "is_editable": True,
+            "is_accounting_order": False,
+            "due_day_accounting_only": False,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 3
+
+        },
+        {
+            "pk": 17,
+            "name": "Umorzenie prowizji",
+            "code": "REM_COMM",
+            "description": "Umorzenie prowizji",
+            "direction": -1,
+            "is_editable": True,
+            "is_accounting_order": False,
+            "due_day_accounting_only": False,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 4
+
+        },
+        {
+            "pk": 18,
+            "name": "Umorzenie raty odsetkowej",
+            "code": "REM_INTEREST",
+            "description": "Umorzenie raty odsetkowej",
+            "direction": -1,
+            "is_editable": True,
+            "is_accounting_order": False,
+            "due_day_accounting_only": False,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 5
+
+        },
+        {
+            "pk": 19,
+            "name": "Umorzenie odsetek za opóźnienie",
+            "code": "REM_INTEREST_REQUUIRED",
+            "description": "Umorzenie odsetek za opóźnienie",
+            "direction": -1,
+            "is_editable": True,
+            "is_accounting_order": False,
+            "due_day_accounting_only": False,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 6
+        },
+        {
+            "pk": 20,
+            "name": "Umorzenie kosztów",
+            "code": "REM_COST",
+            "description": "Umorzenie kosztów",
+            "direction": -1,
+            "is_editable": True,
+            "is_accounting_order": False,
+            "due_day_accounting_only": False,
+            "min_value": "0.00",
+            "subtypes": {},
+            "sq": 7
+        }
+    ]
+
+    for i in accounting_type:
+        DocumentTypeAccountingType.objects.create(**i)
+
+@pytest.fixture
+def fix_document_type_accounting(fix_document_type, fix_document_type_accounting_type):
+    accounting = [
+        {
+            "pk": 255,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=1),
+            "sq": 1
+
+        },
+        {
+            "pk": 256,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=9),
+            "sq": 2
+        },
+        {
+            "pk": 257,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=3),
+            "sq": 3
+        },
+        {
+            "pk": 258,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=4),
+            "sq": 4
+        },
+        {
+            "pk": 259,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=7),
+            "sq": 0
+        },
+        {
+            "pk": 260,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=16),
+            "sq": 0
+        },
+        {
+            "pk": 261,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=17),
+            "sq": 0
+        },
+        {
+            "pk": 262,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=18),
+            "sq": 0
+        },
+        {
+            "pk": 263,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=19),
+            "sq": 0
+        },
+        {
+            "pk": 264,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=20),
+            "sq": 0
+        },
+        {
+            "pk": 265,
+            "document_type": fix_document_type,
+            "accounting_type": DocumentTypeAccountingType.objects.get(pk=2),
+            "sq": 0
+        }
+    ]
+
+    for i in accounting:
+        DocumentTypeAccounting.objects.create(**i)
+
+
+@pytest.fixture
 def fix_product(
         fix_document_type,
         fix_product_type_status,
         fix_document,
+        fix_document_type_accounting,
         fix_user,
         fix_client,
         fix_product_interest_type,
@@ -304,11 +571,11 @@ def fix_product(
         value=100000,
         client=fix_client,
         type=fix_document_type,
-        start_date='2024-01-19',
-        agreement_no='01/2024',
+        start_date=datetime.datetime.strptime('2023-12-19', '%Y-%m-%d').date(),
+        agreement_no='01/2023',
         status=fix_product_type_status,
         creation_user=fix_user,
-        creation_date='2024-01-19'
+        creation_date='2023-12-19'
     )
 
     _product_schedule(product=product)

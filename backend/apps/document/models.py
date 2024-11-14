@@ -1,4 +1,4 @@
-from django.db.models import JSONField
+from django.db.models import JSONField, OuterRef, Exists, Q
 from django.core import validators
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -10,6 +10,7 @@ from apps.attachment.models import Attachment
 from apps.attribute.models import Attribute
 from apps.dict.models import Dictionary
 from apps.hierarchy.models import Hierarchy
+
 from apps.report.models import ReportTemplate, Report
 from apps.user.models import User
 
@@ -30,19 +31,32 @@ class DocumentTypeAccountingType(models.Model):
     name = models.CharField(verbose_name='document.type.accounting.type.name', max_length=100)
     code = models.CharField(verbose_name='document.type.accounting.type.code', max_length=50)
     description = models.TextField(null=True, blank=True)
-    direction = models.IntegerField(verbose_name=_('document.type.accounting.type.direction'))  # 1 - przepływ dodatni, -1 - przepływ ujemny
+    direction = models.IntegerField(
+        verbose_name=_('document.type.accounting.type.direction'))  # 1 - przepływ dodatni, -1 - przepływ ujemny
     is_editable = models.BooleanField(verbose_name=_('document.type.accounting.type.is_editable'), default=True)
-    is_accounting_order = models.BooleanField(verbose_name=_('document.type.accounting.type.is_accounting_order'), default=True)
+    is_accounting_order = models.BooleanField(verbose_name=_('document.type.accounting.type.is_accounting_order'),
+                                              default=True)
     # księgowane tylko w dniu wymagalności raty
-    due_day_accounting_only = models.BooleanField(verbose_name=_('document.type.accounting.type.due_day_accounting_only'), default=False)
+    due_day_accounting_only = models.BooleanField(
+        verbose_name=_('document.type.accounting.type.due_day_accounting_only'), default=False)
     min_value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     subtypes = JSONField(default=dict)
+    parent = models.ForeignKey('self', db_column='id_parent', null=True, blank=True, on_delete=models.CASCADE)
     sq = models.IntegerField(default=0)
 
     # TODO : powiązać typ przepływu z typem atrybutu
 
     def __str__(self):
         return str(self.name)
+
+    @staticmethod
+    def get_accounting_types(editable_only=True):
+        q = Q(parent__isnull=True)
+        if editable_only:
+            q &= Q(is_editable=True)
+
+        from apps.document.api.serializers import DocumentTypeAccountingTypeSerializer
+        return {i['code']: i for i in DocumentTypeAccountingTypeSerializer(DocumentTypeAccountingType.objects.filter(q), many=True).data}
 
     class Meta:
         db_table = 'document_type_accounting_type'
@@ -52,7 +66,8 @@ class DocumentTypeCategory(models.Model):
     name = models.CharField(verbose_name=_('document.category.name'), max_length=200)
     code = models.CharField(verbose_name=_('document.category.code'), max_length=50)
     description = models.TextField(verbose_name=_('document.category.description'), null=True, blank=True)
-    avatar_image = models.CharField(verbose_name='document.category.avatar_image', max_length=300, null=True, blank=True)
+    avatar_image = models.CharField(verbose_name='document.category.avatar_image', max_length=300, null=True,
+                                    blank=True)
     attributes = JSONField(null=True, blank=True)
     sq = models.IntegerField(default=0)
 
@@ -69,14 +84,17 @@ class DocumentTypeCategory(models.Model):
 
 
 class DocumentType(models.Model):
-    category = models.ForeignKey(DocumentTypeCategory, verbose_name=_('Kategoria'), db_column='id_category', on_delete=models.CASCADE)
+    category = models.ForeignKey(DocumentTypeCategory, verbose_name=_('Kategoria'), db_column='id_category',
+                                 on_delete=models.CASCADE)
     name = models.CharField(verbose_name=_('Nazwa'), max_length=200)
     code = models.CharField(verbose_name=_('Kod'), max_length=50)
     owner_type = models.CharField(max_length=50)
-    auto_generated_code_pattern = models.CharField(verbose_name=_('Pattern dla kodu automatycznego'), max_length=50, null=True, blank=True)
+    auto_generated_code_pattern = models.CharField(verbose_name=_('Pattern dla kodu automatycznego'), max_length=50,
+                                                   null=True, blank=True)
     description = models.TextField(verbose_name=_('Opis'), null=True, blank=True)
     avatar_image = models.CharField(verbose_name='document.type.avatar_image', max_length=300, null=True, blank=True)
-    icon_font_name = models.CharField(verbose_name=_('document.type.icon_font_name'), max_length=50, null=True, blank=True)
+    icon_font_name = models.CharField(verbose_name=_('document.type.icon_font_name'), max_length=50, null=True,
+                                      blank=True)
     editable = models.BooleanField(verbose_name=_('document.type.editable'), default=True)
     is_schedule = models.BooleanField(verbose_name=_('Posiada harmonogram'), default=False)
 
@@ -90,7 +108,8 @@ class DocumentType(models.Model):
     is_code_editable = models.BooleanField(verbose_name=_('document.type.is_code_editable'))
     is_owner = models.BooleanField(verbose_name=_('document.type.is_owner'))
 
-    calculation_class = models.CharField(verbose_name=_('document.type.calculation_class'), max_length=500, null=True, blank=True)
+    calculation_class = models.CharField(verbose_name=_('document.type.calculation_class'), max_length=500, null=True,
+                                         blank=True)
     accounting_order = models.ManyToManyField(DocumentTypeAccountingType, through='DocumentTypeAccounting')
     form_name = models.CharField(max_length=200, verbose_name=_('document.type.form_name'), null=True, blank=True)
     form_attributes = JSONField(null=True, blank=True)
@@ -108,9 +127,12 @@ class DocumentType(models.Model):
 
 
 class DocumentTypeSection(models.Model):
-    document_type = models.ForeignKey(DocumentType, db_column='id_document_type', related_name='section_set', on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', db_column='id_parent', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
-    parent_column = models.ForeignKey('DocumentTypeSectionColumn', db_column='id_parent_column', null=True, blank=True, related_name='column_children', on_delete=models.CASCADE)
+    document_type = models.ForeignKey(DocumentType, db_column='id_document_type', related_name='section_set',
+                                      on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', db_column='id_parent', null=True, blank=True, related_name='children',
+                               on_delete=models.CASCADE)
+    parent_column = models.ForeignKey('DocumentTypeSectionColumn', db_column='id_parent_column', null=True, blank=True,
+                                      related_name='column_children', on_delete=models.CASCADE)
     attributes = JSONField(null=True, blank=True)
     name = models.CharField(max_length=100)
     conditional_name_attribute = models.CharField(max_length=200, null=True, blank=True)
@@ -132,12 +154,18 @@ class DocumentTypeSection(models.Model):
 
 
 class DocumentTypeSectionColumn(models.Model):
-    section = models.ForeignKey(DocumentTypeSection, db_column='section_id', related_name='column_set', on_delete=models.CASCADE)
-    name = models.CharField(verbose_name=_('attribute.section.column.panel_name'), max_length=200, null=True, blank=True)
-    lg_width = models.IntegerField(verbose_name=_('attribute.section.column.lg_width'), null=True, blank=True, validators=[validators.MinValueValidator(1), validators.MaxValueValidator(12)])
-    md_width = models.IntegerField(verbose_name=_('attribute.section.column.md_width'), null=True, blank=True, validators=[validators.MinValueValidator(1), validators.MaxValueValidator(12)])
-    sm_width = models.IntegerField(verbose_name=_('attribute.section.column.sm_width'), validators=[validators.MinValueValidator(1), validators.MaxValueValidator(12)])
-    xs_width = models.IntegerField(verbose_name=_('attribute.section.column.xs_width'), null=True, blank=True, validators=[validators.MinValueValidator(1), validators.MaxValueValidator(12)])
+    section = models.ForeignKey(DocumentTypeSection, db_column='section_id', related_name='column_set',
+                                on_delete=models.CASCADE)
+    name = models.CharField(verbose_name=_('attribute.section.column.panel_name'), max_length=200, null=True,
+                            blank=True)
+    lg_width = models.IntegerField(verbose_name=_('attribute.section.column.lg_width'), null=True, blank=True,
+                                   validators=[validators.MinValueValidator(1), validators.MaxValueValidator(12)])
+    md_width = models.IntegerField(verbose_name=_('attribute.section.column.md_width'), null=True, blank=True,
+                                   validators=[validators.MinValueValidator(1), validators.MaxValueValidator(12)])
+    sm_width = models.IntegerField(verbose_name=_('attribute.section.column.sm_width'),
+                                   validators=[validators.MinValueValidator(1), validators.MaxValueValidator(12)])
+    xs_width = models.IntegerField(verbose_name=_('attribute.section.column.xs_width'), null=True, blank=True,
+                                   validators=[validators.MinValueValidator(1), validators.MaxValueValidator(12)])
     sq = models.IntegerField(verbose_name=_('attribute.section.column.sq'), blank=True)
 
     def __str__(self):
@@ -150,7 +178,8 @@ class DocumentTypeSectionColumn(models.Model):
 
 class DocumentTypeAccounting(models.Model):
     document_type = models.ForeignKey(DocumentType, db_column='id_document_type', on_delete=models.CASCADE)
-    accounting_type = models.ForeignKey(DocumentTypeAccountingType, db_column='id_accounting_type', on_delete=models.CASCADE)
+    accounting_type = models.ForeignKey(DocumentTypeAccountingType, db_column='id_accounting_type',
+                                        on_delete=models.CASCADE)
     sq = models.IntegerField()
 
     def __str__(self):
@@ -162,7 +191,8 @@ class DocumentTypeAccounting(models.Model):
 
 
 class DocumentTypeVersionDefinition(models.Model):
-    document_type = models.ForeignKey(DocumentType, db_column='id_document_type', related_name='definition_set', on_delete=models.CASCADE)
+    document_type = models.ForeignKey(DocumentType, db_column='id_document_type', related_name='definition_set',
+                                      on_delete=models.CASCADE)
     code = models.CharField(max_length=20)
     status = models.CharField(max_length=3)
     create_date = models.DateTimeField(auto_now_add=True)
@@ -172,26 +202,36 @@ class DocumentTypeVersionDefinition(models.Model):
 
 
 class DocumentTypeAttribute(models.Model):
-    document_type = models.ForeignKey(DocumentType, db_column='id_document_type', related_name='attribute_set', on_delete=models.CASCADE)
-    dictionary = models.ForeignKey(Dictionary, db_column='dictionary', verbose_name=_('document.type.attribute.dictionary'),
+    document_type = models.ForeignKey(DocumentType, db_column='id_document_type', related_name='attribute_set',
+                                      on_delete=models.CASCADE)
+    dictionary = models.ForeignKey(Dictionary, db_column='dictionary',
+                                   verbose_name=_('document.type.attribute.dictionary'),
                                    null=True, blank=True, on_delete=models.CASCADE)
-    attribute = models.ForeignKey(Attribute, db_column='id_attribute', verbose_name=_('document.type.attribute.attribute'), null=True, blank=True, on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', db_column='id_parent', null=True, blank=True, related_name='children_set', on_delete=models.CASCADE)
+    attribute = models.ForeignKey(Attribute, db_column='id_attribute',
+                                  verbose_name=_('document.type.attribute.attribute'), null=True, blank=True,
+                                  on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', db_column='id_parent', null=True, blank=True, related_name='children_set',
+                               on_delete=models.CASCADE)
     # type - Type of attribute, if ATTR then standard attribute, when FORM then attribute of main document form
     type = models.CharField(max_length=10, default='ATTR', verbose_name=_('document.type.attribute.type'))
     name = models.CharField(max_length=300, verbose_name=_('document.type.attribute.name'))
-    name_short = models.CharField(max_length=50, verbose_name=_('document.type.attribute.name_short'), null=True, blank=True)
+    name_short = models.CharField(max_length=50, verbose_name=_('document.type.attribute.name_short'), null=True,
+                                  blank=True)
     # iconic symbol class of an attribute
     name_icon = JSONField(null=True, blank=True, default=dict)
     code = models.CharField(max_length=100, verbose_name=_('document.type.attribute.code'), null=True, blank=True)
-    width_prc = models.IntegerField(validators=[MinValueValidator(limit_value=1), MaxValueValidator(limit_value=100)], null=True, blank=True)
+    width_prc = models.IntegerField(validators=[MinValueValidator(limit_value=1), MaxValueValidator(limit_value=100)],
+                                    null=True, blank=True)
     feature = JSONField(null=True, blank=True, default=dict)
-    css_class = models.CharField(verbose_name=_('document.type.attribute.css_class'), max_length=200, null=True, blank=True)
-    selector_class = models.CharField(verbose_name=_('document.type.attribute.selector_class'), max_length=200, null=True, blank=True)
+    css_class = models.CharField(verbose_name=_('document.type.attribute.css_class'), max_length=200, null=True,
+                                 blank=True)
+    selector_class = models.CharField(verbose_name=_('document.type.attribute.selector_class'), max_length=200,
+                                      null=True, blank=True)
     lov = JSONField(null=True, blank=True, default=dict)
     dependency = JSONField(null=True, blank=True, default=dict)
     description = models.TextField(null=True, blank=True, verbose_name=_('document.type.attribute.description'))
-    placeholder = models.CharField(max_length=300, null=True, blank=True, verbose_name=_('document.type.attribute.placeholder'))
+    placeholder = models.CharField(max_length=300, null=True, blank=True,
+                                   verbose_name=_('document.type.attribute.placeholder'))
     default_value = models.TextField(null=True, blank=True, verbose_name=_('document.type.attribute.default_value'))
     is_required = models.BooleanField(default=False, verbose_name=_('document.type.attribute.is_required'))
     is_table = models.BooleanField(default=False, verbose_name=_('document.type.attribute.is_table'))
@@ -251,7 +291,8 @@ class DocumentTypeAttributeFeature(models.Model):
 
 
 class DocumentAttribute(models.Model):
-    attribute = models.ForeignKey(DocumentTypeAttribute, db_column='id_attribute', related_name='attribute_value_set', on_delete=models.CASCADE)
+    attribute = models.ForeignKey(DocumentTypeAttribute, db_column='id_attribute', related_name='attribute_value_set',
+                                  on_delete=models.CASCADE)
     parent = models.ForeignKey('self', db_column='id_parent', null=True, blank=True, on_delete=models.CASCADE)
     document_id = models.IntegerField(verbose_name=_('document.attribute.document_id'))
     # value - wartość zatwierdzona przez weryfikatora
@@ -272,20 +313,27 @@ class DocumentAttribute(models.Model):
 
 
 class Document(models.Model):
-    type = models.ForeignKey(DocumentType, db_column='id_type', related_name="document_type_set", on_delete=models.CASCADE)
-    owner = models.ForeignKey(User, verbose_name=_('document.owner'), db_column='id_owner', related_name="owner_set", on_delete=models.CASCADE)
+    type = models.ForeignKey(DocumentType, db_column='id_type', related_name="document_type_set",
+                             on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, verbose_name=_('document.owner'), db_column='id_owner', related_name="owner_set",
+                              on_delete=models.CASCADE)
     # remove this field cause it brokes universality of document intentions
     # lender = models.ForeignKey(Hierarchy, verbose_name=_('document.lender'), db_column='id_lender', related_name="lender_set", on_delete=models.CASCADE)
-    responsible = models.ForeignKey(User, verbose_name=_('document.responsible'), db_column='id_responsible', null=True, blank=True, related_name="responsible_set", on_delete=models.CASCADE)
-    annex = models.OneToOneField('self', db_column='id_annex', null=True, blank=True, on_delete=models.DO_NOTHING, related_name='document_annex', unique=True)
-    annexed_by = models.OneToOneField('self', db_column='id_annexed_by', null=True, blank=True, on_delete=models.DO_NOTHING, related_name='document_annexed_by', unique=True)
+    responsible = models.ForeignKey(User, verbose_name=_('document.responsible'), db_column='id_responsible', null=True,
+                                    blank=True, related_name="responsible_set", on_delete=models.CASCADE)
+    annex = models.OneToOneField('self', db_column='id_annex', null=True, blank=True, on_delete=models.DO_NOTHING,
+                                 related_name='document_annex', unique=True)
+    annexed_by = models.OneToOneField('self', db_column='id_annexed_by', null=True, blank=True,
+                                      on_delete=models.DO_NOTHING, related_name='document_annexed_by', unique=True)
     hierarchy = models.ForeignKey(Hierarchy, null=True, blank=True, on_delete=models.CASCADE)
-    status = models.ForeignKey('DocumentTypeStatus', db_column='id_status', verbose_name=_('document.status'), blank=True, on_delete=models.CASCADE)
+    status = models.ForeignKey('DocumentTypeStatus', db_column='id_status', verbose_name=_('document.status'),
+                               blank=True, on_delete=models.CASCADE)
     code = models.CharField(verbose_name=_('document.code'), max_length=50, null=True, blank=True)
     # document number given by the user
     custom_code = models.CharField(verbose_name=_('document.custom_code'), max_length=50, null=True, blank=True)
     creation_date = models.DateTimeField(verbose_name=_('document.creation_date'), auto_now_add=True)
-    created_by = models.ForeignKey(User, verbose_name=_('document.created_by'), db_column='id_created_by', related_name='document_created_by', on_delete=models.PROTECT)
+    created_by = models.ForeignKey(User, verbose_name=_('document.created_by'), db_column='id_created_by',
+                                   related_name='document_created_by', on_delete=models.PROTECT)
     description = models.TextField(verbose_name=_('document.description'), null=True, blank=True)
     form_data = JSONField(null=True, default=dict, verbose_name=_('document.form_data'))
     attachments = models.ManyToManyField(Attachment, through='DocumentAttachment')
@@ -347,7 +395,8 @@ class DocumentStatusCourse(models.Model):
     in DocumentStatusCourse there will be only A(2020-01-01)->B(2020-01-06) entry.
     Another words it doesn't track changes, but deletes entry when user back status
     """
-    document = models.ForeignKey(Document, db_column='id_document', db_index=True, related_name='status_course', on_delete=models.CASCADE)
+    document = models.ForeignKey(Document, db_column='id_document', db_index=True, related_name='status_course',
+                                 on_delete=models.CASCADE)
     status = models.ForeignKey('DocumentTypeStatus', db_column='id_status', db_index=True, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, db_column='id_user', on_delete=models.CASCADE)
     effective_date = models.DateTimeField(default=timezone.now)
@@ -362,7 +411,8 @@ class DocumentStatusTrack(models.Model):
     DocumentStatusTrack
     track all the status changes of given document with chance to descripbe reason of change
     """
-    document = models.ForeignKey(Document, db_column='id_document', db_index=True, related_name='status_track', on_delete=models.CASCADE)
+    document = models.ForeignKey(Document, db_column='id_document', db_index=True, related_name='status_track',
+                                 on_delete=models.CASCADE)
     status = models.ForeignKey('DocumentTypeStatus', db_column='id_status', db_index=True, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, db_column='id_created_by', on_delete=models.CASCADE)
     effective_date = models.DateTimeField(default=timezone.now)
@@ -385,9 +435,11 @@ class DocumentNote(models.Model):
     header = models.CharField(max_length=300, null=True)
     text = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, db_column='id_created_by', related_name='created_by_set', on_delete=models.PROTECT)
+    created_by = models.ForeignKey(User, db_column='id_created_by', related_name='created_by_set',
+                                   on_delete=models.PROTECT)
     update_date = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(User, db_column='id_updated_by', related_name='updated_by_set', on_delete=models.PROTECT)
+    updated_by = models.ForeignKey(User, db_column='id_updated_by', related_name='updated_by_set',
+                                   on_delete=models.PROTECT)
     history = HistoricalRecords(table_name='h_document_note')
 
     class Meta:
@@ -395,7 +447,8 @@ class DocumentNote(models.Model):
 
 
 class DocumentAttachment(models.Model):
-    document = models.ForeignKey(Document, db_column='id_document', related_name='attachment_set', on_delete=models.CASCADE)
+    document = models.ForeignKey(Document, db_column='id_document', related_name='attachment_set',
+                                 on_delete=models.CASCADE)
     parent = models.ForeignKey('self', db_column='id_parent', on_delete=models.CASCADE, null=True)
     attachment = models.ForeignKey(Attachment, db_column='id_attachment', on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200, null=True)
@@ -416,7 +469,8 @@ class DocumentTypeStatus(models.Model):
     is_product = models.BooleanField(verbose_name=_('document.type.status.is_product'), default=False)
     is_active = models.BooleanField(verbose_name=_('document.type.status.is_active'), default=True)
     is_alternate = models.BooleanField(verbose_name=_('document.type.status.is_alternate'), default=False)
-    is_required_validation = models.BooleanField(verbose_name=_('document.type.status.is_required_validation'), default=False)
+    is_required_validation = models.BooleanField(verbose_name=_('document.type.status.is_required_validation'),
+                                                 default=False)
     is_closing_process = models.BooleanField(verbose_name=_('document.type.status.is_closing_process'), default=False)
     can_revert = models.BooleanField(verbose_name=_('document.type.status.can_revert'), default=True)
     action_class = models.CharField(max_length=300, null=True, blank=True)
@@ -447,8 +501,10 @@ class DocumentTypeStatusFlow(models.Model):
 
 
 class DocumentTypeProcessFlow(models.Model):
-    status = models.ForeignKey(DocumentTypeStatus, db_column='id_current_status', related_name='status', on_delete=models.CASCADE)
-    available_status = models.ForeignKey(DocumentTypeStatus, db_column='id_available_status', null=True, blank=True, related_name='available_status', on_delete=models.CASCADE)
+    status = models.ForeignKey(DocumentTypeStatus, db_column='id_current_status', related_name='status',
+                               on_delete=models.CASCADE)
+    available_status = models.ForeignKey(DocumentTypeStatus, db_column='id_available_status', null=True, blank=True,
+                                         related_name='available_status', on_delete=models.CASCADE)
     is_note_required = models.BooleanField()
     is_default = models.BooleanField(default=False)
     sq = models.IntegerField()
@@ -458,8 +514,10 @@ class DocumentTypeProcessFlow(models.Model):
 
 
 class DocumentTypeAttributeMapping(models.Model):
-    type = models.ForeignKey(DocumentType, db_column='id_type', related_name='attribute_mapping_set', on_delete=models.CASCADE)
-    attribute = models.ForeignKey(DocumentTypeAttribute, db_column='id_document_type_atribute', related_name='mapping_set', on_delete=models.CASCADE, null=True)
+    type = models.ForeignKey(DocumentType, db_column='id_type', related_name='attribute_mapping_set',
+                             on_delete=models.CASCADE)
+    attribute = models.ForeignKey(DocumentTypeAttribute, db_column='id_document_type_atribute',
+                                  related_name='mapping_set', on_delete=models.CASCADE, null=True)
     mapped_name = models.CharField(verbose_name=_('document.type.attribute.mapping.mapped_name'), max_length=200)
     is_required = models.BooleanField(verbose_name=_('document.type.attribute.mapping.is_required'), default=True)
     default_value = models.CharField(max_length=500, null=True)
@@ -473,7 +531,8 @@ class DocumentTypeAttributeMapping(models.Model):
 class DocumentTypeReport(models.Model):
     document_type = models.ForeignKey(DocumentType, db_column='id_document_type', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='document.type.report.name', max_length=200)
-    template = models.ForeignKey(ReportTemplate, db_column='id_template', on_delete=models.CASCADE, null=True, blank=True)
+    template = models.ForeignKey(ReportTemplate, db_column='id_template', on_delete=models.CASCADE, null=True,
+                                 blank=True)
     # report html content covering placeholders in form of $P__ATTRIBUTE_ID__P$ to be filled with data when created
     # Data source for reports comes from document attribute as well as from document main form
     html_template = models.TextField(null=True, blank=True, verbose_name='document.type.report.html_template')

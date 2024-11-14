@@ -269,13 +269,12 @@ def edit(request, id, iframe=0):
         document_type=product.document.type).order_by('sq')
 
     context = {'form': form,
-               'cashflow_type': {i.code.lower(): {"id": i.pk, 'name': i.name, 'subtypes': i.subtypes} for i in
-                                 DocumentTypeAccountingType.objects.filter(is_editable=True)},
+               # 'cashflow_type': {i.code.lower(): {"id": i.pk, 'name': i.name, 'subtypes': i.subtypes} for i in
+               #                   DocumentTypeAccountingType.objects.filter(is_editable=True)},
+               'cashflow_type': DocumentTypeAccountingType.get_accounting_types(),
                'cashflow_formset': cashflow_formset,
                'schedule': schedule,
-               # 'schedule_formset': schedule_formset,
                'tranche_formset': tranche_formset,
-               # 'interest_formset': interest_formset,
                'atm_classname': 'apps.product.models.ProductAttachment',
                'atm_owner_classname': 'apps.product.models.Product',
                'atm_root_name': atm_root_name,

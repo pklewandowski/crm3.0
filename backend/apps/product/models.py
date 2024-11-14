@@ -370,9 +370,13 @@ class ProductCalculation(models.Model):
                                        on_delete=models.CASCADE)
     calc_date = models.DateField(verbose_name='product.calculation.calc_date')
 
-    # Saldo
-    balance = models.DecimalField(verbose_name='product.calculation.capital_per_day', max_digits=15, decimal_places=2,
+    # Saldo bez nadpłaty
+    balance = models.DecimalField(verbose_name='product.calculation.balance', max_digits=15, decimal_places=2,
                                   default=0)
+    # Saldo z nadpłatą
+    balance_with_overpaid = models.DecimalField(verbose_name='product.calculation.balance_no_overpaid', max_digits=15,
+                                                decimal_places=2,
+                                                default=0)
 
     # kapitał
     capital_per_day = models.DecimalField(verbose_name='product.calculation.capital_per_day', max_digits=15,
@@ -399,19 +403,20 @@ class ProductCalculation(models.Model):
     interest_rate = models.DecimalField(verbose_name='product.calculation.interest_rate', max_digits=10,
                                         decimal_places=2, null=True, default=0)
 
+    is_interest_for_delay = models.BooleanField(verbose_name='product.calculation.is_interest_for_delay', default=False)
     # odsetki za opóźnienie
-    interest_for_delay_calculation_base = models.DecimalField(
-        verbose_name='product.calculation.interest_for_delay_calculation_base', max_digits=15, decimal_places=2,
-        default=0)
-    interest_for_delay_total = models.DecimalField(verbose_name='product.calculation.interest_for_delay_total',
-                                                   max_digits=15, decimal_places=2, default=0)
-    interest_for_delay_rate = models.DecimalField(verbose_name='product.calculation.interest_for_delay_rate',
-                                                  max_digits=10, decimal_places=2, null=True, default=0)
-    interest_for_delay_required = models.DecimalField(verbose_name='product.calculation.interest_for_delay_required',
-                                                      max_digits=15, decimal_places=2, default=0)
-    interest_for_delay_required_daily = models.DecimalField(
-        verbose_name='product.calculation.interest_for_delay_required_daily', max_digits=15, decimal_places=2,
-        default=0)
+    # interest_for_delay_calculation_base = models.DecimalField(
+    #     verbose_name='product.calculation.interest_for_delay_calculation_base', max_digits=15, decimal_places=2,
+    #     default=0)
+    # interest_for_delay_total = models.DecimalField(verbose_name='product.calculation.interest_for_delay_total',
+    #                                                max_digits=15, decimal_places=2, default=0)
+    # interest_for_delay_rate = models.DecimalField(verbose_name='product.calculation.interest_for_delay_rate',
+    #                                               max_digits=10, decimal_places=2, null=True, default=0)
+    # interest_for_delay_required = models.DecimalField(verbose_name='product.calculation.interest_for_delay_required',
+    #                                                   max_digits=15, decimal_places=2, default=0)
+    # interest_for_delay_required_daily = models.DecimalField(
+    #     verbose_name='product.calculation.interest_for_delay_required_daily', max_digits=15, decimal_places=2,
+    #     default=0)
 
     # prowizja
     commission_per_day = models.DecimalField(verbose_name='product.calculation.commission_per_day', max_digits=15,
@@ -435,11 +440,10 @@ class ProductCalculation(models.Model):
     cost_occurrence = models.DecimalField(verbose_name='product.calculation.cost_occurence', max_digits=15,
                                           decimal_places=2, default=0)
 
-    # koszt - stan na dzień
-    cost = models.DecimalField(verbose_name='product.calculation.interest_required_daily', max_digits=15,
-                               decimal_places=2, default=0)
-
-    # kosz suma
+    cost = models.JSONField(verbose_name='product.calculation.cost', default=dict)
+    cost_occurrence = models.JSONField(verbose_name='product.calculation.cost_occurence', default=dict)
+    cost_sum_per_day = models.DecimalField(verbose_name='product.calculation.cost_sum_per_day', max_digits=15, decimal_places=2,
+                                       default=0)
     cost_total = models.DecimalField(verbose_name='product.calculation.cost_total', max_digits=15, decimal_places=2,
                                      default=0)
 
@@ -463,10 +467,11 @@ class ProductCalculation(models.Model):
         default=0)
     instalment_accounting_interest_required = models.DecimalField(
         verbose_name='product.calculation.instalment_interest_required', max_digits=15, decimal_places=2, default=0)
-    instalment_accounting_interest_for_delay = models.DecimalField(
-        verbose_name='product.calculation.instalment_instalment_interest', max_digits=15, decimal_places=2, default=0)
     instalment_accounting_cost = models.DecimalField(verbose_name='product.calculation.instalment_cost', max_digits=15,
                                                      decimal_places=2)
+
+    # all avove instalment_accounting_ fields are to be replaced with the following
+    instalment_accounting = models.JSONField(null=True)
 
     # liczba kolejnych przeterminowanych
     instalment_overdue_count = models.IntegerField(default=0)

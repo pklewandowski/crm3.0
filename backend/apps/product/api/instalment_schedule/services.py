@@ -7,7 +7,6 @@ from django.conf import settings
 from apps.document.models import Document
 from apps.product.instalment_schedule.instalment_schedule import InstalmentSchedule
 from apps.product.models import Product
-from apps.product.utils.schedule_utils import ProductScheduleUtils
 from apps.product.utils.utils import LoanUtils
 from py3ws.utils import date_utils as py3ws_date_utils, string_utils
 from py3ws.utils import utils as py3ws_utils
@@ -72,8 +71,6 @@ def _validate_schedule(opts, raise_exception=True):
 
 
 def recalculate_on_product(user, product):
-
-
     instalment_schedule = InstalmentSchedule(
         user=user,
         product=product
@@ -98,7 +95,7 @@ def recalculate(user, opts):
         instalment_schedule=opts['scheduleTableData'],
         instalment_number=int(opts['instalmentNumber']),
         start_date=datetime.datetime.strptime(opts['startDate'], '%Y-%m-%d').date() if opts['startDate'] else None,
-    ).calculate
+    ).calculate()
 
     return instalment_schedule
 

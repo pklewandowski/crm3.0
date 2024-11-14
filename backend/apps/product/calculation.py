@@ -3,10 +3,11 @@ import collections
 import datetime
 import decimal
 
+from django.conf import settings
 from django.db import transaction
-from django.db.models import F, Sum, Max
+from django.db.models import F, Sum, Max, Exists, Subquery, OuterRef
 
-from apps.document.models import DocumentTypeAccounting
+from apps.document.models import DocumentTypeAccounting, DocumentTypeAccountingType
 from apps.product.models import ProductSchedule, ProductInterest, ProductCashFlow, Product, ProductCalculation, \
     ProductTranche
 from apps.user.models import User
@@ -104,7 +105,8 @@ class Calculation(CalculationBase):
         self.set_schedule_end_date()
 
         if self.schedule_list:
-            self.schedule_end_date = datetime.datetime.strptime(next(reversed(self.schedule_list)), '%Y-%m-%d').date()
+            self.schedule_end_date = datetime.datetime.strptime(next(reversed(self.schedule_list)),
+                                                                settings.DATE_FORMAT).date()
         else:
             raise Exception('Calculation: No schedule list')
 
@@ -114,7 +116,7 @@ class Calculation(CalculationBase):
     def set_tranche_list(self):
         self.tranche_list = collections.OrderedDict(
             {
-                datetime.datetime.strftime(i['launch_date'], '%Y-%m-%d'): i['value']
+                datetime.datetime.strftime(i['launch_date'], settings.DATE_FORMAT): i['value']
                 for i in
                 self.product.tranches.filter(launch_date__isnull=False).values('launch_date').annotate(
                     value=Sum('value')).order_by('launch_date')
@@ -140,7 +142,7 @@ class Calculation(CalculationBase):
         })
 
         self.schedule_list_keys = list(self.schedule_list.keys())
-        self.schedule_next_date = datetime.datetime.strptime(self.schedule_list_keys[0], '%Y-%m-%d').date() if \
+        self.schedule_next_date = datetime.datetime.strptime(self.schedule_list_keys[0], settings.DATE_FORMAT).date() if \
             self.schedule_list_keys[0] else None
 
         dt = self.product.start_date
@@ -179,7 +181,12 @@ class Calculation(CalculationBase):
         self.end_date = min(self.product.end_date or datetime.date.today(), datetime.date.today())
 
     def set_accounting(self):
-        for n in DocumentTypeAccounting.objects.filter(document_type=self.product.type).order_by('sq'):
+        q = DocumentTypeAccounting.objects.filter(
+                document_type=self.product.type
+        ).filter(
+            ~Exists(DocumentTypeAccountingType.objects.filter(parent=OuterRef('pk')))).order_by('sq')
+
+        for n in q:
             self.accounting[n.accounting_type.code] = decimal.Decimal(0)
 
             if n.accounting_type.is_accounting_order:
@@ -213,7 +220,7 @@ class Calculation(CalculationBase):
             i.save()
 
     @abc.abstractmethod
-    def calculate(self, start_date=None, end_date=None, simulate=False):
+    def calculate(self, start_date=None, end_date=None, simulate=False, emulate_payment=False):
         pass
 
     @abc.abstractmethod

@@ -4,7 +4,7 @@ from apps.attachment.api.serializers import AttachmentSerializer
 from apps.attribute.models import Attribute
 from apps.document.models import DocumentTypeSection, DocumentTypeAttribute, DocumentAttribute, \
     DocumentTypeSectionColumn, DocumentAttachment, DocumentStatusTrack, DocumentTypeProcessFlow, \
-    DocumentTypeStatus, Document, DocumentNote
+    DocumentTypeStatus, Document, DocumentNote, DocumentTypeAccountingType
 
 
 class AttributeSerializer(serializers.ModelSerializer):
@@ -107,3 +107,14 @@ class DocumentNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentNote
         fields = '__all__'
+
+
+class DocumentTypeAccountingTypeSerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField()
+
+    def get_children(self, obj):
+        return DocumentTypeAccountingTypeSerializer(DocumentTypeAccountingType.objects.filter(parent=obj).order_by('sq'), many=True).data
+
+    class Meta:
+        model = DocumentTypeAccountingType
+        fields = 'id', 'code', 'name', 'children'

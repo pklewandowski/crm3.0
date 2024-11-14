@@ -1,0 +1,93 @@
+{% load static %}
+<div class="modal fade" id="balancePerDayModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="atmFormLabel">Saldo na dzień</h4>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" style="max-height: 600px; overflow: auto;">
+                <div id="balancePerDayContainer">
+                    <div class="form-group">
+                        <div id="balanceDatepicker" class="balance-datepicker"></div>
+                        <input type="text" id="balancePerDayDate" class="form-control input-md"/>
+                        <label for="balancePerDayDate">Data salda</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="balancePerDayEmulatePayment" class="form-control"/>
+                        <label for="balancePerDayEmulatePayment">Symuluj płatności</label>
+                    </div>
+                    <div id="balancePerDayValue"
+                         class="balance-per-day-value text-center product-dashboard-font-stretched product-dashboard-decimal-integer product-dashboard-capital-container"
+                         style="font-weight: bold">
+                    </div>
+                    <div id="balancePerDayDetailContainer">
+                        <table class="product-dashboard-datatable table product-dashboard-capital-container">
+                            <tbody>
+                            <tr>
+                                <td>kapitał niewymagalny</td>
+                                <td><span id="balancePerDayCapitalNotRequired"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>kapitał wymagalny</td>
+                                <td><span id="balancePerDayCapitalRequired"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+                            <tr style="color: #c36560">
+                                <td>Odsetki</td>
+                                <td><span id="balancePerDayInterestRequired"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+                            <tr style="color: #c36560">
+                                <td>Odsetki dzienne</td>
+                                <td><span id="balancePerDayInterestDaily"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+                            <tr style="color: #6299db">
+                                <td>Koszty</td>
+                                <td><span id="balancePerDayCostTotal"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+                            <tr style="color: #60ab6e">
+                                <td>Wpłaty</td>
+                                <td>
+                                    <span id="balancePerDayInstalmentTotal"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+                            <tr style="color: #767676">
+                                <td>suma zobowiązań (kap. wym + kap. nw + odsteki)</td>
+                                <td>
+                                    <span id="balancePerDayRequiredLiabilities"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+

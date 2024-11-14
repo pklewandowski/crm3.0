@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="nordFinance3.0" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="nordFinance3.0">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$/backend" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0" web="/" />
+            <mapping deploy="/static" local="$PROJECT_DIR$/_staticBuild" web="/static" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0/report_templates" />
+            <excludedPath local="true" path="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0/scripts" />
+            <excludedPath local="true" path="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0/_config" />
+            <excludedPath local="true" path="$PROJECT_DIR$/backend/manage.py" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
