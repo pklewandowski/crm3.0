@@ -39,7 +39,3 @@ def fix_system_user():
 def fix_user():
     return User.objects.create_superuser('admin', 'admin@3ws.pl', 'password')
 
-@pytest.fixture
-def fix_product_data(product):
-    pass
-

@@ -213,7 +213,7 @@ class Calculation(CalculationBase):
             i.save()
 
     @abc.abstractmethod
-    def calculate(self, start_date=None, end_date=None, simulate=False):
+    def calculate(self, start_date=None, end_date=None, simulate=False, emulate_payment=False):
         pass
 
     @abc.abstractmethod

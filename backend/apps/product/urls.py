@@ -31,15 +31,19 @@ urlpatterns = [
     # ---------------------------------------- REST ----------------------------------------------
     url(r'^calc-table/$', rest.ProductCalcTable.as_view(), name='product.api.calc_table)'),
     url(r'^cash-flow/$', rest.ProductCashFlowApi.as_view(), name='product.api.cash_flow'),
-    url(r'^cash-flow/aggregates/$', rest.ProductCashFlowAggregatesApi.as_view(), name='product.api.cash_flow_aggregates'),
+    url(r'^cash-flow/aggregates/$', rest.ProductCashFlowAggregatesApi.as_view(),
+        name='product.api.cash_flow_aggregates'),
     url(r'^api/$', rest.ProductApi.as_view(), name='product.api'),
     url(r'^global-interest/api/$', rest.ProductGlobalInterestView.as_view(), name='product.global_interest.api'),
 
     url(r'^cashflow/api/$', rest.ProductApi.as_view(), name='product.api'),
     url(r'^type/api/status$', rest.ProductTypeStatusApi.as_view(), name='product.type.api.status'),
 
-    url(r'^api/instalment-schedule/$', instalment_schedule_rest.ProductInstalmentScheduleView.as_view(), name='product.api.instalment_schedule'),
-    url(r'^api/instalment-schedule/mapping/$', instalment_schedule_rest.ProductInstalmentScheduleMappingView.as_view(), name='product.api.instalment_schedule.mapping'),
+    url(r'^api/instalment-schedule/$', instalment_schedule_rest.ProductInstalmentScheduleView.as_view(),
+        name='product.api.instalment_schedule'),
+    url(r'^api/instalment-schedule/mapping/$', instalment_schedule_rest.ProductInstalmentScheduleMappingView.as_view(),
+        name='product.api.instalment_schedule.mapping'),
 
     url(r'^api/product-stats/$', rest.ProductStatView.as_view(), name='product.api.stats'),
+    url(r'^api/balance-per-day/$', rest.ProductBalancePerDayView.as_view(), name='product.api.balance_per_day'),
 ]
