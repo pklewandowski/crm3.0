@@ -72,8 +72,6 @@ def _validate_schedule(opts, raise_exception=True):
 
 
 def recalculate_on_product(user, product):
-
-
     instalment_schedule = InstalmentSchedule(
         user=user,
         product=product
@@ -98,7 +96,7 @@ def recalculate(user, opts):
         instalment_schedule=opts['scheduleTableData'],
         instalment_number=int(opts['instalmentNumber']),
         start_date=datetime.datetime.strptime(opts['startDate'], '%Y-%m-%d').date() if opts['startDate'] else None,
-    ).calculate
+    ).calculate()
 
     return instalment_schedule
 

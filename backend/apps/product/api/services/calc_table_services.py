@@ -1,26 +1,37 @@
+from django.db.models import Q
+
 from apps.document.models import DocumentTypeAccounting, DocumentTypeAttributeMapping
 from apps.product.api import columns_accounting
 
 
 def get_calc_table_columns(document_type):
     column_accounting_order = DocumentTypeAccounting.objects.filter(document_type=document_type).order_by('sq')
-    mapping = [i.mapped_name for i in DocumentTypeAttributeMapping.objects.filter(type=document_type)]
+    mapping = [
+        i.mapped_name
+        for i in DocumentTypeAttributeMapping.objects.filter(type=document_type).filter(
+            Q(attribute__isnull=False) | Q(default_value__isnull=False))
+    ]
 
     columns = [
         {"title": "Data", "frozen": True, "field": "calc_date", "width": 120,
-         "hozAlign": "center", "dataType": "date", "formatter": "css", "formatterParams": {"className": "calc-table-calc-date"}
+         "hozAlign": "center", "dataType": "date", "formatter": "css",
+         "formatterParams": {"className": "calc-table-calc-date"}
          },
         {"title": "Saldo", "field": "balance", "headerSort": False, "dataType": "currency",
          "hozAlign": "right",
          "formatter": "moneyCss",
-         "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-capital"}
+         "formatterParams": {
+             "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-capital",
+             "css": {"borderRightWidth": "2px"}
+         }
          },
         {"title": "Kapitał", "columns":
             [
                 {"title": "niewymagalny", "field": "capital_not_required", "headerSort": False, "dataType": "currency",
                  "hozAlign": "right",
                  "formatter": "moneyCss",
-                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-capital"}
+                 "formatterParams": {
+                     "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-capital"}
                  },
 
                 {"title": "wymagalny", "field": "capital_required", "headerSort": False, "dataType": "currency",
@@ -31,19 +42,15 @@ def get_calc_table_columns(document_type):
                  }
                  },
 
-                {"title": "z harmonogramu", "field": "capital_required_from_schedule", "headerSort": False, "dataType": "currency",
+                {"title": "z harmonogramu", "field": "capital_required_from_schedule", "headerSort": False,
+                 "dataType": "currency",
                  "hozAlign": "right",
                  "formatter": "moneyCss",
                  "formatterParams": {
-                     "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-capital"
+                     "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-capital",
+                     "css": {"borderRightWidth": "2px"}
                  }
-                 },
-                # {"title": "na dzień", "field": "capital_per_day", "headerSort": False, "dataType": "currency",
-                #  "hozAlign": "right",
-                #  "formatter": "moneyCss", "formatterParams": {
-                #     "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-capital", "css": {"borderRightWidth": "2px"}
-                # }
-                #  },
+                 }
             ]
          }
     ]
@@ -52,7 +59,8 @@ def get_calc_table_columns(document_type):
         columns.append(
             {"title": "Prowizja", "columns":
                 [
-                    {"title": "niewymagalna", "field": "commission_not_required", "headerSort": False, "dataType": "currency",
+                    {"title": "niewymagalna", "field": "commission_not_required", "headerSort": False,
+                     "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss", "formatterParams": {
                         "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-commission"}
@@ -65,58 +73,38 @@ def get_calc_table_columns(document_type):
                     }
                      },
 
-                    {"title": "z harmonogramu", "field": "commission_required_from_schedule", "headerSort": False, "dataType": "currency",
+                    {"title": "z harmonogramu", "field": "commission_required_from_schedule", "headerSort": False,
+                     "dataType": "currency",
                      "hozAlign": "right", "tooltip": True,
                      "formatter": "moneyCss",
                      "formatterParams": {
                          "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-commission",
                      }
-                     },
-                    # {"title": "na dzień", "field": "commission_per_day", "headerSort": False, "dataType": "currency",
-                    #  "hozAlign": "right",
-                    #  "formatter": "moneyCss", "formatterParams": {
-                    #     "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-commission", "css": {"borderRightWidth": "2px"}
-                    # }
-                    #  },
+                     }
                 ],
              },
         )
     if 'INSTALMENT_INTEREST_RATE' in mapping:
         columns.append(
-            {"title": "Rata odsetkowa", "columns":
+            {"title": "Odsetki", "columns":
                 [
                     {
-                        "title": "wymagalna", "field": "interest_required", "headerSort": False, "dataType": "currency",
+                        "title": "wymagalne", "field": "interest_required", "headerSort": False,
+                        "dataType": "currency",
                         "hozAlign": "center", "tooltip": True,
                         "formatter": "moneyCss", "formatterParams":
                         {
                             "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest"
                         }
                     },
-
-                    {
-                        "title": "z harmonogramu", "field": "interest_required_from_schedule", "headerSort": False, "dataType": "currency",
-                        "hozAlign": "right",
-                        "formatter": "moneyCss", "formatterParams":
-                        {
-                            "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest"
-                        }
-                    },
-
                     {"title": "procent", "field": "interest_rate", "headerSort": False, "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
                      "formatterParams":
                          {
-                             "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest", "css": {"borderRightWidth": "2px"}
+                             "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest",
                          }
                      },
-                ]
-             }
-        )
-        columns.append(
-            {"title": "Odsetki umowne dziennie", "columns":
-                [
                     {
                         "title": "dziennie", "field": "interest_daily", "headerSort": False, "dataType": "currency",
                         "hozAlign": "center", "tooltip": True,
@@ -133,15 +121,25 @@ def get_calc_table_columns(document_type):
                             "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest"
                         }
                     },
-
                     {
-                        "title": "skumulowane", "field": "interest_cumulated_per_day", "headerSort": False, "dataType": "currency",
+                        "title": "skumulowane", "field": "interest_cumulated_per_day", "headerSort": False,
+                        "dataType": "currency",
                         "hozAlign": "right",
                         "formatter": "moneyCss", "formatterParams":
                         {
-                            "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest", "css": {"borderRightWidth": "2px"}
+                            "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest",
+                            # "css": {"borderRightWidth": "2px"}
                         }
                     },
+                    # {
+                    #     "title": "czy za opóźnienie", "field": "is_interest_for_delay", "headerSort": False,
+                    #     "hozAlign": "right",
+                    #     "formatter": "moneyCss", "formatterParams":
+                    #     {
+                    #         "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest",
+                    #         "css": {"borderRightWidth": "2px"}
+                    #     }
+                    # },
                 ]
              }
         )
@@ -150,73 +148,39 @@ def get_calc_table_columns(document_type):
         [
             {"title": "Suma zobowiązań", "columns":
                 [
-                    {"title": "na dzień", "field": "required_liabilities_sum", "headerSort": False, "dataType": "currency",
+                    {"title": "na dzień", "field": "required_liabilities_sum", "headerSort": False,
+                     "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss", "formatterParams": {
                         "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-liabilities"
                     }
                      },
 
-                    {"title": "z harmonogramu", "field": "required_liabilities_sum_from_schedule", "headerSort": False, "dataType": "currency",
+                    {"title": "z harmonogramu", "field": "required_liabilities_sum_from_schedule", "headerSort": False,
+                     "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
                      "formatterParams": {
-                         "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-liabilities", "css": {"borderRightWidth": "2px"}
-                     }
-                     },
-                ]
-             },
-
-            {"title": "Odsetki za opóźnienie", "columns":
-                [
-                    {"title": "podstawa", "field": "interest_for_delay_calculation_base", "headerSort": False, "dataType": "currency",
-                     "hozAlign": "right",
-                     "formatter": "moneyCss",
-                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest-delay"}
-
-                     },
-                    {"title": "na dzień", "field": "interest_for_delay_required", "headerSort": False, "dataType": "currency",
-                     "hozAlign": "right",
-                     "formatter": "moneyCss",
-                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest-delay"}
-
-                     },
-
-                    {"title": "dzienne", "field": "interest_for_delay_required_daily", "headerSort": False, "dataType": "currency",
-                     "hozAlign": "right",
-                     "formatter": "moneyCss",
-                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest-delay"}
-                     },
-
-                    {"title": "suma", "field": "interest_for_delay_total", "headerSort": False, "dataType": "currency",
-                     "hozAlign": "right",
-                     "formatter": "moneyCss",
-                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest-delay"}
-                     },
-
-                    {"title": "procent", "field": "interest_for_delay_rate", "headerSort": False, "dataType": "currency",
-                     "hozAlign": "right",
-                     "formatter": "moneyCss",
-                     "formatterParams": {
-                         "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest-delay",
+                         "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-liabilities",
                          "css": {"borderRightWidth": "2px"}
                      }
                      },
                 ]
              },
-
             {"title": "Koszty", "columns":
                 [
                     {"title": "w dniu", "field": "cost_occurrence", "headerSort": False, "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
-                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-cost"}
+                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                         "className": "calc-table-cost"}
                      },
 
                     {"title": "całkowite na dzień", "field": "cost", "headerSort": False, "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
-                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-cost"}
+                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                         "className": "calc-table-cost"}
                      },
 
                     {"title": "całkowite suma", "field": "cost_total", "headerSort": False, "dataType": "currency",
@@ -235,20 +199,25 @@ def get_calc_table_columns(document_type):
                     {"title": "wpłata", "width": 80, "field": "instalment", "headerSort": False, "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
-                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-instalment"}
+                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                         "className": "calc-table-instalment"}
                      },
 
-                    {"title": "suma", "width": 80, "field": "instalment_total", "headerSort": False, "dataType": "currency",
+                    {"title": "suma", "width": 80, "field": "instalment_total", "headerSort": False,
+                     "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
-                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-instalment",
+                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                         "className": "calc-table-instalment",
 
                                          }
                      },
-                    {"title": "nadpłata na dzień", "field": "instalment_overpaid", "headerSort": False, "dataType": "currency",
+                    {"title": "nadpłata na dzień", "field": "instalment_overpaid", "headerSort": False,
+                     "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
-                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-instalment", "css": {"borderRightWidth": "2px"}}
+                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                         "className": "calc-table-instalment", "css": {"borderRightWidth": "2px"}}
                      }
                 ]
              }
@@ -267,27 +236,33 @@ def get_calc_table_columns(document_type):
                 {"title": "kapitał", "field": "remission_capital", "headerSort": False, "dataType": "currency",
                  "hozAlign": "right",
                  "formatter": "moneyCss",
-                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-remission"}
+                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                     "className": "calc-table-remission"}
                  },
                 {"title": "prowizja", "field": "remission_commission", "headerSort": False, "dataType": "currency",
                  "hozAlign": "right",
                  "formatter": "moneyCss",
-                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-remission"}
+                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                     "className": "calc-table-remission"}
                  },
                 {"title": "rata odsetkowa", "field": "remission_interest", "headerSort": False, "dataType": "currency",
                  "hozAlign": "right",
                  "formatter": "moneyCss",
-                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-remission"}
+                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                     "className": "calc-table-remission"}
                  },
-                {"title": "odsetki za opóźnienie", "field": "remission_interest_for_delay", "headerSort": False, "dataType": "currency",
+                {"title": "odsetki za opóźnienie", "field": "remission_interest_for_delay", "headerSort": False,
+                 "dataType": "currency",
                  "hozAlign": "right",
                  "formatter": "moneyCss",
-                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-remission"}
+                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                     "className": "calc-table-remission"}
                  },
                 {"title": "koszt", "field": "remission_cost", "headerSort": False, "dataType": "currency",
                  "hozAlign": "right",
                  "formatter": "moneyCss",
-                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-remission"}
+                 "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                     "className": "calc-table-remission"}
                  },
             ]
          }

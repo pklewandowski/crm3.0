@@ -17,13 +17,13 @@ class InstalmentSchedule:
             product: Product = None,
             balance: float = None,
             interest_rate: float = 0,
-            instalment_rate: float = 0,
+            instalment_rate: float | None = 0,
             constant_instalment: str = 'T',
             instalment_constant_value: float = 0,
             instalment_schedule: list = None,
             instalment_number: int = 12,
             start_date: datetime.date = None,
-            decimal_places: int = 0
+            decimal_places: int = 2
     ):
         self.user = user
         self.product = product
@@ -41,13 +41,6 @@ class InstalmentSchedule:
         self._balloon_interest_value: float = 0.0
 
         if not self.product:
-            # if not self.instalment_number and not self.instalment_schedule:
-            #     raise Exception("No instalment number / schedule found")
-
-            # if not self.instalment_schedule and not self.instalment_rate and not self.instalment_constant_value:
-            #     raise ValueError(
-            #         "when no product, instalment_schedule, instalment_percent or instalment_constant_value must not be empty")
-
             self.interest_required_total = 0.0
 
         else:
@@ -197,7 +190,6 @@ class InstalmentSchedule:
 
         raise Exception("Invalid instalment schedule item type")
 
-    @property
     def calculate(self) -> dict:
 
         instalments = []

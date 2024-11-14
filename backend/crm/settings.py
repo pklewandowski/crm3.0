@@ -3,9 +3,6 @@ import os
 
 from django.utils.translation import gettext_lazy as _
 
-# If you have to load any .env files do it here:
-# load_dotenv()
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 VERSION = '3.0.0'

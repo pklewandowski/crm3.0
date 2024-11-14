@@ -57,7 +57,7 @@ class ProductUtils:
 
     @staticmethod
     def calculate_balance(data):
-        return data['capital_not_required'] + data['commission_not_required'] + data['interest_for_delay_required'] + \
+        return data['capital_not_required'] + data['commission_not_required'] + \
             data['required_liabilities_sum'] + data['cost'] - \
             data['instalment_overpaid']
 
