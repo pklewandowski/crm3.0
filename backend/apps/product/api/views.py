@@ -1,4 +1,5 @@
 import traceback
+from datetime import datetime
 
 from django.conf import settings
 from django.db import transaction
@@ -9,12 +10,13 @@ from rest_framework.views import APIView
 
 from application.wrapper import rest_api_wrapper
 from apps.document.models import DocumentTypeAccountingType, DocumentTypeStatus, DocumentStatusCourse
-from apps.product.api.serializers import ProductCalculationSerializer, ProductCashFlowSerializer, DocumentTypeAccountingTypeSerializer, ProductSerializer, ProductScheduleSerializer, \
-    ProductInterestSerializer, ProductInterestGlobalSerializer
-from apps.product.models import Product, ProductCalculation, ProductCashFlow as ProductCashFlowModel, ProductInterestGlobal
+from apps.product.api.serializers import ProductCalculationSerializer, ProductCashFlowSerializer, \
+    DocumentTypeAccountingTypeSerializer, ProductSerializer, ProductInterestSerializer, ProductInterestGlobalSerializer
+from apps.product.models import Product, ProductCalculation, ProductCashFlow as ProductCashFlowModel, \
+    ProductInterestGlobal
 from apps.product.utils.utils import ProductUtils
-
 from .services import calc_table_services, interest_services
+from ..calc import CalculateLoan
 from ..calculation import Calculation
 from ...document.api.utils import DocumentApiUtils
 from ...financial_accounting.batch_processing.loaders.loaderMT940 import LoaderMT940
@@ -30,8 +32,10 @@ class ProductApi(APIView):
             response_data = {
                 'product': ProductSerializer(product).data,
                 # 'schedule': ProductScheduleSerializer(product.schedule_set.all().order_by('maturity_date'), many=True).data,
-                'cashflow': ProductCashFlowSerializer(product.cashflow_set.all().order_by('cash_flow_date'), many=True).data,
-                'calculation_last': ProductCalculationSerializer(product.calculation.all().order_by('calc_date').last()).data,
+                'cashflow': ProductCashFlowSerializer(product.cashflow_set.all().order_by('cash_flow_date'),
+                                                      many=True).data,
+                'calculation_last': ProductCalculationSerializer(
+                    product.calculation.all().order_by('calc_date').last()).data,
                 'interest': ProductInterestSerializer(product.interest_set.all().order_by('start_date'), many=True).data
             }
 
@@ -56,7 +60,8 @@ class ProductApi(APIView):
                 product.document.save()
 
             DocumentApiUtils.change_status(document=product.document,
-                                           status=DocumentTypeStatus.objects.get(type=product.document.type, is_initial=True),
+                                           status=DocumentTypeStatus.objects.get(type=product.document.type,
+                                                                                 is_initial=True),
                                            reason='[Product deletion]: ',
                                            user=request.user)
 
@@ -118,8 +123,10 @@ class ProductCashFlowApi(APIView):
     @rest_api_wrapper
     def get(self, request):
         product = request.query_params.get('productId')
-        cashflow_type_serializer = DocumentTypeAccountingTypeSerializer(DocumentTypeAccountingType.objects.filter(is_editable=True).order_by('sq'), many=True).data
-        serializer = ProductCashFlowSerializer(ProductCashFlowModel.objects.filter(product=product).order_by('cash_flow_date'), many=True)
+        cashflow_type_serializer = DocumentTypeAccountingTypeSerializer(
+            DocumentTypeAccountingType.objects.filter(is_editable=True).order_by('sq'), many=True).data
+        serializer = ProductCashFlowSerializer(
+            ProductCashFlowModel.objects.filter(product=product).order_by('cash_flow_date'), many=True)
         data = {'cashflow_types': cashflow_type_serializer, 'data': serializer.data}
 
         return data
@@ -154,7 +161,11 @@ class ProductCashFlowAggregatesApi(APIView):
                 'subtype': ProductCashFlowAggregatesApi.get_subtype(i['type'], i['subtype']),
                 'sum': i['sum']
             }
-                for i in ProductCashFlowModel.objects.filter(product=product).select_related('type').values('type', 'type__name', 'type__subtypes', 'subtype').annotate(sum=Sum('value'))]
+                for i in
+                ProductCashFlowModel.objects.filter(product=product).select_related('type').values('type', 'type__name',
+                                                                                                   'type__subtypes',
+                                                                                                   'subtype').annotate(
+                    sum=Sum('value'))]
 
         except Exception as ex:
             status = http_status.HTTP_400_BAD_REQUEST
@@ -188,7 +199,8 @@ class ProductGlobalInterestView(APIView):
         if id:
             return ProductInterestGlobalSerializer(instance=ProductInterestGlobal.objects.get(pk=id)).data
 
-        return ProductInterestGlobalSerializer(instance=ProductInterestGlobal.objects.all().order_by('start_date'), many=True).data
+        return ProductInterestGlobalSerializer(instance=ProductInterestGlobal.objects.all().order_by('start_date'),
+                                               many=True).data
 
     @rest_api_wrapper
     def post(self, request):
@@ -225,7 +237,6 @@ class ProductGlobalInterestView(APIView):
 
         return {'refresh': True}
 
-
     @rest_api_wrapper
     def patch(self, request):
         return self.put(request)
@@ -239,7 +250,7 @@ class ProductStatView(APIView):
 
         products = Product.objects.values('status__name').annotate(
             cnt=Count('id'),
-            total = Sum('value')
+            total=Sum('value')
         ).order_by('status__sq')
 
         for product in products:
@@ -248,3 +259,21 @@ class ProductStatView(APIView):
             labels.append(f"{product['status__name']} ({product['cnt']}) - {label} {settings.CURRENCY_SHORTCUT}.")
 
         return {"products": products, "productStatsChart": {"data": [data], "labels": labels}}
+
+
+class ProductBalancePerDayView(APIView):
+    @rest_api_wrapper
+    def get(self, request):
+        product = Product.objects.get(pk=request.query_params.get('id', None))
+        dt = datetime.strptime(request.query_params.get('balanceDate', None), '%Y-%m-%d').date()
+        emulate_payment = request.query_params.get('emulatePayment', None) == 'true'
+
+        calculation = CalculateLoan(
+            product=product,
+            user=request.user).calculate(end_date=dt, simulation=True, emulate_payment=emulate_payment)
+
+        if not calculation:
+            raise Exception('Calcualtion does not exist')
+
+        return ProductCalculationSerializer(instance=calculation[-1]).data
+

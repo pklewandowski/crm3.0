@@ -3,16 +3,15 @@ import os
 
 from django.utils.translation import gettext_lazy as _
 
-# If you have to load any .env files do it here:
-# load_dotenv()
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-VERSION = '3.0.0'
+with open(os.path.join(BASE_DIR, 'ver')) as f:
+    VERSION = f.read() # '3.0.0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('CRM_DEBUG') else False
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
