@@ -8,6 +8,7 @@ import {Format} from "../../../../_core/format/format";
 const className = 'InstalmentSchedule';
 const SCHEDULE_MAPPING_URL = '/product/api/instalment-schedule/mapping';
 
+const INSTALMENT_NUMBER_SELECTOR = '.instalment-number';
 const INSTALMENT_MATURITY_DATE_SELECTOR = '.instalment-maturity-date';
 const INSTALMENT_CAPITAL_SELECTOR = '.instalment-capital';
 const INSTALMENT_COMMISSION_SELECTOR = '.instalment-commission';
@@ -146,8 +147,10 @@ class InstalmentSchedule {
                 }
             }
             row = this.getRow(idx);
+
             if (row) {
                 this.updateRow(idx, mappedData);
+
             } else {
                 row = this.addRow(mappedData);
             }
@@ -291,9 +294,11 @@ class InstalmentSchedule {
 
     _getMappingValue(key, default_value = null) {
         let mapping = this.mapping[key];
+
         if (!mapping) {
             return default_value;
         }
+
         if (key === 'instalmentInterestRate') {
             let result = {};
             result[_g.settings.MINUS_INFINITY_DATE] = (mapping.item ? Input.getValue(mapping.item, default_value) : mapping.value);
@@ -313,6 +318,7 @@ class InstalmentSchedule {
             let instalmentCommission = i.querySelector('.instalment-commission');
             let instalmentTotal = i.querySelector('.instalment-total');
             let instalmentInterest = i.querySelector('.instalment-interest');
+
             return {
                 maturityDate: {
                     value: instalmentMaturityDate ? Input.getValue(instalmentMaturityDate) : null,
@@ -341,7 +347,9 @@ class InstalmentSchedule {
     _generate(opts, mode) {
         // $(".loader-container").fadeIn();
         opts.scheduleTableData = this._getScheduleTable();
+
         this.cleanErrors();
+
         ajaxCall(
             {
                 method: 'get',
@@ -357,9 +365,11 @@ class InstalmentSchedule {
                 }
 
                 this._renderScheduleSections(res.sections);
+
                 if (res.aggregates) {
                     this._renderAggregates(res.aggregates);
                 }
+
                 this.rowContainer.dispatchEvent(
                     new CustomEvent(
                         this.events.scheduleCreated,
@@ -370,6 +380,7 @@ class InstalmentSchedule {
                             bubbles: true
                         }
                     ));
+
                 this.rowContainer.dispatchEvent(window.evtChanged);
 
             },
@@ -386,7 +397,7 @@ class InstalmentSchedule {
             });
     }
 
-    generate(ask = false, reset = true) {
+    generate(ask = false, reset = false) {
         let params;
 
         if (!this.opts) {
@@ -528,7 +539,7 @@ class InstalmentSchedule {
                     ]) {
                         if (i) {
                             i.addEventListener('change', (e) => {
-                                this.generate();
+                                this.generate(false, true);
                                 this.mapping.value.item.dispatchEvent(window.evtChanged);
                             });
                         }
@@ -554,6 +565,9 @@ class InstalmentSchedule {
          * When a value of a schedule field has been changed, it's becoming an arbitrary field, what meant that entered value is
          * going to be taken explicitly - as it is. To set it back to default state the revert to default btn is added
          */
+
+        // TODO: it needs to be subject for further thoughts. Turned off at the moment
+        return;
 
         if (!e.parentElement.querySelector('.revert-to-default-btn')) {
             let revertBtn = ToolbarUtils.undoBtn();
@@ -641,8 +655,8 @@ class InstalmentSchedule {
     _calculateAggregatesInitial() {
         let capital = 0;
         let interest = 0;
-        let total  = 0;
-        for(let i of Array.from(this.rowContainer.querySelectorAll('tbody tr'))) {
+        let total = 0;
+        for (let i of Array.from(this.rowContainer.querySelectorAll('tbody tr'))) {
             capital += parseFloat(Input.getValue(i.querySelector('.instalment-capital')));
             interest += parseFloat(Input.getValue(i.querySelector('.instalment-interest')));
             total += parseFloat(Input.getValue(i.querySelector('.instalment-total')));

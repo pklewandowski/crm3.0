@@ -5,7 +5,17 @@
 {% load product_tags %}
 
 <template id="productDashboardTemplate">
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="position: relative">
+        <div style="position: absolute; right: 10px; top: -10px;">
+                    <div style="display: inline-block;">
+                        <div class="show-balance-per-day cashflow-icon"
+                             style="background-color: #aa1818; margin-right: 20px; text-align: center"
+                             data-toggle="tooltip"
+                             title="pokaż saldo na dzień">
+                            <span style="pointer-events: none">S</span>
+                        </div>
+                    </div>
+        </div>
         <div class="panel-heading">Produkt stan na dzień {{ calc_max_date|date:"Y-m-d" }}</div>
         <div class="panel-body" style="height: calc(100vh - 200px);">
             <div class="product-dashboard">
@@ -33,7 +43,9 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="product-dashboard-container product-dashboard-capital-container">
-                                        <div class="product-dashboard-title product-dashboard-title-capital-bg">Saldo</div>
+                                        <div class="product-dashboard-title product-dashboard-title-capital-bg"
+                                             style="position: relative">Saldo
+                                        </div>
                                         <div class="product-dashboard-decimal">
                                             __BALANCE__
                                         </div>
@@ -62,9 +74,9 @@
 
                             <div class="col-lg-3">
                                 <div class="product-dashboard-container product-dashboard-interest-for-delay-container">
-                                    <div class="product-dashboard-title product-dashboard-title-interest-bg">Odsetki za opóźnienie na dzień</div>
+                                    <div class="product-dashboard-title product-dashboard-title-interest-bg">Odsetki</div>
                                     <div class="product-dashboard-decimal">
-                                        __INTEREST_FOR_DELAY_REQUIRED__
+                                        __INTEREST_REQUIRED__
                                     </div>
                                 </div>
                                 <div>
@@ -73,15 +85,15 @@
 
                                         <tr>
                                             <td>dziennie</td>
-                                            <td>__INTEREST_FOR_DELAY_REQUIRED_DAILY__</td>
+                                            <td>__INTEREST_REQUIRED_DAILY__</td>
                                         </tr>
                                         <tr>
                                             <td>suma</td>
-                                            <td>__INTEREST_FOR_DELAY_TOTAL__</td>
+                                            <td>__INTEREST_TOTAL__</td>
                                         </tr>
                                         <tr>
                                             <td>procent</td>
-                                            <td>__INTEREST_FOR_DELAY_RATE__</td>
+                                            <td>__INTEREST_RATE__</td>
                                         </tr>
                                         </tbody>
                                     </table>

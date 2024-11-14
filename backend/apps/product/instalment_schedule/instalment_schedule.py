@@ -1,5 +1,7 @@
 import datetime
 
+from django.conf import settings
+
 from apps.product.calc import CalculateLoan
 from apps.product.instalment_schedule import INSTALMENT_MATURITY_DATE_SELECTOR, INSTALMENT_CAPITAL_SELECTOR, \
     INSTALMENT_COMMISSION_SELECTOR, INSTALMENT_TOTAL_SELECTOR, INSTALMENT_INTEREST_SELECTOR, \
@@ -17,13 +19,13 @@ class InstalmentSchedule:
             product: Product = None,
             balance: float = None,
             interest_rate: float = 0,
-            instalment_rate: float = 0,
+            instalment_rate: float | None = 0,
             constant_instalment: str = 'T',
             instalment_constant_value: float = 0,
             instalment_schedule: list = None,
             instalment_number: int = 12,
             start_date: datetime.date = None,
-            decimal_places: int = 0
+            decimal_places: int = 2
     ):
         self.user = user
         self.product = product
@@ -41,13 +43,6 @@ class InstalmentSchedule:
         self._balloon_interest_value: float = 0.0
 
         if not self.product:
-            # if not self.instalment_number and not self.instalment_schedule:
-            #     raise Exception("No instalment number / schedule found")
-
-            # if not self.instalment_schedule and not self.instalment_rate and not self.instalment_constant_value:
-            #     raise ValueError(
-            #         "when no product, instalment_schedule, instalment_percent or instalment_constant_value must not be empty")
-
             self.interest_required_total = 0.0
 
         else:
@@ -95,6 +90,8 @@ class InstalmentSchedule:
                                                  self.decimal_places)
 
             instalment_capital = round(max(0.0, instalment_constant_value - instalment_interest), self.decimal_places)
+            instalment_interest_underpaid = round(max(0, instalment_interest - instalment_constant_value),
+                                                  self.decimal_places)
             instalment_interest = min(instalment_interest, instalment_constant_value)
 
             self._balloon_interest_value = round(self._balloon_interest_value - instalment_interest,
@@ -102,6 +99,7 @@ class InstalmentSchedule:
 
         else:
             instalment_capital = round(self._balance * self.instalment_rate, self.decimal_places)
+            instalment_interest_underpaid = 0.0
 
         return {
             INSTALMENT_MATURITY_DATE_SELECTOR: due_date,
@@ -109,6 +107,7 @@ class InstalmentSchedule:
             INSTALMENT_COMMISSION_SELECTOR: 0.0,
             INSTALMENT_INTEREST_SELECTOR: instalment_interest,
             INSTALMENT_TOTAL_SELECTOR: instalment_capital + instalment_interest,
+            'interest_underpaid': instalment_interest_underpaid,
             'balloon_interest_value': self._balloon_interest_value,
             'days': dt_int
         }
@@ -144,7 +143,7 @@ class InstalmentSchedule:
         weekday = due_date.weekday()
         delta = 7 - weekday if weekday > 4 else 0
 
-        return due_date + datetime.timedelta(days=delta)
+        return due_date + datetime.timedelta(days=delta) if delta else due_date
 
     def _get_due_date(self, current_date: datetime.date) -> datetime.date | None:
         if not current_date:
@@ -169,7 +168,7 @@ class InstalmentSchedule:
             'calc_date': calculation.calc_date,
             'balance': calculation.capital_not_required + calculation.capital_required,
             'interest_rate': calculation.interest_rate,
-            'interest_required_total': calculation.interest_per_day + calculation.interest_for_delay_required_daily
+            'interest_required_total': calculation.interest_per_day
         }
 
     def _get_instalment_schedule_maturity_date(self, instalment_schedule_item):
@@ -179,7 +178,7 @@ class InstalmentSchedule:
         if type(instalment_schedule_item) == dict:
             return self._calculate_due_date(
                 datetime.datetime.strptime(
-                    instalment_schedule_item['maturityDate']['value'], '%Y-%m-%d').date() if
+                    instalment_schedule_item['maturityDate']['value'], settings.DATE_FORMAT).date() if
                 instalment_schedule_item['maturityDate']['value'] else None
             )
 
@@ -197,8 +196,17 @@ class InstalmentSchedule:
 
         raise Exception("Invalid instalment schedule item type")
 
-    @property
+    def _get_maturity_date(self, schedule_date, current_date, recalculate_date):
+        if self.instalment_schedule:
+            if not recalculate_date:
+                return self._get_instalment_schedule_maturity_date(schedule_date)
+
+        return self._get_due_date(current_date)
+
     def calculate(self) -> dict:
+
+        if not self.start_date:
+            raise Exception("Do obliczenia harmonogramu wymagana jest data startu produktu")
 
         instalments = []
         instalment_capital_total = 0.0
@@ -206,12 +214,18 @@ class InstalmentSchedule:
         instalment_value_total = 0.0
 
         current_date = self.start_date
+        current_nominal_date = self.start_date
 
-        for idx, i in enumerate(self.instalment_schedule) if self.instalment_schedule else enumerate(
+        recalculate_date = False
+
+        for idx, i in enumerate(self.instalment_schedule[:self.instalment_number]) if self.instalment_schedule else enumerate(
                 range(self.instalment_number)):
-            due_date = self._calculate_due_date(
-                self._get_instalment_schedule_maturity_date(i)) if self.instalment_schedule else self._get_due_date(
-                current_date)
+
+            if isinstance(i, dict) and 'change_flag' in i['maturityDate']:
+                current_nominal_date = datetime.datetime.strptime(i['maturityDate']['value'], settings.DATE_FORMAT).date()
+                recalculate_date = i['maturityDate']['change_flag'] == '2'
+
+            due_date = self._get_maturity_date(i, current_nominal_date, recalculate_date)
 
             _instalment_constant_value = self.instalment_constant_value
 
@@ -227,6 +241,7 @@ class InstalmentSchedule:
                     if self.instalment_schedule \
                     else i == self.instalment_number - 1
             )
+
             if not idx:
                 instalment[INSTALMENT_INTEREST_SELECTOR] += self.interest_required_total
 
@@ -238,7 +253,9 @@ class InstalmentSchedule:
             instalment_interest_total += instalment[INSTALMENT_INTEREST_SELECTOR]
             instalment_value_total += instalment[INSTALMENT_TOTAL_SELECTOR]
 
-            current_date = add_month(current_date, 1) if current_date else None
+            current_date = due_date
+
+            current_nominal_date = add_month(current_nominal_date, 1)
 
         return {
             'sections': instalments,

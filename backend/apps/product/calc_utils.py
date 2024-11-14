@@ -1,7 +1,7 @@
 import decimal
 
 
-def calculate_interest_daily(
+def calculate_nominal_interest_daily(
         capital_total: decimal.Decimal,
         interest_rate: decimal.Decimal,
         days_in_year: int,
