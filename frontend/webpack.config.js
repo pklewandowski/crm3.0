@@ -93,6 +93,9 @@ module.exports = (env, argv) => {
                 path.resolve(__dirname, './document/js/index'),
                 path.resolve(__dirname, './document/scss/styles.scss'),
             ],
+            document_process_flow: [
+                path.resolve(__dirname, './document/scss/document-process-flow.scss'),
+            ],
             report: [
                 path.resolve(__dirname, './report/js/index'),
                 path.resolve(__dirname, './report/scss/styles.scss'),

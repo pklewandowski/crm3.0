@@ -1,15 +1,31 @@
 {% load l10n %}
 <tr data-id="{{ tranche_form.pk }}" data-removable="false">
     {% if index == 0 %}
-        <td>{{ tranche_form.instance.launch_date|date:'Y-m-d' }}{{ tranche_form.launch_date.as_hidden }}</td>
+        <td>{{ tranche_form.instance.launch_date|date:'Y-m-d' }}{{ tranche_form.launch_date.as_hidden }}{{ tranche_form.instance.launch_date.errors }}</td>
     {% else %}
         {% localize off %}
             <td>{{ tranche_form.launch_date|unlocalize }}{{ tranche_form.launch_date.errors }}</td>
         {% endlocalize %}
     {% endif %}
-    <td>{{ tranche_form.instance.title }}</td>
-    <td>{{ tranche_form.instance.lender.name }}</td>
-    <td class="decimal-field">{{ tranche_form.instance.value }}</td>
+    <td>{{ tranche_form.title }}{{ tranche_form.title.errors }}</td>
+    <td>
+        <select class="form-control" name="{{ tranche_form.lender.html_name }}" id="{{ tranche_form.lender.id_for_label }}">
+            {% for value, label in tranche_form.fields.lender.choices %}
+                <option value="{{ value }}"
+                        {% if value == tranche_form.instance.lender.pk %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    {{ tranche_form.lender.errors }}
+    </td>
+    <td>{{ tranche_form.value }}{{ tranche_form.value.errors }}</td>
+    <td class="tranche-action">
+        <div>
+            <a href="#" class="btn btn-danger delete">
+                <i class="far fa-trash-alt"></i>
+            </a>
+            {{ tranche_form.DELETE.as_hidden }}
+        </div>
+    </td>
     {{ tranche_form.product.as_hidden|unlocalize }}
     {{ tranche_form.id|unlocalize }}
 </tr>

@@ -13,7 +13,8 @@
             <excludedPath local="true" path="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0/report_templates" />
             <excludedPath local="true" path="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0/scripts" />
             <excludedPath local="true" path="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0/_config" />
-            <excludedPath local="true" path="$PROJECT_DIR$/backend/manage.py/manage.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/backend/manage.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0/.gitignore" />
           </excludedPaths>
         </serverdata>
       </paths>

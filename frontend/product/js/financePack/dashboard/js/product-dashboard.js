@@ -30,19 +30,35 @@ class ProductDashboard {
         // there can be no data, when it's the first day of product. todo: what if so?
         this.data = data;
 
+        this.balancePerDayReportForLender = document.getElementById('balancePerDayReportForLender');
+
+        this.balancePerDayProductStartDate = document.getElementById('balancePerDayProductStartDate');
+
         this.balancePerDayContainer = document.getElementById('balancePerDayContainer');
         this.balancePerDayDetailContainer = document.getElementById('balancePerDayDetailContainer');
         this.balancePerDayModal = document.getElementById('balancePerDayModal')
         this.balancePerDayDate = document.getElementById('balancePerDayDate');
+        this.balanceValidToDate = document.getElementById('balanceValidToDate');
         this.balancePerDayEmulatePayment = document.getElementById('balancePerDayEmulatePayment');
 
         this.balancePerDayValue = document.getElementById('balancePerDayValue');
         this.balancePerDayCapitalNotRequired = document.getElementById('balancePerDayCapitalNotRequired');
         this.balancePerDayCapitalRequired = document.getElementById('balancePerDayCapitalRequired');
         this.balancePerDayRequiredLiabilities = document.getElementById('balancePerDayRequiredLiabilities');
+
         this.balancePerDayInterestRequired = document.getElementById('balancePerDayInterestRequired');
         this.balancePerDayInterestDaily = document.getElementById('balancePerDayInterestDaily');
+        this.balancePerDayInterestCumulatedPerDay = document.getElementById('balancePerDayInterestCumulatedPerDay');
+        this.balancePerDayInterestNominalCumulatedPerDay = document.getElementById('balancePerDayInterestNominalCumulatedPerDay');
+        this.balancePerDayInterestForDelayCumulatedPerDay = document.getElementById('balancePerDayInterestForDelayCumulatedPerDay');
+        this.balancePerDayInterestForDelayMaxCumulatedPerDay = document.getElementById('balancePerDayInterestForDelayMaxCumulatedPerDay');
+
+        this.balancePerDayInterestForDelayStartDate = document.getElementById('balancePerDayInterestForDelayStartDate');
+        this.balancePerDayInterestForDelayMaxStartDate = document.getElementById('balancePerDayInterestForDelayMaxStartDate');
+
         this.balancePerDayCostTotal = document.getElementById('balancePerDayCostTotal');
+        this.balancePerDayCostVindicationFee = document.getElementById('balancePerDayCostVindicationFee');
+        this.balancePerDayCostContractualPenalty = document.getElementById('balancePerDayCostContractualPenalty');
         this.balancePerDayInstalmentTotal = document.getElementById('balancePerDayInstalmentTotal');
 
         this.init();
@@ -109,13 +125,27 @@ class ProductDashboard {
                     }
                 },
                 (resp) => {
+                    this.balancePerDayProductStartDate.value = resp.product_start_date;
+
                     this.balancePerDayValue.innerText = Format.formatCurrency(resp.balance);
                     this.balancePerDayCapitalNotRequired.innerText = Format.formatCurrency(resp.capital_not_required);
                     this.balancePerDayCapitalRequired.innerText = Format.formatCurrency(resp.capital_required);
                     this.balancePerDayRequiredLiabilities.innerText = Format.formatCurrency(resp.required_liabilities_sum);
+
+                    this.balancePerDayInterestCumulatedPerDay.innerText = Format.formatCurrency(resp.interest_cumulated_per_day);
+                    this.balancePerDayInterestNominalCumulatedPerDay.innerText = Format.formatCurrency(resp.interest_nominal_cumulated_per_day);
+                    this.balancePerDayInterestForDelayCumulatedPerDay.innerText = Format.formatCurrency(resp.interest_for_delay_cumulated_per_day);
+                    this.balancePerDayInterestForDelayMaxCumulatedPerDay.innerText = Format.formatCurrency(resp.interest_for_delay_max_cumulated_per_day);
                     this.balancePerDayInterestRequired.innerText = Format.formatCurrency(resp.interest_required);
                     this.balancePerDayInterestDaily.innerText = Format.formatCurrency(resp.interest_daily);
+
+                    this.balancePerDayInterestForDelayStartDate.value = resp.interest_for_delay_date;
+                    this.balancePerDayInterestForDelayMaxStartDate.value = resp.interest_for_delay_max_date;
+
+                    this.balancePerDayCostVindicationFee.innerText = Format.formatCurrency(resp.cost_aggregation.COST_VINDICATION_FEE);
+                    this.balancePerDayCostContractualPenalty.innerText = Format.formatCurrency(resp.cost_aggregation.COST_CONTRACTUAL_PENALTY);
                     this.balancePerDayCostTotal.innerText = Format.formatCurrency(resp.cost_total);
+
                     this.balancePerDayInstalmentTotal.innerText = Format.formatCurrency(resp.instalment_total);
 
                     this.balancePerDayDetailContainer.style.visibility = 'visible'
@@ -139,8 +169,44 @@ class ProductDashboard {
         });
     }
 
-    init() {}
+    printBalancePerDay() {
+        if (!this.balancePerDayDate.value) {
+            Alert.warning('Brak daty salda');
+            return;
+        }
+        report.generate(
+            false,
+            true,
+            'BALANCE_PER_DAY',
+            _g.product.document.id,
+            {
+                balancePerDayDate: this.balancePerDayDate.value,
+                balanceValidToDate: this.balanceValidToDate.value,
+                balancePerDayCapitalRequired: this.balancePerDayCapitalRequired.innerText,
+                balancePerDayCapitalNotRequired: this.balancePerDayCapitalNotRequired.innerText,
+                balancePerDayInterestNominalCumulatedPerDay: this.balancePerDayInterestNominalCumulatedPerDay.innerText,
+                balancePerDayInterestCumulatedPerDay: this.balancePerDayInterestCumulatedPerDay.innerText,
+                balancePerDayInterestForDelayCumulatedPerDay: this.balancePerDayInterestForDelayCumulatedPerDay.innerText,
+                balancePerDayInterestForDelayMaxCumulatedPerDay: this.balancePerDayInterestForDelayMaxCumulatedPerDay.innerText,
+                balancePerDayInterestRequired: this.balancePerDayInterestRequired.innerText,
+                balancePerDayCostContractualPenalty: this.balancePerDayCostContractualPenalty.innerText,
+                balancePerDayCostVindicationFee: this.balancePerDayCostVindicationFee.innerText,
+                balancePerDayCostTotal: this.balancePerDayCostTotal.innerText,
+                balancePerDayValue: this.balancePerDayValue.innerText,
+                balancePerDayInterestDaily: this.balancePerDayInterestDaily.innerText,
+                balancePerDayProductStartDate: this.balancePerDayProductStartDate.value,
+                balancePerDayInterestForDelayStartDate: this.balancePerDayInterestForDelayStartDate.value,
+                balancePerDayInterestForDelayMaxStartDate: this.balancePerDayInterestForDelayMaxStartDate.value,
+                balancePerDayReportForLender: this.balancePerDayReportForLender.checked
+            });
+    }
 
+    init() {
+        this.balancePerDayModal.querySelector('.btn-print-balance').addEventListener('click', e => {
+            this.printBalancePerDay();
+
+        });
+    }
 }
 
 export {ProductDashboard};

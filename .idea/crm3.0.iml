@@ -31,6 +31,8 @@
         <option value="$MODULE_DIR$/backend/_temp/templates" />
         <option value="$MODULE_DIR$/backend/apps/product/templates" />
         <option value="$MODULE_DIR$/backend/templates" />
+        <option value="$MODULE_DIR$/backend/apps/report/templates" />
+        <option value="$MODULE_DIR$/backend/apps/document/templates" />
       </list>
     </option>
   </component>

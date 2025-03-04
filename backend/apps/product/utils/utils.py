@@ -42,13 +42,13 @@ class ProductUtils:
             raise TypeError(
                 '[DocumentApi.change_status]: status parameter of incorrect type. Can be either [DocumentTypeStatus], or [int] or [str]')
 
-        ProductStatusTrack.objects.create(
+        ProductStatusTrack(
             product=product,
             status=product_status,
             reason=reason,
             created_by=user,
             effective_date=effective_date if effective_date else datetime.datetime.now()
-        )
+        ).save()
 
         product.status = product_status
         product.save()

@@ -24,6 +24,8 @@ window.debug = function (message) {
     }
 };
 
+var SILENT = true
+
 function clearLoaders() {
     $(".loader-container").hide();
     for (let i of Array.from(document.querySelectorAll('i'))) {
@@ -39,7 +41,9 @@ window.onerror = (msg, url, lineNo, columnNo, error) => {
     }
     clearLoaders();
     console.log(error);
-    Alert.error('Wystąpił wyjątek systemowy!', msg);
+    if(!SILENT) {
+        Alert.error('Wystąpił wyjątek systemowy!', msg);
+    }
 };
 
 // document.addEventListener('click', (evt) => {

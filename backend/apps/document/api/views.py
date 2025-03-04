@@ -19,7 +19,8 @@ from apps.document import utils as doc_utils
 from apps.document.api.attribute_utils import AttributeUtils
 from apps.document.models import DocumentTypeSection, Document, DocumentType, DocumentTypeAttribute, \
     DocumentAttribute, DocumentTypeSectionColumn, DocumentAttachment, DocumentStatusTrack, \
-    DocumentStatusCourse, DocumentTypeProcessFlow, DocumentTypeStatus, DocumentTypeAttributeMapping, DocumentTypeAttributeFeature, DocumentTypeReport, DocumentReport
+    DocumentStatusCourse, DocumentTypeProcessFlow, DocumentTypeStatus, DocumentTypeAttributeMapping, \
+    DocumentTypeAttributeFeature, DocumentTypeReport, DocumentReport
 from apps.user.models import User
 from .rest_form import DocumentForm
 from .serializers import DocumentTypeSectionSerializer, DocumentAttachmentSerializer, \
@@ -27,7 +28,8 @@ from .serializers import DocumentTypeSectionSerializer, DocumentAttachmentSerial
 from .services import note_services, document_services
 from .utils import DocumentApiUtils
 from ..view_base import DocumentException
-from ...product.calc import CalculateLoan
+from ...hierarchy.models import Hierarchy
+from ...product.calc import LoanCalculation
 from ...product.models import ProductCalculation, ProductStatusTrack
 
 
@@ -39,7 +41,8 @@ def add(request, id, owner_id=None):
     context = {
         'mode': settings.MODE_CREATE,
         'initial_owner_id': owner.pk if owner else None,
-        'initial_owner_name': '%s %s %s' % (owner.company_name or '', owner.first_name or '', owner.last_name or '') if owner else '',
+        'initial_owner_name': '%s %s %s' % (
+            owner.company_name or '', owner.first_name or '', owner.last_name or '') if owner else '',
         'document_type': document_type,
     }
     return render(request=request, template_name='document/add_v2/add_v2.html', context=context)
@@ -65,7 +68,8 @@ def edit(request, id):
             'effective_date': i.effective_date,
             'status': i.status,
             'user': i.created_by
-        } for i in ProductStatusTrack.objects.filter(product=document.product).order_by('creation_date')] if hasattr(document, 'product') else [],
+        } for i in ProductStatusTrack.objects.filter(product=document.product).order_by('creation_date')] if hasattr(
+            document, 'product') else [],
         'doc_statuses': document.type.status_set.all().order_by('sq'),
         'product_statuses': document.type.product_status_set.all().order_by('sq'),
         'reports': DocumentReport.objects.filter(document=document)
@@ -102,7 +106,7 @@ class DocumentApi(APIView):
     def calculate_document(document, user):
         if not document.product:
             return None
-        CalculateLoan(document.product, user=user).calculate(start_date=datetime.date.today())
+        LoanCalculation(document.product, user=user).calculate(start_date=datetime.date.today())
         return ProductCalculation.objects.filter(product=document.product).order_by('calc_date').last()
 
     @staticmethod
@@ -116,6 +120,18 @@ class DocumentApi(APIView):
             "interest_for_delay_required": calculation.interest_for_delay_required or 0,
             "interest_required": calculation.interest_required
         }
+
+    @staticmethod
+    def get_hierarchy(document_type, attributes):
+        try:
+            hierarchy_attr = str(DocumentTypeAttributeMapping.objects.get(type=document_type,
+                                                                      mapped_name='CREDITOR').attribute.pk)
+        except DocumentTypeAttributeMapping.DoesNotExist:
+            return None
+
+        return Hierarchy.objects.get(
+            pk=attributes[hierarchy_attr]['value']) if hierarchy_attr and hierarchy_attr in attributes else None
+
 
     @rest_api_wrapper
     def get(self, request):
@@ -234,11 +250,13 @@ class DocumentApi(APIView):
 
             # non-repeatable attribute processing
             for key, value in attributes.items():
-                DocumentApiUtils.save_value(document=document, key=key, value=value, ver=ver[key] if key in ver else None)
+                DocumentApiUtils.save_value(document=document, key=key, value=value,
+                                            ver=ver[key] if key in ver else None)
 
             # repeatable section attribute processing
             for key, value in repeatable_sections.items():
-                DocumentApiUtils.save_repeatable_section(document=document, key=key, value=value, idx=attributes[key]['value'], ver=ver)
+                DocumentApiUtils.save_repeatable_section(document=document, key=key, value=value,
+                                                         idx=attributes[key]['value'], ver=ver)
 
             # status processing
             document_status_id = request.data.get('status')
@@ -252,6 +270,9 @@ class DocumentApi(APIView):
 
             # trigger action from class package
             DocumentApiUtils.trigger_action(user=request.user, document=document)
+
+            document.hierarchy = DocumentApi.get_hierarchy(document_type=document.type, attributes=attributes)
+            document.save()
 
         return response_data
 
@@ -269,7 +290,9 @@ class DocumentAnnexApi(APIView):
         try:
             # todo: zrobić to pobieranie w jednim miejscu, bo jest takie samo w rest_form
             response_data.extend([
-                {"value": i.pk, "text": 'nr: %s z dn.: %s, wartość: %s' % (i.code, i.product.start_date, "{:,.2f}".format(i.product.value).replace(',', ' ').replace(',', '.'))}
+                {"value": i.pk, "text": 'nr: %s z dn.: %s, wartość: %s' % (
+                    i.code, i.product.start_date,
+                    "{:,.2f}".format(i.product.value).replace(',', ' ').replace(',', '.'))}
                 for i in Document.objects.filter(
                     type=document_type,
                     owner=owner,
@@ -283,7 +306,9 @@ class DocumentAnnexApi(APIView):
                     {"value": document.annex.pk, "text": 'nr: %s z dn.: %s, wartość: %s' %
                                                          (document.annex.code,
                                                           document.annex.product.start_date,
-                                                          "{:,.2f}".format(document.annex.product.value).replace(',', ' ').replace(',', '.'))
+                                                          "{:,.2f}".format(document.annex.product.value).replace(',',
+                                                                                                                 ' ').replace(
+                                                              ',', '.'))
                      }
                 )
 
@@ -322,9 +347,11 @@ class AttachmentApi(APIView):
 
     def get(self, request):
         document = Document.objects.get(pk=request.query_params.get('id'))
-        parent = DocumentAttachment.objects.get(pk=request.query_params.get('parent')) if request.query_params.get('parent') else None
+        parent = DocumentAttachment.objects.get(pk=request.query_params.get('parent')) if request.query_params.get(
+            'parent') else None
 
-        q = DocumentAttachment.objects.filter(document=document, parent=parent).order_by('-is_dir', 'name', 'attachment__file_original_name')
+        q = DocumentAttachment.objects.filter(document=document, parent=parent).order_by('-is_dir', 'name',
+                                                                                         'attachment__file_original_name')
         serializer = DocumentAttachmentSerializer(q, many=True)
 
         return Response(serializer.data)
@@ -338,7 +365,8 @@ class AttachmentApi(APIView):
                                                                       api={
                                                                           'path': 'document/attachments/',
                                                                           'store_class': Document,
-                                                                          'save_fn': AttachmentApi._save_attachment,  # getattr(AttachmentApi, '_save_attachment'),
+                                                                          'save_fn': AttachmentApi._save_attachment,
+                                                                          # getattr(AttachmentApi, '_save_attachment'),
                                                                           'serializer': DocumentAttachmentSerializer
                                                                       })
 
@@ -365,7 +393,8 @@ class AttachmentApi(APIView):
                 return Response(data={})
 
         except Exception as e:
-            return Response(data={'errmsg': str(e), 'traceback': traceback.format_exc()}, exception=True, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={'errmsg': str(e), 'traceback': traceback.format_exc()}, exception=True,
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class Section(APIView):
@@ -379,7 +408,8 @@ class Section(APIView):
 
         queryset = DocumentTypeSection.objects.filter(q).prefetch_related(
             Prefetch('column_set', queryset=DocumentTypeSectionColumn.objects.order_by('sq').prefetch_related(
-                Prefetch('column_attribute_set', queryset=DocumentTypeAttribute.objects.order_by('sq'))))).order_by('sq')
+                Prefetch('column_attribute_set', queryset=DocumentTypeAttribute.objects.order_by('sq'))))).order_by(
+            'sq')
 
         serializer = DocumentTypeSectionSerializer(queryset, many=True)
         return Response(serializer.data)
@@ -400,14 +430,16 @@ class AttributeModel(APIView, AttributeUtils):
 
     def get(self, request):
         document_type = DocumentType.objects.get(pk=request.query_params.get('documentType'))
-        document_status = DocumentTypeStatus.objects.get(pk=request.query_params.get('documentStatus')) if request.query_params.get('documentStatus') else None
+        document_status = DocumentTypeStatus.objects.get(
+            pk=request.query_params.get('documentStatus')) if request.query_params.get('documentStatus') else None
         attribute_type = request.query_params.get('type', None)
 
         attributes = []
         ver = {}
 
         if not request.query_params.get('cache'):
-            self.get_attributes(parent=None, document_type=document_type, level=attributes, type=attribute_type, status=document_status)
+            self.get_attributes(parent=None, document_type=document_type, level=attributes, type=attribute_type,
+                                status=document_status)
         else:
             attributes = document_type.model
 
@@ -444,7 +476,8 @@ class AttributeApi(APIView):
 
     @staticmethod
     def get_form_attribute_data(document, data):
-        _attributes = DocumentTypeAttribute.objects.filter(type='FORM', document_type=document.type, is_section=False, is_column=False, is_combo=False, attribute__isnull=False)
+        _attributes = DocumentTypeAttribute.objects.filter(type='FORM', document_type=document.type, is_section=False,
+                                                           is_column=False, is_combo=False, attribute__isnull=False)
         attributes = {}
         for i in _attributes:
             attributes[i.pk] = data[i.code] if i.code in data else None
@@ -456,7 +489,8 @@ class AttributeApi(APIView):
         if attribute_type:
             q &= Q(attribute__type=attribute_type)
 
-        attributes = DocumentAttribute.objects.filter(q).order_by('attribute__pk', 'row_sq').prefetch_related('attribute')
+        attributes = DocumentAttribute.objects.filter(q).order_by('attribute__pk', 'row_sq').prefetch_related(
+            'attribute')
         attribute_data = {}
 
         for i in attributes:
@@ -483,7 +517,8 @@ class AttributeApi(APIView):
 
         for key, value in attributes.items():
             if type(value) in (tuple, list):
-                DocumentAttribute.objects.filter(attribute=key, document_id=document.pk, row_sq__gte=len(value)).delete()
+                DocumentAttribute.objects.filter(attribute=key, document_id=document.pk,
+                                                 row_sq__gte=len(value)).delete()
                 for idx, i in enumerate(value):
                     try:
                         attr = DocumentAttribute.objects.get(attribute=key, document_id=document.pk, row_sq=idx)
@@ -583,7 +618,8 @@ class NoteApi(APIView):
     def post(self, request):
         response_status = status.HTTP_200_OK
         try:
-            response_data = note_services.create_note(request.data.get('idDocument'), request.data.get('text'), request.user)
+            response_data = note_services.create_note(request.data.get('idDocument'), request.data.get('text'),
+                                                      request.user)
 
         except Exception as ex:
             response_data = {'errmsg': str(ex), 'traceback': traceback.format_exc()}

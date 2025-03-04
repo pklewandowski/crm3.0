@@ -16,12 +16,21 @@ class Report {
         this.reportParams.innerHTML = null;
     }
 
-    get(templateId) {
+    get(templateId, templateCode = null, documentId = null, dataParams = null) {
+        if (dataParams) {
+            this.modal.querySelector('#reportDataParams').value = JSON.stringify(dataParams);
+        }
+
         ajaxCall(
             {
                 method: 'get',
                 url: '/report/api/template/',
-                data: {templateId: templateId, documentId: _g.document.id}
+                data: {
+                    id: templateId,
+                    templateId: templateId,
+                    templateCode: templateCode,
+                    documentId: documentId ? documentId : _g.document.id
+                }
             },
             (resp) => {
                 this.templateCode = resp.code;
@@ -63,8 +72,8 @@ class Report {
         );
     }
 
-    generate(preview = false) {
-        if (!this.templateCode) {
+    generate(preview = false, directDownload = false, templateCode = null, documentId = null, dataParams = {}) {
+        if (!this.templateCode && !templateCode) {
             window.Alert.error('Kod szablonu raportu nie może być pusty!');
             return;
         }
@@ -75,16 +84,21 @@ class Report {
                 method: 'post',
                 url: '/report/api/',
                 data: {
-                    'documentId': _g.document.id,
-                    'templateCode': this.templateCode,
-                    'preview': preview ? 'T' : ''
+                    documentId: documentId ? documentId : _g.document?.id ? _g.document.id : null,
+                    templateCode: templateCode ? templateCode : this.templateCode,
+                    preview: preview ? 'T' : '',
+                    dataParams: dataParams ? JSON.stringify(dataParams) : this.modal.querySelector('#reportDataParams').value
                 }
             },
             (resp) => {
                 if (preview) {
                     this.reportPreview.innerHTML = `<embed src="/media/reports/temp/${resp.reportName}" frameBorder="0" scrolling="auto" width="100%" type="application/pdf"/>`;
                 } else {
-                    window.location.reload()
+                    if (directDownload) {
+                        window.open(`/media/reports/generated/${resp.reportName}`, '_blank');
+                    } else {
+                        window.location.reload();
+                    }
                 }
             },
             (resp) => {
@@ -102,7 +116,9 @@ class Report {
             this.generate(true);
         });
         this.generateBtn.addEventListener('click', (e) => {
-            Alert.question('Czy na pewno wygenerować pismo?', '', ()=>{this.generate()});
+            Alert.question('Czy na pewno wygenerować pismo?', '', () => {
+                this.generate()
+            });
         });
     }
 }

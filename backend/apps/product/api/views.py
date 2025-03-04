@@ -1,3 +1,5 @@
+import decimal
+import json
 import traceback
 from datetime import datetime
 
@@ -11,16 +13,47 @@ from rest_framework.views import APIView
 from application.wrapper import rest_api_wrapper
 from apps.document.models import DocumentTypeAccountingType, DocumentTypeStatus, DocumentStatusCourse
 from apps.product.api.serializers import ProductCalculationSerializer, ProductCashFlowSerializer, \
-    DocumentTypeAccountingTypeSerializer, ProductSerializer, ProductInterestSerializer, ProductInterestGlobalSerializer
+    DocumentTypeAccountingTypeSerializer, ProductSerializer, ProductInterestSerializer, ProductInterestGlobalSerializer, \
+    ProductCalculationBalanceSerializer
 from apps.product.models import Product, ProductCalculation, ProductCashFlow as ProductCashFlowModel, \
-    ProductInterestGlobal
+    ProductInterestGlobal, ProductTypeStatus
 from apps.product.utils.utils import ProductUtils
 from .services import calc_table_services, interest_services
-from ..calc import CalculateLoan
+from ..calc import LoanCalculation
 from ..calculation import Calculation
 from ...document.api.utils import DocumentApiUtils
 from ...financial_accounting.batch_processing.loaders.loaderMT940 import LoaderMT940
 from ...financial_accounting.transaction.models import Transaction
+
+
+class ProductEntityApi(APIView):
+    @rest_api_wrapper
+    def get(self, request):
+        product = Product.objects.get(pk=request.query_params.get('id'))
+        return ProductSerializer(product).data
+
+    @rest_api_wrapper
+    def put(self, request):
+        product = ProductSerializer(
+            instance=Product.objects.get(pk=request.data.get('id')),
+            data=request.data,
+            partial=True
+        )
+
+        #with transaction.atomic():
+        if product.is_valid(raise_exception=True):
+            product = product.save()
+
+        if request.data.get('capitalization_date', None):
+            ProductUtils.change_status(
+                product=product,
+                status=ProductTypeStatus.objects.get(type=product.type, code='WYP'),
+                user=request.user,
+                reason='Wypowiedzenie umowy'
+            )
+
+        return {'id': product.id}
+
 
 
 class ProductApi(APIView):
@@ -28,7 +61,7 @@ class ProductApi(APIView):
         response_status = http_status.HTTP_200_OK
 
         try:
-            product = Product.objects.get(pk=request.query_params.get('productId'))
+            product = Product.objects.get(pk=request.query_params.get('id') or request.query_params.get('productId'))
             response_data = {
                 'product': ProductSerializer(product).data,
                 # 'schedule': ProductScheduleSerializer(product.schedule_set.all().order_by('maturity_date'), many=True).data,
@@ -268,12 +301,37 @@ class ProductBalancePerDayView(APIView):
         dt = datetime.strptime(request.query_params.get('balanceDate', None), '%Y-%m-%d').date()
         emulate_payment = request.query_params.get('emulatePayment', None) == 'true'
 
-        calculation = CalculateLoan(
+        calculation = LoanCalculation(
             product=product,
             user=request.user).calculate(end_date=dt, simulation=True, emulate_payment=emulate_payment)
 
         if not calculation:
             raise Exception('Calcualtion does not exist')
 
-        return ProductCalculationSerializer(instance=calculation[-1]).data
+        cost_aggregation = calculation[0].cost
+        interest_for_delay_date = None
+        interest_for_delay_max_date = None
+        for key in cost_aggregation.keys():
+            cost_aggregation[key] = 0.0
 
+        for item in calculation:
+            if item.cost_occurrence:
+                for key in cost_aggregation.keys():
+                    if key in item.cost_occurrence.keys():
+                        cost_aggregation[key] += round(item.cost_occurrence[key], 2)
+
+            if interest_for_delay_date is None and item.interest_type == 'FOR_DELAY':
+                interest_for_delay_date = item.calc_date.strftime('%Y-%m-%d')
+
+            if interest_for_delay_max_date is None and item.interest_type == 'FOR_DELAY_MAX':
+                interest_for_delay_max_date = item.calc_date.strftime('%Y-%m-%d')
+
+        calculation_result = calculation[-1]
+
+        calculation_result.product_start_date = calculation[0].calc_date.strftime('%Y-%m-%d')
+        calculation_result.cost_aggregation = cost_aggregation
+
+        calculation_result.interest_for_delay_date = interest_for_delay_date
+        calculation_result.interest_for_delay_max_date = interest_for_delay_max_date
+
+        return ProductCalculationBalanceSerializer(instance=calculation_result).data

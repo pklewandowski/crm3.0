@@ -413,9 +413,9 @@ LOGGING = {
     }
 }
 
-EMAIL_USE_TLS = True
+# EMAIL_USE_TLS = False
 # EMAIL_USE_SSL = True
-EMAIL_HOST = 'list.home.pl'
+EMAIL_HOST = 'list.pl'
 EMAIL_HOST_USER = 'info@supercrm.com.pl'
 EMAIL_HOST_PASSWORD = 'MRCrepuS11'  # os.environ.get('CRM_MAIL_PASSWORD')
 EMAIL_PORT = 587

@@ -2,7 +2,7 @@ import datetime
 
 from django.conf import settings
 
-from apps.product.calc import CalculateLoan
+from apps.product.calc import LoanCalculation
 from apps.product.models import ProductInterestGlobal, Product, ProductInterest, ProductInterestType
 
 

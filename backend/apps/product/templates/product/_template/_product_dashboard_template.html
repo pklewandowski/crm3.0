@@ -7,14 +7,14 @@
 <template id="productDashboardTemplate">
     <div class="panel panel-default" style="position: relative">
         <div style="position: absolute; right: 10px; top: -10px;">
-                    <div style="display: inline-block;">
-                        <div class="show-balance-per-day cashflow-icon"
-                             style="background-color: #aa1818; margin-right: 20px; text-align: center"
-                             data-toggle="tooltip"
-                             title="pokaż saldo na dzień">
-                            <span style="pointer-events: none">S</span>
-                        </div>
-                    </div>
+{#                    <div style="display: inline-block;">#}
+{#                        <div class="show-balance-per-day cashflow-icon"#}
+{#                             style="background-color: #aa1818; margin-right: 20px; text-align: center"#}
+{#                             data-toggle="tooltip"#}
+{#                             title="pokaż saldo na dzień">#}
+{#                            <span style="pointer-events: none">S</span>#}
+{#                        </div>#}
+{#                    </div>#}
         </div>
         <div class="panel-heading">Produkt stan na dzień {{ calc_max_date|date:"Y-m-d" }}</div>
         <div class="panel-body" style="height: calc(100vh - 200px);">

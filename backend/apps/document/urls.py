@@ -62,7 +62,7 @@ urlpatterns = [
     url(r'^api/attribute/data/$', rest.AttributeSectionData.as_view(), name='document.api.section_attribute'),
 
     url(r'^api/type/attribute/predefined/$', rest.PredefinedView.as_view(), name='document.api.type.predefined'),
-    url(r'^api/get-for-annex$', rest.DocumentAnnexApi.as_view(), name='document.api.get_for_annex'),
+    url(r'^api/get-for-annex/$', rest.DocumentAnnexApi.as_view(), name='document.api.get_for_annex'),
     url(r'^api/attachment/$', csrf_exempt(rest.AttachmentApi.as_view()), name='document.api.attachment'),
     url(r'^api/note/$', rest.NoteApi.as_view(), name='document.api.note'),
     url(r'^type/api/status/$', rest_type.DocumentTypeStatusApi.as_view(), name='document.type.api.status')

@@ -11,7 +11,6 @@
         const id_product = {% if form.instance.pk %}{{form.instance.pk}}{% else %}null{% endif %};
         const mode = '{{ mode }}';
 
-
         _g.product = {
             id: {{ form.instance.id }},
             document: {
@@ -32,6 +31,11 @@
                 cashFlowAggregatesUrl:'{% url 'product.api.cash_flow_aggregates' %}'
             }
         }
+
+        _g.document = {
+            id: _g.product.document.id
+        }
+
     </script>
 {% endlocalize %}
 

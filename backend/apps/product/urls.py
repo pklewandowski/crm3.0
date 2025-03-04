@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^cash-flow/aggregates/$', rest.ProductCashFlowAggregatesApi.as_view(),
         name='product.api.cash_flow_aggregates'),
     url(r'^api/$', rest.ProductApi.as_view(), name='product.api'),
+    url(r'^entity/api/$', rest.ProductEntityApi.as_view(), name='product.entity.api'),
     url(r'^global-interest/api/$', rest.ProductGlobalInterestView.as_view(), name='product.global_interest.api'),
 
     url(r'^cashflow/api/$', rest.ProductApi.as_view(), name='product.api'),

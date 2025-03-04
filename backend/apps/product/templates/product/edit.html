@@ -5,7 +5,10 @@
 {% load humanize %}
 {% load product_tags %}
 
-{% block form_icon %}fa fa-code-fork{% endblock %}
+{% block form_icon %}
+    fa fa-code-fork
+{% endblock %}
+
 {% block form_title %}Edycja produktu:
     {% if  form.instance.client.user.company_name %}
         {{ form.instance.client.user.company_name }} ({{ form.instance.client.user.first_name|default_if_none:'' }}
@@ -15,19 +18,48 @@
         {{ form.instance.client.user.last_name|default_if_none:'' }}
     {% endif %}
 {% endblock %}
+
 {% block form_subtitle %}{{ form.instance.type.name }} | Nr Umowy: {{ form.instance.agreement_no }}, utworzył:
     {{ form.instance.creation_user.first_name }}
-    {{ form.instance.creation_user.last_name }}{% endblock %}
-{% block form_title_right %}
-    <a id="showDocBtn" href="{% url 'document.edit' form.instance.document.pk %}"
-       class="btn btn-default btn-sm btn-show-doc"><i class="far fa-file-alt"></i></a>
-    <a href="#" id="removeProductBtn" class="btn btn-danger btn-sm btn-remove-product"><i class="fa fa-times"></i></a>
-    <button class="btn btn-success btn-sm btn-save" type="button"><i class="fas fa-check"></i></button>
+    {{ form.instance.creation_user.last_name }}
+{% endblock %}
 
+{% block form_title_right %}
+    <a id="showBalancePerDayBtn" href="#"
+       class="show-balance-per-day btn btn-default btn-sm"
+       title="Saldo na dzień"
+       style="background-color: #b775ac; margin-right: 40px; text-align: center" data-toggle="tooltip">
+        <span style="
+              pointer-events: none;
+              font-size: 24px;
+              font-weight: bold;
+              color: white;
+              cursor: pointer;">S</span></a>
+
+    <a id="productEditBtn" href="#" data-toggle="tooltip" title="Edytuj dane produktu"
+       class="btn btn-default btn-sm btn-product-edit">
+        <i class="far fa-edit"></i>
+    </a>
+
+    <a id="showDocBtn" href="{% url 'document.edit' form.instance.document.pk %}" data-toggle="tooltip"
+       title="Pokaż wniosek"
+       class="btn btn-default btn-sm btn-show-doc">
+        <i class="far fa-file-alt"></i>
+    </a>
+
+    <a href="#" id="removeProductBtn" class="btn btn-danger btn-sm btn-remove-product">
+        <i class="fa fa-times"></i>
+    </a>
+
+    <button class="btn btn-success btn-sm btn-save" type="button"><i class="fas fa-check"></i></button>
 {% endblock %}
 
 {% block site_css %}
     <link href="{% static 'dist/product/product-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/report/report-bundle.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'dist/document_process_flow/document_process_flow-bundle.css' %}" rel="stylesheet"
+          type="text/css">
+
 {% endblock %}
 
 {% block site_js %}
@@ -57,13 +89,8 @@
 
     {% config_var 'MODE_VIEW' as mode_view %}
 
-    {#    {% include 'product/_partial/header.html' %}#}
-    {% if commission_formset.errors %}
-        {{ commission_formset.errors }}
-    {% endif %}
 
     {% if form %}
-
         <form method="post" id="product-form">
             {% csrf_token %}
             {% if form.instance.type.is_schedule %}
@@ -76,11 +103,12 @@
 
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#detail-tab">Parametry</a></li>
-                <li><a data-toggle="tab" href="#schedule-tab">Harmonogram</a></li>
+                {#                <li><a data-toggle="tab" href="#schedule-tab">Harmonogram</a></li>#}
                 <li><a data-toggle="tab" href="#tranche-tab">Transze</a></li>
                 {#                <li><a data-toggle="tab" href="#daystate-tab">Stan na dzień</a></li>#}
                 <li><a id="calcTab" data-toggle="tab" href="#calc-tab">Kalkulacja</a></li>
                 <li><a id="cashFlowTab" data-toggle="tab" href="#cashflow-tab">Przepływy</a></li>
+                <li><a id="processFlowTab" data-toggle="tab" href="#processflow-tab">Przebieg procesu</a></li>
             </ul>
 
             <div class="tab-content pad-t">
@@ -131,10 +159,10 @@
                                     <div class="panel-body">
                                         {% if form.instance.type.is_schedule %}
                                             <div style="overflow: auto; height: 100%;">
-                                            <div id="productInstalmentScheduleErrorContainer"></div>
-                                               <table id="product-schedule-table"
+                                                <div id="productInstalmentScheduleErrorContainer"></div>
+                                                <table id="product-schedule-table"
                                                        class="table table-hover table-condensed table-striped">
-                                                   <tbody id="productInstalmentScheduleContainer"></tbody>
+                                                    <tbody id="productInstalmentScheduleContainer"></tbody>
                                                 </table>
                                             </div>
                                         {% else %}
@@ -146,42 +174,44 @@
                         </div>
 
                         {% comment %}
-                        <div class="col-lg-6 nopadding-left">
-                            <div id="product-interest-formset-container">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" style="width: 100%">Odsetki
-                                        <div style="float: right;">
-                                            <div>
-                                                <a class="add interest-add-btn panel-heading-add-btn" data-product-id="{{ form.instance.pk|unlocalize }}">
-                                                    <i class="fa fa-plus-circle"></i>
-                                                </a>
+                            <div class="col-lg-6 nopadding-left">
+                                <div id="product-interest-formset-container">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" style="width: 100%">Odsetki
+                                            <div style="float: right;">
+                                                <div>
+                                                    <a class="add interest-add-btn panel-heading-add-btn"
+                                                       data-product-id="{{ form.instance.pk|unlocalize }}">
+                                                        <i class="fa fa-plus-circle"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div style="height: 100%; overflow-y: auto;">
-                                            <table id="product-interest-formset-table" class="table table-hover table-condensed table-striped">
-                                                <thead>
-                                                <tr>
-                                                    <th style="width:20%">Data od</th>
-                                                    <th style="width:15%">Odsetki umowne</th>
-                                                    <th style="width:15%">Odsetki za opóźnienie</th>
-                                                    <th style="width:15%">Odsetki max. za opóźnienie</th>
-                                                    <th>Sposób rozliczania</th>
-                                                    <th style="width:50px"></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                {% for i in interest_formset %}
-                                                    {% include 'product/_partial/_formset/_row/_interest_formset_row_partial.html' with i=i index=forloop.counter0 %}
-                                                {% endfor %}
-                                                </tbody>
-                                            </table>
+                                        <div class="panel-body">
+                                            <div style="height: 100%; overflow-y: auto;">
+                                                <table id="product-interest-formset-table"
+                                                       class="table table-hover table-condensed table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th style="width:20%">Data od</th>
+                                                        <th style="width:15%">Odsetki umowne</th>
+                                                        <th style="width:15%">Odsetki za opóźnienie</th>
+                                                        <th style="width:15%">Odsetki max. za opóźnienie</th>
+                                                        <th>Sposób rozliczania</th>
+                                                        <th style="width:50px"></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for i in interest_formset %}
+                                                        {% include 'product/_partial/_formset/_row/_interest_formset_row_partial.html' with i=i index=forloop.counter0 %}
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         {% endcomment %}
                     </div>
                 </div>
@@ -190,8 +220,23 @@
                         <div class="col-lg-12">
                             <div id="product-tranche-formset-container">
                                 <div class="panel panel-default">
+                                    <div style="position: absolute; right: 10px; top: -15px;margin-right: 20px">
+                                        <div style="display: inline-block;">
+                                            <div class="add add-tranche-button cashflow-icon"
+                                                 style="background-color: #4472b8"
+                                                 data-product_id="{{ form.instance.pk|unlocalize }}"
+                                                 data-toggle="tooltip"
+                                                 data-accounting_type_code="tranche"
+                                                 title="Dodaj transzę" type="button">
+                                                <i class="fa fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="panel-heading" style="width: 100%">Transze</div>
                                     <div class="panel-body">
+                                        {% if tranche_formset.non_form_errors %}
+                                            {{ tranche_formset.non_form_errors }}
+                                        {% endif %}
 
                                         <div style="height: 100%; overflow-y: auto;">
                                             <table id="product-tranche-formset-table"
@@ -220,7 +265,8 @@
 
                 <div id="commission-tab" class="tab-pane fade in">
                     <div class="dropdown pad-t">
-                        <a href="#" class="dropdown-toggle btn btn-default btn-sm" type="button" data-toggle="dropdown"
+                        <a href="#" class="dropdown-toggle btn btn-default btn-sm" type="button"
+                           data-toggle="dropdown"
                            id="commission_dropdown_btn" aria-haspopup="true"
                            aria-expanded="false"><i class="fa fa-plus"></i></a>
                         <ul class="dropdown-menu" aria-labelledby="commission_dropdown_btn">
@@ -304,15 +350,54 @@
                 <div id="cashflow-tab" class="tab-pane fade in">
                     {% include 'product/_partial/_cashflow_partial.html' with cashflow_formset=cashflow_formset %}
                 </div>
+
+                <div id="processflow-tab" class="tab-pane fade in">
+                    {% include 'product/_partial/_product_process_flow.html' %}
+                </div>
+
             </div>
         </form>
 
     {% endif %}
 
+    <div id="productFormModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="auditAnalysisModalLabel">Edycja produktu</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="productFormContainer"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close-btn" data-dismiss="modal">Zamknij
+                    </button>
+                    <button type="button" class="btn btn-primary submit-form">Zapisz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <template id="productFormTemplate" data-url="/product/entity/api/">
+        <form>
+            <div class="form-group">
+                <input type="text" id="capitalizationDate" name="capitalization_date"
+                       class="form-control input-md vanilla-date-field datepicker-input"/>
+                <label for="capitalizationDate">Data wypowiedzenia</label>
+            </div>
+            <input name="id" type="hidden"/>
+        </form>
+
+    </template>
+
     {% include 'product/_template/_main_client_row_template.html' %}
     {% include 'product/_template/_formset/_client_formset_row_template.html' %}
     {% include 'product/_template/_formset/_schedule_formset_row_template.html' with ef=schedule_formset.empty_form %}
     {% include 'product/_template/_formset/_cashflow_formset_row_template_v2.html' with ef=cashflow_formset.empty_form %}
+    {% include 'product/_template/_formset/_tranche_formset_row_template.html' with ef=tranche_formset.empty_form %}
     {% include 'product/_template/_formset/_interest_formset_row_template.html' with ef=interest_formset.empty_form %}
     {% include 'product/_template/_formset/_commission_formset_row_template.html' %}
     {% include 'product/_template/calc_row_template.html' %}
@@ -321,6 +406,8 @@
     {% include 'product/_modal/calc_table_modal.html' %}
     {% include 'product/_modal/cashflow_aggregates_modal.html' %}
     {% include 'product/_modal/balance_per_day_modal.html' %}
+
+    {% include 'report/modal/_report_modal.html' %}
 
 
 {% endblock %}

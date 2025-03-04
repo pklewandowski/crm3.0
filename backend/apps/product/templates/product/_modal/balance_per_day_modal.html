@@ -10,16 +10,39 @@
                     <span aria-hidden="true">&times;</span>
                     <span class="sr-only">Close</span>
                 </button>
+                <div class="action-button">
+                    <div class="round">
+                        <a href="#" id="printBalance"
+                           class="btn btn-default btn-sm btn-print-balance"
+                           style="
+                           font-size: 22px;
+                           top: -22px;
+                           right: 40px;
+                           position: absolute;
+                           color: #828282;
+                           padding-top: 2px;">
+                            <i class=" fa fa-print"></i></a>
+                    </div>
+                </div>
                 <h4 class="modal-title" id="atmFormLabel">Saldo na dzień</h4>
             </div>
 
             <!-- Modal Body -->
-            <div class="modal-body" style="max-height: 600px; overflow: auto;">
+            <div class="modal-body" style="max-height: 750px; overflow: auto;">
                 <div id="balancePerDayContainer">
                     <div class="form-group">
                         <div id="balanceDatepicker" class="balance-datepicker"></div>
                         <input type="text" id="balancePerDayDate" class="form-control input-md"/>
                         <label for="balancePerDayDate">Data salda</label>
+                    </div>
+                    <div class="form-group">
+                        <div id="balanceValidToDatepicker" class="balance-datepicker"></div>
+                        <input type="text" id="balanceValidToDate" class="form-control input-md"/>
+                        <label for="balanceValidToDate">Data ważności zaświadczenia</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="balancePerDayReportForLender" class="form-control"/>
+                        <label for="balancePerDayReportForLender">Raport dla pożyczkodawcy</label>
                     </div>
                     <div class="form-group">
                         <input type="checkbox" id="balancePerDayEmulatePayment" class="form-control"/>
@@ -33,35 +56,77 @@
                         <table class="product-dashboard-datatable table product-dashboard-capital-container">
                             <tbody>
                             <tr>
-                                <td>kapitał niewymagalny</td>
-                                <td><span id="balancePerDayCapitalNotRequired"
-                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td>kapitał wymagalny</td>
                                 <td><span id="balancePerDayCapitalRequired"
                                           class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>kapitał niewymagalny</td>
+                                <td><span id="balancePerDayCapitalNotRequired"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
                             <tr style="color: #c36560">
-                                <td>Odsetki</td>
+                                <td>Odsetki - suma</td>
+                                <td><span id="balancePerDayInterestCumulatedPerDay"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+                            <tr style="color: #c36560">
+                                <td>Odsetki nominalne</td>
+                                <td><span id="balancePerDayInterestNominalCumulatedPerDay"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+
+                            <tr style="color: #c36560">
+                                <td>Odsetki za opóźnienie</td>
+                                <td><span id="balancePerDayInterestForDelayCumulatedPerDay"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+                            <tr style="color: #c36560">
+                                <td>Odsetki maksymalne</td>
+                                <td><span id="balancePerDayInterestForDelayMaxCumulatedPerDay"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+                            <tr style="color: #c36560">
+                                <td>Odsetki wymagalne</td>
                                 <td><span id="balancePerDayInterestRequired"
                                           class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
                                 </td>
                             </tr>
+
                             <tr style="color: #c36560">
                                 <td>Odsetki dzienne</td>
                                 <td><span id="balancePerDayInterestDaily"
                                           class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
                                 </td>
                             </tr>
+
                             <tr style="color: #6299db">
-                                <td>Koszty</td>
+                                <td>Koszty - suma</td>
                                 <td><span id="balancePerDayCostTotal"
                                           class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
                                 </td>
                             </tr>
+
+                            <tr style="color: #6299db">
+                                <td>Kary umowne</td>
+                                <td><span id="balancePerDayCostContractualPenalty"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+
+                            <tr style="color: #6299db">
+                                <td>Opłata windykacyjna</td>
+                                <td><span id="balancePerDayCostVindicationFee"
+                                          class="product-dashboard-decimal-integer-small product-dashboard-font-stretched"></span>
+                                </td>
+                            </tr>
+
                             <tr style="color: #60ab6e">
                                 <td>Wpłaty</td>
                                 <td>
@@ -89,5 +154,8 @@
 
         </div>
     </div>
+    <input id="balancePerDayProductStartDate" type="hidden"/>
+    <input id="balancePerDayInterestForDelayStartDate" type="hidden"/>
+    <input id="balancePerDayInterestForDelayMaxStartDate" type="hidden"/>
 </div>
 

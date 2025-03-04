@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db.models import Q
 
-from apps.product.calc import CalculateLoan
+from apps.product.calc import LoanCalculation
 from apps.product.models import Product
 from apps.user.models import User
 
@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
         for product in Product.objects.filter(q):
             print(f'Calculating product: {product}')
-            CalculateLoan(product.pk, user).calculate(
+            LoanCalculation(product.pk, user).calculate(
                 start_date=kwargs['start_date'] if kwargs['start_date'] else None,
             )
 

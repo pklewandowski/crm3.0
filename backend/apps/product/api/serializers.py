@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from apps.document.models import DocumentTypeAccountingType
-from apps.product.models import ProductCalculation, ProductCashFlow, Product, ProductSchedule, ProductInterest, ProductTypeStatus, ProductInterestGlobal
+from apps.product.models import ProductCalculation, ProductCashFlow, Product, ProductSchedule, ProductInterest, \
+    ProductTypeStatus, ProductInterestGlobal
 
 
 class ProductTypeStatusSerializer(serializers.ModelSerializer):
@@ -31,6 +32,29 @@ class ProductInterestSerializer(serializers.ModelSerializer):
 
 
 class ProductCalculationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductCalculation
+        fields = '__all__'
+
+
+class ProductCalculationBalanceSerializer(serializers.ModelSerializer):
+    product_start_date = serializers.DateField()
+    cost_aggregation = serializers.SerializerMethodField()
+    interest_for_delay_date = serializers.SerializerMethodField()
+    interest_for_delay_max_date = serializers.SerializerMethodField()
+
+    def get_product_start_date(self, obj):
+        return obj.product_start_date
+
+    def get_cost_aggregation(self, obj):
+        return obj.cost_aggregation
+
+    def get_interest_for_delay_date(self, obj):
+        return obj.interest_for_delay_date
+
+    def get_interest_for_delay_max_date(self, obj):
+        return obj.interest_for_delay_max_date
+
     class Meta:
         model = ProductCalculation
         fields = '__all__'

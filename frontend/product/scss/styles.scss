@@ -32,11 +32,17 @@
   border-right-color: #f7a7a7 !important;
 }
 
-.tabulator-row-odd .calc-table-interest-delay {
+.calc-table-interest-delay-max {
+  color: #bb120f;
+  border-right-color: #f7a7a7 !important;
+  font-weight: bold;
+}
+
+.tabulator-row-odd .calc-table-interest-delay, .tabulator-row-odd .calc-table-interest-delay-max {
   background-color: #ffdfdf;
 }
 
-.tabulator-row-even .calc-table-interest-delay {
+.tabulator-row-even .calc-table-interest-delay, .tabulator-row-even .calc-table-interest-delay-max {
   background-color: #f5c7c4;
 }
 

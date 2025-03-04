@@ -516,7 +516,7 @@ class DocumentTypeProcessFlow(models.Model):
 class DocumentTypeAttributeMapping(models.Model):
     type = models.ForeignKey(DocumentType, db_column='id_type', related_name='attribute_mapping_set',
                              on_delete=models.CASCADE)
-    attribute = models.ForeignKey(DocumentTypeAttribute, db_column='id_document_type_atribute',
+    attribute = models.ForeignKey(DocumentTypeAttribute, db_column='id_document_type_attribute',
                                   related_name='mapping_set', on_delete=models.CASCADE, null=True)
     mapped_name = models.CharField(verbose_name=_('document.type.attribute.mapping.mapped_name'), max_length=200)
     is_required = models.BooleanField(verbose_name=_('document.type.attribute.mapping.is_required'), default=True)

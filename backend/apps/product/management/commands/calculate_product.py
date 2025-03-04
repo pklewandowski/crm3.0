@@ -4,7 +4,7 @@ from itertools import product
 
 from django.core.management import BaseCommand
 
-from apps.product.calc import CalculateLoan
+from apps.product.calc import LoanCalculation
 from apps.product.models import Product
 from apps.user.models import User
 
@@ -25,7 +25,7 @@ class Command(BaseCommand):
         logger.info(f'Start calculating required loan')
         product = Product.objects.get(pk=options["product"])
 
-        with CalculateLoan(product=product, user=user) as calc:
+        with LoanCalculation(product=product, user=user) as calc:
             logger.info(f'Calculating product {product.id} required date: {product.recount_required_date}')
             calc.calculate()
 

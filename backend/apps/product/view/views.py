@@ -21,7 +21,7 @@ from apps.product.calculation import CalculationException
 from apps.product.forms import ProductTypeAttributeForm, ProductForm, ProductActionForm, TestCopyPasteForm, \
     CashFlowFormset, ProductInterestGlobalForm, ProductTrancheFormset
 from apps.product.models import Product, ProductAccounting, ProductCalculation, ProductAction, ProductActionDefinition, \
-    ProductInterestGlobal
+    ProductInterestGlobal, ProductStatusTrack
 from apps.product.utils.utils import ProductUtils
 from apps.report.datasource_utils import ReportDatasourceUtils
 from apps.report.forms import ReportDatasourceForm
@@ -168,7 +168,8 @@ def edit(request, id, iframe=0):
                         #     start_date=datetime.date.today())
                         py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
                     except CalculationException as ex:
-                        return render(request, 'product/calculation_error.html', {"errmsg": str(ex), "product": product})
+                        return render(request, 'product/calculation_error.html',
+                                      {"errmsg": str(ex), "product": product})
 
                 else:
                     print('Product is in closing process status')
@@ -208,7 +209,6 @@ def edit(request, id, iframe=0):
             not form.has_changed() or form.is_valid(),
             not cashflow_formset.has_changed() or cashflow_formset.is_valid(),
             not tranche_formset.has_changed() or tranche_formset.is_valid()
-            # not interest_formset.has_changed() or interest_formset.is_valid()
         ]):
             has_changed = False
 
@@ -286,7 +286,14 @@ def edit(request, id, iframe=0):
                'messages': messages,
                'balance': balance,
                'calc_max_date': calc_max_date,
-               'errors': errors
+               'errors': errors,
+               'product_status_flow': [{
+                   'date': i.creation_date,
+                   'effective_date': i.effective_date,
+                   'status': i.status,
+                   'user': i.created_by
+               } for i in ProductStatusTrack.objects.filter(product=product).order_by('creation_date')],
+               'product_statuses': product.type.product_status_set.all().order_by('sq'),
                }
     if iframe:
         context['override_base'] = "%s.html" % iframe

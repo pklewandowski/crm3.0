@@ -45,14 +45,14 @@ class Rules:
             return True
 
         # check if there is a rule event incoming
-        rule_event = data['RULE_EVENTS'][rule['what']] if 'RULE_EVENTS' in data and rule['what'] in data['RULE_EVENTS'] else None
+        rule_event = data['RULE_EVENTS'][rule['what']] if 'RULE_EVENTS' in data and rule['what'] in data[
+            'RULE_EVENTS'] else None
 
-        if rule_event and Rules._after_before(rule=rule, dt=dt, start_date=rule_event['due_date'], end_date=rule_event['due_date']):
-            return True
-
-        days = Rules._after_before(rule=rule, dt=dt, start_date=start_date, end_date=end_date)
-
-        return days
+        if rule_event:
+            return Rules._after_before(rule=rule, dt=dt, start_date=rule_event['due_date'],
+                                       end_date=rule_event['due_date'])
+        else:
+            return Rules._after_before(rule=rule, dt=dt, start_date=start_date, end_date=end_date)
 
     def what(self, data):
         if self.rules['what'] == 'EACH_INSTALMENT':
@@ -69,25 +69,48 @@ class Rules:
                                                   )
 
     def handle_rules(self, dt, data):
-
         if not self.rules:
             return
 
+        # DEBUG
+        import datetime
+        if dt == datetime.datetime.strptime('2025-02-20', '%Y-%m-%d').date():
+            pass
+        # END DEBUG
+
         for rule in self.rules:
-            days = Rules._days(rule=rule, dt=dt, start_date=data['SCHEDULE_CURRENT_DATE'], end_date=data['SCHEDULE_NEXT_DATE'], data=data)
+            forced_status_change = False
+
+            if rule['fire_on_event'] == 'True':
+                if rule['what'] not in data['RULE_EVENTS']:
+                    continue
+
+                forced_status_change = data['RULE_EVENTS'][rule['what']][
+                    'forced_status_change'] if 'forced_status_change' in data['RULE_EVENTS'][rule['what']] else False
+
+            days = Rules._days(rule=rule, dt=dt, start_date=data['SCHEDULE_CURRENT_DATE'],
+                               end_date=data['SCHEDULE_NEXT_DATE'], data=data)
             condition = Rules._conditions(rule, data) if days else False
+
             status = True
 
             # trigger rules
             if days and condition:
                 if rule["rule_status_change_from"] and rule["rule_status_change_to"]:
-                    if self.product.status.pk == int(rule["rule_status_change_from"]):  # and  self.product.document.status.pk != int(i["rule_status_change_to"]):
+                    if self.product.status.pk == int(rule[
+                                                         "rule_status_change_from"]):  # and  self.product.document.status.pk != int(i["rule_status_change_to"]):
                         ProductUtils.change_status(product=self.product,
                                                    status=rule["rule_status_change_to"],
                                                    user=User.objects.get(status='SYSTEM'),
                                                    effective_date=dt)
                     else:
                         status = False
+
+                elif rule["rule_status_change_to"] and forced_status_change:
+                    ProductUtils.change_status(product=self.product,
+                                               status=rule["rule_status_change_to"],
+                                               user=User.objects.get(status='SYSTEM'),
+                                               effective_date=dt)
 
                 if status and rule["rule_generate_alert_for"] and rule["rule_generate_alert_text"]:
                     user_list = []
@@ -115,4 +138,3 @@ class Rules:
                     # print('module', module)
                     # getattr(module, run_method[1])(self.calculation_object)
                     apps.product.api.temp.set_max_interest_for_delay(self.calculation_object)
-

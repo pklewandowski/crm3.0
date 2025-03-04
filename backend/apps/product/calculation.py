@@ -182,7 +182,7 @@ class Calculation(CalculationBase):
 
     def set_accounting(self):
         q = DocumentTypeAccounting.objects.filter(
-                document_type=self.product.type
+            document_type=self.product.type
         ).filter(
             ~Exists(DocumentTypeAccountingType.objects.filter(parent=OuterRef('pk')))).order_by('sq')
 
@@ -219,14 +219,14 @@ class Calculation(CalculationBase):
         for i in action_list:
             i.save()
 
-    @abc.abstractmethod
-    def calculate(self, start_date=None, end_date=None, simulate=False, emulate_payment=False):
-        pass
-
-    @abc.abstractmethod
-    def calculate_statutory_interest(self, dt):
-        pass
-
-    @abc.abstractmethod
-    def calculate_daily_interest_for_delay(self, dt):
-        pass
+    # @abc.abstractmethod
+    # def calculate(self, start_date=None, end_date=None, simulate=False, emulate_payment=False):
+    #     pass
+    #
+    # @abc.abstractmethod
+    # def calculate_statutory_interest(self, dt):
+    #     pass
+    #
+    # @abc.abstractmethod
+    # def calculate_daily_interest_for_delay(self, dt):
+    #     pass

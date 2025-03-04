@@ -1,0 +1,24 @@
+{% load l10n %}
+<template id="tranche-formset-row-template">
+    <tr data-id="__PRODUCT_ID__" data-removable="false">
+            <td class>{{ ef.launch_date|unlocalize }}</td>
+    <td>{{ ef.title }}</td>
+    <td>
+        <select class="form-control" name="{{ ef.lender.html_name }}" id="{{ ef.lender.id_for_label }}">
+            {% for value, label in ef.fields.lender.choices %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+    </td>
+    <td>{{ ef.value }}</td>
+    <td class="tranche-action">
+        <div>
+            <a href="#" class="btn btn-danger delete">
+                <i class="far fa-trash-alt"></i>
+            </a>
+            {{ ef.DELETE.as_hidden }}
+        </div>
+    </td>
+    <input type="hidden" name="{{ ef.product.html_name }}" value="__PRODUCT_ID__"/>
+</tr>
+</template>

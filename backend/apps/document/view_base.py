@@ -135,7 +135,6 @@ class DocumentManagement(generic_view.GenericView):
     _app_name = 'document'
 
     def __init__(self):
-
         self.exclude_list = ()
         self.id = None
         self.type_id = None

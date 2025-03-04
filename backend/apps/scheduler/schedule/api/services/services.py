@@ -66,13 +66,19 @@ def save_event(event, user):
         event['host_user'] = user.pk
 
     if event['location']:
-        if not event['location']['lat'] or not event['location']['lng']:
+        if event['location']['lat'] and event['location']['lng']:
+            event['location']['lat'] = event['location']['lat'][:10]
+            event['location']['lng'] = event['location']['lng'][:10]
+        else:
             del event['location']['lat']
             del event['location']['lng']
+
+
         if not event['location']['country']:
             event['location']['country'] = 'Polska'
 
     schedule = ScheduleSaveSerializer(instance=schedule_instance, data=event)
+
     schedule_address = AddressSerializer(
         instance=schedule_instance.custom_location_address if schedule_instance else None,
         data=event['location']) if len(event['location']) else None

@@ -38,7 +38,13 @@ class ReportApi(APIView):
 
     @rest_api_wrapper
     def get(self, request):
-        return ReportSerializer(Report.objects.get(pk=request.query_params.get('id'))).data
+        template_code = request.query_params.get('templateCode', None)
+        template_id = request.query_params.get('id', None)
+
+        if template_code:
+            return ReportSerializer(Report.objects.get(code=template_code)).data
+
+        return ReportSerializer(Report.objects.get(pk=template_id)).data
 
     def post(self, request):
         response_status = status.HTTP_200_OK
@@ -46,20 +52,25 @@ class ReportApi(APIView):
         header_path = None
         footer_path = None
         try:
-            self.document = Document.objects.get(pk=request.data.get('documentId'))
+            document_id = request.data.get('documentId', None)
+            self.document = Document.objects.get(pk=request.data.get('documentId', None)) if document_id else None
+
             report_template = ReportTemplate.objects.get(code=request.data.get('templateCode'))
             preview = request.data.get('preview')
             query_params = json.loads(request.data.get('queryParams', '[]'))
+            data_params = json.loads(request.data.get('dataParams', '{}')) or {}
 
             hierarchy = {i.pk: i for i in Hierarchy.objects.filter(type='CMP')}
 
-            params = Params(document=self.document)
+            params = Params(document=self.document)  # if self.document else None
 
             jinja_env = set_jinja2_env()
 
             template = jinja_env.from_string(report_template.html_template)
-            header_template = jinja_env.from_string(report_template.header_template_include.html_template if report_template.header_template_include else '')
-            footer_template = jinja_env.from_string(report_template.footer_template_include.html_template if report_template.footer_template_include else '')
+            header_template = jinja_env.from_string(
+                report_template.header_template_include.html_template if report_template.header_template_include else '')
+            footer_template = jinja_env.from_string(
+                report_template.footer_template_include.html_template if report_template.footer_template_include else '')
 
             header = ''
             if header_template:
@@ -86,18 +97,21 @@ class ReportApi(APIView):
             txt = template.render(
                 merge_two_dicts(
                     params.bind_params(report_template.params_mapping),
-                    {
-                        "logo": settings.LOGO_BASE64,
-                        "user": request.user,
-                        "document": self.document,
-                        # "product": self.document.product if self.document.product else {},
-                        "doc_creation_date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
-                        "now_date": datetime.datetime.now(),
-                        "hierarchy": hierarchy,
-
-                        # "query": report_template.query.replace(report_template.query, dynaparams[re.match('(\$P__)(.*)(__P\$)')[2].lower()]) if report_template.source_type == 'QUERY' else ''
-                        "query": Params.bind_query(report_template.query_json, query_params) if report_template.query_json else ''
-                    })
+                    merge_two_dicts(
+                        data_params,
+                        {
+                            "logo": settings.LOGO_BASE64,
+                            "user": request.user,
+                            "document": self.document,
+                            # "product": self.document.product if self.document.product else {},
+                            "doc_creation_date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
+                            "now_date": datetime.datetime.now(),
+                            "hierarchy": hierarchy,
+                            "query": Params.bind_query(report_template.query_json,
+                                                       query_params) if report_template.query_json else ''
+                        }
+                    )
+                )
             )
 
             report_name = '%s.pdf' % str(uuid.uuid4()).replace('-', '')
@@ -217,7 +231,9 @@ class ReportTemplateApi(APIView):
             return DocumentAttribute.objects.get(q).value
         except DocumentAttribute.DoesNotExist:
             if raise_error:
-                raise ReportException('Wartość parametru nie jest wprowadzona i zapisana w atrybutach dokumentu (parametr: %s)' % DocumentTypeAttribute.objects.get(pk=param))
+                raise ReportException(
+                    'Wartość parametru nie jest wprowadzona i zapisana w atrybutach dokumentu (parametr: %s)' % DocumentTypeAttribute.objects.get(
+                        pk=param))
             return None
 
     def get_params(self, params):
@@ -226,7 +242,8 @@ class ReportTemplateApi(APIView):
             if type(v).__name__ == 'list':
                 par[k] = []
                 for i in v:
-                    par[k].append({'id': i, 'name': DocumentTypeAttribute.objects.get(pk=i).parent.name, 'value': self.get_param_value(i, is_list=True)})
+                    par[k].append({'id': i, 'name': DocumentTypeAttribute.objects.get(pk=i).parent.name,
+                                   'value': self.get_param_value(i, is_list=True)})
             else:
                 dta = DocumentTypeAttribute.objects.get(pk=v)
                 par[k] = {'id': dta.pk, 'name': dta.name, 'value': self.get_param_value(v)}
@@ -236,11 +253,18 @@ class ReportTemplateApi(APIView):
         response_status = status.HTTP_200_OK
         response_data = {}
 
-        template_id = request.query_params.get('templateId')
+        template_id = request.query_params.get('templateId', None)
+        template_code = request.query_params.get('templateCode', None)
         self.document_id = request.query_params.get('documentId')
 
         try:
-            rt = ReportTemplate.objects.get(pk=template_id)
+            if template_id:
+                rt = ReportTemplate.objects.get(pk=template_id)
+            elif template_code:
+                rt = ReportTemplate.objects.get(code=template_code)
+            else:
+                raise Exception(_('No report template available'))
+
             response_data['html_template'] = rt.html_template
             response_data['name'] = rt.name
             response_data['code'] = rt.code

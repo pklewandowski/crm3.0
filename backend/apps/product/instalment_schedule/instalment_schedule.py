@@ -2,7 +2,7 @@ import datetime
 
 from django.conf import settings
 
-from apps.product.calc import CalculateLoan
+from apps.product.calc import LoanCalculation
 from apps.product.instalment_schedule import INSTALMENT_MATURITY_DATE_SELECTOR, INSTALMENT_CAPITAL_SELECTOR, \
     INSTALMENT_COMMISSION_SELECTOR, INSTALMENT_TOTAL_SELECTOR, INSTALMENT_INTEREST_SELECTOR, \
     INSTALMENT_CONSTANT_DAYS_INTERVAL, INSTALMENT_CAPITAL_AGGREGATE, INSTALMENT_INTEREST_AGGREGATE, \
@@ -157,7 +157,7 @@ class InstalmentSchedule:
             return None
 
         if run_calculation:
-            CalculateLoan(product=self.product, user=self.user).calculate()
+            LoanCalculation(product=self.product, user=self.user).calculate()
 
         calculation = self.product.calculation.all().order_by('calc_date').last()
 

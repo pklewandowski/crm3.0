@@ -32,6 +32,7 @@ class DocumentForm(RestForm):
             for i in node:
                 if 'children' in i:
                     set_annex(i['children'])
+
                 if i['code'] == 'annex':
                     if instance:
                         lov = []
@@ -61,6 +62,7 @@ class DocumentForm(RestForm):
                             return
 
                     i['lov'] = {"data": []}
+
                     return
 
         set_annex(self.form_attributes)

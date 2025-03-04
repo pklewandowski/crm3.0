@@ -17,6 +17,7 @@ from apps.config.models import HoldingCompany
 from apps.dict.models import DictionaryEntry
 from apps.document.models import DocumentType, DocumentTypeAccountingType, Document, DocumentTypeStatus
 from apps.hierarchy.models import Hierarchy
+from apps.product import INTEREST_NOMINAL
 from apps.report.models import Report, ReportTemplate
 from apps.scheduler.schedule.models import Schedule
 from apps.user.models import User
@@ -155,7 +156,7 @@ class ProductTranche(AppModel):
     condition = models.TextField(verbose_name=_('condition'), null=True, blank=True)
     value = models.DecimalField(verbose_name=_('value'), max_digits=10, decimal_places=2)
     launch_date = models.DateField(null=True, blank=True)
-    sq = models.SmallIntegerField(verbose_name=_('sq'))
+    sq = models.SmallIntegerField(verbose_name=_('sq'), null=True, blank=True)
 
     class Meta:
         db_table = 'product_tranche'
@@ -396,6 +397,18 @@ class ProductCalculation(models.Model):
     interest_cumulated_per_day = models.DecimalField(
         verbose_name='product.calculation.interest_cumulated_per_day', max_digits=15, decimal_places=2, default=0
     )
+    interest_nominal_cumulated_per_day = models.DecimalField(
+        verbose_name='product.calculation.interest_cumulated_per_day', max_digits=15, decimal_places=2, default=0
+    )
+
+    interest_for_delay_cumulated_per_day = models.DecimalField(
+        verbose_name='product.calculation.interest_for_delay_cumulated_per_day', max_digits=15, decimal_places=2,
+        default=0
+    )
+    interest_for_delay_max_cumulated_per_day = models.DecimalField(
+        verbose_name='product.calculation.interest_for_delay_max_cumulated_per_day', max_digits=15, decimal_places=2,
+        default=0
+    )
     interest_required = models.DecimalField(verbose_name='product.calculation.interest_required', max_digits=15,
                                             decimal_places=2, default=0)
     interest_required_from_schedule = models.DecimalField(
@@ -417,6 +430,9 @@ class ProductCalculation(models.Model):
     # interest_for_delay_required_daily = models.DecimalField(
     #     verbose_name='product.calculation.interest_for_delay_required_daily', max_digits=15, decimal_places=2,
     #     default=0)
+
+    interest_type = models.CharField(max_length=50, verbose_name='product.calculation.interest_type',
+                                     default=INTEREST_NOMINAL)
 
     # prowizja
     commission_per_day = models.DecimalField(verbose_name='product.calculation.commission_per_day', max_digits=15,
@@ -442,8 +458,9 @@ class ProductCalculation(models.Model):
 
     cost = models.JSONField(verbose_name='product.calculation.cost', default=dict)
     cost_occurrence = models.JSONField(verbose_name='product.calculation.cost_occurence', default=dict)
-    cost_sum_per_day = models.DecimalField(verbose_name='product.calculation.cost_sum_per_day', max_digits=15, decimal_places=2,
-                                       default=0)
+    cost_sum_per_day = models.DecimalField(verbose_name='product.calculation.cost_sum_per_day', max_digits=15,
+                                           decimal_places=2,
+                                           default=0)
     cost_total = models.DecimalField(verbose_name='product.calculation.cost_total', max_digits=15, decimal_places=2,
                                      default=0)
 

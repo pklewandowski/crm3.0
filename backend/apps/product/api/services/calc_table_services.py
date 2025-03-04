@@ -101,15 +101,15 @@ def get_calc_table_columns(document_type):
         columns.append(
             {"title": "Odsetki", "columns":
                 [
-                    {
-                        "title": "wymagalne", "field": "interest_required", "headerSort": False,
-                        "dataType": "currency",
-                        "hozAlign": "center", "tooltip": True,
-                        "formatter": "moneyCss", "formatterParams":
-                        {
-                            "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest"
-                        }
-                    },
+                    # {
+                    #     "title": "wymagalne", "field": "interest_required", "headerSort": False,
+                    #     "dataType": "currency",
+                    #     "hozAlign": "center", "tooltip": True,
+                    #     "formatter": "moneyCss", "formatterParams":
+                    #     {
+                    #         "decimal": ",", "thousand": " ", "precision": 2, "className": "calc-table-interest"
+                    #     }
+                    # },
                     {"title": "procent", "field": "interest_rate", "headerSort": False, "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
@@ -193,7 +193,8 @@ def get_calc_table_columns(document_type):
                     },
 
                     {
-                        "title": "kara umowna", "field": "cost_occurrence.COST_CONTRACTUAL_PENALTY", "headerSort": False,
+                        "title": "kara umowna", "field": "cost_occurrence.COST_CONTRACTUAL_PENALTY",
+                        "headerSort": False,
                         "dataType": "currency",
                         "hozAlign": "right",
                         "formatter": "moneyCss",
@@ -202,7 +203,8 @@ def get_calc_table_columns(document_type):
                     },
 
                     {
-                        "title": "opłata windykacyjna", "field": "cost_occurrence.COST_VINDICATION_FEE", "headerSort": False,
+                        "title": "opłata windykacyjna", "field": "cost_occurrence.COST_VINDICATION_FEE",
+                        "headerSort": False,
                         "dataType": "currency",
                         "hozAlign": "right",
                         "formatter": "moneyCss",
@@ -230,7 +232,8 @@ def get_calc_table_columns(document_type):
                     #                      "className": "calc-table-cost"}
                     #  },
 
-                    {"title": "całkowite na dzień", "field": "cost_sum_per_day", "headerSort": False, "dataType": "currency",
+                    {"title": "całkowite na dzień", "field": "cost_sum_per_day", "headerSort": False,
+                     "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
                      "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,

@@ -3,7 +3,7 @@ import datetime
 import pytest
 
 from apps.document.models import DocumentTypeAccountingType
-from apps.product.calc import CalculateLoan
+from apps.product.calc import LoanCalculation
 from apps.product.models import ProductCashFlow
 from conftest import fix_user
 
@@ -48,11 +48,11 @@ def fix_product_cashflow(fix_product):
 @pytest.mark.django_db
 class TestCalculation:
     def test_product_calculation(self, fix_product, fix_user):
-        calculate_list = CalculateLoan(product=fix_product, user=fix_user).calculate()
+        calculate_list = LoanCalculation(product=fix_product, user=fix_user).calculate()
         assert True
 
     def test_product_calculation_simulation_emulate(self, fix_product, fix_user, fix_product_cashflow):
-        calculate_list = CalculateLoan(
+        calculate_list = LoanCalculation(
             product=fix_product, user=fix_user
         ).calculate(
             end_date=datetime.datetime.strptime('2025-03-12', '%Y-%m-%d').date(),
@@ -62,7 +62,7 @@ class TestCalculation:
         assert True
 
     def test_product_calculation_simulation_no_emulate(self, fix_product, fix_user, fix_product_cashflow):
-        calculate_list = CalculateLoan(
+        calculate_list = LoanCalculation(
             product=fix_product, user=fix_user
         ).calculate(
             end_date=datetime.datetime.strptime('2025-03-12', '%Y-%m-%d').date(),

@@ -212,7 +212,6 @@ class Edit(DocumentManagement):
 
     @transaction.atomic()
     def dispatch(self, request, *args, **kwargs):
-
         try:
             self.id = self.kwargs['id'] or None
             if not self.id:

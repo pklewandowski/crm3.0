@@ -4,7 +4,7 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from django.db.models import Q
 
-from apps.product.calc import CalculateLoan
+from apps.product.calc import LoanCalculation
 from apps.product.models import Product, ProductCalculation
 from apps.user.models import User
 
@@ -41,6 +41,6 @@ class Command(BaseCommand):
 
             logger.info(f'Calculating product: {product}')
 
-            CalculateLoan(product.pk, user).calculate(start_date=start_date)
+            LoanCalculation(product.pk, user).calculate(start_date=start_date)
 
         print('--------------------DONE---------------------\n')

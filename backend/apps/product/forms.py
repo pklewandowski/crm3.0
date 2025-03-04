@@ -9,6 +9,7 @@ from .api.instalment_schedule import INSTALMENT_MATURITY_DATE_SELECTOR, INSTALME
     INSTALMENT_COMMISSION_SELECTOR, INSTALMENT_INTEREST_SELECTOR, INSTALMENT_TOTAL_SELECTOR
 from .models import Product, ProductSchedule, ProductCashFlow, ProductInterest, ProductAction, ProductClient, \
     ProductCommission, ProductTypeCommission, ProductInterestGlobal, ProductTranche
+from ..hierarchy.models import Hierarchy
 
 
 class ProductTypeForm(p3form.ModelForm):
@@ -340,6 +341,12 @@ class ProductInterestGlobalForm(p3form.ModelForm):
 
 class ProductTrancheForm(p3form.ModelForm):
 
+    lender = forms.ModelChoiceField(
+        queryset=Hierarchy.objects.filter(type='CMP').order_by('name'),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        empty_label=None
+    )
+
     def __init__(self, *args, **kwargs):
         super(ProductTrancheForm, self).__init__(*args, **kwargs)
         self.fields['launch_date'].widget.attrs['class'] = self.fields['launch_date'].widget.attrs[
@@ -348,38 +355,53 @@ class ProductTrancheForm(p3form.ModelForm):
 
     class Meta:
         model = ProductTranche
-        fields = 'launch_date',
+        fields = 'product', 'launch_date', 'title', 'value', 'lender'
         widgets = {
             'launch_date': forms.TextInput,
+            'value': forms.TextInput,
         }
 
 
 class ProductTrancheBaseFormset(BaseModelFormSet):
     def clean(self):
-        super().clean()
+        if any(self.errors):
+            return
 
         dt = self.forms[0].cleaned_data['launch_date']
+        product = self.forms[0].cleaned_data['product']
 
         if not dt:
             raise forms.ValidationError("First tranche has to have launch data filled")
 
+        total_tranche_value = self.forms[0].cleaned_data['value']
+
         for form in self.forms[1:]:
             if form.cleaned_data['launch_date'] and form.cleaned_data['launch_date'] < dt:
                 form.add_error('launch_date', 'Tranche date cannot be older the first tranche')
-                raise forms.ValidationError('Tranche date cannot be older the first tranche')
+                # raise forms.ValidationError('Tranche date cannot be older then the first tranche date')
 
-        return self.cleaned_data
+            if not form.cleaned_data.get('DELETE'):
+                total_tranche_value += form.cleaned_data['value']
+
+        if total_tranche_value > product.value:
+            raise forms.ValidationError(
+                f"Sum of product tranches: {total_tranche_value} "
+                f"cannot exceed product value: {product.value} "
+            )
 
 
 ClientFormset = modelformset_factory(ProductClientForm.Meta.model, form=ProductClientForm, extra=0, can_delete=True)
 ScheduleFormset = modelformset_factory(ProductScheduleForm.Meta.model, form=ProductScheduleForm, extra=0,
                                        can_delete=True)
+
 CashFlowFormset = modelformset_factory(ProductCashFlowForm.Meta.model, form=ProductCashFlowForm, extra=0,
                                        can_delete=True)
+
 CommissionFormset = modelformset_factory(ProductCommissionForm.Meta.model, form=ProductCommissionForm, extra=0,
                                          can_delete=True)
+
 ProductTrancheFormset = modelformset_factory(ProductTrancheForm.Meta.model,
                                              form=ProductTrancheForm,
                                              formset=ProductTrancheBaseFormset,
                                              extra=0,
-                                             can_delete=False)
+                                             can_delete=True)

@@ -16,18 +16,17 @@ import "../../_core/controls/vanillajs-datepicker-3ws/dist/css/datepicker-bulma.
 import {ProductDashboard} from "./financePack/dashboard/js/product-dashboard";
 import {Product} from "./product";
 import {calculateProductAggregates} from "./financePack/calculation/calculation";
-import {ToolbarUtils} from "../../_core/utils/toolbar-utils";
 import Alert from "../../_core/alert";
-import {isSaved} from "../../_core/core";
+import Report from "../../report/js/report";
+import {ProductForm} from "./product-form";
+
+window.report = new Report('reportModal');
 
 pl.pl.daysMin = ["Nd", "Pn", "Wt", "Śr", "Cz", "Pt", "So"];
 Object.assign(Datepicker.locales, pl);
 
 // formatters for tabulator table used for calculation rows displaying
 TabulatorTableUtils.setFormatters();
-
-// todo: DRUT!
-let cashflow_subtype = {cost: {xx: 'ogólne', ce: 'egzekucyjne'}};
 
 function setDecimalField(el) {
     Input.setMask(el, 'currency');
@@ -37,7 +36,6 @@ let calcTable = null;
 let calcHeader = null;
 let calcData = null;
 
-let isInterestForDelayColumn = null;
 
 function deleteFormsetRow(e, msg, callback = null) {
     let that = e;
@@ -94,7 +92,6 @@ function resizePage() {
     updateDataTable(height + "px");
 }
 
-
 function updateDataTable(scrollHeight) {
     createDataTable(scrollHeight);
 }
@@ -119,7 +116,7 @@ function setPreviousValue() {
 
 function rowFormatter(row) {
     let interestColumns = [
-        'interest_required',
+        // 'interest_required',
         'interest_rate',
         'interest_daily',
         'interest_per_day',
@@ -131,11 +128,27 @@ function rowFormatter(row) {
         row.getElement().classList.add('calc-table-due-date');
     }
 
-    if (data.is_interest_for_delay === true) {
+    if (data.interest_type === 'FOR_DELAY') {
         for (let column of interestColumns) {
             row.getCell(row.getTable().getColumn(column)).getElement().classList.add('calc-table-interest-delay')
         }
+    } else if (data.interest_type === 'FOR_DELAY_MAX') {
+        for (let column of interestColumns) {
+            row.getCell(row.getTable().getColumn(column)).getElement().classList.add('calc-table-interest-delay-max')
+        }
     }
+}
+
+function setCashFlowSubtype(subtype) {
+    let options = typeof subtype === 'string' ? JSON.parse(subtype.replace(/'/g, '"')) : [{XX: 'ogólne'}];
+    let out = '<select class="form-control input-md">__OPTIONS__</select>';
+    let opt = '';
+    for (let i of options) {
+        let _opt = Object.entries(i);
+        console.log(_opt);
+        opt = opt + `<option value="${_opt[0][0]}">${_opt[0][1]}</option>`;
+    }
+    return out.replace('__OPTIONS__', opt)
 }
 
 
@@ -179,19 +192,6 @@ $(document).ready(() => {
         }
     });
 
-
-    function setCashFlowSubtype(subtype) {
-        let options = typeof subtype === 'string' ? JSON.parse(subtype.replace(/'/g, '"')) : [{XX: 'ogólne'}];
-        let out = '<select class="form-control input-md">__OPTIONS__</select>';
-        let opt = '';
-        for (let i of options) {
-            let _opt = Object.entries(i);
-            console.log(_opt);
-            opt = opt + `<option value="${_opt[0][0]}">${_opt[0][1]}</option>`;
-        }
-        return out.replace('__OPTIONS__', opt)
-    }
-
     $(document).on('click', "#product-cashflow-formset-container .add", function () {
         let form_idx = $('table#product-cashflow-formset-table tbody tr').length;
         let row = $("#cashflow-formset-row-template").html();
@@ -233,8 +233,37 @@ $(document).ready(() => {
         // });
     });
 
-    document.querySelector('#product-cashflow-formset-container .reload-mt940').addEventListener('click', (e) => {
+    $(document).on('click', "#product-tranche-formset-container .add", function () {
+        let form_idx = $('table#product-tranche-formset-table tbody tr').length;
+        let row = $("#tranche-formset-row-template").html();
 
+
+        row = row.replace(/__PRODUCT_ID__/g, $(this).data('product_id'));
+        row = row.replace(/__prefix__/g, form_idx);
+
+        $('#id_product-tranche-TOTAL_FORMS').val(form_idx + 1);
+        $("#product-tranche-formset-table tbody").append(row);
+
+        row = ($("#product-tranche-formset-table tbody tr:last"));
+
+        row.find(".vanilla-date-field").each(function (i, el) {
+            // todo: bypass until date-calendar will be unified in whole project to vanillajs-calendar-3ws control
+            el.datepicker = new Datepicker(el, {
+                autohide: true,
+                showOnClick: true,
+                language: 'pl',
+                format: 'yyyy-mm-dd'
+            });
+            // setDatePicker($(this));
+        });
+
+        //TODO: temporary switched off untill new form from jsUtils implemented
+        // row.find(".decimal-field input").each(function (i, el) {
+        //     setDecimalField(el);
+        // });
+    });
+
+    document.querySelector('#product-cashflow-formset-container .reload-mt940').addEventListener('click', (e) => {
         Alert.questionWarning(
             'Czy na pewno załadować transakcje z plików MT940?',
             '',
@@ -349,6 +378,7 @@ $(document).ready(() => {
     $('.btn-save').click(function () {
         setFormset('product-interest-formset-table', 'id_product-interest-TOTAL_FORMS');
         setFormset('product-cashflow-formset-table', 'id_product-cashflow-TOTAL_FORMS');
+        setFormset('product-tranche-formset-table', 'id_product-tranche-TOTAL_FORMS');
 
         $("#loaderContainer").fadeIn();
         $('form#product-form').submit();
@@ -359,6 +389,10 @@ $(document).ready(() => {
     });
 
     $(document).on('click', '#product-interest-formset-table > tbody > tr a.delete', function () {
+        deleteFormsetRow($(this), 'Tak, usuń z listy!');
+    });
+
+    $(document).on('click', '#product-tranche-formset-table > tbody > tr a.delete', function () {
         deleteFormsetRow($(this), 'Tak, usuń z listy!');
     });
 
@@ -452,7 +486,8 @@ $(document).ready(() => {
         }
     )
 
-    let btn = productInstalmentSchedule.toolbar.addButton(null,
+    let btn = productInstalmentSchedule.toolbar.addButton(
+        null,
         '',
         'fa fa-redo',
         'Generuj harmonogram',
@@ -463,4 +498,29 @@ $(document).ready(() => {
 
     btn.style = "margin-right: 5px; float: right; cursor: pointer;"
 
+    // document.querySelector('.btn-print-balance').addEventListener('click', e => {
+    //     report.get(null, 'BALANCE_PER_DAY', _g.product.document.id)
+    // });
+
+    let productForm = new formUtils.Form(
+        document.getElementById('productFormContainer'),
+        document.getElementById('productFormTemplate'),
+        null,
+        null,
+        {'reloadOnSave': true}
+    );
+
+    document.getElementById('productEditBtn').addEventListener('click', e => {
+        productForm.getData(_g.product.id);
+        productForm.show();
+    });
+
+
+    let temp = document.getElementById('capitalizationDate');
+    temp.datepicker = new Datepicker(temp, {
+        autohide: true,
+        showOnClick: true,
+        language: 'pl',
+        format: 'yyyy-mm-dd'
+    });
 });
