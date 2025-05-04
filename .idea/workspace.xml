@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb7884e4-6050-4e0f-8771-12522040e81b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/crm/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/crm/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/manage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/apps/product/calc.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/product/calc.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0/nordfinance/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../nordfinance/prj/nordFinancePrj3.0/nordfinance/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,6 +43,12 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/pklewandowski/crm3.0.git",
+    "accountId": "48f63d56-0990-43ee-8670-a6b923923903"
+  }
+}]]></component>
   <component name="JsbtTreeLayoutManager">
     <layout place="tools.popupGrunt">
       <scroll-view-position x="0" y="0" />
@@ -74,7 +77,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Shell Script.deploy_to_server.sh.executor": "Run",
     "django.template.preview.state": "SHOW_EDITOR",
-    "git-widget-placeholder": "feature/extend-cost-accounting-types",
+    "git-widget-placeholder": "fix/calculate-proper-interest-daily-rate-the-same-day-tranche-is-set",
     "last_opened_file_path": "/mnt/ntfs/webapps/crm/prj/crm3.0/backend",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
@@ -258,8 +261,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PY-243.26053.29" />
-        <option value="bundled-python-sdk-b1dbf8ef85a6-4df51de95216-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.26053.29" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-PY-251.23774.444" />
+        <option value="bundled-python-sdk-890ed5b35930-d9c5bdb153f4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.23774.444" />
       </set>
     </attachedChunks>
   </component>
@@ -347,7 +350,9 @@
       <workItem from="1744539691585" duration="1094000" />
       <workItem from="1744622271719" duration="1987000" />
       <workItem from="1745479283740" duration="7942000" />
-      <workItem from="1745487277653" duration="579000" />
+      <workItem from="1745487277653" duration="646000" />
+      <workItem from="1746364771463" duration="885000" />
+      <workItem from="1746365687635" duration="377000" />
     </task>
     <servers />
   </component>
