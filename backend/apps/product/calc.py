@@ -290,6 +290,34 @@ class LoanCalculation(Calculation):
             if self._instalment_total < self._instalment_schedule_total:
                 self._delay = True
 
+    def _calculate_daily_interest(self, dt):
+        # calculate daily interest
+        self.interest_for_delay_rate_nominal, self.interest_for_delay_rate_max = ProductInterestGlobal.get_for(dt)
+        self.is_interest_for_delay = not self._undo_interest_for_delay and (self._delay or self.delay_total)
+
+        self.interest_rate = (
+            self._get_interest_rate() if not self.is_interest_for_delay
+            else (self.interest_for_delay_rate_nominal
+                  if self.interest_for_delay_rate_use_current == 'MIN' else self.interest_for_delay_rate_max)
+        )  # if dt > self.start_date else decimal.Decimal(0.0)
+
+        if self.interest_for_delay_rate_use_current == 'MAX':
+            self._interest_type = INTEREST_FOR_DELAY_MAX
+
+        elif self.is_interest_for_delay:
+            self._interest_type = INTEREST_FOR_DELAY
+
+        else:
+            self._interest_type = INTEREST_NOMINAL
+
+        self._interest_daily = self.calculate_interest_daily(dt)
+        self._interest_per_day += self._interest_daily
+        self._interest_cumulated_per_day += self._interest_daily
+        self._interest_nominal_cumulated_per_day += self._interest_daily if self._interest_type == INTEREST_NOMINAL else 0
+        self._interest_for_delay_cumulated_per_day += self._interest_daily if self._interest_type == INTEREST_FOR_DELAY else 0
+        self._interest_for_delay_max_cumulated_per_day += self._interest_daily if self._interest_type == INTEREST_FOR_DELAY_MAX else 0
+
+
     def update_operational_variables(self, dt, dt_str):
         # reset operational variables for new loop pass
         self._instalment_nominal = decimal.Decimal(0.0)
@@ -324,35 +352,9 @@ class LoanCalculation(Calculation):
             self._capital_daily = self.instalment_daily[dt_str]['capital']
             self._commission_daily = self.instalment_daily[dt_str]['commission']
 
-        # calculate daily interest
-        self.interest_for_delay_rate_nominal, self.interest_for_delay_rate_max = ProductInterestGlobal.get_for(dt)
-        self.is_interest_for_delay = not self._undo_interest_for_delay and (self._delay or self.delay_total)
-
-        self.interest_rate = (
-            self._get_interest_rate() if not self.is_interest_for_delay
-            else (self.interest_for_delay_rate_nominal
-                  if self.interest_for_delay_rate_use_current == 'MIN' else self.interest_for_delay_rate_max)
-        )  # if dt > self.start_date else decimal.Decimal(0.0)
-
-        if self.interest_for_delay_rate_use_current == 'MAX':
-            self._interest_type = INTEREST_FOR_DELAY_MAX
-        elif self.is_interest_for_delay:
-            self._interest_type = INTEREST_FOR_DELAY
-        else:
-            self._interest_type = INTEREST_NOMINAL
-
-
-        self._interest_daily = self.calculate_interest_daily(dt)
-
         # update per-day values of capital, commission and interest
         self._capital_per_day += self._capital_daily
         self._commission_per_day += self._commission_daily
-
-        self._interest_per_day += self._interest_daily
-        self._interest_cumulated_per_day += self._interest_daily
-        self._interest_nominal_cumulated_per_day += self._interest_daily if self._interest_type == INTEREST_NOMINAL else 0
-        self._interest_for_delay_cumulated_per_day += self._interest_daily if self._interest_type == INTEREST_FOR_DELAY else 0
-        self._interest_for_delay_max_cumulated_per_day += self._interest_daily if self._interest_type == INTEREST_FOR_DELAY_MAX else 0
 
         self.accounting['INTEREST_VALUE'] += self._interest_daily
 
@@ -384,6 +386,8 @@ class LoanCalculation(Calculation):
             self.instalment_overdue_count -= 1
 
             # TODO: Jeśli kapitał wpłat, czyli self.accounting['PAYMENT'] jest niższy niż wymagalny, to informacja do pracownika
+
+        self._calculate_daily_interest(dt)
 
         # if maturity day has come (instalment payment day)
         if dt_str in self.schedule_list:
