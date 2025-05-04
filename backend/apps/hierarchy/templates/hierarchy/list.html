@@ -25,7 +25,7 @@
 
     {% include 'hierarchy/modal/hierarchy_form_modal.html' %}
 {#    {% include "hierarchy/template/user_list_template.html" %}#}
-{#    {% include "hierarchy/modal/user_list_modal.html" %}#}
+    {% include "hierarchy/modal/user_list_modal.html" %}
 
 {% endblock %}
 
@@ -41,7 +41,8 @@
                 apiUrl: '{% url 'hierarchy.api' %}',
                 moveUrl: '{% url 'hierarchy.api.move' %}',
                 groupUrl: '{% url 'hierarchy.api.groups' %}',
-                userListUrl: '{% url 'hierarchy.user_list' %}',
+                employeeUrl: '{% url 'hierarchy.api.employee' %}',
+                getEmployeeUrl: '{% url 'hierarchy.api.get_employee' %}',
                 userEditUrl: '/user/edit/'
             },
             rootNode: {{ root.pk }}

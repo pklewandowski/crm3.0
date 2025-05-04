@@ -46,157 +46,151 @@ class ReportApi(APIView):
 
         return ReportSerializer(Report.objects.get(pk=template_id)).data
 
+    @rest_api_wrapper
     def post(self, request):
-        response_status = status.HTTP_200_OK
-        response_data = {}
         header_path = None
         footer_path = None
-        try:
-            document_id = request.data.get('documentId', None)
-            self.document = Document.objects.get(pk=request.data.get('documentId', None)) if document_id else None
 
-            report_template = ReportTemplate.objects.get(code=request.data.get('templateCode'))
-            preview = request.data.get('preview')
-            query_params = json.loads(request.data.get('queryParams', '[]'))
-            data_params = json.loads(request.data.get('dataParams', '{}')) or {}
+        document_id = request.data.get('documentId', None)
+        self.document = Document.objects.get(pk=request.data.get('documentId', None)) if document_id else None
 
-            hierarchy = {i.pk: i for i in Hierarchy.objects.filter(type='CMP')}
+        report_template = ReportTemplate.objects.get(code=request.data.get('templateCode'))
+        preview = request.data.get('preview')
 
-            params = Params(document=self.document)  # if self.document else None
+        query_params = json.loads(request.data.get('queryParams', '[]'))
+        data_params = json.loads(request.data.get('dataParams', '{}')) or {}
 
-            jinja_env = set_jinja2_env()
+        hierarchy = {i.pk: i for i in Hierarchy.objects.filter(type='CMP')}
 
-            template = jinja_env.from_string(report_template.html_template)
-            header_template = jinja_env.from_string(
-                report_template.header_template_include.html_template if report_template.header_template_include else '')
-            footer_template = jinja_env.from_string(
-                report_template.footer_template_include.html_template if report_template.footer_template_include else '')
+        params = Params(document=self.document)  # if self.document else None
 
-            header = ''
-            if header_template:
-                header = header_template.render({
-                    "logo": settings.LOGO_BASE64,
-                    "doc_creation_date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
-                    "hierarchy": hierarchy
-                })
+        jinja_env = set_jinja2_env()
 
-            footer = ''
-            if footer_template:
-                footer = footer_template.render(
-                    merge_two_dicts(
-                        params.bind_params(report_template.footer_template_include.params_mapping),
-                        {
-                            "logo": settings.LOGO_BASE64,
-                            "doc_creation_date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
-                            "user": request.user,
-                            "hierarchy": hierarchy
-                        }
-                    )
-                )
+        template = jinja_env.from_string(report_template.html_template)
+        header_template = jinja_env.from_string(
+            report_template.header_template_include.html_template if report_template.header_template_include else '')
+        footer_template = jinja_env.from_string(
+            report_template.footer_template_include.html_template if report_template.footer_template_include else '')
 
-            txt = template.render(
+        header = ''
+        if header_template:
+            header = header_template.render({
+                "logo": settings.LOGO_BASE64,
+                "doc_creation_date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
+                "hierarchy": hierarchy
+            })
+
+        footer = ''
+        if footer_template:
+            footer = footer_template.render(
                 merge_two_dicts(
-                    params.bind_params(report_template.params_mapping),
-                    merge_two_dicts(
-                        data_params,
-                        {
-                            "logo": settings.LOGO_BASE64,
-                            "user": request.user,
-                            "document": self.document,
-                            # "product": self.document.product if self.document.product else {},
-                            "doc_creation_date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
-                            "now_date": datetime.datetime.now(),
-                            "hierarchy": hierarchy,
-                            "query": Params.bind_query(report_template.query_json,
-                                                       query_params) if report_template.query_json else ''
-                        }
-                    )
+                    params.bind_params(report_template.footer_template_include.params_mapping),
+                    {
+                        "logo": settings.LOGO_BASE64,
+                        "doc_creation_date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
+                        "user": request.user,
+                        "hierarchy": hierarchy
+                    }
                 )
             )
 
-            report_name = '%s.pdf' % str(uuid.uuid4()).replace('-', '')
-            _path = os.path.join(settings.MEDIA_ROOT, 'reports/%s' % ('temp' if preview else 'generated'))
-            os.makedirs(_path, exist_ok=True)
-            path = os.path.join(_path, report_name, )
-
-            config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_PATH)
-
-            if header:
-                header_path = os.path.join(settings.MEDIA_ROOT, 'temp/%s.html' % str(uuid.uuid4()))
-            if footer:
-                footer_path = os.path.join(settings.MEDIA_ROOT, 'temp/%s.html' % str(uuid.uuid4()))
-
-            if header_path:
-                with open(header_path, 'w', encoding='utf-8') as f:
-                    f.write(header)
-
-            if footer_path:
-                with open(footer_path, 'w', encoding='utf-8') as f:
-                    f.write(footer)
-
-            options = {
-                "enable-local-file-access": None,
-                'encoding': "UTF-8",
-                # "--header-html": header_path,
-                # "--footer-html": footer_path,
-                # "margin-top": '15mm',
-                # "margin-bottom": '30mm',
-                # "margin-left": '5mm',
-                # "margin-right": '5mm',
-                # "--footer-center": "[page] / [topage]" to display pages but not not flexible if u have custom --footer-html
-            }
-            if header_path:
-                options['--header-html'] = header_path
-            if footer_path:
-                options['--footer-html'] = footer_path
-
-            options = merge_two_dicts(options, report_template.features)
-
-            if os.name == 'nt':
-                pdfkit.from_string(input=txt, output_path=path, configuration=config, options=options)
-            else:
-                # needed for linux error wkhtmltopdf cannot connect to x-display
-                with Display():
-                    pdfkit.from_string(input=txt, output_path=path, configuration=config, options=options)
-
-            try:
-                if header_path:
-                    os.remove(header_path)
-            except OSError:
-                pass
-
-            try:
-                if footer_path:
-                    os.remove(footer_path)
-            except OSError:
-                pass
-
-            report = None
-
-            if not preview:
-                report = Report.objects.create(
-                    xml_data=txt,
-                    file_path=_path,
-                    file_name=report_name,
-                    created_by=request.user,
-                    template=report_template, status='NW')
-
-                DocumentReport.objects.create(
-                    report=report,
-                    file_name=report_name,
-                    document=self.document,
-                    created_by=request.user,
-                    template=report_template
+        txt = template.render(
+            merge_two_dicts(
+                params.bind_params(report_template.params_mapping),
+                merge_two_dicts(
+                    data_params,
+                    {
+                        "logo": settings.LOGO_BASE64,
+                        "user": request.user,
+                        "document": self.document,
+                        # "product": self.document.product if self.document.product else {},
+                        "doc_creation_date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
+                        "now_date": datetime.datetime.now(),
+                        "hierarchy": hierarchy,
+                        "query": Params.bind_query(report_template.query_json,
+                                                   query_params) if report_template.query_json else {}
+                    }
                 )
+            )
+        )
 
-            response_data = {'reportName': report_name, 'fullPath': path, 'reportId': report.pk if report else ''}
+        report_name = '%s.pdf' % str(uuid.uuid4()).replace('-', '')
+        _path = os.path.join(settings.MEDIA_ROOT, 'reports/%s' % ('temp' if preview else 'generated'))
+        os.makedirs(_path, exist_ok=True)
+        path = os.path.join(_path, report_name, )
 
-        except Exception as ex:
-            response_status = status.HTTP_400_BAD_REQUEST
-            response_data['errmsg'] = _(str(ex))
-            response_data['errmsg_trace'] = str(traceback.format_exc())
+        config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_PATH)
 
-        return Response(data=response_data, status=response_status)
+        if header:
+            header_path = os.path.join(settings.MEDIA_ROOT, 'temp/%s.html' % str(uuid.uuid4()))
+        if footer:
+            footer_path = os.path.join(settings.MEDIA_ROOT, 'temp/%s.html' % str(uuid.uuid4()))
+
+        if header_path:
+            with open(header_path, 'w', encoding='utf-8') as f:
+                f.write(header)
+
+        if footer_path:
+            with open(footer_path, 'w', encoding='utf-8') as f:
+                f.write(footer)
+
+        options = {
+            "enable-local-file-access": None,
+            'encoding': "UTF-8",
+            # "--header-html": header_path,
+            # "--footer-html": footer_path,
+            # "margin-top": '15mm',
+            # "margin-bottom": '30mm',
+            # "margin-left": '5mm',
+            # "margin-right": '5mm',
+            # "--footer-center": "[page] / [topage]" to display pages but not not flexible if u have custom --footer-html
+        }
+        if header_path:
+            options['--header-html'] = header_path
+        if footer_path:
+            options['--footer-html'] = footer_path
+
+        options = merge_two_dicts(options, report_template.features)
+
+        if os.name == 'nt':
+            pdfkit.from_string(input=txt, output_path=path, configuration=config, options=options)
+        else:
+            # needed for linux error wkhtmltopdf cannot connect to x-display
+            with Display():
+                pdfkit.from_string(input=txt, output_path=path, configuration=config, options=options)
+
+        try:
+            if header_path:
+                os.remove(header_path)
+        except OSError:
+            pass
+
+        try:
+            if footer_path:
+                os.remove(footer_path)
+        except OSError:
+            pass
+
+        report = None
+
+        if not preview:
+            report = Report.objects.create(
+                xml_data=txt,
+                file_path=_path,
+                file_name=report_name,
+                created_by=request.user,
+                template=report_template, status='NW')
+
+            DocumentReport.objects.create(
+                report=report,
+                file_name=report_name,
+                document=self.document,
+                created_by=request.user,
+                template=report_template
+            )
+
+        return {'reportName': report_name, 'fullPath': path, 'reportId': report.pk if report else ''}
+
 
     @rest_api_wrapper
     def put(self, request):

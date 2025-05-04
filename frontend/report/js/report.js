@@ -16,9 +16,13 @@ class Report {
         this.reportParams.innerHTML = null;
     }
 
-    get(templateId, templateCode = null, documentId = null, dataParams = null) {
+    get(templateId, templateCode = null, documentId = null, dataParams = null, queryParams=null) {
         if (dataParams) {
             this.modal.querySelector('#reportDataParams').value = JSON.stringify(dataParams);
+        }
+
+        if (queryParams) {
+            this.modal.querySelector('#reportQueryParams').value = JSON.stringify(queryParams);
         }
 
         ajaxCall(
@@ -72,7 +76,12 @@ class Report {
         );
     }
 
-    generate(preview = false, directDownload = false, templateCode = null, documentId = null, dataParams = {}) {
+    generate(preview = false,
+             directDownload = false,
+             templateCode = null,
+             documentId = null,
+             dataParams = {},
+             queryParams = {}) {
         if (!this.templateCode && !templateCode) {
             window.Alert.error('Kod szablonu raportu nie może być pusty!');
             return;
@@ -87,7 +96,9 @@ class Report {
                     documentId: documentId ? documentId : _g.document?.id ? _g.document.id : null,
                     templateCode: templateCode ? templateCode : this.templateCode,
                     preview: preview ? 'T' : '',
-                    dataParams: dataParams ? JSON.stringify(dataParams) : this.modal.querySelector('#reportDataParams').value
+                    dataParams: dataParams ? JSON.stringify(dataParams) : this.modal.querySelector('#reportDataParams').value,
+                    queryParams: queryParams ? JSON.stringify(queryParams) : this.modal.querySelector('#reportQueryParams').value,
+
                 }
             },
             (resp) => {

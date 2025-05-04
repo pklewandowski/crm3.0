@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^api/groups/$', rest.HierarchyApi.as_view(), name='hierarchy.api.groups'),
     url(r'^api/group/get-for-select2/$', rest.HierarchyApi.as_view(), name='hierarchy.api.group.get_for_select2'),
     url(r'^api/move/$', rest.HierarchyApi.as_view(), name='hierarchy.api.move'),
+    url(r'^api/employee/$', rest.HierarchyUserApi.as_view(), name='hierarchy.api.employee'),
+    url(r'^api/get-employee/$', rest.get_employee_for_hierarchy_select2, name='hierarchy.api.get_employee'),
 
     url(r'^get-subcompany-for-select/$', rest.get_company_list_for_select, name='hierarchy.get_subcompany_for_select'),
 ]

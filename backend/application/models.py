@@ -23,7 +23,7 @@ class AuditMixin(models.Model):
         abstract = True
 
 
-class AddressMixin:
+class AddressMixin(AppModel):
     def json_address_validator(self, address: dict):
         address_items = address.keys()
         available_item_list = ['street', 'street_no', 'apartment_no', 'zip_code', 'city', 'province', 'country']
@@ -52,7 +52,7 @@ class AddressMixin:
         abstract = True
 
 
-class CompanyDataMixin:
+class CompanyDataMixin(AppModel):
     nip = models.CharField(verbose_name=_('nip'), max_length=20, null=True, blank=True, unique=True,
                            validators=[nip_validator])
     krs = models.CharField(verbose_name=_('krs'), max_length=20, null=True, blank=True, unique=True,

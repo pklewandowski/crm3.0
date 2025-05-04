@@ -1,5 +1,3 @@
-asgiref
-attrs
 Babel
 beautifulsoup4
 certifi
@@ -8,20 +6,6 @@ colorama
 config
 datedelta
 Django
-django-allauth
-django-cors-headers
-django-cors-middleware
-django-crontab
-django-dbbackup
-django-js-asset
-django-localflavor
-django-mathfilters
-django-mptt
-django-no-last-login
-django-simple-history
-django-smtp-ssl
-django-templatetags
-django-utils
 djangorestframework
 doc2pdf
 gusregon
@@ -36,6 +20,7 @@ lxml
 Markdown
 MarkupSafe
 migen
+mypy
 numpy
 packaging
 pandas
@@ -45,6 +30,7 @@ platformdirs
 pluggy
 psycopg-binary
 psycopg2-binary
+pylint
 pyserial
 pytesseract
 pytest

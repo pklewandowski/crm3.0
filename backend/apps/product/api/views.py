@@ -1,12 +1,11 @@
-import decimal
-import json
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.db import transaction
 from django.db.models import Sum, Q, Count
 from rest_framework import status as http_status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,11 +15,10 @@ from apps.product.api.serializers import ProductCalculationSerializer, ProductCa
     DocumentTypeAccountingTypeSerializer, ProductSerializer, ProductInterestSerializer, ProductInterestGlobalSerializer, \
     ProductCalculationBalanceSerializer
 from apps.product.models import Product, ProductCalculation, ProductCashFlow as ProductCashFlowModel, \
-    ProductInterestGlobal, ProductTypeStatus
+    ProductInterestGlobal, ProductTypeStatus, ProductStatusTrack
 from apps.product.utils.utils import ProductUtils
 from .services import calc_table_services, interest_services
 from ..calc import LoanCalculation
-from ..calculation import Calculation
 from ...document.api.utils import DocumentApiUtils
 from ...financial_accounting.batch_processing.loaders.loaderMT940 import LoaderMT940
 from ...financial_accounting.transaction.models import Transaction
@@ -40,7 +38,7 @@ class ProductEntityApi(APIView):
             partial=True
         )
 
-        #with transaction.atomic():
+        # with transaction.atomic():
         if product.is_valid(raise_exception=True):
             product = product.save()
 
@@ -53,7 +51,6 @@ class ProductEntityApi(APIView):
             )
 
         return {'id': product.id}
-
 
 
 class ProductApi(APIView):
@@ -170,7 +167,6 @@ class ProductCashFlowApi(APIView):
         with transaction.atomic():
             LoaderMT940.account_products(product=product, reset=True)
             ProductCalculation.objects.filter(product=product).delete()
-            Calculation(product=product, user=request.user).calculate()
 
 
 class ProductCashFlowAggregatesApi(APIView):
@@ -309,8 +305,10 @@ class ProductBalancePerDayView(APIView):
             raise Exception('Calcualtion does not exist')
 
         cost_aggregation = calculation[0].cost
+        interest_nominal_end_date = None
         interest_for_delay_date = None
         interest_for_delay_max_date = None
+
         for key in cost_aggregation.keys():
             cost_aggregation[key] = 0.0
 
@@ -322,6 +320,7 @@ class ProductBalancePerDayView(APIView):
 
             if interest_for_delay_date is None and item.interest_type == 'FOR_DELAY':
                 interest_for_delay_date = item.calc_date.strftime('%Y-%m-%d')
+                interest_nominal_end_date = (item.calc_date - timedelta(days=1)).strftime('%Y-%m-%d')
 
             if interest_for_delay_max_date is None and item.interest_type == 'FOR_DELAY_MAX':
                 interest_for_delay_max_date = item.calc_date.strftime('%Y-%m-%d')
@@ -333,5 +332,62 @@ class ProductBalancePerDayView(APIView):
 
         calculation_result.interest_for_delay_date = interest_for_delay_date
         calculation_result.interest_for_delay_max_date = interest_for_delay_max_date
+        calculation_result.interest_nominal_end_date = interest_nominal_end_date
+        calculation_result.capital_total = calculation_result.capital_required + calculation_result.capital_not_required
+
+        calculation_result.current_liabilities = (
+                calculation_result.capital_required +
+                calculation_result.interest_required +
+                calculation_result.cost_total
+        )
 
         return ProductCalculationBalanceSerializer(instance=calculation_result).data
+
+
+class ProductStatusView(APIView):
+    @staticmethod
+    def _check_user_perms(user, status_hierarchies):
+        if user.is_superuser:
+            return True
+
+        if not status_hierarchies:
+            return True
+
+        user_hierarchies = user.hierarchy.all()
+
+        if not user_hierarchies:
+            return False
+
+        for hierarchy in status_hierarchies:
+            if hierarchy in user_hierarchies:
+                return True
+
+        return False
+
+    @rest_api_wrapper
+    def get(self, request):
+        return
+
+    @rest_api_wrapper
+    def post(self, request):
+        id = request.data.get('id', None)
+        status = request.data.get('status', None)
+
+        product = Product.objects.get(pk=id)
+        product_status = ProductTypeStatus.objects.get(type=product.type, pk=status)
+
+        if not self._check_user_perms(user=request.user, status_hierarchies=product_status.hierarchy.all()):
+            raise PermissionDenied(f"Change product status to '{product_status.name}'.")
+
+        if product_status == product.status:
+            return
+
+        with transaction.atomic():
+            product.status = product_status
+            product.save()
+
+            ProductStatusTrack.objects.create(
+                product=product,
+                status=product_status,
+                created_by=request.user
+            )

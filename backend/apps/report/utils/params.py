@@ -18,7 +18,7 @@ class Params:
         if not q:
             return ''
         for k, v in query_params.items():
-            q = q.replace('$P__{}__P$'.format(k.upper()), v)
+            q = q.replace(f'$P__{k.upper()}__P$', str(v))
         return [i for i in py3ws_utils.get_class(query['class']).objects.raw(q)]
 
     def _bind_list_param(self, param):

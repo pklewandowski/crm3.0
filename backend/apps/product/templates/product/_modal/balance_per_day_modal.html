@@ -40,9 +40,14 @@
                         <input type="text" id="balanceValidToDate" class="form-control input-md"/>
                         <label for="balanceValidToDate">Data ważności zaświadczenia</label>
                     </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="balancePerDayReportForLender" class="form-control"/>
-                        <label for="balancePerDayReportForLender">Raport dla pożyczkodawcy</label>
+                    <div style="position:relative;">
+                        <input  type="radio" id="balancePerDayReportFullBalance"
+                               name="balancePerDayReportType" value="FULL"/>
+                        <label class="label-radio" for="balancePerDayReportFullBalance">Saldo</label>
+
+                        <input type="radio" id="balancePerDayReportCurrentLiability"
+                               name="balancePerDayReportType" value="CURRENT"/>
+                        <label class="label-radio" for="balancePerDayReportCurrentLiability">Bieżące zobowiązanie</label>
                     </div>
                     <div class="form-group">
                         <input type="checkbox" id="balancePerDayEmulatePayment" class="form-control"/>
@@ -155,7 +160,10 @@
         </div>
     </div>
     <input id="balancePerDayProductStartDate" type="hidden"/>
+    <input id="balancePerDayInterestNominalEndDate" type="hidden"/>
     <input id="balancePerDayInterestForDelayStartDate" type="hidden"/>
     <input id="balancePerDayInterestForDelayMaxStartDate" type="hidden"/>
+    <input id="balancePerDayCapitalTotal" type="hidden"/>
+
 </div>
 

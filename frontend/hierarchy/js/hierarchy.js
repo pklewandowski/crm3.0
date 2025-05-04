@@ -1,20 +1,20 @@
-
-
 import "treantjs/Treant";
 import "treantjs/Treant.css";
 import "../scss/styles.scss";
 
 import {HierarchyDrag} from "./hierarchy-drag";
 import {HierarchyForm} from "./hierarchy-form";
+import {HierarchyUser} from "./hierarchy-user";
 import {HierarchyTile} from "./hierarchy-tile";
 import {HierarchyUtils} from "./hierarachy-utils";
 
 class Hierarchy {
-    constructor(container, formDialogId, rootNodeId = null) {
+    constructor(container, formDialogId, userDialogId, rootNodeId = null) {
         this.containerSelector = `#${container}`;
         this.container = jsUtils.Utils.setContainer(container);
         this.rootNodeId = rootNodeId;
         this.form = new HierarchyForm(formDialogId);
+        this.user = new HierarchyUser(userDialogId)
 
         this.tree = null;
         this.blockDiagramConfig = {
@@ -94,6 +94,11 @@ class Hierarchy {
         )
     }
 
+    _userHierarchy(nodeId) {
+        console.log('user-hierarchy clicked', nodeId);
+        this.user.show(nodeId);
+    }
+
     _setActions() {
         this.container.addEventListener('click', (e) => {
             console.log('target', e.target);
@@ -108,6 +113,10 @@ class Hierarchy {
 
             if (el.classList.contains('delete-hierarchy')) {
                 this._deleteHierarchy(id);
+            }
+
+            if (el.classList.contains('user-hierarchy')) {
+                this._userHierarchy(id);
             }
 
             if (el.classList.contains('node-editable-as-root')) {
@@ -155,6 +164,7 @@ class Hierarchy {
 
     render(nodes = null) {
         let _this = this;
+
         function _render() {
             _this.prepareNodes();
             _this.hierarchyDrag.setNodes(_this.blockDiagramConfig.nodeStructure);

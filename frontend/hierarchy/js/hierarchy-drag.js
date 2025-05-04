@@ -18,7 +18,8 @@ class HierarchyDrag {
         if (node.id == dragged.parent.id) {
             return false;
         }
-        let _tmp = HierarchyUtils.isChild(dragged, node);
+
+
         if(HierarchyUtils.findNode(dragged, node.id)) {
             return false;
         }
@@ -36,7 +37,6 @@ class HierarchyDrag {
 
     getDroppable(nodes, dragged, droppableList) {
         for (let i of nodes) {
-
             if (this._checkDroppableConditions(i, dragged)) {
                 droppableList.push(i.id);
             }

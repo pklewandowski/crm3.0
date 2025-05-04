@@ -59,6 +59,6 @@ class Migration(migrations.Migration):
                 'permissions': (('list_user', 'permissions.app.user.list_user'),),
                 'default_permissions': ('add', 'change', 'delete'),
             },
-            bases=(models.Model, application.models.CompanyDataMixin),
+            bases=(application.models.CompanyDataMixin,),
         ),
     ]

@@ -91,7 +91,7 @@ $(document).ready(function () {
 
             ajaxCall({
                     method: 'POST',
-                    url: _g.hierarchy.urls.userListUrl,
+                    url: _g.hierarchy.urls.employeeUrl,
                     data: {id: that.data("id")}
                 },
                 (resp) => {

@@ -4,7 +4,6 @@ import apps.product.api.temp
 from apps.notification.utils import Notification
 from apps.product.utils.utils import ProductUtils
 from apps.user.models import User, UserHierarchy
-from py3ws.utils import utils
 
 
 class Rules:
@@ -69,6 +68,7 @@ class Rules:
                                                   )
 
     def handle_rules(self, dt, data):
+        from apps.product.calc import AUTO_STATUS_CHANGE
         if not self.rules:
             return
 
@@ -96,21 +96,22 @@ class Rules:
 
             # trigger rules
             if days and condition:
-                if rule["rule_status_change_from"] and rule["rule_status_change_to"]:
-                    if self.product.status.pk == int(rule[
-                                                         "rule_status_change_from"]):  # and  self.product.document.status.pk != int(i["rule_status_change_to"]):
+                if AUTO_STATUS_CHANGE:
+                    if rule["rule_status_change_from"] and rule["rule_status_change_to"]:
+                        if self.product.status.pk == int(rule[
+                                                             "rule_status_change_from"]):  # and  self.product.document.status.pk != int(i["rule_status_change_to"]):
+                            ProductUtils.change_status(product=self.product,
+                                                       status=rule["rule_status_change_to"],
+                                                       user=User.objects.get(status='SYSTEM'),
+                                                       effective_date=dt)
+                        else:
+                            status = False
+
+                    elif rule["rule_status_change_to"] and forced_status_change:
                         ProductUtils.change_status(product=self.product,
                                                    status=rule["rule_status_change_to"],
                                                    user=User.objects.get(status='SYSTEM'),
                                                    effective_date=dt)
-                    else:
-                        status = False
-
-                elif rule["rule_status_change_to"] and forced_status_change:
-                    ProductUtils.change_status(product=self.product,
-                                               status=rule["rule_status_change_to"],
-                                               user=User.objects.get(status='SYSTEM'),
-                                               effective_date=dt)
 
                 if status and rule["rule_generate_alert_for"] and rule["rule_generate_alert_text"]:
                     user_list = []

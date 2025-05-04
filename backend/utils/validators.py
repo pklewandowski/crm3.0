@@ -23,8 +23,6 @@ def _validate_nip(nip_str):
 def _validate_krs(krs):
     if len(krs) != 10 or not krs.isdigit():
         return False
-    if krs[0:4] != '0000':
-        return False
     return True
 
 
@@ -44,4 +42,3 @@ def krs_validator(krs):
     valid = _validate_krs(krs)
     if not valid:
         raise ValidationError('Niepoprawny numer KRS!')
-

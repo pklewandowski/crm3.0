@@ -1,5 +1,11 @@
 import Swal from "sweetalert2";
 
+let errorTypeMapping = {
+        "PermissionDenied": "You don't have permission to perform this action",
+        "AttributeError": "Attribute error"
+    }
+
+
 class Alert {
     static formatText(text) {
         if (!Array.isArray(text)) {
@@ -178,7 +184,11 @@ class Alert {
         })
     }
 
-    static error(title, text = '', callback = '', callbackArgs = null) {
+
+    static error(title, text = '', callback = '', callbackArgs = null, errorType = null) {
+        if (errorType) {
+            title = errorTypeMapping[errorType]
+        }
         Swal.fire({
             html: Alert.formatText(text),
             title: title,
