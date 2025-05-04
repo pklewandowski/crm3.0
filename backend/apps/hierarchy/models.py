@@ -1,32 +1,35 @@
 from django.contrib.auth.models import Group
-from django.db.models import JSONField
 from django.db import models
+from django.db.models import JSONField
 from django.utils.translation import gettext_lazy as _
-from mptt.models import MPTTModel
 
 from application.models import CompanyDataMixin
 from apps.address.models import Address
 from apps.hierarchy import HIERARCHY_TYPE_STATUS
 
 
-class Hierarchy(models.Model, CompanyDataMixin):
+class Hierarchy(CompanyDataMixin):
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=50, null=True)
-    parent = models.ForeignKey('self', blank=True, null=True, db_column="parent", related_name='children', on_delete=models.CASCADE)
-    description = models.TextField()
-    address = models.ForeignKey(Address, db_column='id_address', related_name='address', null=True, blank=True, on_delete=models.SET_NULL)
-    email = models.EmailField(null=True)
-    phone = models.CharField(max_length=20, null=True)
+    parent = models.ForeignKey('self', blank=True, null=True, db_column="parent", related_name='children',
+                               on_delete=models.CASCADE)
+    description = models.TextField(null=True, blank=True)
+    address = models.ForeignKey(Address, db_column='id_address', related_name='address', null=True, blank=True,
+                                on_delete=models.SET_NULL)
+    email = models.EmailField(null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, blank=True)
     footer_disclaimer = models.TextField(null=True, blank=True)
     # type field accept values CMP - company | HDQ - headquarter | DEP - department | POS - position in department
     type = models.CharField(max_length=10, default=HIERARCHY_TYPE_STATUS['department'])
-    manager = models.ForeignKey('user.User', db_column='id_manager', null=True, blank=True, related_name='manager', on_delete=models.SET_NULL)
+    manager = models.ForeignKey('user.User', db_column='id_manager', null=True, blank=True, related_name='manager',
+                                on_delete=models.SET_NULL)
     representative = JSONField(default=dict)
     is_client_role = models.BooleanField(default=False)
     hierarchy_groups = models.ManyToManyField(Group, through="HierarchyGroup")
     level = models.IntegerField()
     bank_transaction_files_directory = models.CharField(max_length=50, default='')
     bank_account = models.CharField(max_length=34, default='')
+    share_capital_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     sq = models.IntegerField(default=0)
 
     class Meta:
@@ -63,7 +66,8 @@ class HierarchyGroup(models.Model):
 
 
 class HierarchyPosition(models.Model):
-    hierarchy = models.ForeignKey(Hierarchy, db_column='id_hierarchy', related_name='position_set', on_delete=models.CASCADE)
+    hierarchy = models.ForeignKey(Hierarchy, db_column='id_hierarchy', related_name='position_set',
+                                  on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=10, null=True, blank=True)
     sq = models.IntegerField()

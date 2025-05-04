@@ -18,7 +18,6 @@ import {Product} from "./product";
 import {calculateProductAggregates} from "./financePack/calculation/calculation";
 import Alert from "../../_core/alert";
 import Report from "../../report/js/report";
-import {ProductForm} from "./product-form";
 
 window.report = new Report('reportModal');
 
@@ -523,4 +522,25 @@ $(document).ready(() => {
         language: 'pl',
         format: 'yyyy-mm-dd'
     });
+
+    document.getElementById('productStatuses').addEventListener('click', e => {
+        Alert.questionWarning('Czy na pewno zmienić status produktu?', '', () => {
+            ajaxCall({
+                    method: 'post',
+                    url: "/product/api/product-status/",
+                    data: {"id": _g.product.id, "status": e.target.value}
+
+                },
+                (resp) => {
+                    console.log(resp)
+                    window.location.reload();
+                },
+                (resp) => {
+                    jsUtils.LogUtils.log(resp.responseJSON)
+                    Alert.error(null, resp.responseJSON.errmsg, null, null, resp.responseJSON.errtype)
+                }
+            );
+
+        });
+    })
 });

@@ -28,7 +28,7 @@
     <a id="showBalancePerDayBtn" href="#"
        class="show-balance-per-day btn btn-default btn-sm"
        title="Saldo na dzień"
-       style="background-color: #b775ac; margin-right: 40px; text-align: center" data-toggle="tooltip">
+       style="background-color: #b775ac; margin-right: 30px; text-align: center" data-toggle="tooltip">
         <span style="
               pointer-events: none;
               font-size: 24px;
@@ -46,6 +46,23 @@
        class="btn btn-default btn-sm btn-show-doc">
         <i class="far fa-file-alt"></i>
     </a>
+
+    <div style="margin-right: 30px; float: left;" class="available-statuses-btn-container">
+        <div class="dropdown">
+            <div id="changeStatus" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button id="changeStatusBtn" class="btn btn-success" type="button" style="transform: rotate(90deg);">
+                    <i class="fas fa-code-branch" style="pointer-events: none"></i></button>
+            </div>
+            <div class="dropdown-menu dropdown-menu-right product-available-statuses-dropdown" aria-label="changeStatus">
+                <ul id="productStatuses">
+                    {% for i in product_statuses %}
+                        <li value="{{ i.pk }}">{{ i.name }}</li>
+                    {% endfor %}
+                </ul>
+                <input type="hidden" id="productStatusId" value="{{ product.status.pk }}">
+            </div>
+        </div>
+    </div>
 
     <a href="#" id="removeProductBtn" class="btn btn-danger btn-sm btn-remove-product">
         <i class="fa fa-times"></i>

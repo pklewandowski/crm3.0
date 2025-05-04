@@ -1,7 +1,10 @@
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 
+from apps.address.api.serializers import AddressSerializer
 from apps.hierarchy.models import Hierarchy, HierarchyGroup
+from apps.user.api.serializers import UserSerializer
+from apps.user.models import UserHierarchy, User
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -26,11 +29,12 @@ class HierarchySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Hierarchy
-        exclude = ('level', )
+        exclude = ('level',)
 
 
 class HierarchyDetailSerializer(serializers.ModelSerializer):
     parent = HierarchySerializer()
+    address = AddressSerializer()
 
     class Meta:
         model = Hierarchy
@@ -77,3 +81,17 @@ class HierarchyGetSerializer(serializers.ModelSerializer):
             return 'hierarchy-position'
 
         return ''
+
+
+class UserForHierarchySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = 'id', 'first_name', 'last_name', 'email', 'personal_id', 'nip'
+
+
+class UserHierarchySerializer(serializers.ModelSerializer):
+    user = UserForHierarchySerializer()
+
+    class Meta:
+        model = UserHierarchy
+        fields = 'user',

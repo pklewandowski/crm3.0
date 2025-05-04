@@ -224,7 +224,7 @@ table#calc_table tbody {
 
 table#calc_table thead {
   margin-bottom: 5px;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, .2);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
   width: calc(100% - 17px);
   #min-width: 1200px;
 }
@@ -407,4 +407,20 @@ input.schedule-changed {
 
 tr.instalment-schedule-aggregates div, tr.instalment-schedule-aggregates span {
   font-weight: bold;
+}
+
+.product-available-statuses-dropdown ul {
+  list-style: none;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.product-available-statuses-dropdown li {
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.product-available-statuses-dropdown li:hover {
+  background-color: #afe8af;
 }

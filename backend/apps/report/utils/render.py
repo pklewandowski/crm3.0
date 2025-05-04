@@ -30,6 +30,12 @@ def two_line_address(address):
     return address.get_two_line_address()
 
 
+def default(value, default_text=''):
+    if not value:
+        return default_text
+    return value
+
+
 def set_jinja2_env():
     env = jinja2.Environment(loader=BaseLoader)
     env.filters['currency'] = lambda v: "{:,.2f}".format(float(v)).replace(',', ' ').replace('.', ',') if v else v
@@ -38,6 +44,7 @@ def set_jinja2_env():
     env.filters['trim'] = lambda v: v.strip()
     env.filters['add_days'] = add_days
     env.filters['two_line_address'] = two_line_address
+    env.filters['default'] = default
 
     return env
 

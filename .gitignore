@@ -11,3 +11,4 @@ __pycache__/
 /local/
 # migrations/
 /backend/settings.py
+.idea/

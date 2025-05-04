@@ -72,6 +72,12 @@ class HierarchyForm {
             hierarchy.hierarchy_groups.push({id: parseInt(group.id)});
         }
 
+        hierarchy.address = {}
+        for (let item of Array.from(
+            this.form.querySelector('fieldset#hierachyFormAddressData').querySelectorAll('input, select, textarea'))) {
+            hierarchy.address[item.name] = item.value;
+        }
+
         return hierarchy;
     }
 
@@ -83,6 +89,11 @@ class HierarchyForm {
         }
         for (let opt of Array.from(this.form.querySelector('[name="type"] option'))) {
             opt.removeAttribute('disabled');
+        }
+
+        for (let item of Array.from(
+            this.form.querySelectorAll('input, select, textarea'))) {
+            item.value = null;
         }
     }
 
@@ -108,7 +119,24 @@ class HierarchyForm {
             this.form.querySelector('[name="type"]').setAttribute('disabled', 'disabled');
             this.form.querySelector('[name="type"]').value = data.type;
             this.form.querySelector('[name="name"]').value = data.name;
-            this.form.querySelector('[name="description"]').value = data.description;
+            this.form.querySelector('[name="nip"]').value = data.nip;
+            this.form.querySelector('[name="regon"]').value = data.regon;
+            this.form.querySelector('[name="krs"]').value = data.krs;
+            this.form.querySelector('[name="email"]').value = data.email;
+            this.form.querySelector('[name="phone"]').value = data.phone;
+            this.form.querySelector('[name="share_capital_amount"]').value = data.share_capital_amount;
+
+            this.form.querySelector('[name="description"]').value = data.description? data.description : '';
+
+            if (data.address) {
+                this.form.querySelector('[name="street"]').value = data.address.street;
+                this.form.querySelector('[name="street_no"]').value = data.address.street_no;
+                this.form.querySelector('[name="apartment_no"]').value = data.address.apartment_no;
+                this.form.querySelector('[name="post_code"]').value = data.address.post_code;
+                this.form.querySelector('[name="city"]').value = data.address.city;
+                this.form.querySelector('[name="country"]').value = data.address.country;
+                this.form.querySelector('[name="address_id"]').value = data.address.id;
+            }
 
         } else {
             this._disableHierarchyTypes(parent.type);

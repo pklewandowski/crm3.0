@@ -17,6 +17,7 @@
 {% endif %}
     {% if form.errors %} - <span class="error-header-info">wystąpiły błędy!</span>{% endif %}
 {% endblock %}
+
 {% block form_subtitle %}{% endblock %}
 {% block form_title_right %}
     <a href="{% url 'user.add' type %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></a>
@@ -45,9 +46,13 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    {#            <div class="row">#}
-                    {#                <div class="col-lg-12">#}
+                                <div class="row">
+                                    <div class="col-lg-12">
+
+
+
                     <div style="height: calc(100vh - 220px);  overflow: auto">
+
                         <table id="user_list" class="table table-hover table-condensed">
                             <thead>
                             <tr>
@@ -98,8 +103,8 @@
                                     </th>
                                     <th>Ostatni produkt</th>
                                     <th>Ostatnia kwota</th>
-                                    {#                {% elif type == 'ADVISER' %}#}
-                                    {#                    <th>Oddział</th>#}
+                                                    {% elif type == 'ADVISER' %}
+                                                        <th>Oddział</th>
                                 {% elif type == 'BROKER' %}
                                     <th data-name="adviser__user__last_name"
                                         class="sort sort-{% if sort_field == 'adviser__user__last_name' %}{% if sort_dir  == '-' %}up{% else %}down{% endif %}{% else %}unsorted{% endif %}">Doradca
@@ -111,6 +116,7 @@
                             </tr>
                             </thead>
                             <tbody>
+
                             {% for row in page %}
                                 <tr data-id="{{ row.user.pk|unlocalize }}"
                                         {% if row.product_in_vindication %} class="client-list-vindication-row">
@@ -136,11 +142,13 @@
                                                 {% endif %}
                                             </a>
                                         </div>
+
                                         {% if row.user.avatar_filename %}
                                             <div class="avatar-image-magnifier">
                                                 <img src="{{ MEDIA_URL }}avatar/{{ row.user.avatar_filename }}">
                                             </div>
                                         {% endif %}
+
                                     </div>
                                 </td>
                                 <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.first_name|default_if_none:'' }}</a></td>
@@ -149,10 +157,12 @@
                                 <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.phone_one|default_if_none:'' }}</a></td>
                                 <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.email|default_if_none:'' }}</a></td>
                                 <td><a href="{% url 'user.edit' row.user.pk type %}">{{ row.user.date_joined|date:'Y-m-d' }}</a></td>
+
                                 {% if type == 'CLIENT' %}
                                     <td>{{ row.company.name|default_if_none:'' }}</td>
                                     <td><a href="{% url 'user.edit' row.pk 'CLIENT' %}">{{ row.get_source_label|default_if_none:'' }}</a></td>
                                     <td><a href="{% url 'user.edit' row.pk 'CLIENT' %}">{{ row.get_status_label|default_if_none:'' }}</a></td>
+
                                     {% if row.adviser %}
                                         <td>
                                             <a href="{% url 'user.edit' row.adviser.pk 'ADVISER' %}">{{ row.adviser.user.first_name|default_if_none:'' }} {{ row.adviser.user.last_name|default_if_none:'' }}</a>
@@ -202,16 +212,19 @@
                                         {% endif %}
 
                                 {% elif type == 'BROKER' %}
+
                                     {% if row.adviser %}
                                         <td><a href="{% url 'user.edit' row.adviser.pk 'ADVISER' %}">{{ row.adviser.user.first_name }} {{ row.adviser.user.last_name }}</a></td>
                                     {% else %}
                                         <td>&nbsp;</td>
                                     {% endif %}
                                     <td class="number-value-cell"><strong>{{ row.total_value_no_annex|default_if_none:'-' }}</strong> | {{ row.total_value|default_if_none:'-' }}</td>
+
                                 {% endif %}
 
                                 <td>
                                     <div class="btn-group" role="group">
+
                                         {% if type == 'EMPLOYEE' %}
                                             <a data-id="{{ row.pk }}" href="{% url 'user.edit' row.pk 'EMPLOYEE' %}"
                                                class="btn btn-default btn-sm">
@@ -242,10 +255,18 @@
                                     </div>
                                 </td>
                                 </tr>
+
+
                             {% endfor %}
+
+
+
                             </tbody>
                         </table>
                     </div>
+
+
+
                 </div>
             </div>
         </div>

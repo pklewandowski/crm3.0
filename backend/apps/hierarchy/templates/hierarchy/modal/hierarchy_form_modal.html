@@ -31,6 +31,30 @@
                                                 <label>Nazwa</label>
                                             </div>
                                             <div class="form-group">
+                                                <input type="text" name="nip" class="form-control input-md"/>
+                                                <label>NIP</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="regon" class="form-control input-md"/>
+                                                <label>Regon</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="krs" class="form-control input-md"/>
+                                                <label>KRS</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="email" class="form-control input-md"/>
+                                                <label>E-mail</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="phone" class="form-control input-md"/>
+                                                <label>Telefon</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="share_capital_amount" class="form-control input-md"/>
+                                                <label>Kapitał zakładowy</label>
+                                            </div>
+                                            <div class="form-group">
                                                 <textarea name="description" class="form-control input-md"></textarea>
                                                 <label>Opis</label>
                                             </div>
@@ -41,25 +65,45 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 priv-list">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">Grupy uprawnień</div>
-                                    <div class="panel-body">
-                                        <div>
-                                            <select id="groupSelect2" multiple="multiple"
-                                                    class="form-control input-md" name="groups">
-                                                <option value="1">Pracownik</option>
-                                                <option value="2">Doradca</option>
-                                            </select>
+                            <div class="col-lg-4 pad-b">
+                                <div class="row">
+                                    <div class="col-lg-12 pad-b">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Adres</div>
+                                            <div class="panel-body">
+                                                <div class="col-lg-12 pad-b">
+                                                    <fieldset id="hierachyFormAddressData">
+                                                        {% include "address/_partial/_jsAddress.html" %}
+                                                    </fieldset>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <fieldset id="hierarchyFormGroupData">
-
-                                        </fieldset>
-
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default priv-list">
+                                            <div class="panel-heading">Grupy uprawnień</div>
+                                            <div class="panel-body">
+                                                <div>
+                                                    <select id="groupSelect2" multiple="multiple"
+                                                            class="form-control input-md" name="groups">
+                                                        <option value="1">Pracownik</option>
+                                                        <option value="2">Doradca</option>
+                                                    </select>
+                                                </div>
+                                                <fieldset id="hierarchyFormGroupData"></fieldset>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {#                        <div class="row">#}
+                        {#                            <div class="col-lg-12">#}
+                        {#                                {% include "address/_partial/_jsAddress.html" %}#}
+                        {#                            </div>#}
+                        {#                        </div>#}
                     </div>
 
                     <div class="modal-footer">

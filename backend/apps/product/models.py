@@ -572,6 +572,8 @@ class ProductTypeStatus(models.Model):
                              on_delete=models.CASCADE)
     name = models.CharField(verbose_name=_('product.type.status.name'), max_length=100)
     code = models.CharField(verbose_name=_('product.type.status.code'), max_length=10)
+    hierarchy = models.ManyToManyField(Hierarchy, through='ProductTypeStatusHierarchyM2M',
+                                       related_name='hierarchy_set')
     is_initial = models.BooleanField(verbose_name=_('product.type.status.is_initial'))
     is_active = models.BooleanField(verbose_name=_('product.type.status.is_active'), default=True)
     is_alternate = models.BooleanField(verbose_name=_('product.type.status.is_alternate'), default=False)
@@ -586,6 +588,14 @@ class ProductTypeStatus(models.Model):
 
     class Meta:
         db_table = 'product_type_status'
+
+
+class ProductTypeStatusHierarchyM2M(models.Model):
+    hierarchy = models.ForeignKey(to=Hierarchy, db_column='id_hierarchy', on_delete=models.PROTECT)
+    product = models.ForeignKey(to=ProductTypeStatus, db_column='id_status', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'product_type_status_hierarchy_m2m'
 
 
 class ProductTypeProcessFlow(models.Model):

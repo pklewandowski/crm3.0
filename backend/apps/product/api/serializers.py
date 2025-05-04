@@ -42,6 +42,9 @@ class ProductCalculationBalanceSerializer(serializers.ModelSerializer):
     cost_aggregation = serializers.SerializerMethodField()
     interest_for_delay_date = serializers.SerializerMethodField()
     interest_for_delay_max_date = serializers.SerializerMethodField()
+    interest_nominal_end_date = serializers.SerializerMethodField()
+    capital_total = serializers.SerializerMethodField()
+    current_liabilities = serializers.SerializerMethodField()
 
     def get_product_start_date(self, obj):
         return obj.product_start_date
@@ -54,6 +57,15 @@ class ProductCalculationBalanceSerializer(serializers.ModelSerializer):
 
     def get_interest_for_delay_max_date(self, obj):
         return obj.interest_for_delay_max_date
+
+    def get_interest_nominal_end_date(self, obj):
+        return obj.interest_nominal_end_date
+
+    def get_capital_total(self, obj):
+        return obj.capital_total
+
+    def get_current_liabilities(self, obj):
+        return obj.current_liabilities
 
     class Meta:
         model = ProductCalculation

@@ -45,6 +45,8 @@ urlpatterns = [
     url(r'^api/instalment-schedule/mapping/$', instalment_schedule_rest.ProductInstalmentScheduleMappingView.as_view(),
         name='product.api.instalment_schedule.mapping'),
 
+    url(r'^api/product-status/$', rest.ProductStatusView.as_view(), name='product.api.status'),
+
     url(r'^api/product-stats/$', rest.ProductStatView.as_view(), name='product.api.stats'),
     url(r'^api/balance-per-day/$', rest.ProductBalancePerDayView.as_view(), name='product.api.balance_per_day'),
 ]

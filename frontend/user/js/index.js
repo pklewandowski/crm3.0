@@ -65,7 +65,7 @@ $(document).ready(() => {
     }
 
     ajaxCall({
-            mentod: 'get',
+            method: 'get',
             url: "/hierarchy/api/",
         },
         (hierarchy) => {

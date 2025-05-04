@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('address', '0001_initial'),
         ('attachment', '0001_initial'),
-        ('auth', '0013_group_description'),
+        #('auth', '0013_group_description'),
         ('hierarchy', '0001_initial'),
         ('note', '0001_initial'),
     ]
