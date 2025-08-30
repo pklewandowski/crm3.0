@@ -36,7 +36,7 @@
     <td class="cashflow-description">{{ cashflow_form.description }}{{ cashflow_form.value.description }}</td>
     <td class="cashflow-action">
         <div>
-            {% if  inst.entry_source == 'FILE' %}&nbsp;{% else %}
+            {% if  inst.entry_source == 'FILE' or inst.entry_source == 'AUTO' %}&nbsp;{% else %}
                 <a href="#" class="btn btn-danger delete">
                     <i class="far fa-trash-alt"></i>
                 </a>

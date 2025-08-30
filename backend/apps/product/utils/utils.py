@@ -57,9 +57,7 @@ class ProductUtils:
 
     @staticmethod
     def calculate_balance(data):
-        total = data['capital_not_required'] + data['commission_not_required'] + \
-            data['required_liabilities_sum'] + data['cost']
-
+        total = data['capital_not_required'] + data['commission_not_required'] + data['required_liabilities_sum']
         with_overpaid = total - data['instalment_overpaid']
 
         return {'total': total, 'with_overpaid': with_overpaid}

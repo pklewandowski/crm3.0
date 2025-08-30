@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from django.db.models import JSONField
 from django.core.validators import MinValueValidator
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Max
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -209,6 +209,25 @@ class ProductCashFlow(models.Model):
     class Meta:
         db_table = 'product_cash_flow'
         default_permissions = ()
+
+    @staticmethod
+    def add_cache_flow(data, delete_if_exists=False):
+        cost_type = DocumentTypeAccountingType.objects.get(code=data['code'])
+
+        with transaction.atomic():
+            if delete_if_exists:
+                ProductCashFlow.objects.filter(type=cost_type).delete()
+
+            ProductCashFlow.objects.create(
+                product=data['product'],
+                value=data['vindication_fee'],
+                cash_flow_date=data['cash_flow_date'],
+                type=cost_type,
+                description=data['description'],
+                accounting_date=data['accounting_date'],
+                editable=data['editable'],
+                entry_source=data['entry_source']
+            )
 
 
 class ProductActionAttachment(models.Model):
