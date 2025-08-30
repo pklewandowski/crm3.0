@@ -1,11 +1,13 @@
+import logging
 import traceback
 from datetime import datetime, timedelta
 
 from django.conf import settings
+from django.core.validators import validate_email
 from django.db import transaction
 from django.db.models import Sum, Q, Count
 from rest_framework import status as http_status
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -22,7 +24,10 @@ from ..calc import LoanCalculation
 from ...document.api.utils import DocumentApiUtils
 from ...financial_accounting.batch_processing.loaders.loaderMT940 import LoaderMT940
 from ...financial_accounting.transaction.models import Transaction
+from ...message.models import MessageTemplate
+from ...user.models import User
 
+logger = logging.getLogger(__name__)
 
 class ProductEntityApi(APIView):
     @rest_api_wrapper
@@ -343,6 +348,7 @@ class ProductBalancePerDayView(APIView):
 
         return ProductCalculationBalanceSerializer(instance=calculation_result).data
 
+from apps.message import utils as msg_utils
 
 class ProductStatusView(APIView):
     @staticmethod
@@ -374,6 +380,7 @@ class ProductStatusView(APIView):
         status = request.data.get('status', None)
 
         product = Product.objects.get(pk=id)
+        previous_status = product.status
         product_status = ProductTypeStatus.objects.get(type=product.type, pk=status)
 
         if not self._check_user_perms(user=request.user, status_hierarchies=product_status.hierarchy.all()):
@@ -391,3 +398,22 @@ class ProductStatusView(APIView):
                 status=product_status,
                 created_by=request.user
             )
+        for user in User.objects.filter(hierarchy__in=(product_status.hierarchy.all())):
+            if user.email:
+                try:
+                    validate_email(user.email)
+                    template = MessageTemplate.objects.get(code='PRODUCT_STATUS_CHG')
+                    msg_utils.register_message(template,
+                                               source={'user': user},
+                                               add_params={
+                                                   'PRODUCT_CODE': product.document.code,
+                                                   'PREVIOUS_STATUS': previous_status.name,
+                                                   'CURRENT_STATUS': product.status.name
+                                               },
+                                               recipients=[user.email],
+                                               send_immediately=True
+                                               )
+
+                except ValidationError:
+                    logger.warning(f"Email address '{user.email}' could not be verified.")
+

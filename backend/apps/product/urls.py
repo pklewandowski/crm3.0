@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^$', views.index, name='attribute.index'),
     url(r'^list/(?P<id>\d+)/$', views.list_product, name='product.list'),
     url(r'^list-all/$', views.list_all_products, name='product.list_all_products'),
+    url(r'^list-by-type/(?P<type>\w+)/$', views.list_products_by_type, name='product.list_products_by_type'),
     url(r'^add/(?P<id>\d+)/$', views.add, name='product.add'),
     url(r'^add/(?P<id>\d+)/(?P<id_client>\d+)/$', views.add, name='product.add'),
     url(r'^edit/(?P<id>\d+)/$', views.edit, name='product.edit'),

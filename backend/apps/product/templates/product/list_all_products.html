@@ -14,6 +14,13 @@
         a, a:hover {
             color: unset;
         }
+
+        .edit-btn {
+            color: #168fd9;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
     </style>
 {% endblock %}
 
@@ -41,15 +48,17 @@
                     <th>Nr umowy</th>
                     <th>Typ</th>
                     <th style="white-space: nowrap">Wartość</th>
+                    <th style="white-space: nowrap">Status</th>
+
                     <th>Imię i Nazwisko / Firma</th>
                     <th>PESEL</th>
                     <th>NIP</th>
-                    <th>Adres</th>
+                    {#                    <th>Adres</th>#}
                     <th>E-mail</th>
                     <th>Data utworzenia</th>
                     <th>Utworzył</th>
 
-                    <th style="width:130px">Akcje</th>
+                    <th style="width:35px;"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -57,23 +66,33 @@
                     <tr>
                         <td><a href="{% url 'document.edit' product.document.pk %}">{{ product.agreement_no }}</a></td>
                         <td>{{ product.document.type.name }}</td>
-                        <td style="text-align: right; white-space: nowrap"><a href="{% url 'product.edit' product.pk %}">{{ product.value }}</a></td>
-                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.first_name|default_if_none:'----' }} {{ product.client.user.last_name }}</a></td>
-                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.personal_id|default_if_none:'----' }}</a></td>
-                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.nip|default_if_none:'----' }}</a></td>
-                        <td style="white-space: nowrap"><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.mail_address|compact_address }}</a></td>
-                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.email|default_if_none:'----' }}</a></td>
-                        <td style="white-space: nowrap"><a href="{% url 'product.edit' product.pk %}">{{ product.creation_date|date:'Y-m-d' }}</a></td>
+                        <td style="text-align: right; white-space: nowrap"><a
+                                href="{% url 'product.edit' product.pk %}">{{ product.value }}</a></td>
+                        <td>{{ product.status }}</td>
+                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">
+                            {{ product.client.user.first_name|default_if_none:'----' }} {{ product.client.user.last_name }}</a>
+                        </td>
+                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">
+                            {{ product.client.user.personal_id|default_if_none:'----' }}</a></td>
+                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">
+                            {{ product.client.user.nip|default_if_none:'----' }}</a></td>
+                        {#                        <td style="white-space: nowrap"><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">{{ product.client.user.mail_address|compact_address }}</a></td>#}
+                        <td><a href="{% url 'user.edit' product.client.user.pk 'CLIENT' %}">
+                            {{ product.client.user.email|default_if_none:'----' }}</a></td>
+                        <td style="white-space: nowrap"><a href="{% url 'product.edit' product.pk %}">
+                            {{ product.creation_date|date:'Y-m-d' }}</a></td>
                         {% if product.creation_user.is_superuser %}
-                            <td>{{ product.creation_user.first_name|default_if_none:'----' }} {{ product.creation_user.last_name }}</td>
+                            <td>
+                                {{ product.creation_user.first_name|default_if_none:'----' }} {{ product.creation_user.last_name }}</td>
                         {% else %}
-                            <td><a href="{% url 'user.edit' product.creation_user.pk %}">{{ product.creation_user.first_name|default_if_none:'----' }} {{ product.creation_user.last_name }}</a></td>
+                            <td><a href="{% url 'user.edit' product.creation_user.pk %}">
+                                {{ product.creation_user.first_name|default_if_none:'----' }} {{ product.creation_user.last_name }}</a>
+                            </td>
                         {% endif %}
 
                         <td>
                             <div class="btn-group">
-                                <a href="{% url 'product.edit' product.pk %}"
-                                   class="btn btn-default btn-sm edit">
+                                <a href="{% url 'product.edit' product.pk %}" class="edit edit-btn">
                                     <i class="far fa-edit"></i>
                                 </a>
                             </div>

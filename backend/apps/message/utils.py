@@ -56,7 +56,7 @@ def bind_params(text: str, source: dict = None, add_params: dict = None, test=Fa
                             text = text.replace("$P__%s__P$" % p.code, '<img src="cid:%s"/>' % p.code)
                             attachments[p.code] = add_params[p.code]
 
-    if type(add_params) == 'dict':
+    if type(add_params) == dict:
         for k, v in add_params.items():
             text = text.replace("$P__%s__P$" % k, v)
 
@@ -157,13 +157,14 @@ def send_message(subject, body, sms_text=None, to=None, cc=None, phones=None, at
                 os.remove(file_path)
 
     if phones:
-        from smsapi.client import SmsApiPlClient
-        from smsapi.exception import SmsApiException
-
-        client = SmsApiPlClient(access_token=settings.SMSAPI_ACCESS_TOKEN)
-        for phone in phones:
-            try:
-                send_results = client.sms.send(to=phone, message=sms_text)
-            except SmsApiException as ex:
-                # todo: Handle this exception somehow
-                pass
+        pass
+        # from smsapi.client import SmsApiPlClient
+        # from smsapi.exception import SmsApiException
+        #
+        # client = SmsApiPlClient(access_token=settings.SMSAPI_ACCESS_TOKEN)
+        # for phone in phones:
+        #     try:
+        #         send_results = client.sms.send(to=phone, message=sms_text)
+        #     except SmsApiException as ex:
+        #         # todo: Handle this exception somehow
+        #         pass
