@@ -265,7 +265,6 @@ class DocumentApi(APIView):
                 DocumentApiUtils.change_status(document, document_status_id, request.user)
             response_data['documentStatus'] = document_status_id
 
-            # trigger common action
             DocumentApiUtils.trigger_common_action(user=request.user, document=document)
 
             # trigger action from class package

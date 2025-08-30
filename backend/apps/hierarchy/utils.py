@@ -20,3 +20,21 @@ def get_departments(hierarchy_set, with_descendants=False):
                 for dsc in dept.get_descendants():
                     depts[dsc.pk] = dsc
     return depts
+
+def check_user_perms(user, status_hierarchies, raise_exception=False):
+    if user.is_superuser:
+        return True
+
+    if not status_hierarchies:
+        return True
+
+    user_hierarchies = user.hierarchy.all()
+
+    if not user_hierarchies:
+        return False
+
+    for hierarchy in status_hierarchies:
+        if hierarchy in user_hierarchies:
+            return True
+
+    return False
