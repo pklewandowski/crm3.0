@@ -56,6 +56,20 @@ def list_all_products(request):
     return render(request, 'product/list_all_products.html', context)
 
 
+def list_products_by_type(request, type):
+    type_statuses = {
+        'vindication': [4, 5, 2, 3, 6, 7, 8, 9],
+        'archive': [10, 11, 12, 13]
+    }
+    if type not in type_statuses:
+        raise AttributeError('Podano niepoprawny typ dla produktów')
+
+    products = Product.objects.filter(status_id__in=type_statuses[type]).order_by('document__type__name', '-creation_date')
+
+    context = {'products': products, 'product_type': 'Windykacja' if type=='vindication' else 'Archiwum'}
+    return render(request, 'product/list_products_by_type.html', context)
+
+
 @login_required()
 @p3permission_required('product.add_product')
 @transaction.atomic()
@@ -268,6 +282,12 @@ def edit(request, id, iframe=0):
     product_action_definition = ProductActionDefinition.objects.filter(
         document_type=product.document.type).order_by('sq')
 
+    def can_process_status(status):
+        if (set([i.pk for i in request.user.hierarchy.all()]).
+                intersection(set([i.pk for i in status.hierarchy.all()]))):
+            return True
+        return False
+
     context = {'form': form,
                # 'cashflow_type': {i.code.lower(): {"id": i.pk, 'name': i.name, 'subtypes': i.subtypes} for i in
                #                   DocumentTypeAccountingType.objects.filter(is_editable=True)},
@@ -293,7 +313,13 @@ def edit(request, id, iframe=0):
                    'status': i.status,
                    'user': i.created_by
                } for i in ProductStatusTrack.objects.filter(product=product).order_by('creation_date')],
-               'product_statuses': product.type.product_status_set.all().order_by('sq'),
+               'product_statuses': [
+                   {
+                       'id': i.pk,
+                       'pk': i.pk,
+                       'name': i.name,
+                       'can_process': can_process_status(i)
+                   } for i in product.type.product_status_set.all().order_by('sq')],
                }
     if iframe:
         context['override_base'] = "%s.html" % iframe

@@ -3,7 +3,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'hierarchy.list' %}">Struktura firmy</a></div>
         <div class="side-menu-icon"><a href="{% url 'hierarchy.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Struktura firmy">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Struktura firmy">
             <i class="fas fa-project-diagram"></i>
         </a>
         </div>
@@ -11,7 +12,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'user.listgroup' %}">Uprawnienia</a></div>
         <div class="side-menu-icon"><a href="{% url 'user.listgroup' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Uprawnienia">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Uprawnienia">
             <i class="fas fa-users-cog"></i>
         </a></div>
     </li>
@@ -21,7 +23,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'client.current_contacts' %}">Bieżące kontakty</a></div>
         <div class="side-menu-icon"><a href="{% url 'client.current_contacts' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Bieżące kontakty">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Bieżące kontakty">
             <i class="fas fa-hands-helping"></i>
         </a></div>
     </li>
@@ -29,7 +32,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'client.list' %}">Klienci</a></div>
         <div class="side-menu-icon"><a href="{% url 'client.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Klienci">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Klienci">
             <i class="fas fa-user-friends"></i>
         </a></div>
     </li>
@@ -37,7 +41,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'employee.list' %}">Pracownicy</a></div>
         <div class="side-menu-icon"><a href="{% url 'employee.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Pracownicy">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Pracownicy">
             <i class="fas fa-user-tie"></i>
         </a></div>
     </li>
@@ -46,7 +51,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'adviser.list' %}">Doradcy</a></div>
         <div class="side-menu-icon"><a href="{% url 'adviser.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Doradcy">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Doradcy">
             <i class="fas fa-user-graduate"></i>
         </a></div>
     </li>
@@ -54,7 +60,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'broker.list' %}">Pośrednicy</a></div>
         <div class="side-menu-icon"><a href="{% url 'broker.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Pośrednicy">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Pośrednicy">
             <i class="fas fa-people-arrows"></i>
         </a></div>
     </li>
@@ -64,7 +71,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'contractor.list' %}">Partnerzy biznesowi</a></div>
         <div class="side-menu-icon"><a href="{% url 'contractor.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Partnerzy biznesowi">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Partnerzy biznesowi">
             <i class="fas fa-users-cog"></i>
         </a></div>
     </li>
@@ -91,46 +99,68 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'document.type.list' %}">Wnioski</a></div>
         <div class="side-menu-icon"><a href="{% url 'document.type.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Wnioski">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Wnioski">
             <i class="fas fa-book"></i>
         </a></div>
     </li>
+    <hr/>
     <li>
         <div class="side-menu-label"><a href="{% url 'product.list_all_products' %}">Produkty</a></div>
         <div class="side-menu-icon"><a href="{% url 'product.list_all_products' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Produkty">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Produkty">
             <i class="fas fa-industry"></i>
         </a></div>
     </li>
-        <hr />
 
-        <li>
-            <div class="side-menu-label"><a href="{% url 'schedule_app.index' %}">Kalendarz</a></div>
-            <div class="side-menu-icon"><a href="{% url 'schedule_app.index' %}"
-                                           data-toggle="tooltip" data-container="body" data-placement="right" title="Kalendarz">
-                <i class="fas fa-calendar-alt"></i>
-            </a></div>
-        </li>
+    <li>
+        <div class="side-menu-label"><a href="{% url 'product.list_products_by_type' 'vindication'%}">Windykacja</a></div>
+        <div class="side-menu-icon"><a href="{% url 'product.list_products_by_type' 'vindication'%}"
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Produkty - windykacja">
+            <i class="fas fa-bolt"></i>
+        </a></div>
+    </li>
+
+    <li>
+        <div class="side-menu-label"><a href="{% url 'product.list_products_by_type' 'archive' %}">Archiwum</a></div>
+        <div class="side-menu-icon"><a href="{% url 'product.list_products_by_type' 'archive' %}"
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Produkty - archiwum">
+            <i class="fas fa-archive"></i>
+        </a></div>
+    </li>
+    <hr />
+
+    <li>
+        <div class="side-menu-label"><a href="{% url 'schedule_app.index' %}">Kalendarz</a></div>
+        <div class="side-menu-icon"><a href="{% url 'schedule_app.index' %}"
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Kalendarz">
+            <i class="fas fa-calendar-alt"></i>
+        </a></div>
+    </li>
     <hr/>
     {#        <li><a href="{% url 'contractor.list' %}">Kontrahenci</a></li>#}
-{#    <li>#}
-{#        <div class="side-menu-label"><a href="{% url 'schedule.calendar.all' %}">Kalendarz</a></div>#}
-{#        <div class="side-menu-icon">#}
-{#            <a href="{% url 'schedule.calendar.all' %}" data-toggle="tooltip" data-container="body" data-placement="right" title="Kalendarz">#}
-{#                <i class="far fa-calendar-alt"></i>#}
-{#            </a>#}
-{#        </div>#}
-{#    </li>#}
-{##}
-{#    <li>#}
-{#        <div class="side-menu-label"><a href="{% url 'schedule.calendar' user.pk %}">Kalendarz - moje</a></div>#}
-{#        <div class="side-menu-icon">#}
-{#            <a href="{% url 'schedule.calendar' user.pk %}" data-toggle="tooltip" data-container="body" data-placement="right" title="Kalendarz - moje">#}
-{#                <i class="far fa-calendar"></i>#}
-{#            </a>#}
-{#        </div>#}
-{#    </li>#}
-{#    <hr/>#}
+    {#    <li>#}
+    {#        <div class="side-menu-label"><a href="{% url 'schedule.calendar.all' %}">Kalendarz</a></div>#}
+    {#        <div class="side-menu-icon">#}
+    {#            <a href="{% url 'schedule.calendar.all' %}" data-toggle="tooltip" data-container="body" data-placement="right" title="Kalendarz">#}
+    {#                <i class="far fa-calendar-alt"></i>#}
+    {#            </a>#}
+    {#        </div>#}
+    {#    </li>#}
+    {##}
+    {#    <li>#}
+    {#        <div class="side-menu-label"><a href="{% url 'schedule.calendar' user.pk %}">Kalendarz - moje</a></div>#}
+    {#        <div class="side-menu-icon">#}
+    {#            <a href="{% url 'schedule.calendar' user.pk %}" data-toggle="tooltip" data-container="body" data-placement="right" title="Kalendarz - moje">#}
+    {#                <i class="far fa-calendar"></i>#}
+    {#            </a>#}
+    {#        </div>#}
+    {#    </li>#}
+    {#    <hr/>#}
 
     {#    <li><a href="#">Kalendarz - ustawienia</a>#}
     {#        <ul style="padding-left:15px; font-size:10px;">#}
@@ -151,7 +181,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'message.template.list' %}">Powiadomienia</a></div>
         <div class="side-menu-icon"><a href="{% url 'message.template.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Powiadomienia">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Powiadomienia">
             <i class="fas fa-envelope"></i>
         </a></div>
     </li>
@@ -160,7 +191,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'marketing.lp.list' %}">Marketing</a></div>
         <div class="side-menu-icon"><a href="{% url 'marketing.lp.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Marketing">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Marketing">
             <i class="fas fa-comment-dollar"></i>
         </a></div>
     </li>
@@ -168,7 +200,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'partner.lead.list' %}">Partner</a></div>
         <div class="side-menu-icon"><a href="{% url 'partner.lead.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Partner">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Partner">
             <i class="fas fa-handshake"></i>
         </a></div>
     </li>
@@ -184,7 +217,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'table_report.list' %}">Raporty...</a></div>
         <div class="side-menu-icon"><a href="{% url 'table_report.list' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Raporty...">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Raporty...">
             <i class="fa fa-table"></i>
         </a></div>
     </li>
@@ -192,7 +226,8 @@
     <li>
         <div class="side-menu-label"><a href="{% url 'login.logout' %}">Wyloguj...</a></div>
         <div class="side-menu-icon"><a href="{% url 'login.logout' %}"
-                                       data-toggle="tooltip" data-container="body" data-placement="right" title="Wyloguj...">
+                                       data-toggle="tooltip" data-container="body" data-placement="right"
+                                       title="Wyloguj...">
             <i class="fas fa-sign-out-alt"></i>
         </a></div>
     </li>
