@@ -11,6 +11,8 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.hierarchy import utils as hierarchy_utils
+
 from application.wrapper import rest_api_wrapper
 from apps.document.models import DocumentTypeAccountingType, DocumentTypeStatus, DocumentStatusCourse
 from apps.product.api.serializers import ProductCalculationSerializer, ProductCashFlowSerializer, \
@@ -351,25 +353,6 @@ class ProductBalancePerDayView(APIView):
 from apps.message import utils as msg_utils
 
 class ProductStatusView(APIView):
-    @staticmethod
-    def _check_user_perms(user, status_hierarchies):
-        if user.is_superuser:
-            return True
-
-        if not status_hierarchies:
-            return True
-
-        user_hierarchies = user.hierarchy.all()
-
-        if not user_hierarchies:
-            return False
-
-        for hierarchy in status_hierarchies:
-            if hierarchy in user_hierarchies:
-                return True
-
-        return False
-
     @rest_api_wrapper
     def get(self, request):
         return
@@ -383,7 +366,7 @@ class ProductStatusView(APIView):
         previous_status = product.status
         product_status = ProductTypeStatus.objects.get(type=product.type, pk=status)
 
-        if not self._check_user_perms(user=request.user, status_hierarchies=product_status.hierarchy.all()):
+        if not hierarchy_utils.check_user_perms(user=request.user, status_hierarchies=product_status.hierarchy.all()):
             raise PermissionDenied(f"Change product status to '{product_status.name}'.")
 
         if product_status == product.status:

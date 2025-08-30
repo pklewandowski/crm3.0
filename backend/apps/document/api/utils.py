@@ -2,9 +2,13 @@ import datetime
 import json
 
 from django.db.models import Q
+from rest_framework.exceptions import PermissionDenied
 
 from apps.document.models import DocumentTypeStatus, DocumentStatusTrack, DocumentStatusCourse, DocumentAttribute, DocumentTypeAttribute
+from apps.hierarchy.models import Hierarchy
 from py3ws.utils import utils as py3ws_utils
+
+from apps.hierarchy import utils as hierarchy_utils
 
 
 class DocumentApiUtils:
@@ -21,6 +25,10 @@ class DocumentApiUtils:
 
         else:
             raise TypeError('[DocumentApi.change_status]: status parameter of incorrect type. Can be either [DocumentTypeStatus], or [int] or [str]')
+
+        if document_status.hierarchies:
+            if not hierarchy_utils.check_user_perms(user, Hierarchy.objects.filter(pk__in=document_status.hierarchies)):
+                raise PermissionDenied(f"Nie posiadasz uprawnien do zmiany statusu na '{document_status.name}'.")
 
         DocumentStatusTrack.objects.create(
             document=document,
