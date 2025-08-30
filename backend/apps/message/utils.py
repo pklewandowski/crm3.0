@@ -93,7 +93,7 @@ def register_message(template, source=None, add_params=None, recipients=None, ph
         phones=phones,
         is_sent=False)
 
-    if send_immediately:
+    if send_immediately and os.getenv('EMAIL_ENABLED') != 'false':
         try:
             send_message(subject=subject, body=text, attachments=attachments, to=recipients, phones=phones)
             mq.is_sent = True
