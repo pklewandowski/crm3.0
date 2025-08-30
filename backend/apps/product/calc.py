@@ -6,13 +6,14 @@ from django.conf import settings
 from django.db import transaction
 from django.db.models import Max
 
+from apps.document.models import DocumentAttribute
 from apps.product import INTEREST_NOMINAL, INTEREST_FOR_DELAY_MAX, INTEREST_FOR_DELAY, CONSTANT_DAYS_IN_YEAR
 from apps.product.calc_utils import calculate_nominal_interest_daily
 from apps.product.calculation import Calculation, CalculationException
 from apps.product.models import ProductCalculation, ProductAction, ProductActionDefinition, ProductStatusTrack, \
-    ProductInterestGlobal
+    ProductInterestGlobal, ProductCashFlow
 from apps.product.rules import Rules
-from apps.product.utils.utils import ProductUtils
+from apps.product.utils.utils import ProductUtils, LoanUtils
 from apps.product.view.views import ProductActionManager
 
 logger = logging.getLogger(__name__)
@@ -21,6 +22,7 @@ logging.basicConfig(level=logging.DEBUG)
 DECIMAL_PLACES = 2
 # TODO: move to product level, not global!!!
 AUTO_STATUS_CHANGE = False
+
 
 class LoanCalculation(Calculation):
     def __init__(self, product, user):
@@ -514,7 +516,7 @@ class LoanCalculation(Calculation):
                 'capital_not_required': self.accounting['CAP_NOT_REQ'],
                 'commission_not_required': self.accounting['COMM_NOT_REQ'],
                 'required_liabilities_sum': required_liabilities_sum,
-                'cost': self._cost_sum_per_day,
+                # 'cost': self._cost_sum_per_day,
                 'instalment_overpaid': self.accounting['PAYMENT']
             }
         )
@@ -859,6 +861,40 @@ class LoanCalculation(Calculation):
         # instalment = self.schedule_list[
         #     datetime.datetime.strftime(self.schedule_current_date, '%Y-%m-%d')]['instalment_total']
 
+        VINDICATION_FEE_ATTRIBUTE = 'VINDICATION_FEE'
+
+        def charge_vindication_fee():
+            mapped_attributes = LoanUtils.get_mapped_attributes(self.product.document)
+            if VINDICATION_FEE_ATTRIBUTE in mapped_attributes:
+                try:
+                    vindication_fee = DocumentAttribute.objects.get(
+                        document_id=self.product.document.pk,
+                        attribute_id=mapped_attributes[VINDICATION_FEE_ATTRIBUTE]['id']
+                    ).value
+
+                except DocumentAttribute.DoesNotExist:
+                    return
+
+                try:
+                    if not vindication_fee or float(vindication_fee) == 0:
+                        return
+                except ValueError:
+                    logger.warning(f'vindication_fee is not a number, but: "{vindication_fee}"')
+                    return
+
+                ProductCashFlow.add_cache_flow(
+                    {
+                        'product': self.product,
+                        'vindication_fee': vindication_fee,
+                        'cash_flow_date': dt,
+                        'accounting_date': dt,
+                        'code': 'COST_VINDICATION_FEE',
+                        'description': 'Opłata windykacyjna',
+                        'editable': False,
+                        'entry_source': 'AUTO'
+                    }, delete_if_exists=True
+                )
+
         if not self.delay_total and dt >= self.schedule_current_date:
             if (dt - self.schedule_current_date).days < self.product.grace_period:
                 if (dt - self.schedule_current_date).days == self.product.grace_period - 1:
@@ -892,6 +928,10 @@ class LoanCalculation(Calculation):
 
                 if self._delay:
                     self.delay_total = True
+
+                    # charge vindication fee
+                    # TODO: DRUT! finally make this action configurable via RULES
+                    charge_vindication_fee()
 
         return dt
 

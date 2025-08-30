@@ -4,10 +4,9 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.document.models import DocumentType, DocumentTypeSection, DocumentTypeAttribute
 from py3ws.forms import p3form
-from py3ws.forms.percentage_field import PercentageField
 from .api.instalment_schedule import INSTALMENT_MATURITY_DATE_SELECTOR, INSTALMENT_CAPITAL_SELECTOR, \
     INSTALMENT_COMMISSION_SELECTOR, INSTALMENT_INTEREST_SELECTOR, INSTALMENT_TOTAL_SELECTOR
-from .models import Product, ProductSchedule, ProductCashFlow, ProductInterest, ProductAction, ProductClient, \
+from .models import Product, ProductSchedule, ProductCashFlow, ProductAction, ProductClient, \
     ProductCommission, ProductTypeCommission, ProductInterestGlobal, ProductTranche
 from ..hierarchy.models import Hierarchy
 
@@ -340,7 +339,6 @@ class ProductInterestGlobalForm(p3form.ModelForm):
 
 
 class ProductTrancheForm(p3form.ModelForm):
-
     lender = forms.ModelChoiceField(
         queryset=Hierarchy.objects.filter(type='CMP').order_by('name'),
         widget=forms.Select(attrs={'class': 'form-control'}),
