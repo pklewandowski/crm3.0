@@ -6,7 +6,9 @@ import Section from "../component/section/section";
 import Column from "../component/column/column";
 import TabSection from "../component/section/tab-section";
 import Combo from "../component/combo/combo";
-import {DocumentAttributeInstalmentScheduleRepeatableSection} from "../instalment-schedule/document-attribute-instalment-schedule-repeatable-section";
+import {
+    DocumentAttributeInstalmentScheduleRepeatableSection
+} from "../instalment-schedule/document-attribute-instalment-schedule-repeatable-section";
 
 const className = 'DocumentAttributeRendererUtils';
 
@@ -24,7 +26,7 @@ class DocumentAttributeRendererUtils {
 
     static _getRepeatableSectionClass(at, f, level, ver) {
         return at.selector_class == 'instalment-schedule' ?
-            new DocumentAttributeInstalmentScheduleRepeatableSection(at, DocumentAttributeRendererUtils.fTable, level, ver) :
+            new DocumentAttributeInstalmentScheduleRepeatableSection(at, DocumentAttributeRendererUtils.fTable, level, ver):
             at.is_table ?
                 new RepeatableTableSection(at, DocumentAttributeRendererUtils.fTable, level, ver) :
                 new RepeatableSection(at, f, level, ver);

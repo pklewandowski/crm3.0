@@ -40,7 +40,7 @@ class Hierarchy(CompanyDataMixin):
         )
 
     def get_children(self):
-        return Hierarchy.objects.filter(parent=self)
+        return Hierarchy.objects.filter(parent=self).order_by('sq')
 
     def is_root_node(self):
         return self.parent is None

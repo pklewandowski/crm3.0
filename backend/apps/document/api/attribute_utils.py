@@ -8,22 +8,30 @@ from apps.document.models import DocumentTypeAttribute, DocumentTypeAttributeFea
 
 
 class AttributeUtils:
-    def render_calc_func(self, f):
+    @staticmethod
+    def render_calc_func(f):
         sources = re.findall(r'_(\d+)', f)
         body = re.sub(r'_(\d+)', 'document.getElementById(\'\g<1>\')', f)
         body = body.replace('#V', 'Input.getValue')
         return {'sources': sources, 'body': body}
 
-    def get_attributes(self, document_type, parent, level, type=None, status=None, only_data_items=False):
+    @staticmethod
+    def get_attributes(document_type,
+                       parent,
+                       level,
+                       type=None,
+                       status=None,
+                       only_data_items=False,
+                       readonly=False):
+
         q = Q(is_active=True)
         q &= Q(type=type) if type else Q()
         q &= Q(parent=parent) if parent else Q(document_type=document_type, is_section=True, parent__isnull=True)
 
         for i in DocumentTypeAttribute.objects.filter(q).order_by('sq'):
-
             if only_data_items and (i.is_section or i.is_column or i.is_combo):
-                # self.get_attributes(parent=i, document_type=document_type, level=level, type=type, status=status)
-                self.get_attributes(parent=i, document_type=document_type, level=level, status=status)
+                AttributeUtils.get_attributes(parent=i, document_type=document_type, level=level, status=status,
+                                              readonly=readonly)
                 continue
 
             item = model_to_dict(i, fields=[field.name for field in i._meta.fields])
@@ -42,28 +50,35 @@ class AttributeUtils:
                 }
 
                 # if item has attribute assigned we can be sure that is field neither section nor column nor combo
+
                 if status:
                     try:
                         df = DocumentTypeAttributeFeature.objects.get(attribute=i, status=status)
                         item['VER'] = {
                             'visible': df.visible,
-                            'editable': df.editable,
-                            'required': df.required
+                            'editable': df.editable and df.visible and not readonly,
+                            'required': df.required and df.editable and not readonly,
                         }
 
                     except DocumentTypeAttributeFeature.DoesNotExist:
                         item['VER'] = {
                             'visible': True,
-                            'editable': True,
+                            'editable': not readonly,
                             'required': False
                         }
+                else:
+                    item['VER'] = {
+                        'visible': True,
+                        'editable': not readonly,
+                        'required': False
+                    }
 
             level.append(item)
 
             if i.is_section or i.is_column or i.is_combo:
                 item['children'] = []
-                self.get_attributes(parent=i, document_type=document_type, level=item['children'], type=type,
-                                    status=status)
+                AttributeUtils.get_attributes(parent=i, document_type=document_type, level=item['children'], type=type,
+                                              status=status, readonly=readonly)
 
     @staticmethod
     def get_attribute_list(document_type, parent, level, type):

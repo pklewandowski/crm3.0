@@ -45,17 +45,16 @@ class ProductEntityApi(APIView):
             partial=True
         )
 
-        # with transaction.atomic():
         if product.is_valid(raise_exception=True):
             product = product.save()
 
-        if request.data.get('capitalization_date', None):
-            ProductUtils.change_status(
-                product=product,
-                status=ProductTypeStatus.objects.get(type=product.type, code='WYP'),
-                user=request.user,
-                reason='Wypowiedzenie umowy'
-            )
+        # if request.data.get('capitalization_date', None):
+        #     ProductUtils.change_status(
+        #         product=product,
+        #         status=ProductTypeStatus.objects.get(type=product.type, code='WYP'),
+        #         user=request.user,
+        #         reason='Wypowiedzenie umowy'
+        #     )
 
         return {'id': product.id}
 

@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hierarchy', '0006_alter_hierarchy_email'),
+        ('hierarchy', '0005_alter_hierarchy_email'),
         ('product', '0020_producttypestatushierarchym2m_and_more'),
     ]
 

@@ -1,5 +1,6 @@
 import datetime
 import json
+from typing import Optional, Any, Type
 
 from django.db.models import Q
 from rest_framework.exceptions import PermissionDenied
@@ -63,6 +64,7 @@ class DocumentApiUtils:
             q = Q(attribute=attribute, document_id=document.pk)
             if idx:
                 q &= Q(row_sq__gte=idx)
+
             DocumentAttribute.objects.filter(q).delete()
 
         f(attribute)
@@ -108,6 +110,8 @@ class DocumentApiUtils:
             cl = py3ws_utils.get_class(document.status.action_class)()
             return getattr(cl, document.status.action)(user, document.pk)
 
+        return None
+
     @staticmethod
     def _copy_items(item_list, document):
         for k, v in item_list.items():
@@ -141,3 +145,23 @@ class DocumentApiUtils:
 
         if "copy" in action:
             DocumentApiUtils._copy_items(action['copy'], document)
+
+
+class DocumentApiCredentials:
+    @staticmethod
+    def check_user_in_hierarchy(user, status):
+        if user.is_superuser:
+            return True
+
+        if not status.hierarchies:
+            return True
+
+        user_hierarchies = [i.pk for i in user.hierarchy.all()]
+        valid = False
+
+        for i in status.hierarchies:
+            if i in user_hierarchies:
+                valid = True
+                break
+
+        return valid

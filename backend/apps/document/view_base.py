@@ -194,7 +194,8 @@ class DocumentManagement(generic_view.GenericView):
     def _get_instance(self):
         if not self.instance:
             try:
-                self.instance = Document.objects.select_related('type', 'status').prefetch_related('note_set', 'attachment_set').get(pk=self.id)
+                self.instance = Document.objects.select_related(
+                    'type', 'status').prefetch_related('note_set', 'attachment_set').get(pk=self.id)
             except Document.DoesNotExist:
                 raise DocumentException('Próba pobrania danych dokumentu zakończona niepowodzeniem!')
 
@@ -207,12 +208,12 @@ class DocumentManagement(generic_view.GenericView):
 
         user_hierarchies = [i.pk for i in user.hierarchy.all()]
         valid = False
-        # TODO: poniżej lepsza metoda niż iteracja
 
         for i in self.instance.status.hierarchies:
             if i in user_hierarchies:
                 valid = True
                 break
+
         return valid
 
     def validate(self):

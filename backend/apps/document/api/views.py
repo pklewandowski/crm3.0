@@ -26,7 +26,7 @@ from .rest_form import DocumentForm
 from .serializers import DocumentTypeSectionSerializer, DocumentAttachmentSerializer, \
     DocumentStatusTrackSerializer, DocumentTypeProcessFlowSerializer, DocumentSerializer, DocumentFormSerializer
 from .services import note_services, document_services
-from .utils import DocumentApiUtils
+from .utils import DocumentApiUtils, DocumentApiCredentials
 from ..view_base import DocumentException
 from ...hierarchy.models import Hierarchy
 from ...product.calc import LoanCalculation
@@ -36,8 +36,11 @@ from ...product.models import ProductCalculation, ProductStatusTrack
 def add(request, id, owner_id=None):
     document_type = DocumentType.objects.get(pk=id)
     owner = User.objects.get(pk=owner_id) if owner_id else None
+
     form_attributes = []
+
     AttributeUtils().get_attributes(parent=None, document_type=document_type, level=form_attributes, type='FORM')
+
     context = {
         'mode': settings.MODE_CREATE,
         'initial_owner_id': owner.pk if owner else None,
@@ -45,6 +48,7 @@ def add(request, id, owner_id=None):
             owner.company_name or '', owner.first_name or '', owner.last_name or '') if owner else '',
         'document_type': document_type,
     }
+
     return render(request=request, template_name='document/add_v2/add_v2.html', context=context)
 
 
@@ -75,6 +79,7 @@ def edit(request, id):
         'reports': DocumentReport.objects.filter(document=document)
         #
     }
+
     return render(request=request, template_name='document/edit_v2/edit_v2.html', context=context)
 
 
@@ -125,13 +130,12 @@ class DocumentApi(APIView):
     def get_hierarchy(document_type, attributes):
         try:
             hierarchy_attr = str(DocumentTypeAttributeMapping.objects.get(type=document_type,
-                                                                      mapped_name='CREDITOR').attribute.pk)
+                                                                          mapped_name='CREDITOR').attribute.pk)
         except DocumentTypeAttributeMapping.DoesNotExist:
             return None
 
         return Hierarchy.objects.get(
             pk=attributes[hierarchy_attr]['value']) if hierarchy_attr and hierarchy_attr in attributes else None
-
 
     @rest_api_wrapper
     def get(self, request):
@@ -156,84 +160,75 @@ class DocumentApi(APIView):
                 'processFlow': process_flow_serializer.data
             }
 
-        response_data['formAttributes'] = DocumentForm(document_type=document_type, instance=document).get_form()
+        response_data['formAttributes'] = DocumentForm(document_type=document_type, instance=document,
+                                                       user=request.user).get_form()
 
         return response_data
 
+    @rest_api_wrapper
     def post(self, request):
         response_data = {}
-        response_status = status.HTTP_200_OK
         copy_annex_data = request.data.get('copyAnnexData', None)
 
-        try:
-            with transaction.atomic():
-                document_type = DocumentType.objects.get(pk=request.data.get('type'))
-                document_status = doc_utils.get_initial_status(document_type)
+        with transaction.atomic():
+            document_type = DocumentType.objects.get(pk=request.data.get('type'))
+            document_status = doc_utils.get_initial_status(document_type)
 
-                # attributes processing
-                attributes = json.loads(request.data.get('formData'))
+            # attributes processing
+            attributes = json.loads(request.data.get('formData'))
 
-                # get attribute codes for document creation
-                del attributes['__REPEATABLE_SECTIONS']
-                attribute_codes = {i.code: attributes[str(i.pk)]['value']
-                                   for i in DocumentTypeAttribute.objects.filter(pk__in=list(attributes.keys()))}
+            # get attribute codes for document creation
+            del attributes['__REPEATABLE_SECTIONS']
+            attribute_codes = {i.code: attributes[str(i.pk)]['value']
+                               for i in DocumentTypeAttribute.objects.filter(pk__in=list(attributes.keys()))}
 
-                if 'responsible' not in attribute_codes or not attribute_codes['responsible']:
-                    attribute_codes['responsible'] = request.user.pk
+            if 'responsible' not in attribute_codes or not attribute_codes['responsible']:
+                attribute_codes['responsible'] = request.user.pk
 
-                attribute_codes['created_by'] = request.user.pk
-                attribute_codes['code'] = doc_utils.get_document_code(document_type)
-                attribute_codes['type'] = document_type.pk
-                attribute_codes['status'] = document_status.pk
+            attribute_codes['created_by'] = request.user.pk
+            attribute_codes['code'] = doc_utils.get_document_code(document_type)
+            attribute_codes['type'] = document_type.pk
+            attribute_codes['status'] = document_status.pk
 
-                serializer = DocumentSerializer(data=attribute_codes)
+            serializer = DocumentSerializer(data=attribute_codes)
 
-                if serializer.is_valid():
-                    # save document data based on attribute_codes
-                    document = serializer.save()
+            if serializer.is_valid():
+                # save document data based on attribute_codes
+                document = serializer.save()
 
-                    # save document attributes
-                    #  non-repeatable attribute processing
-                    for key, value in attributes.items():
-                        DocumentApiUtils.save_value(document=document, key=key, value=value)
-                else:
-                    raise DocumentException('Wystąpiły błędy w formularzu!', error_list=serializer.errors)
+                # save document attributes
+                #  non-repeatable attribute processing
+                for key, value in attributes.items():
+                    DocumentApiUtils.save_value(document=document, key=key, value=value)
+            else:
+                raise DocumentException('Wystąpiły błędy w formularzu!', error_list=serializer.errors)
 
-                # annex
+            # annex
+            try:
+                DocumentTypeAttributeMapping.objects.get(mapped_name='ANNEX').attribute.pk
+            except DocumentTypeAttributeMapping.DoesNotExist:
+                raise DocumentException("Brak mapowania dla atrybutu 'ANNEX', określającego id umowy ankesowanej")
+
+            if document.annex:
                 try:
-                    DocumentTypeAttributeMapping.objects.get(mapped_name='ANNEX').attribute.pk
-                except DocumentTypeAttributeMapping.DoesNotExist:
-                    raise DocumentException("Brak mapowania dla atrybutu 'ANNEX', określającego id umowy ankesowanej")
+                    Document.objects.get(pk=attribute_codes['annex'], status__code='ANX')
+                    raise DocumentException("Umowa posiada już status 'Aneksowana'")
 
-                if document.annex:
-                    try:
-                        Document.objects.get(pk=attribute_codes['annex'], status__code='ANX')
-                        raise DocumentException("Umowa posiada już status 'Aneksowana'")
+                except Document.DoesNotExist:
+                    pass
 
-                    except Document.DoesNotExist:
-                        pass
+                document.annex.annexed_by = document
+                serializer.instance.annex.save()
 
-                    document.annex.annexed_by = document
-                    serializer.instance.annex.save()
+                if copy_annex_data:
+                    doc_utils.copy_annex_data(document=document)
 
-                    if copy_annex_data:
-                        doc_utils.copy_annex_data(document=document)
+            DocumentStatusTrack.objects.create(document=document, status=document_status, created_by=request.user)
+            DocumentStatusCourse.objects.create(document=document, status=document_status, created_by=request.user)
 
-                DocumentStatusTrack.objects.create(document=document, status=document_status, created_by=request.user)
-                DocumentStatusCourse.objects.create(document=document, status=document_status, created_by=request.user)
+            response_data['id'] = document.pk
 
-                response_data['id'] = document.pk
-
-        except DocumentException as dex:
-            response_data = {'errmsg': dex.message, 'traceback': traceback.format_exc(), 'errorList': dex.error_list}
-            response_status = status.HTTP_400_BAD_REQUEST
-
-        except Exception as ex:
-            response_data['errmsg'] = str(ex)
-            response_data['traceback'] = traceback.format_exc()
-            response_status = status.HTTP_400_BAD_REQUEST
-
-        return Response(data=response_data, status=response_status)
+        return response_data
 
     @rest_api_wrapper
     def put(self, request):
@@ -414,8 +409,7 @@ class Section(APIView):
         return Response(serializer.data)
 
 
-class AttributeModel(APIView, AttributeUtils):
-
+class AttributeModel(APIView):
     def __init__(self):
         super().__init__()
         self.document_type = None
@@ -423,24 +417,44 @@ class AttributeModel(APIView, AttributeUtils):
 
     def update_model(self, document_type):
         attributes = []
-        self.get_attributes(parent=None, document_type=document_type, level=attributes)
+        AttributeUtils.get_attributes(parent=None, document_type=document_type, level=attributes)
+
         document_type.model = attributes
         document_type.save()
+
+    @staticmethod
+    def _get_VER(attributes, attribute_VER, readonly, ver):
+
+        for i in attributes:
+            if not i['attribute']:
+                AttributeModel._get_VER(i['children'], attribute_VER, readonly, ver)
+            else:
+                ver[i['id']] = {'visible': True, 'editable': True, 'required': True}
+
+
+
 
     def get(self, request):
         document_type = DocumentType.objects.get(pk=request.query_params.get('documentType'))
         document_status = DocumentTypeStatus.objects.get(
             pk=request.query_params.get('documentStatus')) if request.query_params.get('documentStatus') else None
+
         attribute_type = request.query_params.get('type', None)
 
         attributes = []
         ver = {}
 
+        readonly = not DocumentApiCredentials.check_user_in_hierarchy(user=request.user, status=document_status)
+
         if not request.query_params.get('cache'):
-            self.get_attributes(parent=None, document_type=document_type, level=attributes, type=attribute_type,
-                                status=document_status)
+            AttributeUtils.get_attributes(parent=None, document_type=document_type, level=attributes,
+                                          type=attribute_type,
+                                          status=document_status)
         else:
             attributes = document_type.model
+
+        ver = {}
+        AttributeModel._get_VER(attributes, None, readonly, ver)
 
         if document_status:
             ver = {i.attribute.pk: {'v': i.visible, 'e': i.editable, 'r': i.required}
@@ -472,7 +486,6 @@ class AttributeSectionData(APIView):
 
 
 class AttributeApi(APIView):
-
     @staticmethod
     def get_form_attribute_data(document, data):
         _attributes = DocumentTypeAttribute.objects.filter(type='FORM', document_type=document.type, is_section=False,

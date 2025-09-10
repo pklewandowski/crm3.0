@@ -4,7 +4,7 @@ import logging
 
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Max
+from django.db.models import Max, Q
 
 from apps.document.models import DocumentAttribute
 from apps.product import INTEREST_NOMINAL, INTEREST_FOR_DELAY_MAX, INTEREST_FOR_DELAY, CONSTANT_DAYS_IN_YEAR
@@ -33,7 +33,7 @@ class LoanCalculation(Calculation):
         self.rules = Rules(calculation_object=self)
         self.interest_rate = self._get_interest_rate()
 
-        # intrerest value
+        # interest value
         self.accounting['INTEREST_VALUE'] = decimal.Decimal(0.0)
         self.accounting['INTEREST_REQUIRED'] = decimal.Decimal(0.0)
 
@@ -54,7 +54,7 @@ class LoanCalculation(Calculation):
         # payments
         self.accounting['PAYMENT'] = decimal.Decimal(0.0)
 
-        ## Nominal payment is for counting pure payments without any accountings. It then is used to calculate
+        ## Nominal payment is for counting pure payments without any accounting. It then is used to calculate
         # payment delay. IE: schedule payment is 2000. Costs are 500 so accounting is 2000 - 500 - 1500. This is
         # not enough for instalment payment, but a client paid proper value 2000 complying with schedule.
         # So we can't set delay even there is not enough payment to cover instalment
@@ -149,9 +149,6 @@ class LoanCalculation(Calculation):
 
     def _get_interest_rate(self):
         return self.product.instalment_interest_rate
-
-    # def calculate_statutory_interest(self, dt):
-    #     return decimal.Decimal(self.product.capital_net * self.interest_rate / self.days_in_year)
 
     def calculate_interest_daily(self, dt):
         due_date = self.schedule_current_date
@@ -419,7 +416,7 @@ class LoanCalculation(Calculation):
             self._commission_required_from_schedule = min(self._commission_per_day, self.accounting['COMM_NOT_REQ'])
             self._interest_required_from_schedule = self._interest_per_day
 
-            # Swich-ujemy kapitał /prow niewymagalny (czyli przerzucamy na kapitał/prow wymagalny
+            # Switch-ujemy kapitał /prow niewymagalny (czyli przerzucamy na kapitał/prow wymagalny
             # z kapitału niewymagalnego: (CAP_REQ += val), (CAP_NOT_REQ -= val))
             oper = min(self.accounting['COMM_NOT_REQ'], self._commission_required_from_schedule)
             self.accounting['COMM_REQ'] += oper
@@ -430,7 +427,7 @@ class LoanCalculation(Calculation):
             self.accounting['CAP_NOT_REQ'] -= oper
             #
 
-            # Sprawdzenie zaległości we wpłatach rat. Add overdues to eventually diminish it in accounting
+            # Sprawdzenie zaległości we wpłatach rat. Add overdue to eventually diminish it in accounting
             self.instalment_overdue_count += 1
             self.instalment_overdue_occurrence += 1
 
@@ -865,6 +862,7 @@ class LoanCalculation(Calculation):
 
         def charge_vindication_fee():
             mapped_attributes = LoanUtils.get_mapped_attributes(self.product.document)
+
             if VINDICATION_FEE_ATTRIBUTE in mapped_attributes:
                 try:
                     vindication_fee = DocumentAttribute.objects.get(
@@ -938,6 +936,17 @@ class LoanCalculation(Calculation):
     def calculate(self, start_date=None, end_date=None, simulation=False, emulate_payment=False):
         logger.debug('Calculation started')
 
+        def delete_auto_cash_flow(date_from: datetime.date = None) -> None:
+            """
+                deletes all cash flow accounted automatically during calculation process
+            """
+            q = Q(product=self.product, entry_source='AUTO')
+            if start_date:
+                q &= Q(cash_flow_date__gte=date_from)
+
+            ProductCashFlow.objects.filter(q).delete()
+
+
         if emulate_payment:
             logger.debug('setting payment emulation')
 
@@ -964,6 +973,8 @@ class LoanCalculation(Calculation):
             # get the real possible start date of the calculation and set the calculation initial state
             # for one day before start_date
             dt = self.set_calculation_initial_state(dt)
+
+            delete_auto_cash_flow(dt)
 
             if dt is None:
                 dt = self.product.start_date

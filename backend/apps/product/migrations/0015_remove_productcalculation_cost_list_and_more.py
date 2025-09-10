@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             name='cost',
             field=models.JSONField(default=dict, verbose_name='product.calculation.cost'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='productcalculation',
             name='cost_occurrence',
             field=models.JSONField(default=dict, verbose_name='product.calculation.cost_occurence'),
