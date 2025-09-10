@@ -10,18 +10,18 @@
 {% endblock %}
 
 {% block form_title %}Edycja produktu:
-    {% if  form.instance.client.user.company_name %}
-        {{ form.instance.client.user.company_name }} ({{ form.instance.client.user.first_name|default_if_none:'' }}
-        {{ form.instance.client.user.last_name }})
+    {% if  product.client.user.company_name %}
+        {{ product.client.user.company_name }} ({{ product.client.user.first_name|default_if_none:'' }}
+        {{ product.client.user.last_name }})
     {% else %}
-        {{ form.instance.client.user.first_name|default_if_none:'' }}
-        {{ form.instance.client.user.last_name|default_if_none:'' }}
+        {{ product.client.user.first_name|default_if_none:'' }}
+        {{ product.client.user.last_name|default_if_none:'' }}
     {% endif %}
 {% endblock %}
 
-{% block form_subtitle %}{{ form.instance.type.name }} | Nr Umowy: {{ form.instance.agreement_no }}, utworzył:
-    {{ form.instance.creation_user.first_name }}
-    {{ form.instance.creation_user.last_name }}
+{% block form_subtitle %}{{ product.type.name }} | Nr Umowy: {{ product.agreement_no }}, utworzył:
+    {{ product.creation_user.first_name }}
+    {{ product.creation_user.last_name }}
 {% endblock %}
 
 {% block form_title_right %}
@@ -41,7 +41,7 @@
         <i class="far fa-edit"></i>
     </a>
 
-    <a id="showDocBtn" href="{% url 'document.edit' form.instance.document.pk %}" data-toggle="tooltip"
+    <a id="showDocBtn" href="{% url 'document.edit' product.document.pk %}" data-toggle="tooltip"
        title="Pokaż wniosek"
        class="btn btn-default btn-sm btn-show-doc">
         <i class="far fa-file-alt"></i>
@@ -60,7 +60,7 @@
                     {% for i in product_statuses %}
                         <li value="{{ i.pk }}"
                             data-can_process="{{ i.can_process }}"
-                            class="{% if i.pk == form.instance.status.pk %}
+                            class="{% if i.pk == product.status.pk %}
                             product-status-current
                             {% elif not i.can_process %}
                             product-status-grayed
@@ -115,10 +115,10 @@
     {% config_var 'MODE_VIEW' as mode_view %}
 
 
-    {% if form %}
+    {% if product %}
         <form method="post" id="product-form">
             {% csrf_token %}
-            {% if form.instance.type.is_schedule %}
+            {% if product.type.is_schedule %}
                 {{ schedule_formset.management_form }}
             {% endif %}
             {{ cashflow_formset.management_form }}
@@ -143,34 +143,34 @@
                             <div id="productDashboardContainer"></div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">Dane</div>
-                                <div class="panel-body">
-                                    {{ form.client.as_hidden }}
-                                    {% include "py3ws/forms/fields/p3form_field.html" with field=form.agreement_no %}
-                                    {% include "py3ws/forms/fields/p3form_field.html" with field=form.value %}
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.start_date %}
-                                        </div>
-                                        <div class="col-lg-6">
-                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.end_date %}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.capitalization_date %}
-                                        </div>
-                                        <div class="col-lg-6">
-                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.termination_date %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{#                    <div class="row">#}
+{#                        <div class="col-lg-8">#}
+{#                            <div class="panel panel-default">#}
+{#                                <div class="panel-heading">Dane</div>#}
+{#                                <div class="panel-body">#}
+{#                                    {{ form.client.as_hidden }}#}
+{#                                    {% include "py3ws/forms/fields/p3form_field.html" with field=form.agreement_no %}#}
+{#                                    {% include "py3ws/forms/fields/p3form_field.html" with field=form.value %}#}
+{#                                    <div class="row">#}
+{#                                        <div class="col-lg-6">#}
+{#                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.start_date %}#}
+{#                                        </div>#}
+{#                                        <div class="col-lg-6">#}
+{#                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.end_date %}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="row">#}
+{#                                        <div class="col-lg-6">#}
+{#                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.capitalization_date %}#}
+{#                                        </div>#}
+{#                                        <div class="col-lg-6">#}
+{#                                            {% include "py3ws/forms/fields/p3form_field.html" with field=form.termination_date %}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
                 </div>
 
                 <div id="schedule-tab" class="tab-pane fade in">
@@ -182,7 +182,7 @@
                                         <div style="float: left">Harmonogram</div>
                                     </div>
                                     <div class="panel-body">
-                                        {% if form.instance.type.is_schedule %}
+                                        {% if product.type.is_schedule %}
                                             <div style="overflow: auto; height: 100%;">
                                                 <div id="productInstalmentScheduleErrorContainer"></div>
                                                 <table id="product-schedule-table"
@@ -206,7 +206,7 @@
                                             <div style="float: right;">
                                                 <div>
                                                     <a class="add interest-add-btn panel-heading-add-btn"
-                                                       data-product-id="{{ form.instance.pk|unlocalize }}">
+                                                       data-product-id="{{ product.pk|unlocalize }}">
                                                         <i class="fa fa-plus-circle"></i>
                                                     </a>
                                                 </div>
@@ -249,7 +249,7 @@
                                         <div style="display: inline-block;">
                                             <div class="add add-tranche-button cashflow-icon"
                                                  style="background-color: #4472b8"
-                                                 data-product_id="{{ form.instance.pk|unlocalize }}"
+                                                 data-product_id="{{ product.pk|unlocalize }}"
                                                  data-toggle="tooltip"
                                                  data-accounting_type_code="tranche"
                                                  title="Dodaj transzę" type="button">
@@ -295,7 +295,7 @@
                            id="commission_dropdown_btn" aria-haspopup="true"
                            aria-expanded="false"><i class="fa fa-plus"></i></a>
                         <ul class="dropdown-menu" aria-labelledby="commission_dropdown_btn">
-                            {% for c in form.instance.type.commission_set.all %}
+                            {% for c in product.type.commission_set.all %}
                                 <li><a href="#" class="product-type-commission"
                                        data-id="{{ c.pk }}"
                                        data-type="{{ c.type }}"
@@ -307,7 +307,7 @@
                     </div>
 
                     <div class="col-lg-12 pad-t">
-                        <table id="product-commission-formset-table" data-id="{{ form.instance.pk }}"
+                        <table id="product-commission-formset-table" data-id="{{ product.pk }}"
                                class="table table-hover table-condensed">
                             <thead>
                             <th>Nazwa</th>
@@ -415,7 +415,6 @@
             </div>
             <input name="id" type="hidden"/>
         </form>
-
     </template>
 
     {% include 'product/_template/_main_client_row_template.html' %}

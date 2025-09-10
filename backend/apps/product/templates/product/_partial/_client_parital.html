@@ -24,10 +24,10 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{ form.instance.client.user.first_name|default_if_none:'' }} {{ form.instance.client.user.last_name|default_if_none:'' }}</td>
-                        <td>{{ form.instance.client.user.email|default_if_none:'' }}</td>
-                        <td>{{ form.instance.client.user.personal_id|default_if_none:'' }}</td>
-                        <td>{{ form.instance.client.user.nip|default_if_none:'' }}</td>
+                        <td>{{ product.client.user.first_name|default_if_none:'' }} {{ product.client.user.last_name|default_if_none:'' }}</td>
+                        <td>{{ product.client.user.email|default_if_none:'' }}</td>
+                        <td>{{ product.client.user.personal_id|default_if_none:'' }}</td>
+                        <td>{{ product.client.user.nip|default_if_none:'' }}</td>
 
                     </tr>
 

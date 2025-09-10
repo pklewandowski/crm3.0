@@ -7,25 +7,25 @@
         const calc_day_url = '{% url 'product.day_calculation' %}';
         const action_delete_url = '{% url 'product.action.delete' %}';
         const root_name = '{{ atm_root_name }}';
-        const atm = {"id": "{{ form.instance.pk }}", "root_dir_name": "product", "classname": "{{ atm_classname }}", "owner_classname": "{{ atm_owner_classname }}"};
-        const id_product = {% if form.instance.pk %}{{form.instance.pk}}{% else %}null{% endif %};
+        const atm = {"id": "{{ product.pk }}", "root_dir_name": "product", "classname": "{{ atm_classname }}", "owner_classname": "{{ atm_owner_classname }}"};
+        const id_product = {% if product.pk %}{{product.pk}}{% else %}null{% endif %};
         const mode = '{{ mode }}';
 
         _g.product = {
-            id: {{ form.instance.id }},
+            id: {{ product.id }},
             document: {
-                id: {{ form.instance.document.id }}
+                id: {{ product.document.id }}
             },
-            startDate: '{{ form.instance.start_date }}',
-            capitalNet: {{ form.instance.capital_net }},
-            value: {{ form.instance.value }},
-            commission: {{ form.instance.commission }},
-            instalmentNumber: {{ form.instance.schedule_set.all|length }},
-            instalmentCapital: {{ form.instance.instalment_capital }},
-            instalmentCommission: {{ form.instance.instalment_commission }},
-            instalmentInterestRate: {{ form.instance.instalment_interest_rate }},
-            instalmentInterestCapitalTypeCalcSource: '{{ form.instance.capital_type_calc_source }}',
-            total: {{ form.instance.value }},
+            startDate: '{{ product.start_date }}',
+            capitalNet: {{ product.capital_net }},
+            value: {{ product.value }},
+            commission: {{ product.commission }},
+            instalmentNumber: {{ product.schedule_set.all|length }},
+            instalmentCapital: {{ product.instalment_capital }},
+            instalmentCommission: {{ product.instalment_commission }},
+            instalmentInterestRate: {{ product.instalment_interest_rate }},
+            instalmentInterestCapitalTypeCalcSource: '{{ product.capital_type_calc_source }}',
+            total: {{ product.value }},
             urls: {
                 cashFlowUrl: '{% url 'product.api.cash_flow' %}',
                 cashFlowAggregatesUrl:'{% url 'product.api.cash_flow_aggregates' %}'

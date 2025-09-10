@@ -24,7 +24,7 @@ class HierarchyUser {
             <td>{user.email ? user.email : '-'}</td>
             <td>{user.personal_id ? user.personal_id : '-'}</td>
             <td>{user.nip ? user.nip : '-'}</td>
-            <td className={"delete-user"}><i className={"fa fa-trash-alt"} style={"pointer-events: none"}></i></td>
+            <td className={"hierarchy-user-delete delete-user"}><i className={"fa fa-trash-alt"} style={"pointer-events: none"}></i></td>
         </tr>;
 
         row.dataset.id = user.id;

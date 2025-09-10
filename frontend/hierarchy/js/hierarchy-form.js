@@ -124,6 +124,7 @@ class HierarchyForm {
             this.form.querySelector('[name="krs"]').value = data.krs;
             this.form.querySelector('[name="email"]').value = data.email;
             this.form.querySelector('[name="phone"]').value = data.phone;
+            this.form.querySelector('[name="bank_account"]').value = data.bank_account;
             this.form.querySelector('[name="share_capital_amount"]').value = data.share_capital_amount;
 
             this.form.querySelector('[name="description"]').value = data.description? data.description : '';
