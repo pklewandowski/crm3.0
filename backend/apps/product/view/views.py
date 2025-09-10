@@ -143,7 +143,7 @@ def edit(request, id, iframe=0):
     calculation_list = ProductCalculation.objects.filter(product=product).order_by('calc_date')
     atm_root_name = py3ws_utils.replace_special_chars(product.agreement_no)
 
-    form = ProductForm(request.POST or None, instance=product)
+    # form = ProductForm(request.POST or None, instance=product)
 
     end_date = None
     schedule = None
@@ -220,15 +220,15 @@ def edit(request, id, iframe=0):
         #     valid = not schedule_formset.has_changed() or schedule_formset.is_valid()
 
         if valid and all([
-            not form.has_changed() or form.is_valid(),
+            # not form.has_changed() or form.is_valid(),
             not cashflow_formset.has_changed() or cashflow_formset.is_valid(),
             not tranche_formset.has_changed() or tranche_formset.is_valid()
         ]):
             has_changed = False
 
-            if form.has_changed():
-                form.save()
-                has_changed = True
+            # if form.has_changed():
+            #     form.save()
+            #     has_changed = True
 
             # if schedule_formset and schedule_formset.has_changed():
             #     min_change_date = min(min_change_date,
@@ -288,9 +288,7 @@ def edit(request, id, iframe=0):
             return True
         return False
 
-    context = {'form': form,
-               # 'cashflow_type': {i.code.lower(): {"id": i.pk, 'name': i.name, 'subtypes': i.subtypes} for i in
-               #                   DocumentTypeAccountingType.objects.filter(is_editable=True)},
+    context = {'product': product,
                'cashflow_type': DocumentTypeAccountingType.get_accounting_types(),
                'cashflow_formset': cashflow_formset,
                'schedule': schedule,

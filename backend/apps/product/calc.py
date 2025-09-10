@@ -4,7 +4,7 @@ import logging
 
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Max
+from django.db.models import Max, Q
 
 from apps.document.models import DocumentAttribute
 from apps.product import INTEREST_NOMINAL, INTEREST_FOR_DELAY_MAX, INTEREST_FOR_DELAY, CONSTANT_DAYS_IN_YEAR
@@ -865,6 +865,7 @@ class LoanCalculation(Calculation):
 
         def charge_vindication_fee():
             mapped_attributes = LoanUtils.get_mapped_attributes(self.product.document)
+
             if VINDICATION_FEE_ATTRIBUTE in mapped_attributes:
                 try:
                     vindication_fee = DocumentAttribute.objects.get(
@@ -938,6 +939,17 @@ class LoanCalculation(Calculation):
     def calculate(self, start_date=None, end_date=None, simulation=False, emulate_payment=False):
         logger.debug('Calculation started')
 
+        def delete_auto_cash_flow(date_from: datetime.date = None) -> None:
+            """
+                deletes all cash flow accounted automatically during calculation process
+            """
+            q = Q(product=self.product, entry_source='AUTO')
+            if start_date:
+                q &= Q(cash_flow_date__gte=date_from)
+
+            ProductCashFlow.objects.filter(q).delete()
+
+
         if emulate_payment:
             logger.debug('setting payment emulation')
 
@@ -964,6 +976,8 @@ class LoanCalculation(Calculation):
             # get the real possible start date of the calculation and set the calculation initial state
             # for one day before start_date
             dt = self.set_calculation_initial_state(dt)
+
+            delete_auto_cash_flow(dt)
 
             if dt is None:
                 dt = self.product.start_date
