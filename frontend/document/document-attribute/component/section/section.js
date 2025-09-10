@@ -72,6 +72,7 @@ class Section {
             panel.innerHTML = HtmlUtils.escapeScriptTag(at.name);
             cl.appendChild(panel);
         }
+
         cl.classList.add(...['row', 'subsection-container']);
         if (at.css_class) {
             cl.classList.add(at.css_class);

@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hierarchy', '0004_hierarchy_share_capital_amount'),
+        ('hierarchy', '0003_hierarchy_share_capital_amount'),
     ]
 
     operations = [

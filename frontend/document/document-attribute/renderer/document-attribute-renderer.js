@@ -52,6 +52,24 @@ class DocumentAttributeRenderer {
         })
     }
 
+    enableFullscreenMode() {
+        document.getElementById('documentSectionLabelContainer').addEventListener('dblclick', (evt) => {
+            let el = evt.target;
+            if (!el.classList.contains('section-label-active')) {
+                return;
+            }
+
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+                return;
+            }
+
+            document.getElementById(`section_${el.dataset.id}`).requestFullscreen().catch((err) => {
+                console.error(`Error enabling fullscreen: ${err.message}`);
+            });
+        })
+    }
+
     async init() {
         // try {
         if (!window.documentDefinitionMode) {
@@ -72,7 +90,10 @@ class DocumentAttributeRenderer {
             // afterAttributesRender event is going to be fired after all attribute has its values attached.
             Promise.all(window.documentAttributeDataPromises).then(() => {
                 document.dispatchEvent(this.events.afterAttributesRender);
+
+                //this.enableFullscreenMode();
             });
+
         });
         // } catch (error) {
         //     //todo: log error to global page errors and display error message. Also log error in database and send email to admin

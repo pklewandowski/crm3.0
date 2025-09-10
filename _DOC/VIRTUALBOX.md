@@ -3,3 +3,20 @@
 $ sudo apt install virtualbox 
 $ sudo apt install --reinstall virtualbox-dkms && sudo apt install libelf-dev
 ```
+
+## Allow to create symlinks
+```VBoxManage.exe setextradata VM_NAME VBoxInternal2/SharedFoldersEnableSymlinksCreate/SHARED_NAME 1```
+
+## Docker on Virtualbox and permissions for shared folder(s)
+When creating docker for ie postgres and sudo-ing postgres su - postgres, it can't see the vbox shared folder 
+content exposed by docker. to enable it:
+```shell
+# get id of the vboxsf group
+getent group vboxsf
+
+# add group in docker image
+docker exec -it image_name bash
+groupadd -g <gid> vboxsf
+usermod -aG vboxsf postgres
+```
+Generally in order to work with shared folder, user has to be added to vboxsf group

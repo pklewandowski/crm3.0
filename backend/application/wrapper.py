@@ -22,9 +22,11 @@ def rest_api_wrapper(fn):
 
         except Exception as ex:
             response_status = status.HTTP_400_BAD_REQUEST
+
             response_data = {
                 'errmsg': str(ex),
                 'errtype': ex.__class__.__name__,
+                'error_list': ex.error_list if hasattr(ex, 'error_list') else None,
                 'traceback': traceback.format_exc()
             }
 

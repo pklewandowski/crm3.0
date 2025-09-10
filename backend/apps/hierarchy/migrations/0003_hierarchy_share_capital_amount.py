@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hierarchy', '0003_hierarchy_krs_hierarchy_nip_hierarchy_regon'),
+        ('hierarchy', '0002_initial'),
     ]
 
     operations = [

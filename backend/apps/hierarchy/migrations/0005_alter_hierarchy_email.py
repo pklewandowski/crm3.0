@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hierarchy', '0005_alter_hierarchy_description_alter_hierarchy_phone'),
+        ('hierarchy', '0004_alter_hierarchy_description_alter_hierarchy_phone'),
     ]
 
     operations = [

@@ -172,7 +172,7 @@ class Migration(migrations.Migration):
                 ('commission_required_from_schedule', models.DecimalField(decimal_places=2, default=0, max_digits=15, verbose_name='product.calculation.commission_required_from_schedule')),
                 ('required_liabilities_sum', models.DecimalField(decimal_places=2, default=0, max_digits=15, verbose_name='product.calculation.required_liabilities_sum')),
                 ('required_liabilities_sum_from_schedule', models.DecimalField(decimal_places=2, default=0, max_digits=15, verbose_name='product.calculation.required_liabilities_sum_from_schedule')),
-                ('cost_occurrence', models.DecimalField(decimal_places=2, default=0, max_digits=15, verbose_name='product.calculation.cost_occurence')),
+                # ('cost_occurrence', models.DecimalField(decimal_places=2, default=0, max_digits=15, verbose_name='product.calculation.cost_occurence')),
                 ('cost', models.DecimalField(decimal_places=2, default=0, max_digits=15, verbose_name='product.calculation.interest_required_daily')),
                 ('cost_total', models.DecimalField(decimal_places=2, default=0, max_digits=15, verbose_name='product.calculation.cost_total')),
                 ('instalment', models.DecimalField(decimal_places=2, default=0, max_digits=15, verbose_name='product.calculation.instalment')),

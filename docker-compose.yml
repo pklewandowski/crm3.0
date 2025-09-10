@@ -8,7 +8,7 @@ services:
 #      - D:/3WS/PROJEKTY/CRM_RESTFull/dbdata/postgres9.6:/var/lib/postgresql/data
 #      Have to create docker volume like the following and then expose it
       - crmrest-pg-data:/var/lib/postgresql/data
-      - /mnt/ntfs/webapps/crm/dbdump:/webapps/crm/dbdump
+      - /media/sf_ntfs/webapps/crm/dbdump:/webapps/crm/dbdump
     environment:
       - POSTGRES_PASSWORD=postgres
     ports:

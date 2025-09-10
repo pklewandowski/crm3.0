@@ -12,7 +12,7 @@ class RepeatableSectionBase {
         this.cl = jsUtils.Utils.domElement('div', at.id, 'repeatable-section-panel');
 
         // add actions for repeatable section
-        if (this.at.feature.actions) {
+        if (this.at?.feature?.actions) {
                 // change action
                 if (this.at.feature.actions.change) {
                     this.cl.addEventListener('change', (e) => {
@@ -20,6 +20,17 @@ class RepeatableSectionBase {
                     });
                 }
             }
+
+        // if (this.at?.feature?.allow_fullscreen) {
+        //     let fullscreen = jsUtils.Utils.domElement('div', null, 'fullscreen-button')
+        //     let fullscreen_icon = jsUtils.Utils.domElement('i', null, ["fas", "fa-expand-arrows-alt"])
+        //     fullscreen.appendChild(fullscreen_icon);
+        //
+        //     fullscreen_icon.addEventListener('click', () => {
+        //         this.cl.requestFullscreen();
+        //     })
+        //     this.cl.appendChild(fullscreen);
+        // }
     }
 
     _isEditable() {
