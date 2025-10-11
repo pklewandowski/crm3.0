@@ -261,27 +261,45 @@ def get_calc_table_columns(document_type):
                                          "className": "calc-table-instalment"}
                      },
 
-                    {"title": "suma", "width": 80, "field": "instalment_total", "headerSort": False,
+                    {"title": "suma wpłat", "width": 80, "field": "instalment_total", "headerSort": False,
                      "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
                      "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
-                                         "className": "calc-table-instalment",
-
-                                         }
+                                         "className": "calc-table-instalment"}
                      },
+
                     {"title": "nadpłata na dzień", "field": "instalment_overpaid", "headerSort": False,
                      "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
                      "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
                                          "className": "calc-table-instalment", "css": {"borderRightWidth": "2px"}}
-                     }
+                     },
+
+                    {"title": "Wcześniejsza spłata", "width": 80, "field": "early_payment", "headerSort": False,
+                     "dataType": "currency",
+                     "hozAlign": "right",
+                     "formatter": "moneyCss",
+                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                         "className": "calc-table-instalment"}
+                     },
+
+                    {"title": "suma wcześniejszych spłat", "width": 80, "field": "early_payment_total", "headerSort": False,
+                     "dataType": "currency",
+                     "hozAlign": "right",
+                     "formatter": "moneyCss",
+                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                         "className": "calc-table-instalment", "css": {"borderRightWidth": "2px"}}
+                     },
+
+
                 ]
              }
         ])
 
     acc_columns = []
+
     for i in column_accounting_order:
         if i.accounting_type.code in columns_accounting.ACC:
             acc_columns.append(columns_accounting.ACC[i.accounting_type.code])

@@ -356,6 +356,10 @@ class ProductInterestGlobal(models.Model):
         return list(cls.objects.all().order_by('start_date'))
 
     @classmethod
+    def update_list(cls):
+        cls.interest_list = cls.get_list()
+
+    @classmethod
     def get_for(cls, date: datetime.date):
         if cls.interest_list is None:
             cls.interest_list = cls.get_list()
@@ -490,6 +494,10 @@ class ProductCalculation(models.Model):
                                            decimal_places=2, default=0)
     instalment_overpaid = models.DecimalField(verbose_name='product.calculation.instalment_overpaid', max_digits=15,
                                               decimal_places=2, default=0)
+    early_payment = models.DecimalField(verbose_name='product.calculation.early_payment', max_digits=15, decimal_places=2,
+                                     default=0)
+    early_payment_total = models.DecimalField(verbose_name='product.calculation.early_payment_total', max_digits=15,
+                                           decimal_places=2, default=0)
 
     # rozksięgowanie raty na poszczególne składniki
     instalment_accounting_capital_required = models.DecimalField(
