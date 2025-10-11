@@ -2,6 +2,7 @@ import logging
 import traceback
 from datetime import datetime, timedelta
 
+import django.dispatch
 from django.conf import settings
 from django.core.validators import validate_email
 from django.db import transaction
@@ -226,6 +227,9 @@ class ProductTypeStatusApi(APIView):
         return Response(data=response_data, status=response_status)
 
 
+global_interest_changed = django.dispatch.Signal()
+
+
 class ProductGlobalInterestView(APIView):
     @rest_api_wrapper
     def get(self, request):
@@ -243,8 +247,14 @@ class ProductGlobalInterestView(APIView):
         product_interest_global.is_valid(raise_exception=True)
 
         with transaction.atomic():
-            product_interest_global = product_interest_global.save()
-            interest_services.save_interest_global(product_interest_global, request.user)
+            product_interest_global.save()
+
+            # Update product interest for all product individually -
+            # bypassed now as only the global interest is considered at the moment
+            # interest_services.save_interest_global(product_interest_global, request.user)
+
+            # Update ProductInterestGlobal variable storing global interest list (singleton) via signal send
+            global_interest_changed.send(sender=self.__class__)
 
         return {'refresh': True}
 
@@ -258,7 +268,10 @@ class ProductGlobalInterestView(APIView):
 
         with transaction.atomic():
             product_interest_global = product_interest_global.save()
-            interest_services.save_interest_global(product_interest_global, request.user)
+            # interest_services.save_interest_global(product_interest_global, request.user)
+
+            # Update ProductInterestGlobal variable storing global interest list (singleton) via signal send
+            global_interest_changed.send(sender=self.__class__)
 
         return {'refresh': True}
 
@@ -267,8 +280,11 @@ class ProductGlobalInterestView(APIView):
         id = request.data.get('id', None)
 
         interest_global = ProductInterestGlobal.objects.get(pk=id)
-        interest_services.delete_interest_global(interest_global)
+        #interest_services.delete_interest_global(interest_global)
         interest_global.delete()
+
+        # Update ProductInterestGlobal variable storing global interest list (singleton) via signal send
+        global_interest_changed.send(sender=self.__class__)
 
         return {'refresh': True}
 

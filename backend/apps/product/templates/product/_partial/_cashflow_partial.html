@@ -17,15 +17,32 @@
                              title="załaduj dane z MT940">
                             <span style="pointer-events: none">M</span>
                         </div>
-                        <div class="add cashflow-icon cashflow-icon-payment"
-                             data-product_id="{{ product.pk|unlocalize }}"
-                             data-toggle="tooltip"
-                             data-accounting_type_id="{{ cashflow_type.PAYMENT.id|unlocalize }}"
-                             data-accounting_type_code="payment"
-                             data-accounting_type_name="{{ cashflow_type.PAYMENT.name }}"
-                             title="Wpłata">
-                            <span>W</span>
+
+                        <div class="dropdown" style="display: inline;">
+                            <div id="cashflowPayment" class="cashflow-icon cashflow-icon-payment"
+                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span data-toggle="tooltip" title="Wpłata">W</span>
+                            </div>
+                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="cashflowPayment">
+                                <li class="add"
+                                    data-product_id="{{ product.pk|unlocalize }}"
+                                    data-toggle="tooltip"
+                                    data-accounting_type_id="{{ cashflow_type.PAYMENT.id|unlocalize }}"
+                                    data-accounting_type_code="payment"
+                                    data-accounting_type_name="{{ cashflow_type.PAYMENT.name }}">
+                                    <a href="#">{{ cashflow_type.PAYMENT.name }}</a>
+                                </li>
+                                <li class="add"
+                                    data-product_id="{{ product.pk|unlocalize }}"
+                                    data-toggle="tooltip"
+                                    data-accounting_type_id="{{ cashflow_type.EARLY_PAYMENT.id|unlocalize }}"
+                                    data-accounting_type_code="early_payment"
+                                    data-accounting_type_name="{{ cashflow_type.EARLY_PAYMENT.name }}">
+                                    <a href="#">{{ cashflow_type.EARLY_PAYMENT.name }}</a>
+                                </li>
+                            </ul>
                         </div>
+
                         <div class="dropdown" style="display: inline;">
                             <div id="cashflowRemission" class="cashflow-icon cashflow-icon-cost"
                                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -43,44 +60,44 @@
                             </ul>
                         </div>
 
-{#                        <div class="dropdown" style="display: inline;">#}
-{#                            <div id="cashflowRemission" class="cashflow-icon cashflow-icon-remission"#}
-{#                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-{#                                <span data-toggle="tooltip" title="Umorzenie">U</span>#}
-{#                            </div>#}
-{#                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="cashflowRemission">#}
-{#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
-{#                                    data-accounting_type_id="{{ cashflow_type.rem_cap.id }}"#}
-{#                                    data-accounting_type_code="rem_cap"#}
-{#                                    data-accounting_type_name="{{ cashflow_type.rem_cap.name }}">#}
-{#                                    <a href="#">Umorzenie kapitału</a>#}
-{#                                </li>#}
-{#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
-{#                                    data-accounting_type_id="{{ cashflow_type.rem_comm.id }}"#}
-{#                                    data-accounting_type_code="rem_comm"#}
-{#                                    data-accounting_type_name="{{ cashflow_type.rem_comm.name }}">#}
-{#                                    <a href="#">Umorzenie prowizji</a>#}
-{#                                </li>#}
-{#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
-{#                                    data-accounting_type_id="{{ cashflow_type.rem_cost.id }}"#}
-{#                                    data-accounting_type_code="rem_cost"#}
-{#                                    data-accounting_type_name="{{ cashflow_type.rem_cost.name }}">#}
-{#                                    <a href="#">Umorzenie kosztów</a>#}
-{#                                </li>#}
-{#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
-{#                                    data-accounting_type_id="{{ cashflow_type.rem_interest.id }}"#}
-{#                                    data-accounting_type_code="rem_interest"#}
-{#                                    data-accounting_type_name="{{ cashflow_type.rem_interest.name }}">#}
-{#                                    <a href="#">Umorzenie raty odsetkowej</a>#}
-{#                                </li>#}
-                                {#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
-                                {#                                    data-accounting_type_id="{{ cashflow_type.rem_interest_required.id }}"#}
-                                {#                                    data-accounting_type_code="rem_interest_required"#}
-                                {#                                    data-accounting_type_name="{{ cashflow_type.rem_interest_required.name }}">#}
-                                {#                                    <a href="#">Umorzenie odsetek za opóźnienie</a>#}
-                                {#                                </li>#}
-{#                            </ul>#}
-{#                        </div>#}
+                        {#                        <div class="dropdown" style="display: inline;">#}
+                        {#                            <div id="cashflowRemission" class="cashflow-icon cashflow-icon-remission"#}
+                        {#                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+                        {#                                <span data-toggle="tooltip" title="Umorzenie">U</span>#}
+                        {#                            </div>#}
+                        {#                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="cashflowRemission">#}
+                        {#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
+                        {#                                    data-accounting_type_id="{{ cashflow_type.rem_cap.id }}"#}
+                        {#                                    data-accounting_type_code="rem_cap"#}
+                        {#                                    data-accounting_type_name="{{ cashflow_type.rem_cap.name }}">#}
+                        {#                                    <a href="#">Umorzenie kapitału</a>#}
+                        {#                                </li>#}
+                        {#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
+                        {#                                    data-accounting_type_id="{{ cashflow_type.rem_comm.id }}"#}
+                        {#                                    data-accounting_type_code="rem_comm"#}
+                        {#                                    data-accounting_type_name="{{ cashflow_type.rem_comm.name }}">#}
+                        {#                                    <a href="#">Umorzenie prowizji</a>#}
+                        {#                                </li>#}
+                        {#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
+                        {#                                    data-accounting_type_id="{{ cashflow_type.rem_cost.id }}"#}
+                        {#                                    data-accounting_type_code="rem_cost"#}
+                        {#                                    data-accounting_type_name="{{ cashflow_type.rem_cost.name }}">#}
+                        {#                                    <a href="#">Umorzenie kosztów</a>#}
+                        {#                                </li>#}
+                        {#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
+                        {#                                    data-accounting_type_id="{{ cashflow_type.rem_interest.id }}"#}
+                        {#                                    data-accounting_type_code="rem_interest"#}
+                        {#                                    data-accounting_type_name="{{ cashflow_type.rem_interest.name }}">#}
+                        {#                                    <a href="#">Umorzenie raty odsetkowej</a>#}
+                        {#                                </li>#}
+                        {#                                <li class="add" data-product_id="{{ product.pk|unlocalize }}"#}
+                        {#                                    data-accounting_type_id="{{ cashflow_type.rem_interest_required.id }}"#}
+                        {#                                    data-accounting_type_code="rem_interest_required"#}
+                        {#                                    data-accounting_type_name="{{ cashflow_type.rem_interest_required.name }}">#}
+                        {#                                    <a href="#">Umorzenie odsetek za opóźnienie</a>#}
+                        {#                                </li>#}
+                        {#                            </ul>#}
+                        {#                        </div>#}
 
                     </div>
                 </div>
