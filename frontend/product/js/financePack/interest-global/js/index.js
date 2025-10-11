@@ -19,7 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
         interestGlobal.form.show(true, true);
     });
 
-    document.querySelector('.delete-global-interest-btn').addEventListener('click', (evt) => {
+    document.getElementById('interestGlobalListContainer').addEventListener('click', (evt) => {
+        let el = evt.target;
+        if (!el.classList.contains('delete-global-interest-btn')) {
+            return;
+        }
+
         Alert.questionWarning(
             'Czy na pewno usunąć wpis?',
             '',
