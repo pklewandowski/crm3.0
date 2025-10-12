@@ -20,11 +20,11 @@ from apps.document.api.attribute_utils import AttributeUtils
 from apps.document.models import DocumentTypeSection, Document, DocumentType, DocumentTypeAttribute, \
     DocumentAttribute, DocumentTypeSectionColumn, DocumentAttachment, DocumentStatusTrack, \
     DocumentStatusCourse, DocumentTypeProcessFlow, DocumentTypeStatus, DocumentTypeAttributeMapping, \
-    DocumentTypeAttributeFeature, DocumentTypeReport, DocumentReport
+    DocumentTypeReport, DocumentReport
 from apps.user.models import User
 from .rest_form import DocumentForm
 from .serializers import DocumentTypeSectionSerializer, DocumentAttachmentSerializer, \
-    DocumentStatusTrackSerializer, DocumentTypeProcessFlowSerializer, DocumentSerializer, DocumentFormSerializer
+    DocumentStatusTrackSerializer, DocumentTypeProcessFlowSerializer, DocumentSerializer
 from .services import note_services, document_services
 from .utils import DocumentApiUtils, DocumentApiCredentials
 from ..view_base import DocumentException
@@ -52,7 +52,6 @@ def add(request, id, owner_id=None):
     return render(request=request, template_name='document/add_v2/add_v2.html', context=context)
 
 
-# docelowo zwykłe requesty przenieść do view nie REST-owych
 def edit(request, id):
     document = Document.objects.get(pk=id)
 
@@ -77,7 +76,6 @@ def edit(request, id):
         'doc_statuses': document.type.status_set.all().order_by('sq'),
         'product_statuses': document.type.product_status_set.all().order_by('sq'),
         'reports': DocumentReport.objects.filter(document=document)
-        #
     }
 
     return render(request=request, template_name='document/edit_v2/edit_v2.html', context=context)
@@ -234,9 +232,14 @@ class DocumentApi(APIView):
     def put(self, request):
         response_data = {}
 
+        document = Document.objects.get(pk=request.data.get('document'))
+
+        if not DocumentApiCredentials.check_user_in_hierarchy(user=request.user, status=document.status):
+            raise PermissionError(
+                f"You don't have permission to perform this action as user '{request.user.username}'")
+
         with transaction.atomic():
             # document processing
-            document = Document.objects.get(pk=request.data.get('document'))
             ver = document_services.get_ver(document.type, document.status)
 
             # attributes processing
@@ -426,13 +429,11 @@ class AttributeModel(APIView):
     def _get_VER(attributes, attribute_VER, readonly, ver):
 
         for i in attributes:
-            if not i['attribute']:
+            if any([i['is_section'], i['is_column'], i['is_combo']]):
                 AttributeModel._get_VER(i['children'], attribute_VER, readonly, ver)
             else:
-                ver[i['id']] = {'visible': True, 'editable': True, 'required': True}
-
-
-
+                # TODO: finally get VER from database DocumentTypeAttributeFeature for given document_status
+                ver[i['id']] = {'visible': True, 'editable': not readonly, 'required': False}
 
     def get(self, request):
         document_type = DocumentType.objects.get(pk=request.query_params.get('documentType'))
@@ -442,7 +443,6 @@ class AttributeModel(APIView):
         attribute_type = request.query_params.get('type', None)
 
         attributes = []
-        ver = {}
 
         readonly = not DocumentApiCredentials.check_user_in_hierarchy(user=request.user, status=document_status)
 
@@ -456,9 +456,11 @@ class AttributeModel(APIView):
         ver = {}
         AttributeModel._get_VER(attributes, None, readonly, ver)
 
-        if document_status:
-            ver = {i.attribute.pk: {'v': i.visible, 'e': i.editable, 'r': i.required}
-                   for i in DocumentTypeAttributeFeature.objects.filter(status=document_status)}
+        # TODO: at the moment detail VER taken for individual attributes from stored table data disabled.
+        #  Have to back to it
+        # if document_status:
+        #     ver = {i.attribute.pk: {'v': i.visible, 'e': i.editable, 'r': i.required}
+        #            for i in DocumentTypeAttributeFeature.objects.filter(status=document_status)}
 
         return Response(data={'model': attributes, 'ver': ver})
 

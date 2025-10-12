@@ -240,6 +240,7 @@ class DocumentAttributeRenderer {
         });
 
         DocumentAttributeRenderer.setCalculable(this.model.model, null, null, this.errorList);
+
         document.dispatchEvent(this.events.documentCreated);
     }
 }

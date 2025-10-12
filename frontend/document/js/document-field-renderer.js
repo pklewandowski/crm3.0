@@ -612,9 +612,7 @@ class FieldRenderer {
                     if (!window.documentDefinitionMode) {
                         fieldCss.push('date-field');
 
-
                         // todo: move it to separate function or update setDatePicker()
-
                         new Datepicker(el, {
                             autohide: true,
                             showOnClick: true,
@@ -722,16 +720,15 @@ class FieldRenderer {
             }
         }
 
-
         // set readonly
-        if (at.feature?.readonly) {
+        if (at.readonly || at.feature?.readonly) {
             el.setAttribute('disabled', 'disabled');
         } else {
             if (ver && Object.keys(ver).length) {
-                if (!ver.e) {
+                if (!ver.editable) {
                     el.setAttribute('disabled', 'disabled');
                 }
-                el.dataset['required'] = ver.r;
+                el.dataset['required'] = ver.required;
             }
         }
 
