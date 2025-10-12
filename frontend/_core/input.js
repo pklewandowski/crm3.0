@@ -1,8 +1,13 @@
 import IMask from "imask";
 
+
+
 const INPUT_TYPES = ['text', 'password', 'number', 'email', 'tel', 'url', 'search', 'date', 'datetime', 'datetime-local', 'time', 'month', 'week'];
 const classname = 'Input';
 
+/**
+ * @deprecated Module moved to jsUtils project
+ */
 class Input {
     static setAttribute(el, attr) {
         if (!el) {
