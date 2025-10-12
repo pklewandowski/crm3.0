@@ -2,9 +2,9 @@ import datetime
 from datetime import timedelta
 from decimal import Decimal
 
-from django.db.models import JSONField
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
+from django.db.models import JSONField
 from django.db.models import Max
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -12,14 +12,10 @@ from simple_history.models import HistoricalRecords
 
 from application.models import AppModel
 from apps.attachment.models import Attachment
-from apps.attribute.models import Attribute
-from apps.config.models import HoldingCompany
-from apps.dict.models import DictionaryEntry
-from apps.document.models import DocumentType, DocumentTypeAccountingType, Document, DocumentTypeStatus
+from apps.document.models import DocumentType, DocumentTypeAccountingType, Document
 from apps.hierarchy.models import Hierarchy
 from apps.product import INTEREST_NOMINAL
 from apps.report.models import Report, ReportTemplate
-from apps.scheduler.schedule.models import Schedule
 from apps.user.models import User
 from apps.user_func.adviser.models import Adviser
 from apps.user_func.broker.models import Broker
@@ -475,10 +471,6 @@ class ProductCalculation(models.Model):
         verbose_name='product.calculation.required_liabilities_sum_from_schedule', max_digits=15, decimal_places=2,
         default=0)
 
-    # koszt wystąpienie w danym dniu
-    cost_occurrence = models.DecimalField(verbose_name='product.calculation.cost_occurence', max_digits=15,
-                                          decimal_places=2, default=0)
-
     cost = models.JSONField(verbose_name='product.calculation.cost', default=dict)
     cost_occurrence = models.JSONField(verbose_name='product.calculation.cost_occurence', default=dict)
     cost_sum_per_day = models.DecimalField(verbose_name='product.calculation.cost_sum_per_day', max_digits=15,
@@ -494,10 +486,11 @@ class ProductCalculation(models.Model):
                                            decimal_places=2, default=0)
     instalment_overpaid = models.DecimalField(verbose_name='product.calculation.instalment_overpaid', max_digits=15,
                                               decimal_places=2, default=0)
-    early_payment = models.DecimalField(verbose_name='product.calculation.early_payment', max_digits=15, decimal_places=2,
-                                     default=0)
+    early_payment = models.DecimalField(verbose_name='product.calculation.early_payment', max_digits=15,
+                                        decimal_places=2,
+                                        default=0)
     early_payment_total = models.DecimalField(verbose_name='product.calculation.early_payment_total', max_digits=15,
-                                           decimal_places=2, default=0)
+                                              decimal_places=2, default=0)
 
     # rozksięgowanie raty na poszczególne składniki
     instalment_accounting_capital_required = models.DecimalField(

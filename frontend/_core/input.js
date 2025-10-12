@@ -76,7 +76,7 @@ class Input {
         }
 
         if (el.type === 'checkbox') {
-            el.checked = value === 'T';
+            el.checked = (value == 'T');
 
         } else if (el.imask) {
             el.imask.typedValue = Input.isNullValue(value) ? '' : value;
