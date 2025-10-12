@@ -25,11 +25,13 @@ class DocumentApiUtils:
             document_status = DocumentTypeStatus.objects.get(pk=status)
 
         else:
-            raise TypeError('[DocumentApi.change_status]: status parameter of incorrect type. Can be either [DocumentTypeStatus], or [int] or [str]')
+            raise TypeError('[DocumentApi.change_status]: status parameter of incorrect type. '
+                            'Can be either [DocumentTypeStatus], or [int] or [str]')
 
-        if document_status.hierarchies:
-            if not hierarchy_utils.check_user_perms(user, Hierarchy.objects.filter(pk__in=document_status.hierarchies)):
-                raise PermissionDenied(f"Nie posiadasz uprawnien do zmiany statusu na '{document_status.name}'.")
+        # if document has current status (before change) that not allow to edit it by the user:
+        if document.status.hierarchies:
+            if not hierarchy_utils.check_user_perms(user, Hierarchy.objects.filter(pk__in=document.status.hierarchies)):
+                raise PermissionDenied(f"Nie posiadasz uprawnien do zmiany statusu na '{document.status.name}'.")
 
         DocumentStatusTrack.objects.create(
             document=document,
