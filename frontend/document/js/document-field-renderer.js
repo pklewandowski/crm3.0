@@ -486,10 +486,11 @@ class FieldRenderer {
 
                 let fieldContainer = FieldRenderer._getFieldContainer(at);
                 let hr = jsUtils.Utils.domElement('hr', '');
+
                 fieldContainer.appendChild(hr);
                 hr.dataset['code'] = at.id;
-                return {fieldContainer: fieldContainer};
 
+                return {fieldContainer: fieldContainer};
 
             case 'chart':
                 if (!at.feature || !at.feature.chart) {
@@ -714,6 +715,7 @@ class FieldRenderer {
         }
 
         Input.setValue(el, val);
+
         if (dataMeta) {
             for (let [key, value] of Object.entries(dataMeta)) {
                 el.dataset[`__meta__${key}`] = value;
