@@ -40,6 +40,14 @@
                                     data-accounting_type_name="{{ cashflow_type.EARLY_PAYMENT.name }}">
                                     <a href="#">{{ cashflow_type.EARLY_PAYMENT.name }}</a>
                                 </li>
+                                <li class="add"
+                                    data-product_id="{{ product.pk|unlocalize }}"
+                                    data-toggle="tooltip"
+                                    data-accounting_type_id="{{ cashflow_type.CAPITAL_PAYMENT.id|unlocalize }}"
+                                    data-accounting_type_code="early_payment"
+                                    data-accounting_type_name="{{ cashflow_type.CAPITAL_PAYMENT.name }}">
+                                    <a href="#">{{ cashflow_type.CAPITAL_PAYMENT.name }}</a>
+                                </li>
                             </ul>
                         </div>
 

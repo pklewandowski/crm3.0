@@ -54,6 +54,7 @@ class LoanCalculation(Calculation):
         # payments
         self.accounting['PAYMENT'] = decimal.Decimal(0.0)
         self.accounting['EARLY_PAYMENT'] = decimal.Decimal(0.0)
+        self.accounting['CAPITAL_PAYMENT'] = decimal.Decimal(0.0)
 
         ## Nominal payment is for counting pure payments without any accounting. It then is used to calculate
         # payment delay. IE: schedule payment is 2000. Costs are 500 so accounting is 2000 - 500 - 1500. This is
@@ -73,6 +74,7 @@ class LoanCalculation(Calculation):
         # operational variables but defined as instance attributes to handle ProductCalculation inserts
         self._instalment_nominal = decimal.Decimal(0.0)
         self._early_payment = decimal.Decimal(0.0)
+        self._capital_payment = decimal.Decimal(0.0)
         self._cost_occurrence = decimal.Decimal(0.0)
 
         self._capital_required_from_schedule = decimal.Decimal(0.0)
@@ -95,6 +97,7 @@ class LoanCalculation(Calculation):
 
         self._instalment_total = decimal.Decimal(0.0)
         self._early_payment_total = decimal.Decimal(0.0)
+        self._capital_payment_total = decimal.Decimal(0.0)
         self._instalment_schedule_total = decimal.Decimal(0.0)
 
         self._capital_daily = decimal.Decimal(0.0)
@@ -324,6 +327,7 @@ class LoanCalculation(Calculation):
         # reset operational variables for new loop pass
         self._instalment_nominal = decimal.Decimal(0.0)
         self._early_payment = decimal.Decimal(0.0)
+        self._capital_payment = decimal.Decimal(0.0)
 
         self._capital_required_from_schedule = decimal.Decimal(0.0)
         self._commission_required_from_schedule = decimal.Decimal(0.0)
@@ -382,6 +386,12 @@ class LoanCalculation(Calculation):
             self.accounting['EARLY_PAYMENT'] += val
             self._early_payment = val
             self._early_payment_total += val
+
+        if 'CAPITAL_PAYMENT' in self.accounting_list and dt_str in self.accounting_list['CAPITAL_PAYMENT']:
+            val = self.accounting_list['CAPITAL_PAYMENT'][dt_str]
+            self.accounting['CAPITAL_PAYMENT'] += val
+            self._capital_payment = val
+            self._capital_payment_total += val
 
         # if there is payment on the list
         if 'PAYMENT' in self.accounting_list and dt_str in self.accounting_list['PAYMENT']:
@@ -507,7 +517,7 @@ class LoanCalculation(Calculation):
                 self._interest_per_day = round(max(0, self._interest_per_day - val), self.decimal_places)
 
 
-    def book_payment_with_accounting_order(self, dt_str: str, ignore_due_day=False):
+    def book_payment(self, dt_str: str, ignore_due_day=False):
         self.accounting_booking = {}
 
         if self.accounting['PAYMENT'] > 0:
@@ -515,6 +525,18 @@ class LoanCalculation(Calculation):
 
         if self.accounting['EARLY_PAYMENT'] > 0:
             self._account_with_order(dt_str, 'EARLY_PAYMENT', True)
+
+        # accounting unconditional capital payment (not accounting ordered)
+        if self.accounting['CAPITAL_PAYMENT'] > 0:
+            val = max(0, min(self.accounting['CAPITAL_PAYMENT'], self.accounting['CAP_NOT_REQ']))
+            self._instalment_accounting_capital_not_required += val
+            self.accounting['CAP_NOT_REQ'] -= val
+            self.accounting['CAPITAL_PAYMENT'] -= val
+
+            val = max(0, min(self.accounting['CAPITAL_PAYMENT'], self.accounting['CAP_REQ']))
+            self._instalment_accounting_capital_required += val
+            self.accounting['CAP_REQ'] -= val
+            self.accounting['CAPITAL_PAYMENT'] -= val
 
 
     def fill_calculation_table(self, dt, dt_str):
@@ -577,12 +599,14 @@ class LoanCalculation(Calculation):
                 # cost_occurrence=self._cost_occurrence,
                 cost_total=self._cost_total,
 
-                instalment=self._instalment_nominal,
-                instalment_total=self._instalment_total,
                 early_payment=self._early_payment,
                 early_payment_total=self._early_payment_total,
-                instalment_overpaid=self.accounting['PAYMENT'],
+                capital_payment=self._capital_payment,
+                capital_payment_total=self._capital_payment_total,
 
+                instalment=self._instalment_nominal,
+                instalment_total=self._instalment_total,
+                instalment_overpaid=self.accounting['PAYMENT'],
                 instalment_accounting_capital_required=self._instalment_accounting_capital_required,
                 instalment_accounting_capital_not_required=self._instalment_accounting_capital_not_required,
                 instalment_accounting_commission_required=self._instalment_accounting_commission_required,
@@ -683,6 +707,9 @@ class LoanCalculation(Calculation):
 
             self._early_payment = calc.early_payment
             self._early_payment_total = calc.early_payment_total
+
+            self._capital_payment = calc.capital_payment
+            self._capital_payment_total = calc.capital_payment_total
 
             self.accounting['PAYMENT'] = calc.instalment_overpaid
 
@@ -1031,7 +1058,7 @@ class LoanCalculation(Calculation):
                 self.update_state(dt, dt_str)
 
                 # book payment following the accounting order on maturity day incoming
-                self.book_payment_with_accounting_order(dt_str=dt_str, ignore_due_day=self._undo_interest_for_delay)
+                self.book_payment(dt_str=dt_str, ignore_due_day=self._undo_interest_for_delay)
 
                 # termination
                 if dt == self.product.termination_date:

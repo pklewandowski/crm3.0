@@ -492,6 +492,12 @@ class ProductCalculation(models.Model):
     early_payment_total = models.DecimalField(verbose_name='product.calculation.early_payment_total', max_digits=15,
                                               decimal_places=2, default=0)
 
+    capital_payment = models.DecimalField(verbose_name='product.calculation.capital_payment', max_digits=15,
+                                          decimal_places=2,
+                                          default=0)
+    capital_payment_total = models.DecimalField(verbose_name='product.calculation.capital_payment_total', max_digits=15,
+                                                decimal_places=2, default=0)
+
     # rozksięgowanie raty na poszczególne składniki
     instalment_accounting_capital_required = models.DecimalField(
         verbose_name='product.calculation.instalment_capital_required', max_digits=15, decimal_places=2, default=0)

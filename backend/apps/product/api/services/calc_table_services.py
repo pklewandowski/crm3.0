@@ -293,6 +293,23 @@ def get_calc_table_columns(document_type):
                                          "className": "calc-table-instalment", "css": {"borderRightWidth": "2px"}}
                      },
 
+                    {"title": "Spłata kapitału", "width": 80, "field": "capital_payment", "headerSort": False,
+                     "dataType": "currency",
+                     "hozAlign": "right",
+                     "formatter": "moneyCss",
+                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                         "className": "calc-table-instalment"}
+                     },
+
+                    {"title": "suma spłat kapitału", "width": 80, "field": "capital_payment_total",
+                     "headerSort": False,
+                     "dataType": "currency",
+                     "hozAlign": "right",
+                     "formatter": "moneyCss",
+                     "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
+                                         "className": "calc-table-instalment", "css": {"borderRightWidth": "2px"}}
+                     },
+
 
                 ]
              }
