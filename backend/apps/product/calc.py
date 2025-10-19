@@ -482,7 +482,8 @@ class LoanCalculation(Calculation):
 
             # ustalenie maksymalnej możliwej kwoty na rozksięgowanie dla danego typu
             # zaokrąglenie, żeby poprawne były obliczenia (nie uciekał 1 grosz)
-            val = round(min(self.accounting[i.accounting_type.code], self.accounting[payment_type]), self.decimal_places)
+            val = round(min(self.accounting[i.accounting_type.code], self.accounting[payment_type]),
+                        self.decimal_places)
             self.accounting_booking[i.accounting_type.code] = round(float(val), self.decimal_places)
 
             # pomniejszenie wpłaty o wartość dla danego typu zobowiązania
@@ -516,6 +517,16 @@ class LoanCalculation(Calculation):
                 self._instalment_accounting_interest_required = val
                 self._interest_per_day = round(max(0, self._interest_per_day - val), self.decimal_places)
 
+    def _account_no_order(self):
+        val = max(0, min(self.accounting['CAPITAL_PAYMENT'], self.accounting['CAP_NOT_REQ']))
+        self._instalment_accounting_capital_not_required += val
+        self.accounting['CAP_NOT_REQ'] -= val
+        self.accounting['CAPITAL_PAYMENT'] -= val
+
+        val = max(0, min(self.accounting['CAPITAL_PAYMENT'], self.accounting['CAP_REQ']))
+        self._instalment_accounting_capital_required += val
+        self.accounting['CAP_REQ'] -= val
+        self.accounting['CAPITAL_PAYMENT'] -= val
 
     def book_payment(self, dt_str: str, ignore_due_day=False):
         self.accounting_booking = {}
@@ -528,16 +539,7 @@ class LoanCalculation(Calculation):
 
         # accounting unconditional capital payment (not accounting ordered)
         if self.accounting['CAPITAL_PAYMENT'] > 0:
-            val = max(0, min(self.accounting['CAPITAL_PAYMENT'], self.accounting['CAP_NOT_REQ']))
-            self._instalment_accounting_capital_not_required += val
-            self.accounting['CAP_NOT_REQ'] -= val
-            self.accounting['CAPITAL_PAYMENT'] -= val
-
-            val = max(0, min(self.accounting['CAPITAL_PAYMENT'], self.accounting['CAP_REQ']))
-            self._instalment_accounting_capital_required += val
-            self.accounting['CAP_REQ'] -= val
-            self.accounting['CAPITAL_PAYMENT'] -= val
-
+            self._account_no_order()
 
     def fill_calculation_table(self, dt, dt_str):
         required_liabilities_sum = (
@@ -994,7 +996,6 @@ class LoanCalculation(Calculation):
                 q &= Q(cash_flow_date__gte=date_from)
 
             ProductCashFlow.objects.filter(q).delete()
-
 
         if emulate_payment:
             logger.debug('setting payment emulation')
