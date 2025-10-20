@@ -155,6 +155,9 @@ class DocumentApiCredentials:
         if user.is_superuser:
             return True
 
+        if status is None:
+            return True
+
         if not status.hierarchies:
             return True
 

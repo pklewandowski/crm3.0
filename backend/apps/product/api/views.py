@@ -12,17 +12,16 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.hierarchy import utils as hierarchy_utils
-
 from application.wrapper import rest_api_wrapper
 from apps.document.models import DocumentTypeAccountingType, DocumentTypeStatus, DocumentStatusCourse
+from apps.hierarchy import utils as hierarchy_utils
 from apps.product.api.serializers import ProductCalculationSerializer, ProductCashFlowSerializer, \
     DocumentTypeAccountingTypeSerializer, ProductSerializer, ProductInterestSerializer, ProductInterestGlobalSerializer, \
     ProductCalculationBalanceSerializer
 from apps.product.models import Product, ProductCalculation, ProductCashFlow as ProductCashFlowModel, \
     ProductInterestGlobal, ProductTypeStatus, ProductStatusTrack
 from apps.product.utils.utils import ProductUtils
-from .services import calc_table_services, interest_services
+from .services import calc_table_services
 from ..calc import LoanCalculation
 from ...document.api.utils import DocumentApiUtils
 from ...financial_accounting.batch_processing.loaders.loaderMT940 import LoaderMT940
@@ -31,6 +30,7 @@ from ...message.models import MessageTemplate
 from ...user.models import User
 
 logger = logging.getLogger(__name__)
+
 
 class ProductEntityApi(APIView):
     @rest_api_wrapper
@@ -160,10 +160,13 @@ class ProductCashFlowApi(APIView):
     @rest_api_wrapper
     def get(self, request):
         product = request.query_params.get('productId')
+
         cashflow_type_serializer = DocumentTypeAccountingTypeSerializer(
             DocumentTypeAccountingType.objects.filter(is_editable=True).order_by('sq'), many=True).data
+
         serializer = ProductCashFlowSerializer(
             ProductCashFlowModel.objects.filter(product=product).order_by('cash_flow_date'), many=True)
+
         data = {'cashflow_types': cashflow_type_serializer, 'data': serializer.data}
 
         return data
@@ -280,7 +283,7 @@ class ProductGlobalInterestView(APIView):
         id = request.data.get('id', None)
 
         interest_global = ProductInterestGlobal.objects.get(pk=id)
-        #interest_services.delete_interest_global(interest_global)
+        # interest_services.delete_interest_global(interest_global)
         interest_global.delete()
 
         # Update ProductInterestGlobal variable storing global interest list (singleton) via signal send
@@ -365,7 +368,9 @@ class ProductBalancePerDayView(APIView):
 
         return ProductCalculationBalanceSerializer(instance=calculation_result).data
 
+
 from apps.message import utils as msg_utils
+
 
 class ProductStatusView(APIView):
     @rest_api_wrapper
@@ -381,8 +386,9 @@ class ProductStatusView(APIView):
         previous_status = product.status
         product_status = ProductTypeStatus.objects.get(type=product.type, pk=status)
 
-        if not hierarchy_utils.check_user_perms(user=request.user, status_hierarchies=product_status.hierarchy.all()):
-            raise PermissionDenied(f"Change product status to '{product_status.name}'.")
+        if not hierarchy_utils.check_user_perms(user=request.user, status_hierarchies=product.status.hierarchy.all()):
+            raise PermissionDenied(
+                f"Nie posiadasz uprawnień do zmiany produktu będącego w statusie: '{product.status.name}'.")
 
         if product_status == product.status:
             return
@@ -414,4 +420,3 @@ class ProductStatusView(APIView):
 
                 except ValidationError:
                     logger.warning(f"Email address '{user.email}' could not be verified.")
-
