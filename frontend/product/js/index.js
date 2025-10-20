@@ -525,15 +525,15 @@ $(document).ready(() => {
 
     document.getElementById('productStatuses').addEventListener('click', e => {
         let el = e.target;
-        if(el.dataset.can_process == 'False') {
-            Alert.error('',
-                `Nie posiadasz ma uprawnień do zmiany statusu produktu na '${el.innerText}'`,
-                '',
-                '',
-                'PermissionDenied'
-            );
-            return false;
-        }
+        // if(el.dataset.can_process == 'False') {
+        //     Alert.error('',
+        //         `Nie posiadasz ma uprawnień do zmiany statusu produktu na '${el.innerText}'`,
+        //         '',
+        //         '',
+        //         'PermissionDenied'
+        //     );
+        //     return false;
+        // }
 
         Alert.questionWarning('Czy na pewno zmienić status produktu?', '', () => {
             ajaxCall({
