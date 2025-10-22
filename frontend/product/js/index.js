@@ -524,20 +524,9 @@ $(document).ready(() => {
     });
 
     document.getElementById('productStatuses').addEventListener('click', e => {
-        let el = e.target;
-        // if(el.dataset.can_process == 'False') {
-        //     Alert.error('',
-        //         `Nie posiadasz ma uprawnień do zmiany statusu produktu na '${el.innerText}'`,
-        //         '',
-        //         '',
-        //         'PermissionDenied'
-        //     );
-        //     return false;
-        // }
-
         Alert.questionWarning('Czy na pewno zmienić status produktu?', '', () => {
             ajaxCall({
-                    method: 'post',
+                    method: 'put',
                     url: "/product/api/product-status/",
                     data: {"id": _g.product.id, "status": e.target.value}
 
@@ -551,7 +540,27 @@ $(document).ready(() => {
                     Alert.error(null, resp.responseJSON.errmsg, null, null, resp.responseJSON.errtype)
                 }
             );
+        });
+    });
 
+    document.getElementById('revertProductStatus').addEventListener('click', e => {
+        Alert.questionWarning(
+        'Czy na pewno cofnąć status?',
+        '',
+        () => {
+            ajaxCall(
+                {
+                    method: 'patch',
+                    url: "/product/api/product-status/",
+                    data: {"id": _g.product.id}
+                },
+                () => {
+                    window.location.reload();
+                },
+                (resp) => {
+                    let res = resp.responseJSON;
+                    Alert.error('Błąd', res.errmsg);
+                });
         });
     })
 });

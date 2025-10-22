@@ -19,7 +19,7 @@ from apps.product.api.serializers import ProductCalculationSerializer, ProductCa
     DocumentTypeAccountingTypeSerializer, ProductSerializer, ProductInterestSerializer, ProductInterestGlobalSerializer, \
     ProductCalculationBalanceSerializer
 from apps.product.models import Product, ProductCalculation, ProductCashFlow as ProductCashFlowModel, \
-    ProductInterestGlobal, ProductTypeStatus, ProductStatusTrack
+    ProductInterestGlobal, ProductTypeStatus, ProductStatusTrack, ProductTypeProcessFlow, ProductStatusCourse
 from apps.product.utils.utils import ProductUtils
 from .services import calc_table_services
 from ..calc import LoanCalculation
@@ -378,31 +378,43 @@ class ProductStatusView(APIView):
         return
 
     @rest_api_wrapper
-    def post(self, request):
+    def put(self, request):
         id = request.data.get('id', None)
         status = request.data.get('status', None)
 
         product = Product.objects.get(pk=id)
-        previous_status = product.status
-        product_status = ProductTypeStatus.objects.get(type=product.type, pk=status)
+        current_status = product.status
+        new_status = ProductTypeStatus.objects.get(type=product.type, pk=status)
+
+        available_statuses = ProductUtils.get_available_statuses(current_status=current_status)
+
+        if new_status.pk not in list(map(lambda x: x.available_status.pk, available_statuses)):
+            raise Exception(f"Status '{new_status.name}' can't be set from current status '{current_status.name}'")
 
         if not hierarchy_utils.check_user_perms(user=request.user, status_hierarchies=product.status.hierarchy.all()):
             raise PermissionDenied(
                 f"Nie posiadasz uprawnień do zmiany produktu będącego w statusie: '{product.status.name}'.")
 
-        if product_status == product.status:
+        if new_status == product.status:
             return
 
         with transaction.atomic():
-            product.status = product_status
+            product.status = new_status
             product.save()
 
             ProductStatusTrack.objects.create(
                 product=product,
-                status=product_status,
+                status=new_status,
                 created_by=request.user
             )
-        for user in User.objects.filter(hierarchy__in=(product_status.hierarchy.all())):
+
+            ProductStatusCourse.objects.create(
+                product=product,
+                status=new_status,
+                created_by=request.user
+            )
+
+        for user in User.objects.filter(hierarchy__in=(new_status.hierarchy.all())):
             if user.email:
                 try:
                     validate_email(user.email)
@@ -411,7 +423,7 @@ class ProductStatusView(APIView):
                                                source={'user': user},
                                                add_params={
                                                    'PRODUCT_CODE': product.document.code,
-                                                   'PREVIOUS_STATUS': previous_status.name,
+                                                   'PREVIOUS_STATUS': current_status.name,
                                                    'CURRENT_STATUS': product.status.name
                                                },
                                                recipients=[user.email],
@@ -420,3 +432,43 @@ class ProductStatusView(APIView):
 
                 except ValidationError:
                     logger.warning(f"Email address '{user.email}' could not be verified.")
+
+
+    @rest_api_wrapper
+    def patch(self, request):
+        """
+        Reverting product status
+        Status reverting possible only when at least two record are present in ProductStatusCourse table. Otheriwse
+        something went wrong and raise fatal error
+        """
+        id = request.data.get('id', None)
+        product = Product.objects.get(pk=id)
+
+
+
+        with transaction.atomic():
+            result = ProductStatusCourse.objects.filter(product=product).order_by('-creation_date')
+            if not result:
+                raise Exception('To process status revert ProductStatusCourse table need to have at least 2 records.')
+            elif len(result) == 1:
+                raise Exception('To process status revert ProductStatusCourse table need to have at least 2 records.')
+
+
+            if result:
+                try:
+                    product.status = result[1].status
+                except IndexError:
+                    logger.error(f"Index error: Product status course have less then 2 rows. Product id {product.pk}")
+                    raise
+
+                result[0].delete()
+
+            ProductStatusTrack.objects.create(
+                product=product,
+                status=product.status,
+                created_by=request.user
+            )
+
+            product.save()
+
+

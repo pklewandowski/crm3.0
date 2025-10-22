@@ -19,6 +19,7 @@ function calculateProductAggregates(product) {
     }
     return {
         status: product.data?.product?.status?.name,
+        previous_status: product.data?.product?.previous_status?.name,
         startDate: product.data?.product?.start_date,
         instalmentCount: product.data?.schedule ? product.data.schedule.length : 0,
         instalmentMcSum: instalmentMcSum,

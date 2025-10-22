@@ -1,8 +1,10 @@
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from apps.document.models import DocumentTypeAccountingType
 from apps.product.models import ProductCalculation, ProductCashFlow, Product, ProductSchedule, ProductInterest, \
     ProductTypeStatus, ProductInterestGlobal
+from apps.product.utils.utils import ProductUtils
 
 
 class ProductTypeStatusSerializer(serializers.ModelSerializer):
@@ -13,6 +15,10 @@ class ProductTypeStatusSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     status = ProductTypeStatusSerializer()
+    previous_status = serializers.SerializerMethodField()
+
+    def get_previous_status(self, obj):
+        return ProductTypeStatusSerializer(ProductUtils.get_previous_status(obj)).data
 
     class Meta:
         model = Product

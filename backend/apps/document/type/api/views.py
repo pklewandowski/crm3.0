@@ -10,7 +10,7 @@ from apps.document.utils import get_available_statuses
 
 class DocumentTypeStatusApi(APIView):
     def get(self, request):
-        response_data = ()
+        response_data = {}
         response_status = status.HTTP_200_OK
         try:
             current_status = request.query_params.get('status', None)

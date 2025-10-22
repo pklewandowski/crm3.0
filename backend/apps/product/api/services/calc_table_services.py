@@ -29,7 +29,7 @@ def get_calc_table_columns(document_type):
         },
 
         {
-            "title": "Saldo - nadpłata", "field": "balance_with_overpaid", "headerSort": False, "dataType": "currency",
+            "title": "Saldo - Nadpłata", "field": "balance_with_overpaid", "headerSort": False, "dataType": "currency",
             "hozAlign": "right",
             "formatter": "moneyCss",
             "formatterParams": {
@@ -285,7 +285,8 @@ def get_calc_table_columns(document_type):
                                          "className": "calc-table-instalment"}
                      },
 
-                    {"title": "suma wcześniejszych spłat", "width": 80, "field": "early_payment_total", "headerSort": False,
+                    {"title": "suma wcześniejszych spłat", "width": 80, "field": "early_payment_total",
+                     "headerSort": False,
                      "dataType": "currency",
                      "hozAlign": "right",
                      "formatter": "moneyCss",
@@ -309,8 +310,6 @@ def get_calc_table_columns(document_type):
                      "formatterParams": {"decimal": ",", "thousand": " ", "precision": 2,
                                          "className": "calc-table-instalment", "css": {"borderRightWidth": "2px"}}
                      },
-
-
                 ]
              }
         ])
