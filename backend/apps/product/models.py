@@ -74,6 +74,7 @@ class Product(models.Model):
 
     status = models.ForeignKey('ProductTypeStatus', db_column='id_status', related_name='status_set',
                                on_delete=models.CASCADE)
+
     recount_required_date = models.DateField(verbose_name=_('product.recount_required_date'), null=True, blank=True)
     # recount_required_date_creation_marker: marker where the recount required date was set. It's when recount is done the date is set to null.
     # If during the recount process some other process set the value, the marker changes and thus recount proces would know
@@ -625,10 +626,11 @@ class ProductTypeStatusHierarchyM2M(models.Model):
 
 
 class ProductTypeProcessFlow(models.Model):
-    status = models.ForeignKey(ProductTypeStatus, db_column='id_current_status', related_name='status',
+    current_status = models.ForeignKey(ProductTypeStatus, db_column='id_current_status', related_name='product_status',
                                on_delete=models.CASCADE)
     available_status = models.ForeignKey(ProductTypeStatus, db_column='id_available_status', null=True, blank=True,
-                                         related_name='available_status', on_delete=models.CASCADE)
+                                         related_name='product_available_status', on_delete=models.CASCADE)
+    is_note_required = models.BooleanField(default=False)
     is_default = models.BooleanField(default=False)
     sq = models.IntegerField()
 
@@ -652,6 +654,19 @@ class ProductStatusTrack(models.Model):
 
     class Meta:
         db_table = 'product_status_track'
+
+class ProductStatusCourse(models.Model):
+
+    product = models.ForeignKey(Product, db_column='id_product', db_index=True, related_name='product_status_course',
+                                 on_delete=models.CASCADE)
+    status = models.ForeignKey('ProductTypeStatus', db_column='id_status', db_index=True, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, db_column='id_user', on_delete=models.CASCADE)
+    effective_date = models.DateTimeField(default=timezone.now)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'product_status_course'
+
 
 
 class CompanyBankTransactionFile(models.Model):

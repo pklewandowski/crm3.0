@@ -1,6 +1,8 @@
 import datetime
 import decimal
+import logging
 from collections import OrderedDict
+from typing import Optional, Iterable
 
 from django.db import transaction
 from django.db.models import Min
@@ -15,11 +17,13 @@ from apps.product import ANNEX_STATUS
 from apps.product.base import ProductActionManager
 from apps.product.models import Product, ProductInterest, ProductInterestType, ProductAccounting, \
     ProductAction, ProductStatusTrack, ProductTypeStatus, ProductTypeProcessFlow, \
-    INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT, ProductTranche
+    INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT, ProductTranche, ProductStatusCourse
 from apps.product.utils.schedule_utils import ProductScheduleUtils
 from apps.user.models import User
 from apps.user_func.broker.models import Broker
 from apps.user_func.client.models import Client
+
+logger = logging.getLogger(__name__)
 
 
 class ProductException(Exception):
@@ -63,10 +67,22 @@ class ProductUtils:
         return {'total': total, 'with_overpaid': with_overpaid}
 
     @staticmethod
-    def get_available_statuses(status):
-        if not status:
-            return
-        return ProductTypeProcessFlow.objects.filter(status=status).order_by('sq')
+    def get_available_statuses(current_status: ProductTypeStatus) -> Iterable[ProductTypeProcessFlow]:
+        return ProductTypeProcessFlow.objects.filter(current_status=current_status)
+
+    @staticmethod
+    def get_previous_status(product: Product) -> Optional[ProductTypeStatus]:
+        statuses = list(ProductStatusCourse.objects.filter(product=product.pk).order_by('-creation_date'))[:2]
+
+        if not statuses:
+            err_msg = 'ProductStatusCourse must have at least one record'
+            logger.error(err_msg)
+            raise ProductException(err_msg)
+
+        if len(statuses) == 1:
+            return None
+
+        return statuses[1].status
 
 
 class LoanUtils:
@@ -206,16 +222,16 @@ class LoanUtils:
             if not isinstance(mapping['TRANCHE_NORD_TITLE'], list):
                 raise Exception(f'Incorrect Nord tranche instance: {type(mapping['TRANCHE_NORD_TITLE'])}')
 
-            for i in range (len(mapping['TRANCHE_NORD_TITLE'])):
+            for i in range(len(mapping['TRANCHE_NORD_TITLE'])):
                 if not all(
-                    [
-                        not LoanUtils.empty(mapping['TRANCHE_NORD_TITLE'][i]['id']),
-                        not LoanUtils.empty(mapping['TRANCHE_NORD_TITLE'][i]['value']),
-                        not LoanUtils.empty(mapping['TRANCHE_NORD_LENDER'][i]['id']),
-                        not LoanUtils.empty(mapping['TRANCHE_NORD_LENDER'][i]['value']),
-                        not LoanUtils.empty(mapping['TRANCHE_NORD_VALUE'][i]['id']),
-                        not LoanUtils.empty(mapping['TRANCHE_NORD_VALUE'][i]['value'])
-                    ]
+                        [
+                            not LoanUtils.empty(mapping['TRANCHE_NORD_TITLE'][i]['id']),
+                            not LoanUtils.empty(mapping['TRANCHE_NORD_TITLE'][i]['value']),
+                            not LoanUtils.empty(mapping['TRANCHE_NORD_LENDER'][i]['id']),
+                            not LoanUtils.empty(mapping['TRANCHE_NORD_LENDER'][i]['value']),
+                            not LoanUtils.empty(mapping['TRANCHE_NORD_VALUE'][i]['id']),
+                            not LoanUtils.empty(mapping['TRANCHE_NORD_VALUE'][i]['value'])
+                        ]
                 ):
                     raise Exception('Nie wszystkie pola transz NORD posiadają wartości')
 
@@ -235,14 +251,14 @@ class LoanUtils:
 
             for i in range(len(mapping['TRANCHE_CLIENT_TITLE'])):
                 if not all(
-                    [
-                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_TITLE'][i]['id']),
-                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_TITLE'][i]['value']),
-                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_LENDER'][i]['id']),
-                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_LENDER'][i]['value']),
-                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_VALUE'][i]['id']),
-                        not LoanUtils.empty(mapping['TRANCHE_CLIENT_VALUE'][i]['value']),
-                    ]
+                        [
+                            not LoanUtils.empty(mapping['TRANCHE_CLIENT_TITLE'][i]['id']),
+                            not LoanUtils.empty(mapping['TRANCHE_CLIENT_TITLE'][i]['value']),
+                            not LoanUtils.empty(mapping['TRANCHE_CLIENT_LENDER'][i]['id']),
+                            not LoanUtils.empty(mapping['TRANCHE_CLIENT_LENDER'][i]['value']),
+                            not LoanUtils.empty(mapping['TRANCHE_CLIENT_VALUE'][i]['id']),
+                            not LoanUtils.empty(mapping['TRANCHE_CLIENT_VALUE'][i]['value']),
+                        ]
                 ):
                     raise Exception('Nie wszystkie pola transz klienta posiadają wartości')
 
@@ -335,6 +351,7 @@ class LoanUtils:
     @staticmethod
     def _create_product(user, document, mapping):
         product = Product()
+        product_status = ProductTypeStatus.objects.get(is_initial=True)
 
         product.start_date = datetime.datetime.strptime(mapping['START_DATE']['value'], '%Y-%m-%d').date()
         if product.start_date > datetime.date.today():
@@ -371,7 +388,7 @@ class LoanUtils:
             decimal.Decimal(mapping['DEBT_COLLECTION_FEE_PERIOD'][
                                 'value'] or 0) if 'DEBT_COLLECTION_FEE_PERIOD' in mapping else decimal.Decimal(0.0)
         )
-        product.status = ProductTypeStatus.objects.get(is_initial=True)
+        product.status = product_status
         product.capital_type_calc_source = \
             mapping['INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE'][
                 'value'] if 'INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE' in mapping else INSTALMENT_INTEREST_CAPITAL_TYPE_CALC_SOURCE_DEFAULT
@@ -399,6 +416,7 @@ class LoanUtils:
         )
 
         product.save()
+
         for tranche in tranches:
             tranche.save()
 
@@ -411,9 +429,15 @@ class LoanUtils:
             status=product.status,
             created_by=product.creation_user,
             effective_date=product.start_date,
-            creation_date=datetime.datetime.now(),
             reason='Product creation',
             is_initial=True
+        )
+
+        ProductStatusCourse.objects.create(
+            product=product,
+            status=product.status,
+            created_by=product.creation_user,
+            effective_date=product.start_date,
         )
 
     @staticmethod
@@ -478,12 +502,13 @@ class LoanUtils:
         if document.annex:
             LoanUtils._process_annex(user=user, document=document, mapping=mapping)
 
-        product = LoanUtils._create_product(user=user, document=document, mapping=mapping)
+        with transaction.atomic():
+            product = LoanUtils._create_product(user=user, document=document, mapping=mapping)
 
-        LoanUtils._set_product_initial_status(product=product)
-        LoanUtils._create_schedule(product=product, mapping=mapping)
-        LoanUtils._create_interest(product=product, mapping=mapping)
-        LoanUtils._create_accounting(product=product)
+            LoanUtils._set_product_initial_status(product=product)
+            LoanUtils._create_schedule(product=product, mapping=mapping)
+            LoanUtils._create_interest(product=product, mapping=mapping)
+            LoanUtils._create_accounting(product=product)
 
         return product.pk
 

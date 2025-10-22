@@ -21,7 +21,7 @@ from apps.product.calculation import CalculationException
 from apps.product.forms import ProductTypeAttributeForm, ProductForm, ProductActionForm, TestCopyPasteForm, \
     CashFlowFormset, ProductInterestGlobalForm, ProductTrancheFormset
 from apps.product.models import Product, ProductAccounting, ProductCalculation, ProductAction, ProductActionDefinition, \
-    ProductInterestGlobal, ProductStatusTrack
+    ProductInterestGlobal, ProductStatusTrack, ProductTypeProcessFlow
 from apps.product.utils.utils import ProductUtils
 from apps.report.datasource_utils import ReportDatasourceUtils
 from apps.report.forms import ReportDatasourceForm
@@ -64,9 +64,10 @@ def list_products_by_type(request, type):
     if type not in type_statuses:
         raise AttributeError('Podano niepoprawny typ dla produktów')
 
-    products = Product.objects.filter(status_id__in=type_statuses[type]).order_by('document__type__name', '-creation_date')
+    products = Product.objects.filter(status_id__in=type_statuses[type]).order_by('document__type__name',
+                                                                                  '-creation_date')
 
-    context = {'products': products, 'product_type': 'Windykacja' if type=='vindication' else 'Archiwum'}
+    context = {'products': products, 'product_type': 'Windykacja' if type == 'vindication' else 'Archiwum'}
     return render(request, 'product/list_products_by_type.html', context)
 
 
@@ -288,39 +289,47 @@ def edit(request, id, iframe=0):
             return True
         return False
 
-    context = {'product': product,
-               'cashflow_type': DocumentTypeAccountingType.get_accounting_types(),
-               'cashflow_formset': cashflow_formset,
-               'schedule': schedule,
-               'tranche_formset': tranche_formset,
-               'atm_classname': 'apps.product.models.ProductAttachment',
-               'atm_owner_classname': 'apps.product.models.Product',
-               'atm_root_name': atm_root_name,
-               'accounting_ordered': accounting_ordered,
-               'calculation_list': calculation_list,
-               'product_action_definition': product_action_definition,
-               'actions': actions,
-               'mode': settings.MODE_EDIT,
-               'messages': messages,
-               'balance': balance,
-               'calc_max_date': calc_max_date,
-               'errors': errors,
-               'product_status_flow': [{
-                   'date': i.creation_date,
-                   'effective_date': i.effective_date,
-                   'status': i.status,
-                   'user': i.created_by
-               } for i in ProductStatusTrack.objects.filter(product=product).order_by('creation_date')],
-               'product_statuses': [
-                   {
-                       'id': i.pk,
-                       'pk': i.pk,
-                       'name': i.name,
-                       'can_process': can_process_status(i)
-                   } for i in product.type.product_status_set.all().order_by('sq')],
-               }
+
+
+    context = {
+        'product': product,
+        'cashflow_type': DocumentTypeAccountingType.get_accounting_types(),
+        'cashflow_formset': cashflow_formset,
+        'schedule': schedule,
+        'tranche_formset': tranche_formset,
+        'atm_classname': 'apps.product.models.ProductAttachment',
+        'atm_owner_classname': 'apps.product.models.Product',
+        'atm_root_name': atm_root_name,
+        'accounting_ordered': accounting_ordered,
+        'calculation_list': calculation_list,
+        'product_action_definition': product_action_definition,
+        'actions': actions,
+        'mode': settings.MODE_EDIT,
+        'messages': messages,
+        'balance': balance,
+        'calc_max_date': calc_max_date,
+        'errors': errors,
+        'product_status_flow': [{
+            'date': i.creation_date,
+            'effective_date': i.effective_date,
+            'status': i.status,
+            'user': i.created_by
+        } for i in ProductStatusTrack.objects.filter(product=product).order_by('creation_date')],
+        'product_available_statuses': ProductUtils.get_available_statuses(current_status=product.status),
+        'product_statuses': [
+            {
+                'id': i.pk,
+                'pk': i.pk,
+                'name': i.name,
+                'can_process': can_process_status(i)
+            } for i in product.type.product_status_set.all().order_by('sq')
+        ],
+        'product_previous_status': ProductUtils.get_previous_status(product)
+    }
+
     if iframe:
         context['override_base'] = "%s.html" % iframe
+
     return render(request, 'product/edit.html', context)
 
 

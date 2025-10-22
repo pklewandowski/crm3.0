@@ -86,6 +86,7 @@ class ProductDashboard {
             let html = this.template;
             html = html.replace('__START_DATE__', this.data.startDate);
             html = html.replace('__STATUS__', this.data.status);
+            html = html.replace('__PREVIOUS_STATUS__', this.data.previous_status? this.data.previous_status: '-');
             html = html.replace('__BALANCE__', this.formatDecimal(this.data.balance));
             html = html.replace('__INTEREST_REQUIRED__', this.formatDecimal(this.data.interest_per_day));
             html = html.replace('__COST_TOTAL__', this.formatDecimal(this.data.cost_total));
