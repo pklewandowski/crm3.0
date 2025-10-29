@@ -167,27 +167,29 @@ def edit(request, id, iframe=0):
     # TODO: Do tego czasu trzeba każdorazowo przeliczać, żeby stan był aktualny
 
     if request.method != 'POST' and product.type.calculation_class:
-        if FORCE_CALCULATION:
-            py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
-        else:
-            try:
-                ProductCalculation.objects.get(product=product, calc_date=end_date - datetime.timedelta(days=1))
-                logger.debug('Calculation exists!')
-            except ProductCalculation.DoesNotExist:
-                logger.debug('Calculation does not exist')
-                if not product.status.is_closing_process:
-                    # calculating
-                    try:
-                        # TODO: poprawić, żeby działało dla startu od danego dnia
-                        # py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate(
-                        #     start_date=datetime.date.today())
-                        py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
-                    except CalculationException as ex:
-                        return render(request, 'product/calculation_error.html',
-                                      {"errmsg": str(ex), "product": product})
+        if not settings.APP_IN_VINDICATION:
+            if FORCE_CALCULATION:
+                py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
+            else:
+                try:
+                    ProductCalculation.objects.get(product=product, calc_date=end_date - datetime.timedelta(days=1))
+                    logger.debug('Calculation exists!')
 
-                else:
-                    print('Product is in closing process status')
+                except ProductCalculation.DoesNotExist:
+                    logger.debug('Calculation does not exist')
+                    if not product.status.is_closing_process:
+                        # calculating
+                        try:
+                            # TODO: poprawić, żeby działało dla startu od danego dnia
+                            # py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate(
+                            #     start_date=datetime.date.today())
+                            py3ws_utils.get_class(product.type.calculation_class)(product, request.user).calculate()
+                        except CalculationException as ex:
+                            return render(request, 'product/calculation_error.html',
+                                          {"errmsg": str(ex), "product": product})
+
+                    else:
+                        print('Product is in closing process status')
 
     try:
         cb = _count_balance(product=product)

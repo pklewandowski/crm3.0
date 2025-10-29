@@ -180,6 +180,8 @@ $(document).ready(() => {
                 (resp) => {
                     console.log('error');
                     console.log(resp);
+                    Alert.error('Wystąpił wyjątek!', resp.responseJSON.errmsg);
+
                 },
                 () => {
                     $("#calc-tab .loader-container").fadeOut();

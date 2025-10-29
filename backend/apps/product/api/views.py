@@ -136,7 +136,12 @@ class ProductCalcTable(APIView):
 
         return ProductCalculationSerializer(ProductCalculation.objects.filter(q).order_by('calc_date'), many=True).data
 
+    @rest_api_wrapper
     def get(self, request):
+        if settings.APP_IN_VINDICATION:
+            raise Exception('Funkcjonalność kalkulacji produktu wstrzymana. '
+                            'Prosimy o kontakt z działem windykacji.')
+
         product_id = request.query_params.get('productId')
         calc_date = request.query_params.get('calcDate', None)
         no_header = request.query_params.get('noHeader', False)
@@ -152,8 +157,8 @@ class ProductCalcTable(APIView):
             data = ProductCalcTable.get_data(product)
 
         if no_header:
-            return Response(data=data)
-        return Response(data={"header": ProductCalcTable.get_calc_table_columns(product.document.type), "data": data})
+            return data
+        return {"header": ProductCalcTable.get_calc_table_columns(product.document.type), "data": data}
 
 
 class ProductCashFlowApi(APIView):

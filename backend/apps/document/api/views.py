@@ -259,6 +259,9 @@ class DocumentApi(APIView):
             # status processing
             document_status_id = request.data.get('status')
             if document_status_id:
+                if settings.APP_IN_VINDICATION:
+                    raise Exception('Funkcjonalność zmiany statusu dokumentu wstrzymana. '
+                                    'Prosimy o kontakt z działem windykacji.')
                 # BE AWARE: DocumentApi.change_status commits changes on the document!!!
                 DocumentApiUtils.change_status(document, document_status_id, request.user)
             response_data['documentStatus'] = document_status_id
