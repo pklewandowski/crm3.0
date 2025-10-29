@@ -192,6 +192,11 @@ class DocumentApi(APIView):
 
             if serializer.is_valid():
                 # save document data based on attribute_codes
+                if settings.APP_IN_VINDICATION:
+                    if serializer.validated_data['owner'].last_name != 'Fasola':
+                        raise Exception('Dokument może być wprowadzony jedynie dla klienta testowego (Jaś Fasola). '
+                                        'Prosimy o kontakt z działem windykacji.')
+
                 document = serializer.save()
 
                 # save document attributes

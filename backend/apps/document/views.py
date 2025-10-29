@@ -137,8 +137,10 @@ class Add(DocumentManagement):
             if not type_id:
                 raise Exception("Parametr 'type' nie może być pusty")
             self.type = DocumentType.objects.get(pk=type_id)
+
         except KeyError:
             raise AttributeError("Brak parametru 'type'")
+
         except DocumentType.DoesNotExist:
             raise Exception('Brak definicji typu dokumentu')
 
@@ -146,6 +148,7 @@ class Add(DocumentManagement):
         try:
             self.status = DocumentTypeStatus.objects.get(type=self.type, is_initial=True)
             self.prev_status = self.status
+
         except DocumentTypeStatus.DoesNotExist:
             raise AttributeError('Brak definicji statusu inicjalnego dla dokumentu: %s' % self.type.name)
 
