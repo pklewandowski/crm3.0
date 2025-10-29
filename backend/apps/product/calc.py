@@ -984,8 +984,16 @@ class LoanCalculation(Calculation):
 
         return dt
 
-    def calculate(self, start_date=None, end_date=None, simulation=False, emulate_payment=False):
+    def calculate(self,
+                  start_date=None,
+                  end_date=None,
+                  simulation=False,
+                  emulate_payment=False) -> list[ProductCalculation]:
+
         logger.debug('Calculation started')
+
+        if settings.APP_IN_VINDICATION:
+            return []
 
         def delete_auto_cash_flow(date_from: datetime.date = None) -> None:
             """
